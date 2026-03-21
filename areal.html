@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Arealkalkulator - ProBuilder</title>
+<meta name="description" content="Beregn nøyaktig areal for vegger, gulv og tak med ProBuilder. Enkel arealkalkulator for profesjonelle og private prosjekter.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/areal.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/areal.html">
+<meta property="og:title" content="Arealkalkulator - ProBuilder">
+<meta property="og:description" content="Beregn nøyaktig areal for vegger, gulv og tak med ProBuilder. Enkel arealkalkulator for profesjonelle og private prosjekter.">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://vigibygg-cmyk.github.io/Calc/areal.html">
+<meta name="twitter:title" content="Arealkalkulator - ProBuilder">
+<meta name="twitter:description" content="Beregn nøyaktig areal for vegger, gulv og tak med ProBuilder. Enkel arealkalkulator for profesjonelle og private prosjekter.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Arealkalkulator - ProBuilder",
+  "description": "Beregn nøyaktig areal for vegger, gulv og tak med ProBuilder. Enkel arealkalkulator for profesjonelle og private prosjekter.",
+  "url": "https://vigibygg-cmyk.github.io/Calc/areal.html",
+  "applicationCategory": "ConstructionTool",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "NOK"
+  }
+}
+</script>
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProBuilder">
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.back-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: #e8f0fe;
+}
+.page-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; color: var(--text); }
+.page-title span { color: var(--primary); }
+
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── TABS ─── */
+.tab-nav {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 960px;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  min-height: 44px;
+}
+.tab-btn:hover {
+  color: var(--text);
+  border-color: #a0aec0;
+  background: var(--surface2);
+}
+.tab-btn.active {
+  background: #ebf8ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ─── MAIN ─── */
+main {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 0 auto;
+  padding: 16px 16px 60px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.tab-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title, .ct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-title::after, .ct::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM ─── */
+.form-grid, .fg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.field, .f { display: flex; flex-direction: column; gap: 5px; }
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+input[type="number"], input[type="text"], select, textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+input::placeholder, textarea::placeholder { color: var(--dim); }
+.field-hint, .hint { font-size: 0.69rem; color: var(--dim); line-height: 1.4; }
+textarea { resize: vertical; line-height: 1.5; min-height: 56px; }
+.sp2 { grid-column: span 2; }
+
+/* ─── ROOM ROW ─── */
+.rr {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rrt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.rnum {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--dim);
+  width: 24px;
+  flex-shrink: 0;
+  font-family: 'Consolas', monospace;
+}
+.ri {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  min-height: 40px;
+}
+.ri:focus { border-color: var(--primary); }
+.rn { flex: 2; min-width: 120px; }
+.rst { flex: 1; min-width: 100px; font-size: 0.85rem; }
+.rdim { font-family: 'Consolas', monospace; font-size: 0.95rem; width: 85px; text-align: center; }
+.rab {
+  font-family: 'Consolas', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--success);
+  background: var(--success-bg);
+  border: 1px solid #9ae6b4;
+  border-radius: 6px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.rab.empty {
+  color: var(--dim);
+  background: var(--surface2);
+  border-color: var(--border);
+}
+.rdel {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 10px;
+  transition: all 0.18s;
+  min-height: 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+.rdel:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
+
+/* ─── ROOM AREA INLINE ─── */
+.room-area-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+/* ─── RESULT BOXES ─── */
+.result-grid, .rg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.res-box, .rb {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.res-val, .rv {
+  font-family: 'Consolas', monospace;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.res-val.ok, .rv.ok { color: var(--success); }
+.res-val.inf, .rv.inf { color: var(--primary); }
+.res-val.wa, .rv.wa { color: var(--warn); }
+.res-val.ac, .rv.ac { color: var(--accent); }
+.res-lbl, .rl {
+  font-size: 0.67rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* ─── INFO BOXES ─── */
+.info-box, .ib {
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.83rem;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.info-box.bl, .ib.bl { background: #ebf8ff; border: 1px solid #bee3f8; color: #2b6cb0; }
+.info-box.gr, .ib.gr { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.info-box.ye, .ib.ye { background: var(--warn-bg); border: 1px solid #fbd38d; color: var(--warn); }
+.info-box.or, .ib.or { background: #fff5ec; border: 1px solid #fbd38d; color: var(--accent); }
+.info-box.re, .ib.re { background: var(--danger-bg); border: 1px solid #feb2b2; color: var(--danger); }
+
+/* ─── SHAPE SELECTOR ─── */
+.sgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.sc {
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s;
+}
+.sc:hover { border-color: #a0aec0; background: #e2e8f0; }
+.sc.active {
+  border-color: var(--primary);
+  background: #ebf8ff;
+}
+.sc svg { display: block; margin: 0 auto 6px; color: var(--muted); }
+.sc.active svg { color: var(--primary); }
+.scl { font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+.sc.active .scl { color: var(--primary); }
+
+/* ─── CANVAS ─── */
+.canvas-wrap, .cw { overflow-x: auto; margin: 12px 0; }
+canvas { display: block; border-radius: 8px; background: var(--surface2); }
+
+/* ─── TABLE ─── */
+.table-wrap, .tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+thead th {
+  padding: 9px 12px;
+  background: var(--surface2);
+  border-bottom: 2px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:hover { background: #ebf8ff; }
+tbody td {
+  padding: 9px 12px;
+  font-size: 0.85rem;
+  vertical-align: middle;
+  color: var(--text);
+}
+td.mn { font-family: 'Consolas', monospace; }
+.bg {
+  display: inline-block; padding: 2px 7px;
+  border-radius: 5px; font-size: 0.68rem; font-weight: 700;
+}
+.bgp { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.bgs { background: #fff5ec; border: 1px solid #fbd38d; color: var(--accent); }
+.bgx { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); }
+
+/* ─── POLYGON POINT LIST ─── */
+.ptr { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.pl { font-size: 0.75rem; color: var(--muted); width: 60px; flex-shrink: 0; font-family: 'Consolas', monospace; font-weight: 600; }
+.pi { width: 100px; font-family: 'Consolas', monospace; text-align: center; }
+.pd {
+  background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  color: var(--muted); cursor: pointer; padding: 4px 8px; font-size: 0.9rem;
+  min-height: 40px; transition: all 0.18s;
+}
+.pd:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: inherit; font-size: 0.84rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; min-height: 44px; white-space: nowrap;
+}
+.btn-primary, .bp { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(43,108,176,0.25); }
+.btn-primary:hover, .bp:hover { background: var(--primary-dark); }
+.btn-outline, .bo { background: transparent; border-color: var(--border); color: var(--muted); }
+.btn-outline:hover, .bo:hover { color: var(--text); border-color: #a0aec0; background: var(--surface2); }
+.btn-danger-outline, .bd { background: transparent; border-color: rgba(197,48,48,0.3); color: var(--danger); }
+.btn-danger-outline:hover, .bd:hover { background: var(--danger-bg); border-color: var(--danger); }
+.btn-add, .ba { background: #ebf8ff; border: 1px solid #bee3f8; color: var(--primary); width: 100%; justify-content: center; }
+.btn-add:hover, .ba:hover { background: #bee3f8; }
+.btn-row, .br { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ─── FOOTER ─── */
+.main-footer {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.8rem;
+  background: var(--card);
+}
+
+/* ─── PRINT ─── */
+@media print {
+  header, .no-print, .tab-nav, .np { display: none !important; }
+  main { padding: 0; max-width: 100%; }
+  body { background: #fff; color: #111; font-size: 11pt; }
+  .card { background: #fff; border: 1px solid #ccc; box-shadow: none; break-inside: avoid; padding: 12pt; }
+  .tab-panel.hidden { display: flex !important; }
+  .ph { display: block !important; }
+  canvas { border: 1px solid #ccc; }
+  footer.main-footer { display: block !important; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ccc; color: #000; font-size: 9pt; background: #fff; text-align: center; padding: 10px 0; }
+}
+.ph { display: none; border-bottom: 2px solid #333; padding-bottom: 10pt; margin-bottom: 14pt; }
+.ph h1 { font-size: 16pt; font-weight: 700; }
+.ph .pm { font-size: 9pt; color: #555; margin-top: 4pt; }
+
+.hidden { display: none !important; }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  .btn { width: 100%; justify-content: center; }
+  .form-grid, .fg { grid-template-columns: 1fr; }
+  .sp2 { grid-column: span 1; }
+  .rg { grid-template-columns: repeat(2, 1fr); }
+  .rr { padding: 10px; }
+  .rrt { gap: 8px; }
+  .ri { padding: 8px; font-size: 16px; }
+  .rdim { width: 70px; }
+  .rn { min-width: 100%; order: 2; margin-top: 6px; }
+  .rnum { order: 1; }
+  .rst { order: 3; flex: 1; }
+  .rdel { order: 4; }
+  .room-area-inline { width: 100%; order: 5; margin-top: 8px; justify-content: space-between; }
+}
+</style>
+</head>
+<body>
+
+<div class="ph" id="ph">
+  <h1 id="pht">ProBuilder — Area Calculator</h1>
+  <div class="pm" id="phm"></div>
+</div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-left">
+    <a href="index.html" class="back-btn">← <span data-i18n="back"></span></a>
+    <span class="page-title">📐 <span data-i18n="page_title"></span></span>
+  </div>
+  <div class="header-right">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="lang-group">
+            <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+            <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+            <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+          </div>    </div>
+  </div>
+</header>
+
+<!-- ─── TABS ─── -->
+<div class="tab-nav np">
+  <button class="tab-btn active" data-tab="t1" onclick="switchTab('t1',this)">🏠 <span data-i18n="tab_rooms"></span></button>
+  <button class="tab-btn" data-tab="t2" onclick="switchTab('t2',this)">📐 <span data-i18n="tab_shapes"></span></button>
+  <button class="tab-btn" data-tab="t3" onclick="switchTab('t3',this)">📏 <span data-i18n="tab_angle"></span></button>
+</div>
+
+<main>
+
+<!-- TAB 1: ROOMS -->
+<div id="t1" class="tab-panel">
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_project"></span></div>
+    <div class="fg">
+      <div class="f sp2"><label data-i18n="lbl_proj_name"></label><input type="text" id="pn" data-i18n-ph="ph_proj_name"></div>
+      <div class="f"><label data-i18n="lbl_date"></label><input type="date" id="pd"></div>
+      <div class="f sp2"><label data-i18n="lbl_notes"></label><textarea id="pno" data-i18n-ph="ph_notes" rows="2"></textarea></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_ns_info"></span></div>
+    <div id="nsinfo"></div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_rooms"></span></div>
+    <div id="rlist" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <div class="br" style="margin-top:14px;">
+      <button class="btn ba" onclick="addRoom()">+ <span data-i18n="btn_add_room"></span></button>
+    </div>
+  </div>
+
+  <div class="card" id="rcard" style="display:none;">
+    <div class="ct"><span data-i18n="sec_result"></span></div>
+    <div class="rg" id="rrg"></div>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="th_room"></th>
+            <th data-i18n="th_type"></th>
+            <th data-i18n="th_dims"></th>
+            <th data-i18n="th_area"></th>
+            <th data-i18n="th_counted_as"></th>
+          </tr>
+        </thead>
+        <tbody id="rtbody"></tbody>
+      </table>
+    </div>
+    <div class="br np" style="margin-top:16px;">
+      <button class="btn bp" onclick="window.print()">🖨 <span data-i18n="btn_print"></span></button>
+      <button class="btn bo" onclick="exportJSON()">📤 <span data-i18n="btn_export"></span></button>
+      <button class="btn bo" onclick="document.getElementById('imp').click()">📥 <span data-i18n="btn_import"></span></button>
+      <input type="file" id="imp" accept=".json" style="display:none" onchange="importJSON(event)">
+      <button class="btn bd" onclick="resetAll()">↺ <span data-i18n="btn_reset"></span></button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: SHAPES -->
+<div id="t2" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_shape_select"></span></div>
+    <div class="sgrid" id="sgrid"></div>
+
+    <!-- RECTANGLE -->
+    <div id="sh-rect">
+      <div class="ib bl" id="ir"></div>
+      <div class="fg">
+        <div class="f">
+          <label data-i18n="lbl_rect_w"></label>
+          <input type="number" id="rw" inputmode="decimal" placeholder="3500" oninput="calcShape()">
+          <span class="hint">mm</span>
+        </div>
+        <div class="f">
+          <label data-i18n="lbl_rect_l"></label>
+          <input type="number" id="rl" inputmode="decimal" placeholder="4200" oninput="calcShape()">
+          <span class="hint">mm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARALLELOGRAM -->
+    <div id="sh-para" class="hidden">
+      <div class="ib bl" id="ipa"></div>
+      <div class="fg">
+        <div class="f">
+          <label data-i18n="lbl_para_base"></label>
+          <input type="number" id="pb" inputmode="decimal" placeholder="4000" oninput="calcShape()">
+          <span class="hint">mm</span>
+        </div>
+        <div class="f">
+          <label data-i18n="lbl_para_side"></label>
+          <input type="number" id="ps" inputmode="decimal" placeholder="3000" oninput="calcShape()">
+          <span class="hint">mm</span>
+        </div>
+        <div class="f">
+          <label data-i18n="lbl_para_h"></label>
+          <input type="number" id="ph2" inputmode="decimal" placeholder="2500" oninput="calcShape()">
+          <span class="hint">mm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRAPEZOID -->
+    <div id="sh-trap" class="hidden">
+      <div class="ib bl" id="itr"></div>
+      <div class="fg">
+        <div class="f"><label data-i18n="lbl_trap_a"></label><input type="number" id="ta" inputmode="decimal" placeholder="5000" oninput="calcShape()"><span class="hint">mm</span></div>
+        <div class="f"><label data-i18n="lbl_trap_b"></label><input type="number" id="tb" inputmode="decimal" placeholder="3000" oninput="calcShape()"><span class="hint">mm</span></div>
+        <div class="f"><label data-i18n="lbl_trap_c"></label><input type="number" id="tc" inputmode="decimal" placeholder="2800" oninput="calcShape()"><span class="hint">mm</span></div>
+        <div class="f"><label data-i18n="lbl_trap_d"></label><input type="number" id="td" inputmode="decimal" placeholder="3200" oninput="calcShape()"><span class="hint">mm</span></div>
+        <div class="f"><label data-i18n="lbl_trap_h"></label><input type="number" id="th2" inputmode="decimal" placeholder="2500" oninput="calcShape()"><span class="hint">mm</span></div>
+      </div>
+    </div>
+
+    <!-- TRIANGLE -->
+    <div id="sh-tri" class="hidden">
+      <div class="ib bl" id="iti"></div>
+      <div class="fg">
+        <div class="f"><label data-i18n="lbl_tri_a"></label><input type="number" id="tri-a" inputmode="decimal" placeholder="4000" oninput="calcShape()"><span class="hint" id="hta"></span></div>
+        <div class="f"><label data-i18n="lbl_tri_b"></label><input type="number" id="tri-b" inputmode="decimal" placeholder="3000" oninput="calcShape()"><span class="hint" id="htb"></span></div>
+        <div class="f"><label data-i18n="lbl_tri_c"></label><input type="number" id="tri-c" inputmode="decimal" placeholder="5000" oninput="calcShape()"><span class="hint" id="htc"></span></div>
+      </div>
+    </div>
+
+    <!-- POLYGON -->
+    <div id="sh-poly" class="hidden">
+      <div class="ib bl" id="ipo"></div>
+      <div id="pplist" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
+      <button class="btn ba" onclick="addPolyPt()">+ <span data-i18n="btn_add_pt"></span></button>
+      <div class="ib ye" style="margin-top:8px;" id="pmn"></div>
+    </div>
+
+    <!-- SHAPE RESET -->
+    <div style="margin-top:14px;">
+      <button class="btn bd" onclick="resetShape()">↺ <span data-i18n="btn_reset_shape"></span></button>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="sres" style="display:none;margin-top:16px;">
+      <div id="swarn" style="display:none;"></div>
+      <div class="rg" id="srg"></div>
+      <div class="cw">
+        <canvas id="sc" height="260" style="width:100%;"></canvas>
+      </div>
+      <div id="satbl" style="display:none;margin-top:12px;">
+        <div class="ct" style="margin-bottom:8px;"><span data-i18n="sec_angles"></span></div>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_vertex"></th>
+                <th data-i18n="th_angle_deg"></th>
+                <th data-i18n="th_cut_angle"></th>
+              </tr>
+            </thead>
+            <tbody id="atbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: ANGLE CHECKER -->
+<div id="t3" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_angle_checker"></span></div>
+    <div class="ib bl" id="iac"></div>
+    <div class="fg">
+      <div class="f"><label data-i18n="lbl_side_a"></label><input type="number" id="aa" inputmode="decimal" placeholder="3000" oninput="calcAngle()"><span class="hint" data-i18n="hint_ang_a"></span></div>
+      <div class="f"><label data-i18n="lbl_side_b"></label><input type="number" id="ab" inputmode="decimal" placeholder="4000" oninput="calcAngle()"><span class="hint" data-i18n="hint_ang_b"></span></div>
+      <div class="f"><label data-i18n="lbl_diagonal"></label><input type="number" id="ac" inputmode="decimal" placeholder="5000" oninput="calcAngle()"><span class="hint" data-i18n="hint_ang_c"></span></div>
+    </div>
+    <div style="margin-top:14px;">
+      <button class="btn bd" onclick="resetAngle()">↺ <span data-i18n="btn_reset_angle"></span></button>
+    </div>
+    <div id="ares" style="display:none;margin-top:16px;">
+      <div class="rg" id="arb"></div>
+      <div id="art" style="margin-bottom:14px;"></div>
+      <div class="cw">
+        <canvas id="acc" height="220" style="width:100%;"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="main-footer">
+    © 2026 Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+</footer>
+
+<!-- PWA SW Registration -->
+
+
+<script>
+const T={
+en:{back:'Back',page_title:'Area Calculator — NS 3940',tab_rooms:'Room areas',tab_shapes:'Shape calculator',tab_angle:'Angle checker',sec_project:'Project',lbl_proj_name:'Project name',ph_proj_name:'e.g. Apartment 2nd floor',lbl_date:'Date',lbl_notes:'Notes',ph_notes:'Address, client…',sec_ns_info:'NS 3940 — Area definitions',ns_bra:'BRA (Bruksareal) — Usable area between INNER walls. Attics: only height ≥ 1.9 m, extended 0.6 m laterally.',ns_bta:'BTA (Bruttoareal) — Gross area from OUTER surfaces of outer walls.',ns_prom:'P-ROM — Primary rooms: living room, kitchen, bedrooms, bathroom.',ns_srom:'S-ROM — Secondary rooms: unheated basement, utility rooms, storage.',sec_rooms:'Rooms',btn_add_room:'Add room',room_ph_name:'Room name',type_prom:'P-ROM',type_srom:'S-ROM',type_exclude:'Exclude',sec_result:'Summary — NS 3940',res_bra:'BRA (m²)',res_prom:'P-ROM (m²)',res_srom:'S-ROM (m²)',res_total:'Rooms',res_excl:'Excluded',th_room:'Room',th_type:'Type',th_dims:'W × L (mm)',th_area:'Area (m²)',th_counted_as:'Counted as',counted_prom:'BRA / P-ROM',counted_srom:'BRA / S-ROM',counted_excl:'Excluded',btn_print:'Print / PDF',btn_export:'Export JSON',btn_import:'Import JSON',btn_reset:'Reset all',reset_confirm:'Reset all rooms and data?',sec_shape_select:'Select shape type',shape_rect:'Rectangle',shape_para:'Parallelogram',shape_trap:'Trapez',shape_tri:'Triangle',shape_poly:'Polygon',
+info_rect:'Enter width and length. For a square enter the same value for both. All four angles are 90°.',
+info_para:'Enter base length, slanted side length, and HEIGHT (perpendicular distance between parallel sides). Area = base × height.',
+info_trap:'Enter: a = long base, b = short base, c = left leg, d = right leg, h = height between bases. Area = (a+b)/2 × h. Legs c and d can differ for an irregular trapezoid.',
+info_tri:'Enter all three side lengths. Side a is the bottom (opposite corner A). Side b connects corner A to corner C. Side c is opposite corner C. Canvas shows the triangle with labeled sides and corner angles.',
+hint_tri_a:'bottom side — opposite corner A',hint_tri_b:'left side — from A to C',hint_tri_c:'right side — opposite corner C',
+lbl_tri_a:'Side a — bottom (mm)',lbl_tri_b:'Side b — left (mm)',lbl_tri_c:'Side c — right (mm)',
+info_poly:'Enter distances between consecutive corner points (P1→P2, P2→P3, …). The tool reconstructs the polygon shape and calculates area, perimeter, and all corner angles. For best accuracy use convex shapes or verify with diagonal measurements.',
+lbl_rect_w:'Width (mm)',lbl_rect_l:'Length (mm)',lbl_para_base:'Base (mm)',lbl_para_side:'Side length (mm)',lbl_para_h:'Height ⊥ (mm)',
+lbl_trap_a:'Base a — long (mm)',lbl_trap_b:'Base b — short (mm)',lbl_trap_c:'Leg c — left (mm)',lbl_trap_d:'Leg d — right (mm)',lbl_trap_h:'Height ⊥ (mm)',
+btn_add_pt:'Add point',poly_method_note:'Enter distances between consecutive corner points. Minimum 3 points. Equal-angle distribution is used — for irregular polygons verify results with diagonal cross-checks.',
+res_area_m2:'Area (m²)',res_area_cm2:'Area (cm²)',res_perimeter:'Perimeter (mm)',sec_angles:'Corner angles',th_vertex:'Corner',th_angle_deg:'Angle (°)',th_cut_angle:'Trim cut (°)',
+tri_invalid:'⚠ Invalid triangle — one side is longer than the sum of the other two.',
+sec_angle_checker:'Corner angle & diagonal checker',
+info_angle:'Enter wall lengths A and B. Then measure the actual diagonal C to check the corner angle. Leave C blank to only calculate the required diagonal for 90°. Canvas shows the layout with required vs. actual diagonal.',
+lbl_side_a:'Wall A (mm)',hint_ang_a:'Length along one wall from the corner',lbl_side_b:'Wall B (mm)',hint_ang_b:'Length along the adjacent wall',lbl_diagonal:'Diagonal C (mm)',hint_ang_c:'Leave blank → calculates required diagonal for 90°',
+res_angle:'Angle (°)',res_req_diag:'Required diagonal (mm)',res_actual_diag:'Actual diagonal (mm)',
+ang_is_right:'✓ RIGHT ANGLE — within 2 mm tolerance',
+ang_not_right:(deg,exp,got,diff)=>`✗ Not 90° — angle is ${deg}°. Required diagonal ${exp} mm, measured ${got} mm (difference: ${diff} mm)`,
+ang_no_c:(d)=>`Required diagonal for 90°: ${d} mm. Measure this distance to confirm a right angle.`,
+ang_cut:(h)=>`Trim/skirting cut: ${h}° per piece (half the corner angle)`,
+print_meta:(n,d)=>`Project: ${n}  |  Date: ${d}`,
+lbl_pt_n:(i)=>`P${i}→P${i+1}`,
+btn_reset_shape:'Clear inputs',btn_reset_angle:'Clear inputs',reset_shape_confirm:'Clear all shape inputs?',reset_angle_confirm:'Clear angle inputs?',
+},
+no:{back:'Tilbake',page_title:'Arealberegning — NS 3940',tab_rooms:'Romareal',tab_shapes:'Formkalkulator',tab_angle:'Vinkelsjekk',sec_project:'Prosjekt',lbl_proj_name:'Prosjektnavn',ph_proj_name:'f.eks. Leilighet 2. etasje',lbl_date:'Dato',lbl_notes:'Notater',ph_notes:'Adresse, kunde…',sec_ns_info:'NS 3940 — Arealdefinisjonar',ns_bra:'BRA (Bruksareal) — Nyttbart areal mellom INNVENDIGE vegger. Loft: kun høyde ≥ 1,9 m, 0,6 m sideveis.',ns_bta:'BTA (Bruttoareal) — Bruttoareal fra UTVENDIGE flater av yttervegger.',ns_prom:'P-ROM — Primærrom: stue, kjøkken, soverom, bad.',ns_srom:'S-ROM — Sekundærrom: uisolert kjeller, teknisk rom, bod.',sec_rooms:'Rom',btn_add_room:'Legg til rom',room_ph_name:'Romnavn',type_prom:'P-ROM',type_srom:'S-ROM',type_exclude:'Utelatt',sec_result:'Sammendrag — NS 3940',res_bra:'BRA (m²)',res_prom:'P-ROM (m²)',res_srom:'S-ROM (m²)',res_total:'Antall rom',res_excl:'Utelatt',th_room:'Rom',th_type:'Type',th_dims:'B × L (mm)',th_area:'Areal (m²)',th_counted_as:'Telt som',counted_prom:'BRA / P-ROM',counted_srom:'BRA / S-ROM',counted_excl:'Utelatt',btn_print:'Skriv ut / PDF',btn_export:'Eksporter JSON',btn_import:'Importer JSON',btn_reset:'Nullstill alt',reset_confirm:'Nullstille alle rom og data?',sec_shape_select:'Velg formtype',shape_rect:'Rektangel',shape_para:'Parallellogram',shape_trap:'Trapes',shape_tri:'Trekant',shape_poly:'Polygon',
+info_rect:'Skriv inn bredde og lengde. For kvadrat, bruk samme verdi for begge. Alle fire vinkler er 90°.',
+info_para:'Skriv inn grunnlinje, skrå side og HØYDE (loddrett avstand mellom parallelle sider). Areal = grunnlinje × høyde.',
+info_trap:'Skriv inn: a = lang grunnlinje, b = kort grunnlinje, c = venstre ben, d = høyre ben, h = høyde mellom grunnlinjene. Areal = (a+b)/2 × h. Benene c og d kan være ulike for ujevn trapes.',
+info_tri:'Skriv inn alle tre sidelengder. Side a er bunnen (overfor hjørne A). Side b går fra A til C. Side c er overfor hjørne C. Canvas viser trekanten med merkede sider og hjørnvinkler.',
+hint_tri_a:'bunn — overfor hjørne A',hint_tri_b:'venstre — fra A til C',hint_tri_c:'høyre — overfor hjørne C',
+lbl_tri_a:'Side a — bunn (mm)',lbl_tri_b:'Side b — venstre (mm)',lbl_tri_c:'Side c — høyre (mm)',
+info_poly:'Skriv inn avstandene mellom påfølgende hjørnepunkter (P1→P2, P2→P3, …). Verktøyet rekonstruerer polygonformen og beregner areal, omkrets og alle hjørnvinkler.',
+lbl_rect_w:'Bredde (mm)',lbl_rect_l:'Lengde (mm)',lbl_para_base:'Grunnlinje (mm)',lbl_para_side:'Sidelengde (mm)',lbl_para_h:'Høyde ⊥ (mm)',
+lbl_trap_a:'Grunnlinje a — lang (mm)',lbl_trap_b:'Grunnlinje b — kort (mm)',lbl_trap_c:'Ben c — venstre (mm)',lbl_trap_d:'Ben d — høyre (mm)',lbl_trap_h:'Høyde ⊥ (mm)',
+btn_add_pt:'Legg til punkt',poly_method_note:'Skriv inn avstandene mellom påfølgende hjørnepunkter. Minimum 3 punkter. Jevn vinkelfordeling brukes — for uregelmessige polygoner, bekreft med diagonalmålinger.',
+res_area_m2:'Areal (m²)',res_area_cm2:'Areal (cm²)',res_perimeter:'Omkrets (mm)',sec_angles:'Hjørnvinkler',th_vertex:'Hjørne',th_angle_deg:'Vinkel (°)',th_cut_angle:'Kappvinkel (°)',
+tri_invalid:'⚠ Ugyldig trekant — én side er lengre enn summen av de to andre.',
+sec_angle_checker:'Hjørnvinkel- og diagonalsjekk',
+info_angle:'Skriv inn vegglengder A og B. Mål deretter den faktiske diagonalen C for å sjekke hjørnvinkelen. La C stå tomt for å bare beregne nødvendig diagonal for 90°.',
+lbl_side_a:'Vegg A (mm)',hint_ang_a:'Lengde langs én vegg fra hjørnet',lbl_side_b:'Vegg B (mm)',hint_ang_b:'Lengde langs naboveggen',lbl_diagonal:'Diagonal C (mm)',hint_ang_c:'La stå tomt → beregner nødvendig diagonal for 90°',
+res_angle:'Vinkel (°)',res_req_diag:'Nødvendig diagonal (mm)',res_actual_diag:'Faktisk diagonal (mm)',
+ang_is_right:'✓ RETT VINKEL — innenfor 2 mm toleranse',
+ang_not_right:(deg,exp,got,diff)=>`✗ Ikke 90° — vinkel er ${deg}°. Nødvendig diagonal ${exp} mm, målt ${got} mm (avvik: ${diff} mm)`,
+ang_no_c:(d)=>`Nødvendig diagonal for 90°: ${d} mm. Mål dette for å bekrefte rett vinkel.`,
+ang_cut:(h)=>`List/gulvlist kappvinkel: ${h}° per stykke`,
+print_meta:(n,d)=>`Prosjekt: ${n}  |  Dato: ${d}`,
+lbl_pt_n:(i)=>`P${i}→P${i+1}`,
+btn_reset_shape:'Tøm felt',btn_reset_angle:'Tøm felt',reset_shape_confirm:'Tøm alle felt?',reset_angle_confirm:'Tøm vinkelberegning?',
+},
+pl:{back:'Powrót',page_title:'Obliczenia powierzchni — NS 3940',tab_rooms:'Powierzchnie',tab_shapes:'Kalkulator kształtów',tab_angle:'Sprawdzenie kąta',sec_project:'Projekt',lbl_proj_name:'Nazwa projektu',ph_proj_name:'np. Mieszkanie 2. piętro',lbl_date:'Data',lbl_notes:'Uwagi',ph_notes:'Adres, klient…',sec_ns_info:'NS 3940 — Definicje powierzchni',ns_bra:'BRA (Bruksareal) — Powierzchnia użytkowa między WEWNĘTRZNYMI ścianami. Poddasze: tylko ≥ 1,9 m, 0,6 m bocznie.',ns_bta:'BTA (Bruttoareal) — Powierzchnia brutto od ZEWNĘTRZNYCH powierzchni ścian.',ns_prom:'P-ROM — Pomieszczenia główne: salon, kuchnia, sypialnie, łazienka.',ns_srom:'S-ROM — Pomieszczenia pomocnicze: nieocieplane piwnica, techniczne, spiżarnia.',sec_rooms:'Pomieszczenia',btn_add_room:'Dodaj pomieszczenie',room_ph_name:'Nazwa pomieszczenia',type_prom:'P-ROM',type_srom:'S-ROM',type_exclude:'Wyklucz',sec_result:'Podsumowanie — NS 3940',res_bra:'BRA (m²)',res_prom:'P-ROM (m²)',res_srom:'S-ROM (m²)',res_total:'Pomieszczeń',res_excl:'Wykluczone',th_room:'Pomieszczenie',th_type:'Typ',th_dims:'Sz × Dł (mm)',th_area:'Pow. (m²)',th_counted_as:'Liczone jako',counted_prom:'BRA / P-ROM',counted_srom:'BRA / S-ROM',counted_excl:'Wykluczone',btn_print:'Drukuj / PDF',btn_export:'Eksportuj JSON',btn_import:'Importuj JSON',btn_reset:'Resetuj wszystko',reset_confirm:'Zresetować wszystkie pomieszczenia i dane?',sec_shape_select:'Wybierz typ kształtu',shape_rect:'Prostokąt',shape_para:'Równoległobok',shape_trap:'Trapez',shape_tri:'Trójkąt',shape_poly:'Wielokąt',
+info_rect:'Podaj szerokość i długość. Dla kwadratu obie wartości równe. Wszystkie cztery kąty 90°.',
+info_para:'Podaj podstawę, długość boku ukośnego i WYSOKOŚĆ (prostopadła odległość między równoległymi bokami). Pow. = podstawa × wysokość.',
+info_trap:'Podaj: a = długa podstawa, b = krótka podstawa, c = lewy bok, d = prawy bok, h = wysokość między podstawami. Pow. = (a+b)/2 × h. Boki c i d mogą się różnić dla nierównoległobocznego trapezu.',
+info_tri:'Podaj wszystkie trzy długości boków. Bok a to podstawa (naprzeciwko narożnika A). Bok b łączy A z C. Bok c jest naprzeciwko C. Canvas pokazuje trójkąt z opisanymi bokami i kątami narożników.',
+hint_tri_a:'podstawa — naprzeciwko narożnika A',hint_tri_b:'lewy — od A do C',hint_tri_c:'prawy — naprzeciwko C',
+lbl_tri_a:'Bok a — podstawa (mm)',lbl_tri_b:'Bok b — lewy (mm)',lbl_tri_c:'Bok c — prawy (mm)',
+info_poly:'Podaj odległości między kolejnymi narożnikami (P1→P2, P2→P3, …). Narzędzie rekonstruuje kształt wielokąta i oblicza powierzchnię, obwód i kąty narożników.',
+lbl_rect_w:'Szerokość (mm)',lbl_rect_l:'Długość (mm)',lbl_para_base:'Podstawa (mm)',lbl_para_side:'Długość boku (mm)',lbl_para_h:'Wysokość ⊥ (mm)',
+lbl_trap_a:'Podstawa a — długa (mm)',lbl_trap_b:'Podstawa b — krótka (mm)',lbl_trap_c:'Bok c — lewy (mm)',lbl_trap_d:'Bok d — prawy (mm)',lbl_trap_h:'Wysokość ⊥ (mm)',
+btn_add_pt:'Dodaj punkt',poly_method_note:'Podaj odległości między kolejnymi narożnikami. Min. 3 punkty. Używany jest równomierny rozkład kątów — dla nieregularnych wielokątów sprawdź wyniki przekątnymi.',
+res_area_m2:'Powierzchnia (m²)',res_area_cm2:'Powierzchnia (cm²)',res_perimeter:'Obwód (mm)',sec_angles:'Kąty narożników',th_vertex:'Narożnik',th_angle_deg:'Kąt (°)',th_cut_angle:'Kąt cięcia (°)',
+tri_invalid:'⚠ Nieprawidłowy trójkąt — jeden bok jest dłuższy niż suma dwóch pozostałych.',
+sec_angle_checker:'Sprawdzenie kąta narożnika i przekątnej',
+info_angle:'Podaj długości ścian A i B. Następnie zmierz przekątną C, aby sprawdzić kąt narożnika. Pozostaw C puste, aby tylko obliczyć wymaganą przekątną dla 90°.',
+lbl_side_a:'Ściana A (mm)',hint_ang_a:'Długość wzdłuż jednej ściany od narożnika',lbl_side_b:'Ściana B (mm)',hint_ang_b:'Długość wzdłuż sąsiedniej ściany',lbl_diagonal:'Przekątna C (mm)',hint_ang_c:'Pozostaw puste → oblicza wymaganą przekątną dla 90°',
+res_angle:'Kąt (°)',res_req_diag:'Wymagana przekątna (mm)',res_actual_diag:'Rzeczywista przekątna (mm)',
+ang_is_right:'✓ KĄT PROSTY — w granicach tolerancji 2 mm',
+ang_not_right:(deg,exp,got,diff)=>`✗ Nie 90° — kąt wynosi ${deg}°. Wymagana przekątna ${exp} mm, zmierzono ${got} mm (różnica: ${diff} mm)`,
+ang_no_c:(d)=>`Wymagana przekątna dla 90°: ${d} mm. Zmierz tę odległość, aby potwierdzić kąt prosty.`,
+ang_cut:(h)=>`Kąt cięcia listwy: ${h}° na element`,
+print_meta:(n,d)=>`Projekt: ${n}  |  Data: ${d}`,
+lbl_pt_n:(i)=>`P${i}→P${i+1}`,
+btn_reset_shape:'Wyczyść pola',btn_reset_angle:'Wyczyść pola',reset_shape_confirm:'Wyczyścić wszystkie pola?',reset_angle_confirm:'Wyczyścić obliczenia kąta?',
+},
+lt:{back:'Atgal',page_title:'Plotų skaičiavimas — NS 3940',tab_rooms:'Patalpų plotai',tab_shapes:'Formų skaičiuoklė',tab_angle:'Kampo tikrinimas',sec_project:'Projektas',lbl_proj_name:'Projekto pavadinimas',ph_proj_name:'pvz. Butas 2 aukštas',lbl_date:'Data',lbl_notes:'Pastabos',ph_notes:'Adresas, klientas…',sec_ns_info:'NS 3940 — Plotų apibrėžimai',ns_bra:'BRA (Bruksareal) — Naudingasis plotas tarp VIDINIŲ sienų. Palėpė: tik ≥ 1,9 m, 0,6 m į šoną nuo to taško.',ns_bta:'BTA (Bruttoareal) — Bendrasis plotas nuo IŠORINIŲ sienų paviršių.',ns_prom:'P-ROM — Pagrindinės patalpos: svetainė, virtuvė, miegamieji, vonia.',ns_srom:'S-ROM — Pagalbinės patalpos: neapšildintas rūsys, techninės, sandėliukai.',sec_rooms:'Patalpos',btn_add_room:'Pridėti patalpą',room_ph_name:'Patalpos pavadinimas',type_prom:'P-ROM',type_srom:'S-ROM',type_exclude:'Neįskaityti',sec_result:'Suvestinė — NS 3940',res_bra:'BRA (m²)',res_prom:'P-ROM (m²)',res_srom:'S-ROM (m²)',res_total:'Patalpų sk.',res_excl:'Neįsk.',th_room:'Patalpa',th_type:'Tipas',th_dims:'Pl × Il (mm)',th_area:'Plotas (m²)',th_counted_as:'Skaičiuojama kaip',counted_prom:'BRA / P-ROM',counted_srom:'BRA / S-ROM',counted_excl:'Neįskaičiuota',btn_print:'Spausdinti / PDF',btn_export:'Eksportuoti JSON',btn_import:'Importuoti JSON',btn_reset:'Nustatyti iš naujo',reset_confirm:'Išvalyti visas patalpas ir duomenis?',sec_shape_select:'Pasirinkite figūros tipą',shape_rect:'Stačiakampis',shape_para:'Lygiagretainis',shape_trap:'Trapecija',shape_tri:'Trikampis',shape_poly:'Daugiakampis',
+info_rect:'Įveskite plotį ir ilgį. Kvadratui — abi reikšmės vienodos. Visi keturi kampai 90°.',
+info_para:'Įveskite pagrindą, įstrižo šono ilgį ir AUKŠTĮ (statmenas atstumas tarp lygiagrečių šonų). Plotas = pagrindas × aukštis.',
+info_trap:'Įveskite: a = ilgas pagrindas, b = trumpas pagrindas, c = kairė kojelė, d = dešinė kojelė, h = aukštis tarp pagrindų. Plotas = (a+b)/2 × h. Kojelės c ir d gali skirtis nelygiašonei trapecijai.',
+info_tri:'Įveskite visų trijų kraštinių ilgius. Kraštinė a yra apačia (priešais kampą A). Kraštinė b jungia A su C. Kraštinė c priešais kampą C. Canvas rodo trikampį su pažymėtomis kraštinėmis ir kampų dydžiais.',
+hint_tri_a:'apačia — priešais kampą A',hint_tri_b:'kairė — nuo A iki C',hint_tri_c:'dešinė — priešais kampą C',
+lbl_tri_a:'Kraštinė a — apačia (mm)',lbl_tri_b:'Kraštinė b — kairė (mm)',lbl_tri_c:'Kraštinė c — dešinė (mm)',
+info_poly:'Įveskite atstumus tarp gretimų kampinių taškų (T1→T2, T2→T3, …). Įrankis atkuria daugiakampio formą ir apskaičiuoja plotą, perimetrą bei visų kampų dydžius.',
+lbl_rect_w:'Plotis (mm)',lbl_rect_l:'Ilgis (mm)',lbl_para_base:'Pagrindas (mm)',lbl_para_side:'Šono ilgis (mm)',lbl_para_h:'Aukštis ⊥ (mm)',
+lbl_trap_a:'Pagrindas a — ilgas (mm)',lbl_trap_b:'Pagrindas b — trumpas (mm)',lbl_trap_c:'Kojelė c — kairė (mm)',lbl_trap_d:'Kojelė d — dešinė (mm)',lbl_trap_h:'Aukštis ⊥ (mm)',
+btn_add_pt:'Pridėti tašką',poly_method_note:'Įveskite atstumus tarp gretimų kampinių taškų. Mažiausia 3 taškai. Naudojamas tolygus kampų pasiskirstymas — nelygioms figūroms patikrinkite įstrižainėmis.',
+res_area_m2:'Plotas (m²)',res_area_cm2:'Plotas (cm²)',res_perimeter:'Perimetras (mm)',sec_angles:'Kampų dydžiai',th_vertex:'Kampas',th_angle_deg:'Dydis (°)',th_cut_angle:'Pjovimo k. (°)',
+tri_invalid:'⚠ Netinkamas trikampis — viena kraštinė ilgesnė už dviejų kitų sumą.',
+sec_angle_checker:'Kampo ir įstrižainės tikrinimas',
+info_angle:'Įveskite sienų ilgius A ir B. Tada išmatuokite faktinę įstrižainę C kampo patikrinimui. Palikite C tuščią — gausite tik reikalingą įstrižainę 90°.',
+lbl_side_a:'Siena A (mm)',hint_ang_a:'Ilgis palei vieną sieną nuo kampo',lbl_side_b:'Siena B (mm)',hint_ang_b:'Gretimos sienos ilgis',lbl_diagonal:'Įstrižainė C (mm)',hint_ang_c:'Palikti tuščią → rodo reikalingą įstrižainę 90°',
+res_angle:'Kampas (°)',res_req_diag:'Reikalinga įstrižainė (mm)',res_actual_diag:'Faktinė įstrižainė (mm)',
+ang_is_right:'✓ STATUS KAMPAS — 2 mm tolerancija',
+ang_not_right:(deg,exp,got,diff)=>`✗ Ne 90° — kampas yra ${deg}°. Reikia ${exp} mm įstrižainės, išmatuota ${got} mm (skirtumas: ${diff} mm)`,
+ang_no_c:(d)=>`Reikalinga įstrižainė 90°: ${d} mm. Išmatuokite šį atstumą statam kampui patvirtinti.`,
+ang_cut:(h)=>`Apdailos pjovimo kampas: ${h}° kiekvienai daliai`,
+print_meta:(n,d)=>`Projektas: ${n}  |  Data: ${d}`,
+lbl_pt_n:(i)=>`T${i}→T${i+1}`,
+btn_reset_shape:'Išvalyti laukus',btn_reset_angle:'Išvalyti laukus',reset_shape_confirm:'Išvalyti visus įvesties laukus?',reset_angle_confirm:'Išvalyti kampo skaičiavimą?',
+},
+};
+
+let lang=localStorage.getItem('pb_lang')||'en';
+let rooms=[],rseq=0,polyPts=[],pseq=0,activeShape='rect';
+
+const SHAPES=[
+  {id:'rect',svg:'<rect x="8" y="18" width="44" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="2.5"/>'},
+  {id:'para',svg:'<polygon points="12,42 20,18 52,18 44,42" fill="none" stroke="currentColor" stroke-width="2.5"/>'},
+  {id:'trap',svg:'<polygon points="8,42 18,18 42,18 52,42" fill="none" stroke="currentColor" stroke-width="2.5"/>'},
+  {id:'tri', svg:'<polygon points="30,10 56,46 4,46" fill="none" stroke="currentColor" stroke-width="2.5"/>'},
+  {id:'poly',svg:'<polygon points="30,8 50,16 56,38 42,52 18,52 4,38 10,16" fill="none" stroke="currentColor" stroke-width="2.5"/>'},
+];
+
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.remove('hidden');
+  btn.classList.add('active');
+}
+
+function applyLang(){
+  const d=T[lang];
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(typeof d[k]==='string')el.textContent=d[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(d[k])el.placeholder=d[k];});
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  const keys=['ir','ipa','itr','iti','ipo','iac'];
+  const maps=['info_rect','info_para','info_trap','info_tri','info_poly','info_angle'];
+  keys.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=d[maps[i]];});
+  document.getElementById('pmn').textContent=d.poly_method_note;
+  document.getElementById('hta').textContent=d.hint_tri_a;
+  document.getElementById('htb').textContent=d.hint_tri_b;
+  document.getElementById('htc').textContent=d.hint_tri_c;
+  // Update trap labels
+  ['lbl_trap_a','lbl_trap_b','lbl_trap_c','lbl_trap_d','lbl_trap_h'].forEach(k=>{
+    const el=document.querySelector(`[data-i18n="${k}"]`);if(el&&d[k])el.textContent=d[k];
+  });
+  renderNSInfo();renderShapeGrid();renderRoomList();calcRooms();calcShape();calcAngle();
+  renderPolyPts();
+}
+function setLang(l){lang=l;localStorage.setItem('pb_lang',l);applyLang();}
+
+function renderNSInfo(){
+  const d=T[lang];
+  document.getElementById('nsinfo').innerHTML=
+    [['BRA','var(--primary)',d.ns_bra],['BTA','var(--primary-dark)',d.ns_bta],['P-ROM','var(--success)',d.ns_prom],['S-ROM','var(--accent)',d.ns_srom]]
+    .map(([b,c,t])=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">
+      <div style="width:4px;border-radius:2px;background:${c};flex-shrink:0;min-height:24px;"></div>
+      <div><span style="font-weight:700;color:var(--text);font-size:.82rem;">${b}</span>
+      <span style="color:var(--muted);font-size:.78rem;margin-left:6px;line-height:1.6;">${t}</span></div></div>`).join('');
+}
+
+function renderShapeGrid(){
+  const d=T[lang];
+  const g=document.getElementById('sgrid');g.innerHTML='';
+  SHAPES.forEach(s=>{
+    const btn=document.createElement('div');
+    btn.className='sc'+(s.id===activeShape?' active':'');
+    const col=s.id===activeShape?'var(--primary)':'var(--muted)';
+    btn.innerHTML=`<svg width="60" height="56" viewBox="0 0 60 56" style="color:${col}">${s.svg}</svg>
+      <div class="scl">${d['shape_'+s.id]}</div>`;
+    btn.onclick=()=>selectShape(s.id);
+    g.appendChild(btn);
+  });
+}
+
+// ===================== ROOMS =====================
+function addRoom(data){
+  const id='r'+(++rseq);
+  rooms.push({id,name:data?.name||'',type:data?.type||'prom',w:data?.w||'',l:data?.l||''});
+  renderRoomList();calcRooms();
+}
+function removeRoom(id){rooms=rooms.filter(r=>r.id!==id);renderRoomList();calcRooms();}
+function updateRoom(id,f,v){
+  const r=rooms.find(x=>x.id===id);if(r)r[f]=v;
+  calcRooms();saveState();
+}
+function renderRoomList(){
+  const d=T[lang];const el=document.getElementById('rlist');el.innerHTML='';
+  rooms.forEach((r,i)=>{
+    const w=parseFloat(r.w),l=parseFloat(r.l);
+    const hasArea=!isNaN(w)&&!isNaN(l)&&w>0&&l>0;
+    const area=hasArea?((w*l)/1e6).toFixed(2):'—';
+    const areaM2=hasArea?((w*l)/1e6).toFixed(2):null;
+    const row=document.createElement('div');row.className='rr';
+    row.innerHTML=`<div class="rrt">
+      <span class="rnum">${i+1}</span>
+      <input class="ri rn" type="text" value="${r.name}" placeholder="${d.room_ph_name}" oninput="updateRoom('${r.id}','name',this.value)">
+      <select class="ri rst" onchange="updateRoom('${r.id}','type',this.value)">
+        <option value="prom" ${r.type==='prom'?'selected':''}>${d.type_prom}</option>
+        <option value="srom" ${r.type==='srom'?'selected':''}>${d.type_srom}</option>
+        <option value="exclude" ${r.type==='exclude'?'selected':''}>${d.type_exclude}</option>
+      </select>
+      <button class="rdel" onclick="removeRoom('${r.id}')">×</button>
+    </div>
+    <div class="room-area-inline">
+      <span style="font-size:.68rem;color:var(--dim);">W</span>
+      <input class="ri rdim" type="number" value="${r.w}" placeholder="3500" inputmode="decimal" oninput="updateRoom('${r.id}','w',this.value)">
+      <span style="color:var(--dim);font-weight:700;">×</span>
+      <span style="font-size:.68rem;color:var(--dim);">L</span>
+      <input class="ri rdim" type="number" value="${r.l}" placeholder="4200" inputmode="decimal" oninput="updateRoom('${r.id}','l',this.value)">
+      <span style="font-size:.7rem;color:var(--dim);">mm</span>
+      <span class="rab ${hasArea?'':'empty'}" data-ra="${r.id}">${areaM2?areaM2+' m²':'— m²'}</span>
+    </div>`;
+    el.appendChild(row);
+  });
+}
+function calcRooms(){
+  // update inline area badges
+  rooms.forEach(r=>{
+    const el=document.querySelector(`[data-ra="${r.id}"]`);
+    if(el){
+      const w=parseFloat(r.w),l=parseFloat(r.l);
+      const ok=!isNaN(w)&&!isNaN(l)&&w>0&&l>0;
+      if(ok){el.textContent=((w*l)/1e6).toFixed(2)+' m²';el.classList.remove('empty');el.classList.add('rab');}
+      else{el.textContent='— m²';el.classList.add('empty');}
+    }
+  });
+  let bra=0,prom=0,srom=0,excl=0;
+  rooms.forEach(r=>{const a=(r.w&&r.l)?(parseFloat(r.w)*parseFloat(r.l))/1e6:0;
+    if(r.type==='prom'){bra+=a;prom+=a;}else if(r.type==='srom'){bra+=a;srom+=a;}else excl++;});
+  const card=document.getElementById('rcard');
+  if(rooms.length===0){card.style.display='none';return;}
+  card.style.display='block';
+  const d=T[lang];
+  document.getElementById('rrg').innerHTML=`
+    <div class="rb"><div class="rv inf">${bra.toFixed(2)}</div><div class="rl">${d.res_bra}</div></div>
+    <div class="rb"><div class="rv ok">${prom.toFixed(2)}</div><div class="rl">${d.res_prom}</div></div>
+    <div class="rb"><div class="rv ac">${srom.toFixed(2)}</div><div class="rl">${d.res_srom}</div></div>
+    <div class="rb"><div class="rv">${rooms.length}</div><div class="rl">${d.res_total}</div></div>
+    ${excl>0?`<div class="rb"><div class="rv wa">${excl}</div><div class="rl">${d.res_excl}</div></div>`:''}`;
+  const tbody=document.getElementById('rtbody');tbody.innerHTML='';
+  rooms.forEach((r,i)=>{
+    const a=(r.w&&r.l)?((parseFloat(r.w)*parseFloat(r.l))/1e6).toFixed(2):'—';
+    const nm=r.name||`#${i+1}`;
+    let badge,cnt;
+    if(r.type==='prom'){badge=`<span class="bg bgp">${d.type_prom}</span>`;cnt=d.counted_prom;}
+    else if(r.type==='srom'){badge=`<span class="bg bgs">${d.type_srom}</span>`;cnt=d.counted_srom;}
+    else{badge=`<span class="bg bgx">${d.type_exclude}</span>`;cnt=d.counted_excl;}
+    tbody.innerHTML+=`<tr><td>${nm}</td><td>${badge}</td>
+      <td class="mn" style="color:var(--muted);">${r.w||'—'} × ${r.l||'—'}</td>
+      <td class="mn ok">${a}</td>
+      <td style="font-size:.75rem;color:var(--muted);">${cnt}</td></tr>`;
+  });
+  const pn=document.getElementById('pn').value||'—';const pd2=document.getElementById('pd').value||'—';
+  document.getElementById('pht').textContent=`ProBuilder — ${d.page_title}`;
+  document.getElementById('phm').textContent=d.print_meta(pn,pd2);
+  saveState();
+}
+
+// ===================== SHAPES =====================
+function selectShape(id){
+  activeShape=id;
+  ['rect','para','trap','tri','poly'].forEach(s=>document.getElementById('sh-'+s).classList.toggle('hidden',s!==id));
+  renderShapeGrid();
+  document.getElementById('sres').style.display='none';
+  calcShape();saveState();
+}
+
+function heronArea(a,b,c){const s=(a+b+c)/2;const v=s*(s-a)*(s-b)*(s-c);return v>0?Math.sqrt(v):0;}
+
+// Reconstruct polygon from side lengths using equal-angle distribution
+function sidesFromLengths(sides){
+  const n=sides.length;const avgAngle=(n-2)*180/n;
+  const pts=[{x:0,y:0}];let dir=0;
+  for(let i=0;i<n-1;i++){
+    const rad=dir*Math.PI/180;
+    pts.push({x:pts[pts.length-1].x+sides[i]*Math.cos(rad),y:pts[pts.length-1].y+sides[i]*Math.sin(rad)});
+    dir+=(180-avgAngle);
+  }
+  return pts;
+}
+function polyAreaPts(pts){let a=0;const n=pts.length;for(let i=0;i<n;i++){const j=(i+1)%n;a+=pts[i].x*pts[j].y-pts[j].x*pts[i].y;}return Math.abs(a)/2;}
+function polyAngles(pts){const n=pts.length;return pts.map((p,i)=>{const pv=pts[(i-1+n)%n],nx=pts[(i+1)%n];const v1={x:pv.x-p.x,y:pv.y-p.y},v2={x:nx.x-p.x,y:nx.y-p.y};const dot=v1.x*v2.x+v1.y*v2.y;const mag=Math.sqrt((v1.x**2+v1.y**2)*(v2.x**2+v2.y**2));return mag>0?Math.acos(Math.max(-1,Math.min(1,dot/mag)))*180/Math.PI:0;});}
+function polyPerim(pts){let p=0;for(let i=0;i<pts.length;i++){const j=(i+1)%pts.length;const dx=pts[j].x-pts[i].x,dy=pts[j].y-pts[i].y;p+=Math.sqrt(dx*dx+dy*dy);}return p;}
+
+function addPolyPt(data){const id='p'+(++pseq);polyPts.push({id,len:data?.len||''});renderPolyPts();calcShape();}
+function removePolyPt(id){if(polyPts.length<=3)return;polyPts=polyPts.filter(p=>p.id!==id);renderPolyPts();calcShape();}
+function updatePolyPt(id,v){const p=polyPts.find(x=>x.id===id);if(p)p.len=v;calcShape();}
+function renderPolyPts(){
+  const d=T[lang];
+  const el=document.getElementById('pplist');el.innerHTML='';
+  polyPts.forEach((p,i)=>{
+    const lbl=typeof d.lbl_pt_n==='function'?d.lbl_pt_n(i+1):`P${i+1}→P${i+2}`;
+    const row=document.createElement('div');row.className='ptr';
+    row.innerHTML=`<span class="pl">${lbl}</span>
+      <input class="pi" type="number" value="${p.len}" placeholder="3000" inputmode="decimal" oninput="updatePolyPt('${p.id}',this.value)">
+      <span style="font-size:0.75rem;color:var(--dim);">mm</span>
+      ${polyPts.length>3?`<button class="pd" onclick="removePolyPt('${p.id}')">×</button>`:''}`;
+    el.appendChild(row);
+  });
+}
+
+function calcShape(){
+  const d=T[lang];
+  const sres=document.getElementById('sres');
+  const swarn=document.getElementById('swarn');
+  let areaMM2=0,perimMM=0,angles=null,pts=null;
+
+  if(activeShape==='rect'){
+    const w=parseFloat(document.getElementById('rw').value);
+    const l=parseFloat(document.getElementById('rl').value);
+    if(isNaN(w)||isNaN(l)){sres.style.display='none';return;}
+    areaMM2=w*l;perimMM=2*(w+l);
+    pts=[{x:0,y:0},{x:w,y:0},{x:w,y:l},{x:0,y:l}];angles=[90,90,90,90];
+  } else if(activeShape==='para'){
+    const base=parseFloat(document.getElementById('pb').value);
+    const side=parseFloat(document.getElementById('ps').value)||0;
+    const h=parseFloat(document.getElementById('ph2').value);
+    if(isNaN(base)||isNaN(h)){sres.style.display='none';return;}
+    areaMM2=base*h;
+    const eff=side>h?side:h;
+    const offset=Math.sqrt(Math.max(0,eff**2-h**2));
+    perimMM=2*(base+eff);
+    pts=[{x:0,y:0},{x:base,y:0},{x:base+offset,y:h},{x:offset,y:h}];
+    const aA=Math.round(Math.acos(Math.max(-1,Math.min(1,offset/eff)))*180/Math.PI)||90;
+    angles=[aA,180-aA,aA,180-aA];
+  } else if(activeShape==='trap'){
+    const a=parseFloat(document.getElementById('ta').value);
+    const b=parseFloat(document.getElementById('tb').value);
+    const cL=parseFloat(document.getElementById('tc').value);
+    const dR=parseFloat(document.getElementById('td').value);
+    const h=parseFloat(document.getElementById('th2').value);
+    if(isNaN(a)||isNaN(b)||isNaN(h)){sres.style.display='none';return;}
+    areaMM2=(a+b)/2*h;
+    let offsetL,offsetR;
+    if(!isNaN(cL)&&cL>0&&cL>=h){offsetL=Math.sqrt(Math.max(0,cL**2-h**2));}
+    else{offsetL=(a-b)/2;}
+    if(!isNaN(dR)&&dR>0&&dR>=h){offsetR=Math.sqrt(Math.max(0,dR**2-h**2));}
+    else{offsetR=(a-b)/2;}
+    const legL=!isNaN(cL)&&cL>0?cL:Math.sqrt(offsetL**2+h**2);
+    const legR=!isNaN(dR)&&dR>0?dR:Math.sqrt(offsetR**2+h**2);
+    perimMM=a+b+legL+legR;
+    pts=[{x:0,y:0},{x:a,y:0},{x:a-offsetR,y:h},{x:offsetL,y:h}];
+    const angA=Math.round(Math.atan2(h,offsetL)*180/Math.PI);
+    const angB=Math.round(Math.atan2(h,offsetR)*180/Math.PI);
+    angles=[angA,angB,180-angB,180-angA];
+  } else if(activeShape==='tri'){
+    const a=parseFloat(document.getElementById('tri-a').value);
+    const b=parseFloat(document.getElementById('tri-b').value);
+    const c=parseFloat(document.getElementById('tri-c').value);
+    if(isNaN(a)||isNaN(b)||isNaN(c)){sres.style.display='none';return;}
+    if(a+b<=c||a+c<=b||b+c<=a){
+      swarn.className='info-box re';swarn.style.display='block';swarn.textContent=d.tri_invalid;
+      sres.style.display='block';document.getElementById('srg').innerHTML='';
+      document.getElementById('satbl').style.display='none';
+      document.getElementById('sc').style.display='none';return;
+    }
+    swarn.style.display='none';
+    areaMM2=heronArea(a,b,c);perimMM=a+b+c;
+    const angA=Math.acos((b**2+c**2-a**2)/(2*b*c))*180/Math.PI;
+    const angB=Math.acos((a**2+c**2-b**2)/(2*a*c))*180/Math.PI;
+    const angC=180-angA-angB;
+    const xA=0,yA=0,xB=c,yB=0;
+    const cosA=(c**2+b**2-a**2)/(2*c*b);
+    const xC2=b*cosA;
+    const yC2=b*Math.sqrt(Math.max(0,1-cosA**2));
+    pts=[{x:xA,y:yA},{x:xB,y:yB},{x:xC2,y:yC2}];
+    const angAv=Math.acos((c**2+b**2-a**2)/(2*c*b))*180/Math.PI;
+    const angBv=Math.acos((c**2+a**2-b**2)/(2*c*a))*180/Math.PI;
+    const angCv=180-angAv-angBv;
+    angles=[angAv,angBv,angCv];
+  } else if(activeShape==='poly'){
+    const sides=polyPts.map(p=>parseFloat(p.len)).filter(v=>!isNaN(v)&&v>0);
+    if(sides.length<3){sres.style.display='none';return;}
+    perimMM=sides.reduce((s,v)=>s+v,0);
+    pts=sidesFromLengths(sides);
+    areaMM2=polyAreaPts(pts);
+    angles=polyAngles(pts);
+  }
+
+  if(areaMM2<=0&&activeShape!=='tri'){sres.style.display='none';return;}
+  sres.style.display='block';swarn.style.display='none';
+  document.getElementById('sc').style.display='block';
+
+  const aM2=(areaMM2/1e6).toFixed(3);
+  const aCm2=Math.round(areaMM2/100);
+  document.getElementById('srg').innerHTML=`
+    <div class="rb"><div class="rv ok" style="font-size:1.45rem;">${aM2}</div><div class="rl">${d.res_area_m2}</div></div>
+    <div class="rb"><div class="rv inf">${aCm2.toLocaleString()}</div><div class="rl">${d.res_area_cm2}</div></div>
+    <div class="rb"><div class="rv">${Math.round(perimMM)}</div><div class="rl">${d.res_perimeter}</div></div>`;
+
+  const atbl=document.getElementById('satbl');const atbody=document.getElementById('atbody');
+  if(angles){
+    atbl.style.display='block';atbody.innerHTML='';
+    const labels=activeShape==='tri'?['A','B','C']:angles.map((_,i)=>i+1+'');
+    angles.forEach((ang,i)=>{
+      const cut=(ang/2).toFixed(1);
+      atbody.innerHTML+=`<tr>
+        <td style="font-weight:700;color:var(--primary);">${labels[i]}</td>
+        <td class="mn ok">${ang.toFixed(1)}°</td>
+        <td class="mn" style="color:var(--warn);">${cut}°</td></tr>`;
+    });
+  } else atbl.style.display='none';
+
+  if(pts)drawShape(pts,angles,activeShape,d);
+}
+
+function drawShape(pts,angles,type,d){
+  const canvas=document.getElementById('sc');
+  const W=canvas.parentElement.offsetWidth||400;
+  canvas.width=W;canvas.height=260;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,260);
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
+  const minX=Math.min(...xs),maxX=Math.max(...xs);
+  const minY=Math.min(...ys),maxY=Math.max(...ys);
+  const pad=58;
+  const drawH=220;
+  const scX=(W-pad*2)/Math.max(maxX-minX,1);
+  const scY=(drawH-pad*2)/Math.max(maxY-minY,1);
+  const sc=Math.min(scX,scY,2.5);
+  const ox2=pad+(W-pad*2-(maxX-minX)*sc)/2;
+  const oy2=pad+(drawH-pad*2-(maxY-minY)*sc)/2;
+  const tx=x=>ox2+(x-minX)*sc,ty=y=>oy2+(y-minY)*sc;
+
+  // Shadow fill - LIGHT THEME
+  ctx.shadowColor='rgba(43,108,176,0.15)'; ctx.shadowBlur=18;
+  ctx.fillStyle='rgba(43,108,176,0.10)';
+  ctx.beginPath();pts.forEach((p,i)=>i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y)));
+  ctx.closePath();ctx.fill();
+  ctx.shadowBlur=0;
+
+  // Outline - PRIMARY BLUE
+  ctx.strokeStyle='#2b6cb0'; ctx.lineWidth=2.2;
+  ctx.beginPath();pts.forEach((p,i)=>i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y)));
+  ctx.closePath();ctx.stroke();
+
+  // Vertices dots - PRIMARY BLUE
+  pts.forEach(p=>{
+    ctx.fillStyle='#2b6cb0';
+    ctx.beginPath();ctx.arc(tx(p.x),ty(p.y),4,0,Math.PI*2);ctx.fill();
+  });
+
+  // Side labels - MUTED
+  ctx.font='bold 10px Consolas, monospace'; ctx.textAlign='center';
+  pts.forEach((p,i)=>{
+    const j=(i+1)%pts.length;
+    const px1=tx(p.x),py1=ty(p.y),px2=tx(pts[j].x),py2=ty(pts[j].y);
+    const mx=(px1+px2)/2,my=(py1+py2)/2;
+    const dx=pts[j].x-p.x,dy=pts[j].y-p.y;
+    const len=Math.round(Math.sqrt(dx*dx+dy*dy));
+    const nm=Math.sqrt((px2-px1)**2+(py2-py1)**2)||1;
+    const nx2=-(py2-py1)/nm*16,ny2=(px2-px1)/nm*16;
+    // side length label
+    ctx.fillStyle='#718096';
+    ctx.fillText(len+' mm',mx+nx2,my+ny2);
+    // side letter label for triangle
+    if(type==='tri'){
+      const sideName=['a','b','c'][i]||'';
+      ctx.fillStyle='#718096';
+      ctx.font='bold 11px Segoe UI, system-ui, sans-serif';
+      ctx.fillText(sideName,mx+nx2*1.8,my+ny2*1.8);
+      ctx.font='bold 10px Consolas, monospace';
+    }
+  });
+
+  // Corner angles
+  if(angles){
+    const labels=type==='tri'?['A','B','C']:angles.map((_,i)=>(i+1)+'');
+    pts.forEach((p,i)=>{
+      const ang=angles[i];if(!ang)return;
+      const isR=Math.abs(ang-90)<1.5;
+      const cx2=tx(p.x),cy2=ty(p.y);
+      const prev=pts[(i-1+pts.length)%pts.length],next=pts[(i+1)%pts.length];
+      const v1={x:prev.x-p.x,y:prev.y-p.y},v2={x:next.x-p.x,y:next.y-p.y};
+      const m1=Math.sqrt(v1.x**2+v1.y**2)||1,m2=Math.sqrt(v2.x**2+v2.y**2)||1;
+      const d1={x:v1.x/m1,y:v1.y/m1},d2={x:v2.x/m2,y:v2.y/m2};
+      const r2=16;
+      if(isR){
+        ctx.strokeStyle='#276749'; ctx.lineWidth=1.5; // Success Green
+        ctx.beginPath();
+        ctx.moveTo(cx2+d1.x*r2,cy2+d1.y*r2);
+        ctx.lineTo(cx2+d1.x*r2+d2.x*r2,cy2+d1.y*r2+d2.y*r2);
+        ctx.lineTo(cx2+d2.x*r2,cy2+d2.y*r2);ctx.stroke();
+      } else {
+        const a1=Math.atan2(d1.y,d1.x),a2=Math.atan2(d2.y,d2.x);
+        ctx.strokeStyle='#dd6b20'; ctx.lineWidth=1.5; // Accent Orange
+        ctx.beginPath();ctx.arc(cx2,cy2,r2,a1,a2,false);ctx.stroke();
+      }
+      // Vertex label + angle
+      const off=30;
+      const mx2=(d1.x+d2.x)/2||0,my2=(d1.y+d2.y)/2||0;
+      const ml=Math.sqrt(mx2**2+my2**2)||1;
+      const lx=cx2+(mx2/ml)*off*0.6-( mx2/ml)*off;
+      const ly=cy2+(my2/ml)*off*0.6-( my2/ml)*off;
+      ctx.font='bold 11px Segoe UI, system-ui, sans-serif';
+      ctx.textAlign='center';
+      const label=labels[i];
+      // Draw background pill for readability
+      const txt=`${label}: ${ang.toFixed(0)}°`;
+      const tw=ctx.measureText(txt).width;
+      ctx.fillStyle='rgba(255,255,255,0.85)';
+      ctx.beginPath();ctx.roundRect(lx-tw/2-3,ly-10,tw+6,14,4);ctx.fill();
+      ctx.fillStyle=isR?'#276749':'#dd6b20';
+      ctx.fillText(txt,lx,ly);
+    });
+  }
+
+  // Height line for trapezoid and parallelogram
+  if(type==='trap'||type==='para'){
+    const h=parseFloat(document.getElementById(type==='trap'?'th2':'ph2').value);
+    if(!isNaN(h)&&h>0){
+      const midX=(pts[0].x+pts[1].x)/2;
+      ctx.strokeStyle='#718096'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]); // Muted
+      ctx.beginPath();ctx.moveTo(tx(midX),ty(pts[0].y));ctx.lineTo(tx(midX),ty(pts[2].y));ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#718096'; ctx.font='bold 9px Consolas, monospace'; ctx.textAlign='left';
+      ctx.fillText('h='+Math.round(h)+'mm',tx(midX)+5,(ty(pts[0].y)+ty(pts[2].y))/2);
+    }
+  }
+
+  // Legend
+  ctx.font='500 9px Segoe UI, system-ui, sans-serif'; ctx.textAlign='left';
+  ctx.fillStyle='#276749'; ctx.fillText('▪ 90°',10,250);
+  ctx.fillStyle='#dd6b20'; ctx.fillText('▪ other',46,250);
+  ctx.fillStyle='#718096'; ctx.fillText('sides in mm',100,250);
+}
+
+// ===================== ANGLE CHECKER =====================
+function calcAngle(){
+  const a=parseFloat(document.getElementById('aa').value);
+  const b=parseFloat(document.getElementById('ab').value);
+  const c=parseFloat(document.getElementById('ac').value);
+  const d=T[lang];
+  const el=document.getElementById('ares');
+  if(isNaN(a)||isNaN(b)||a<=0||b<=0){el.style.display='none';return;}
+  const reqD=Math.sqrt(a*a+b*b);
+  let boxes='',txt='',actualAngle=null;
+  boxes+=`<div class="rb"><div class="rv inf">${Math.round(reqD)}</div><div class="rl">${d.res_req_diag}</div></div>`;
+  if(!isNaN(c)&&c>0){
+    const cosVal=(a*a+b*b-c*c)/(2*a*b);
+    if(cosVal>=-1&&cosVal<=1){
+      actualAngle=Math.acos(cosVal)*180/Math.PI;
+      const diff=Math.abs(c-reqD);const isR=diff<=2;
+      boxes+=`<div class="rb"><div class="rv ${isR?'ok':'wa'}">${actualAngle.toFixed(2)}</div><div class="rl">${d.res_angle}</div></div>`;
+      boxes+=`<div class="rb"><div class="rv">${Math.round(c)}</div><div class="rl">${d.res_actual_diag}</div></div>`;
+      const half=(actualAngle/2).toFixed(1);
+      txt=`<div class="ib ${isR?'gr':'re'}">${isR?d.ang_is_right:d.ang_not_right(actualAngle.toFixed(2),Math.round(reqD),Math.round(c),Math.round(diff))}</div>`;
+      txt+=`<div class="ib bl">${d.ang_cut(half)}</div>`;
+    }
+  } else {
+    txt=`<div class="ib bl">${d.ang_no_c(Math.round(reqD))}</div>`;
+  }
+  document.getElementById('arb').innerHTML=boxes;
+  document.getElementById('art').innerHTML=txt;
+  el.style.display='block';
+  drawAngleCanvas(a,b,isNaN(c)||c<=0?null:c,reqD,actualAngle);
+}
+
+function drawAngleCanvas(a,b,c,reqD,actualAngle){
+  const canvas=document.getElementById('acc');
+  const W=canvas.parentElement.offsetWidth||400;
+  canvas.width=W;canvas.height=220;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,220);
+  const pad=50;
+  const maxLen=Math.max(a,b,c||1,reqD)*1.1;
+  const scA=Math.min((W-pad*2)*0.65,180)/maxLen;
+  const ox=pad,oy=180;
+
+  // Wall A (horizontal, blue)
+  ctx.strokeStyle='#2b6cb0'; ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+a*scA,oy);ctx.stroke();
+  // arrow head
+  ctx.fillStyle='#2b6cb0';
+  ctx.beginPath();ctx.moveTo(ox+a*scA+8,oy);ctx.lineTo(ox+a*scA,oy-5);ctx.lineTo(ox+a*scA,oy+5);ctx.fill();
+  ctx.fillStyle='#2b6cb0'; ctx.font='bold 12px Segoe UI, system-ui, sans-serif'; ctx.textAlign='left';
+  ctx.fillText('A',ox+a*scA+12,oy+5);
+  ctx.fillStyle='#718096'; ctx.font='bold 9px Consolas, monospace'; ctx.textAlign='center';
+  ctx.fillText(Math.round(a)+' mm',(ox+ox+a*scA)/2,oy+16);
+
+  // Wall B (vertical, purple)
+  ctx.strokeStyle='#805ad5'; ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy-b*scA);ctx.stroke();
+  ctx.fillStyle='#805ad5';
+  ctx.beginPath();ctx.moveTo(ox,oy-b*scA-8);ctx.lineTo(ox-5,oy-b*scA);ctx.lineTo(ox+5,oy-b*scA);ctx.fill();
+  ctx.fillStyle='#805ad5'; ctx.font='bold 12px Segoe UI, system-ui, sans-serif'; ctx.textAlign='center';
+  ctx.fillText('B',ox,oy-b*scA-16);
+  ctx.fillStyle='#718096'; ctx.font='bold 9px Consolas, monospace'; ctx.textAlign='right';
+  ctx.fillText(Math.round(b)+' mm',ox-8,(oy+oy-b*scA)/2+4);
+
+  const ex=ox+a*scA,ey=oy-b*scA;
+
+  // Required diagonal (dashed green)
+  ctx.strokeStyle='#276749'; ctx.lineWidth=1.8; ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ex,oy);ctx.lineTo(ox,ey);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#276749'; ctx.font='bold 9px Consolas, monospace'; ctx.textAlign='center';
+  ctx.fillText('⊞ '+Math.round(reqD)+' mm',(ex+ox)/2+22,(oy+ey)/2);
+
+  // Actual diagonal
+  if(c!==null){
+    const isR=Math.abs(c-reqD)<=2;
+    ctx.strokeStyle=isR?'#276749':'#c53030'; ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.moveTo(ex,oy);ctx.lineTo(ox,ey);ctx.stroke();
+    ctx.fillStyle=isR?'#276749':'#c53030'; ctx.font='bold 9px Consolas, monospace'; ctx.textAlign='center';
+    ctx.fillText('C: '+Math.round(c)+' mm',(ex+ox)/2-20,(oy+ey)/2-12);
+  }
+
+  // Corner angle arc
+  const arcR=30; ctx.strokeStyle='#dd6b20'; ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(ox,oy,arcR,-Math.PI/2,0);ctx.stroke();
+  ctx.fillStyle='#dd6b20'; ctx.font='bold 11px Segoe UI, system-ui, sans-serif'; ctx.textAlign='left';
+  const angTxt=actualAngle!==null?actualAngle.toFixed(1)+'°':'90°?';
+  ctx.fillText(angTxt,ox+arcR+6,oy-arcR+6);
+
+  // Right angle box (required corner)
+  ctx.strokeStyle='rgba(43,108,176,0.5)'; ctx.lineWidth=1.5;
+  ctx.strokeRect(ox,oy-16,16,16);
+
+  // Labels
+  ctx.fillStyle='#718096'; ctx.font='500 9px Segoe UI, system-ui, sans-serif'; ctx.textAlign='left';
+  ctx.fillStyle='#276749'; ctx.fillText('⊞ required diagonal',ox+a*scA/2-30,205);
+  if(c!==null){
+    const isR=Math.abs(c-reqD)<=2;
+    ctx.fillStyle=isR?'#276749':'#c53030';
+    ctx.fillText(' C: measured',ox+a*scA/2+60,205);
+  }
+}
+
+// ===================== STATE =====================
+const SK='pb_areal';
+function gatherState(){
+  return{lang,proj_name:document.getElementById('pn').value,proj_date:document.getElementById('pd').value,
+    proj_notes:document.getElementById('pno').value,rooms:rooms.map(r=>({...r})),rseq,
+    polyPts:polyPts.map(p=>({...p})),pseq,activeShape};
+}
+function applyState(s){
+  if(!s)return;
+  if(s.proj_name)document.getElementById('pn').value=s.proj_name;
+  if(s.proj_date)document.getElementById('pd').value=s.proj_date;
+  if(s.proj_notes)document.getElementById('pno').value=s.proj_notes;
+  if(s.rooms){rooms=s.rooms;rseq=s.rseq||rooms.length;}
+  if(s.polyPts){polyPts=s.polyPts;pseq=s.pseq||polyPts.length;}
+  if(s.activeShape)activeShape=s.activeShape;
+  renderRoomList();renderPolyPts();
+}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify(gatherState()));}catch(e){}}
+function loadState(){try{const s=JSON.parse(localStorage.getItem(SK));if(s){if(s.lang)lang=s.lang;applyState(s);}}catch(e){}}
+function exportJSON(){
+  const s=gatherState();s.exported=new Date().toISOString();
+  const pn=(document.getElementById('pn').value||'areal').replace(/\s+/g,'_');
+  const blob=new Blob([JSON.stringify(s,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download=pn+'_areal.json';a.click();URL.revokeObjectURL(url);
+}
+function importJSON(evt){
+  const f=evt.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{try{const s=JSON.parse(e.target.result);if(s.lang)lang=s.lang;applyState(s);applyLang();}catch{alert('⚠ Invalid JSON');}};
+  r.readAsText(f);evt.target.value='';
+}
+function resetAll(){
+  const d=T[lang];if(!confirm(d.reset_confirm))return;
+  rooms=[];rseq=0;
+  ['pn','pd','pno'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  renderRoomList();calcRooms();localStorage.removeItem(SK);
+}
+function resetShape(){
+  // Clear all shape input fields
+  ['rw','rl','pb','ps','ph2','ta','tb','tc','td','th2','tri-a','tri-b','tri-c'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  // Reset polygon points to defaults
+  polyPts=[];pseq=0;
+  [3500,4200,3500,4200].forEach(len=>addPolyPt({len}));
+  document.getElementById('sres').style.display='none';
+  saveState();
+}
+function resetAngle(){
+  ['aa','ab','ac'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ares').style.display='none';
+}
+
+// Init
+loadState();
+if(polyPts.length===0)[3500,4200,3500,4200].forEach(len=>addPolyPt({len}));
+if(rooms.length===0){addRoom();addRoom();}
+applyLang();renderNSInfo();renderShapeGrid();
+selectShape(activeShape);
+const dte=document.getElementById('pd');if(!dte.value)dte.value=new Date().toISOString().slice(0,10);
+window.addEventListener('resize',()=>{calcShape();calcAngle();});
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

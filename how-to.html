@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<title>Bruksanvisning — Slik bruker du ProBuilder | Tips & Guide</title>
+<meta name="description" content="Guide til hvordan du bruker ProBuilder byggkalkulatorer, inkludert tips for offline bruk og installasjon som app (PWA) på din mobil.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/how-to.html">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="Bruksanvisning - ProBuilder">
+<meta property="og:description" content="Guide til hvordan du bruker ProBuilder byggkalkulatorer og installerer dem på mobilen.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/how-to.html">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bruksanvisning - ProBuilder">
+<meta name="twitter:description" content="Guide til hvordan du bruker ProBuilder byggkalkulatorer.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<link rel="manifest" href="manifest.json">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Hvordan installere ProBuilder som app",
+  "description": "Instruksjoner for å installere ProBuilder på hjemmeskjermen for offline bruk.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "text": "Åpne ProBuilder i nettleseren på din mobil."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Trykk på 'Del' (iOS) eller meny-knappen (Android)."
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Velg 'Legg til på hjemmeskjerm'."
+    }
+  ]
+}
+</script>
+
+    <meta name="theme-color" content="#2b6cb0">
+    <style>
+        :root {
+            --bg: #f7f9fa; --card: #ffffff; --text: #1a202c; --muted: #718096;
+            --primary: #2b6cb0; --primary-dark: #1a4a8a; --accent: #dd6b20;
+            --warning: #744210; --warning-bg: #fffbeb; --success: #276749; --success-bg: #f0fff4;
+            --border: #e2e8f0; --radius: 10px; --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; color: var(--text); background: var(--bg); line-height: 1.6; }
+        a { text-decoration: none; color: var(--primary); }
+        ul { list-style: none; }
+        button { font-family: inherit; font-size: 16px; cursor: pointer; border: none; background: none; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navbar */
+        .navbar { background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .navbar-inner { display: flex; justify-content: space-between; align-items: center; min-height: 70px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-title { font-weight: 700; font-size: 20px; color: var(--primary); }
+        .logo-sub { font-size: 12px; color: var(--muted); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-link { color: var(--text); font-weight: 500; }
+        .nav-link:hover, .nav-link.active { color: var(--primary); }
+        .phone-btn { background: var(--success-bg); color: var(--success); padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; }
+        .lang-switcher { display: flex; gap: 4px; }
+        .lang-btn { border: 1px solid transparent; border-radius: 6px; padding: 6px; font-size: 18px; }
+        .lang-btn.active { background: var(--bg); border-color: var(--border); }
+        .hamburger { display: none; font-size: 24px; }
+
+        /* Hero */
+        .hero { background: var(--card); padding: 40px 0; border-bottom: 1px solid var(--border); text-align: center; }
+        .breadcrumb { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+        .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+        .hero p { color: var(--muted); font-size: 18px; }
+
+        /* Cards Grid */
+        .section-box { padding: 50px 0; }
+        h2.sec-title { margin-bottom: 20px; font-size: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .card h3 { font-size: 18px; margin-bottom: 10px; color: var(--text); }
+        .card p { font-size: 15px; color: var(--muted); }
+
+        /* Accordion */
+        .acc-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .acc-header { padding: 18px 20px; width: 100%; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 18px; color: var(--text); }
+        .acc-header:hover { background: var(--bg); }
+        .acc-body { max-height: 0; transition: max-height 0.3s ease-out; padding: 0 20px; color: var(--muted); }
+        .acc-item.active .acc-body { max-height: 500px; padding: 0 20px 20px; }
+        .acc-icon { transition: transform 0.3s; font-size: 14px; }
+        .acc-item.active .acc-icon { transform: rotate(180deg); }
+        .acc-body ul { margin-left: 20px; margin-bottom: 15px; list-style-type: disc; }
+        .acc-body li { margin-bottom: 5px; }
+        .acc-link { font-weight: 600; display: inline-block; color: var(--primary); }
+
+        /* Disclaimer */
+        .disclaimer { border-left: 4px solid var(--accent); background: var(--warning-bg); color: var(--warning); padding: 20px; border-radius: 0 var(--radius) var(--radius) 0; margin-top: 40px; font-size: 15px; }
+
+        /* Footer */
+        footer { background: #1a202c; color: #a0aec0; padding: 40px 0 20px; margin-top: 40px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .footer-col h4 { color: white; margin-bottom: 15px; }
+        .footer-col a { color: #a0aec0; display: block; margin-bottom: 8px; }
+        .bottom-bar { text-align: center; border-top: 1px solid #2d3748; padding-top: 20px; font-size: 12px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); padding: 20px; border-bottom: 1px solid var(--border); }
+            .nav-links.active { display: flex; }
+            .hamburger { display: block; }
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="logo-area" style="display:flex; flex-direction:column;">
+                <div class="logo-title">🔨 ProBuilder</div>
+                <div class="logo-sub">by Vytautas Giedraitis</div>
+            </a>
+            <div class="nav-right">
+                <button class="hamburger" id="mobile-menu-btn">☰</button>
+                <div class="nav-links" id="nav-links">
+                    <a href="index.html" class="nav-link" data-i18n="nav_home">Hjem</a>
+                    <a href="tools.html" class="nav-link" data-i18n="nav_tools">Verktøy</a>
+                    <a href="how-to.html" class="nav-link active" data-i18n="nav_howto">Slik bruker du</a>
+                    <a href="about.html" class="nav-link" data-i18n="nav_about">Om oss</a>
+                    <a href="contact.html" class="nav-link" data-i18n="nav_contact">Kontakt</a>
+                </div>
+                <a href="tel:94844497" class="phone-btn">📞 94844497</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="no">NO</button>
+                    <button class="lang-btn" data-lang="lt">LT</button>
+                    <button class="lang-btn" data-lang="pl">PL</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <div class="breadcrumb"><a href="index.html" data-i18n="nav_home">Hjem</a> / <span data-i18n="nav_howto">Slik bruker du</span></div>
+            <h1 data-i18n="hero_title">Slik bruker du ProBuilder</h1>
+            <p data-i18n="hero_sub">Alle verktøyene fungerer direkte i nettleseren — ingen installasjon nødvendig</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Quick Start -->
+        <section class="section-box">
+            <div class="grid-3">
+                <div class="card">
+                    <h3 data-i18n="qs1_title">📱 Steg 1: Åpne i nettleseren</h3>
+                    <p data-i18n="qs1_desc">Klikk på et verktøy fra forsiden. Siden åpnes direkte — ingen app eller innlogging.</p>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="qs2_title">✏️ Steg 2: Fyll inn mål</h3>
+                    <p data-i18n="qs2_desc">Skriv inn dine mål og dimensjoner. Bruk desimalpunkt eller komma.</p>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="qs3_title">📄 Steg 3: Les resultatet</h3>
+                    <p data-i18n="qs3_desc">Resultater oppdateres umiddelbart. Bruk print-knappen eller del lenken med brigaden.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PWA Save -->
+        <section class="section-box" style="padding-top:0;">
+            <h2 class="sec-title" data-i18n="pwa_title">💾 Lagre på hjemmeskjermen (fungerer offline)</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3 data-i18n="pwa_ios_title">🍎 iPhone / Safari</h3>
+                    <p data-i18n="pwa_ios_desc">Trykk deleknappen (□↑) i bunnen av skjermen → velg «Legg til på Hjem-skjerm».</p>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="pwa_and_title">🤖 Android / Chrome</h3>
+                    <p data-i18n="pwa_and_desc">Trykk ⋮ menyen øverst til høyre → velg «Legg til på startskjerm».</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tool Accordions -->
+        <section class="section-box" style="padding-top:0;">
+            <h2 class="sec-title" data-i18n="acc_tools_title">Verktøyspesifikke veiledninger</h2>
+            
+            <div class="acc-item">
+                <button class="acc-header">🪵 Stender kalkulator <span class="acc-icon">▼</span></button>
+                <div class="acc-body">
+                    <ul>
+                        <li data-i18n="t1_1">Angi veggbredde i mm.</li>
+                        <li data-i18n="t1_2">Velg stendertype og CC-avstand (standard 600mm).</li>
+                        <li data-i18n="t1_3">Les av antall stendere, svill og toppsvill.</li>
+                        <li data-i18n="t1_4">Klikk «Tegning» for visuell framstilling.</li>
+                    </ul>
+                    <a href="stender.html" class="acc-link" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+            </div>
+            
+            <div class="acc-item">
+                <button class="acc-header">🏠 Lekter kalkulator <span class="acc-icon">▼</span></button>
+                <div class="acc-body">
+                    <ul>
+                        <li data-i18n="t2_1">Angi takflatens totale lengde.</li>
+                        <li data-i18n="t2_2">Sett startheng og sluttavstand fra møne.</li>
+                        <li data-i18n="t2_3">Angi ønsket maksimumsavstand mellom lekter.</li>
+                        <li data-i18n="t2_4">Les av eksakt posisjon for hver lekt.</li>
+                    </ul>
+                    <a href="lekter.html" class="acc-link" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+            </div>
+
+            <div class="acc-item">
+                <button class="acc-header">📐 Arealberegning <span class="acc-icon">▼</span></button>
+                <div class="acc-body">
+                    <ul>
+                        <li data-i18n="t3_1">Legg til romenheter med + knappen.</li>
+                        <li data-i18n="t3_2">Angi lengde × bredde per rektangel i meter.</li>
+                        <li data-i18n="t3_3">Trekk fra nisjer med minus-funksjon.</li>
+                        <li data-i18n="t3_4">Eksporter arealiste som rapport.</li>
+                    </ul>
+                    <a href="areal.html" class="acc-link" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+            </div>
+
+            <div class="acc-item">
+                <button class="acc-header">📋 ProNorm <span class="acc-icon">▼</span></button>
+                <div class="acc-body">
+                    <ul>
+                        <li data-i18n="t8_1">Sett timepris og brigadeantall øverst.</li>
+                        <li data-i18n="t8_2">Søk i arbeidskatalog etter arbeidstype (f.eks. «gips»).</li>
+                        <li data-i18n="t8_3">Se løpende total med og uten MVA.</li>
+                        <li data-i18n="t8_4">Lagre prosjekt med 💾 og åpne med 📂. Print til PDF.</li>
+                    </ul>
+                    <a href="normcalc.html" class="acc-link" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section-box" style="padding-top:0;">
+            <h2 class="sec-title">FAQ</h2>
+            <div class="acc-item">
+                <button class="acc-header"><span data-i18n="faq1_q">Er verktøyene gratis?</span> <span class="acc-icon">▼</span></button>
+                <div class="acc-body"><p style="padding-top:10px;" data-i18n="faq1_a">Ja, alle ProBuilder-verktøy er helt gratis. Ingen konto, ingen betaling, ingen annonser.</p></div>
+            </div>
+            <div class="acc-item">
+                <button class="acc-header"><span data-i18n="faq2_q">Fungerer det offline?</span> <span class="acc-icon">▼</span></button>
+                <div class="acc-body"><p style="padding-top:10px;" data-i18n="faq2_a">Ja, etter første besøk lagres siden i nettleseren. Lagre siden på hjemmeskjermen for offline-tilgang.</p></div>
+            </div>
+            <div class="acc-item">
+                <button class="acc-header"><span data-i18n="faq3_q">Hvilke enheter bruker kalkulatorene?</span> <span class="acc-icon">▼</span></button>
+                <div class="acc-body"><p style="padding-top:10px;" data-i18n="faq3_a">Norsk standard: mm for lengder i konstruksjon, m og m² for arealer, m³ for volum, NOK for pris.</p></div>
+            </div>
+            <div class="acc-item">
+                <button class="acc-header"><span data-i18n="faq4_q">Kan jeg stole på beregningene?</span> <span class="acc-icon">▼</span></button>
+                <div class="acc-body"><p style="padding-top:10px;" data-i18n="faq4_a">Beregningene er veiledende. Verifiser alltid med fagmann ved behov.</p></div>
+            </div>
+        </section>
+
+        <div class="disclaimer">
+            <b data-i18n="disc_title">ℹ️ Ansvarsfraskrivelse:</b> <span data-i18n="disc_text">Alle beregninger er kun for informasjonsformål. ProBuilder tar ikke ansvar for feil i beregninger brukt i faktisk konstruksjon.</span>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>🔨 ProBuilder</h4>
+                <p data-i18n="footer_brand">Profesjonelle byggkalkulatorer for det norske markedet.</p>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav_tools">Verktøy</h4>
+                <a href="stender.html">Stender kalkulator</a>
+                <a href="lekter.html">Lekter kalkulator</a>
+                <a href="normcalc.html">ProNorm</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav_contact">Kontakt</h4>
+                <a href="about.html" data-i18n="nav_about">Om oss</a>
+                <a href="contact.html" data-i18n="nav_contact">Kontakt oss</a>
+                <a href="tel:94844497">📞 94844497</a>
+            </div>
+        </div>
+        <div class="bottom-bar" data-i18n="footer_copy">© 2026 ProBuilder by Vytautas Giedraitis — Alle beregninger kun for informasjonsformål.</div>
+    </footer>
+
+    <script>
+        const T = {
+            no: { nav_home: "Hjem", nav_howto: "Slik bruker du", nav_about: "Om oss", nav_contact: "Kontakt", nav_tools: "Verktøy", hero_title: "Slik bruker du ProBuilder", hero_sub: "Alle verktøyene fungerer direkte i nettleseren", qs1_title: "📱 Steg 1: Åpne i nettleseren", qs1_desc: "Klikk på et verktøy fra forsiden. Siden åpnes direkte — ingen app.", qs2_title: "✏️ Steg 2: Fyll inn mål", qs2_desc: "Skriv inn dine mål. Bruk desimalpunkt eller komma.", qs3_title: "📄 Steg 3: Les resultatet", qs3_desc: "Resultater oppdateres umiddelbart. Bruk print-knappen.", pwa_title: "💾 Lagre på hjemmeskjermen", pwa_ios_title: "🍎 iPhone / Safari", pwa_ios_desc: "Trykk deleknappen → «Legg til på Hjem-skjerm».", pwa_and_title: "🤖 Android / Chrome", pwa_and_desc: "Trykk ⋮ menyen → «Legg til på startskjerm».", acc_tools_title: "Verktøyspesifikke veiledninger", btn_open: "Åpne verktøy →", t1_1: "Angi vegglengde i mm og velg hjørnetyper (indre/ytre/fri).", t1_2: "Beregn stenderhøyde ved å legge til svill-lag (bunn- og toppsvill).", t1_3: "Legg til vinduer og dører for å se åpninger i layouten.", t1_4: "Bruk fanen 'Vindusmerker' for å beregne nøyaktige merker fra referansepunkt.", t2_1: "Angi takflatens lengde.", t2_2: "Sett startheng.", t2_3: "Angi maksimumsavstand.", t2_4: "Les av eksakt posisjon.", t3_1: "Legg til romenheter.", t3_2: "Angi lengde × bredde.", t3_3: "Trekk fra nisjer.", t3_4: "Eksporter rapport.", t8_1: "Sett timepris.", t8_2: "Søk i arbeidskatalog.", t8_3: "Se løpende total.", t8_4: "Lagre prosjekt og Print.", faq1_q: "Er verktøyene gratis?", faq1_a: "Verktøyene er gratis i utviklingsfasen mens de testes og optimaliseres. I fremtiden kan det bli tilbudt spesialtilpassede løsninger for bedrifter.", faq2_q: "Fungerer det offline?", faq2_a: "Ja, lagre på hjemmeskjerm.", faq3_q: "Hvilke enheter brukes?", faq3_a: "mm, m, m², m³, NOK.", faq4_q: "Er beregningene sikre?", faq4_a: "Beregningene er nøyaktige, men er ment som veiledende. Meld gjerne fra om du oppdager feil.", disc_title: "Ansvarsfraskrivelse:", disc_text: "Alle beregninger er veiledende. ProBuilder er nøyaktig, men vi tar forbehold om menneskelige feil. Meld gjerne fra om forbedringer.", footer_brand: "Profesjonelle byggkalkulatorer.", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis" },
+            en: { nav_home: "Home", nav_howto: "How to use", nav_about: "About", nav_contact: "Contact", nav_tools: "Tools", hero_title: "How to use ProBuilder", hero_sub: "All tools work directly in your browser", qs1_title: "📱 Step 1: Open in browser", qs1_desc: "Click a tool from the home page. It opens directly — no app needed.", qs2_title: "✏️ Step 2: Input dimensions", qs2_desc: "Enter your measurements. Use decimal point or comma.", qs3_title: "📄 Step 3: Read result", qs3_desc: "Results update instantly. Use the print button.", pwa_title: "💾 Save to Home Screen", pwa_ios_title: "🍎 iPhone / Safari", pwa_ios_desc: "Press share → «Add to Home Screen».", pwa_and_title: "🤖 Android / Chrome", pwa_and_desc: "Press ⋮ menu → «Add to Home screen».", acc_tools_title: "Tool Guides", btn_open: "Open tool →", t1_1: "Enter wall length in mm and select corner types (inner/outer/free).", t1_2: "Calculate stud height by adding plate layers (bottom and top plates).", t1_3: "Add windows and doors to see openings in the layout.", t1_4: "Use the 'Window Marks' tab to calculate precise marks from reference points.", t2_1: "Enter roof length.", t2_2: "Set overhangs.", t2_3: "Set max spacing.", t2_4: "Read positions.", t3_1: "Add rooms.", t3_2: "Enter L × W.", t3_3: "Subtract niches.", t3_4: "Export.", t8_1: "Set rate.", t8_2: "Search catalog.", t8_3: "See total.", t8_4: "Save and Print.", faq1_q: "Is it free?", faq1_a: "Tools are free during the development phase while testing and optimizing. Specialized solutions for businesses may be offered in the future.", faq2_q: "Works offline?", faq2_a: "Yes, save to home screen.", faq3_q: "Units used?", faq3_a: "mm, m, m², m³, NOK.", faq4_q: "Is it accurate?", faq4_a: "Calculations are accurate but for orientational purposes. Please report any errors.", disc_title: "Disclaimer:", disc_text: "All calculations are orientational. ProBuilder is accurate, but we reserve the right for human error. Please report improvements.", footer_brand: "Professional calculators.", footer_copy: "© 2026 ProBuilder" },
+            lt: { nav_home: "Pradžia", nav_howto: "Kaip naudotis", nav_about: "Apie mus", nav_contact: "Kontaktai", nav_tools: "Įrankiai", hero_title: "Kaip naudotis ProBuilder", hero_sub: "Visi įrankiai veikia tiesiogiai naršyklėje", qs1_title: "📱 1 žingsnis: Atidarykite", qs1_desc: "Pasirinkite įrankį pagrindiniame puslapyje. Nereikia jokios programėlės.", qs2_title: "✏️ 2 žingsnis: Įveskite matmenis", qs2_desc: "Įveskite savo matmenis. Naudokite tašką arba kablelį.", qs3_title: "📄 3 žingsnis: Rezultatas", qs3_desc: "Rezultatai atnaujinami akimirksniu. Naudokite spausdinimo mygtuką.", pwa_title: "💾 Išsaugoti ekrane", pwa_ios_title: "🍎 iPhone / Safari", pwa_ios_desc: "Spauskite dalinimosi mygtuką → «Pridėti į pradinį ekraną».", pwa_and_title: "🤖 Android / Chrome", pwa_and_desc: "Spauskite ⋮ meniu → «Pridėti į pagrindinį ekraną».", acc_tools_title: "Įrankių gidai", btn_open: "Atidaryti →", t1_1: "Įveskite sienos ilgį mm ir pasirinkite kampų tipus (vidinis/išorinis/laisvas).", t1_2: "Apskaičiuokite stenderių aukštį pridėdami sijų sluoksnius (apatines ir viršutines).", t1_3: "Pridėkite langus ir duris, kad matytumėte angas išdėstyme.", t1_4: "Naudokite skiltį „Langų žymėjimas“, kad apskaičiuotumėte tikslius žymėjimus nuo atskaitos taško.", t2_1: "Stogo ilgis.", t2_2: "Išsikišimai.", t2_3: "Maks. atstumas.", t2_4: "Pozicijos.", t3_1: "Pridėti patalpas.", t3_2: "Ilgis × Plotis.", t3_3: "Atimti nišas.", t3_4: "Eksportuoti.", t8_1: "Valandos kaina.", t8_2: "Ieškoti kataloge.", t8_3: "Bendra suma.", t8_4: "Išsaugoti ir Spausdinti.", faq1_q: "Ar įrankiai nemokami?", faq1_a: "Įrankiai yra nemokami vystymo laikotarpiu, kol jie yra testuojami ir pritaikomi. Ateityje gali būti siūlomi individualūs sprendimai verslui.", faq2_q: "Veikia be interneto?", faq2_a: "Taip, išsisaugokite pradiniame ekrane.", faq3_q: "Kokie vienetai naudojami?", faq3_a: "Norvegijos standartai: mm ilgiams, m ir m² plotams, m³ tūriui, NOK kainai.", faq4_q: "Ar skaičiavimai tikslūs?", faq4_a: "Skaičiavimai yra tikslūs, tačiau orientacinio pobūdžio. Meldžiame vartotojų būti budriems ir pranešti apie pastebėtas klaidas.", disc_title: "Atsakomybės ribojimas:", disc_text: "Visi skaičiavimai yra orientaciniai. ProBuilder yra tikslus, tačiau galimas žmogiškas faktorius. Praneškite mums apie pastebėtas klaidas.", footer_brand: "Profesionalios skaičiuoklės.", footer_copy: "© 2026 ProBuilder" },
+            pl: { nav_home: "Główna", nav_howto: "Jak używać", nav_about: "O nas", nav_contact: "Kontakt", nav_tools: "Narzędzia", hero_title: "Jak używać ProBuilder", hero_sub: "Wszystkie narzędzia działają bezpośrednio w przeglądarce", qs1_title: "📱 Krok 1: Otwórz w przeglądarce", qs1_desc: "Kliknij narzędzie na stronie głównej. Otwiera się bezpośrednio — bez aplikacji.", qs2_title: "✏️ Krok 2: Wprowadź wymiary", qs2_desc: "Wpisz swoje wymiary. Użyj kropki lub przecinka.", qs3_title: "📄 Krok 3: Odczytaj wynik", qs3_desc: "Wyniki aktualizują się natychmiast. Użyj przycisku drukowania.", pwa_title: "💾 Zapisz na ekranie głównym", pwa_ios_title: "🍎 iPhone / Safari", pwa_ios_desc: "Naciśnij udostępnij → «Dodaj do ekranu pocz.».", pwa_and_title: "🤖 Android / Chrome", pwa_and_desc: "Naciśnij ⋮ menu → «Dodaj do ekranu głównego».", acc_tools_title: "Poradniki dla narzędzi", btn_open: "Otwórz →", t1_1: "Wprowadź długość ściany w mm i wybierz typy narożników (wewnętrzne/zewnętrzne/wolne).", t1_2: "Oblicz wysokość słupków, dodając warstwy oczepów (podwaliny i oczepy).", t1_3: "Dodaj okna i drzwi, aby zobaczyć otwory w układzie.", t1_4: "Użyj zakładki „Znaki okienne”, aby obliczyć dokładne znaki z punktu odniesienia.", t2_1: "Długość dachu.", t2_2: "Zwisy.", t2_3: "Max rozstaw.", t2_4: "Pozycje.", t3_1: "Dodaj pokoje.", t3_2: "Długość × Szerokość.", t3_3: "Odejmij wnęki.", t3_4: "Eksport.", t8_1: "Stawka.", t8_2: "Szukaj w katalogu.", t8_3: "Suma.", t8_4: "Zapisz i Drukuj.", faq1_q: "Czy narzędzia są darmowe?", faq1_a: "Narzędzia są bezpłatne w fazie rozwoju, podczas testowania i dostosowywania. W przyszłości mogą być oferowane indywidualne rozwiązania dla firm.", faq2_q: "Działa offline?", faq2_a: "Tak, zapisz na ekranie głównym.", faq3_q: "Jakie jednostki?", faq3_a: "Norweskie standardy: mm dla długości, m i m² dla powierzchni, m³ dla objętości, NOK dla ceny.", faq4_q: "Czy obliczenia są dokładne?", faq4_a: "Obliczenia są dokładne, ale mają charakter orientacyjny. Prosimy użytkowników o czujność i zgłaszanie błędów.", disc_title: "Zastrzeżenie:", disc_text: "Wszystkie obliczenia są orientacyjne. ProBuilder jest dokładny, ale zastrzegamy sobie prawo do błędów ludzkich. Prosimy o zgłaszanie sugestii.", footer_brand: "Profesjonalne kalkulatory.", footer_copy: "© 2026 ProBuilder" }
+        };
+
+        function setLang(lang) {
+            if(!T[lang]) return;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(T[lang][key]) el.textContent = T[lang][key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+            localStorage.setItem('pb_lang', lang);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('pb_lang') || 'no';
+            setLang(saved);
+            document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('nav-links').classList.toggle('active'));
+
+            // Accordion Logic
+            document.querySelectorAll('.acc-header').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = btn.parentElement;
+                    const isActive = item.classList.contains('active');
+                    document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('active'));
+                    if(!isActive) item.classList.add('active');
+                });
+            });
+        });
+    </script>
+    <script src="js/pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "name": "ProBuilder — Profesjonelle Byggkalkulatorer",
+  "short_name": "ProBuilder",
+  "description": "8 profesjonelle kalkulatorer for tømrere, snekkere og entreprenører. Fungerer offline.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "background_color": "#f7f9fa",
+  "theme_color": "#2b6cb0",
+  "orientation": "portrait-primary",
+  "lang": "nb",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Stender kalkulator",
+      "short_name": "Stender",
+      "url": "stender.html",
+      "icons": [{ "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "ProNorm kalkyle",
+      "short_name": "ProNorm",
+      "url": "normcalc.html",
+      "icons": [{ "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

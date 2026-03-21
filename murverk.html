@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Murverkkalkulator - ProBuilder | Profesjonelle byggverktøy</title>
+<meta name="description" content="Beregn antall murstein, blokker, mørtel og armering for ditt murprosjekt. Profesjonell kalkulator for murverk.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/murverk.html">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="Murverkkalkulator - ProBuilder">
+<meta property="og:description" content="Beregn antall murstein, blokker, mørtel og armering for ditt murprosjekt. Profesjonell kalkulator for murverk.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/murverk.html">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Murverkkalkulator - ProBuilder">
+<meta name="twitter:description" content="Beregn antall murstein, blokker, mørtel og armering for ditt murprosjekt. Profesjonell kalkulator for murverk.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProBuilder">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Murverkkalkulator - ProBuilder",
+  "url": "https://vigibygg-cmyk.github.io/Calc/murverk.html",
+  "image": "https://vigibygg-cmyk.github.io/Calc/img/og-image.png",
+  "description": "Profesjonell kalkulator for beregning av murverk, blokker og mørtel.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any",
+  "author": {
+    "@type": "Person",
+    "name": "Vytautas Giedraitis"
+  }
+}
+</script>
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color: transparent;}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s;
+}
+.back-btn:hover { color: var(--primary); border-color: var(--primary); background: #fff; }
+.page-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.page-title span { color: var(--primary); }
+
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── TABS ─── */
+.tab-nav {
+  display: flex;
+  gap: 6px;
+  padding: 16px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: var(--muted);
+  font-size: 0.87rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.tab-btn:hover { color: var(--text); background: var(--surface2); }
+.tab-btn.active {
+  background: #ffffff;
+  border-color: var(--border);
+  color: var(--primary);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+  position: relative;
+}
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ffffff;
+    z-index: 2;
+}
+
+/* ─── MAIN ─── */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px 16px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tab-panel { display: flex; flex-direction: column; gap: 16px; animation: fadeIn 0.2s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.hidden { display: none !important; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center; gap: 10px;
+}
+.card-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM ─── */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+input[type="number"], input[type="text"], input[type="date"], select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px; /* Prevents iOS zoom */
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px;
+}
+input:focus, select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+.field-hint { font-size: 0.69rem; color: var(--dim); margin-top: 2px; }
+
+/* ─── PRESETS ─── */
+.preset-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.preset-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.preset-btn:hover { border-color: var(--primary); color: var(--primary); }
+.preset-btn.active {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ─── RESULTS ─── */
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.result-grid-lg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+.res-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+.res-box.highlight { border-color: var(--primary); background: #ebf8ff; }
+.res-val {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+.res-val.ok { color: var(--success); }
+.res-val.warn { color: var(--accent); }
+.res-val.info { color: var(--primary); }
+.res-val.accent { color: var(--accent); }
+.res-lbl {
+  font-size: 0.62rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  font-weight: 700;
+}
+
+.info-box {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.info-box.blue { background: #ebf8ff; border: 1px solid #bee3f8; color: #2c5282; }
+.info-box.orange { background: #fffaf0; border: 1px solid #feebc8; color: #9c4221; }
+.info-box.yellow { background: #fffff0; border: 1px solid #faf089; color: #744210; }
+
+/* ─── TABLES ─── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; background: #ffffff; }
+thead th {
+  text-align: left;
+  padding: 12px;
+  background: var(--surface2);
+  border-bottom: 2px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+tbody td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+td.val { font-family: 'Consolas', monospace; font-weight: 700; color: var(--primary); }
+td.warn { color: var(--accent); font-weight: 700; }
+td.ok { color: var(--success); font-weight: 700; }
+
+/* ─── BUTTONS ─── */
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  min-height: 44px;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.btn-primary { background: var(--primary); color: #ffffff; box-shadow: 0 2px 6px rgba(43,108,176,0.3); }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+.btn-outline { background: #ffffff; border-color: var(--border); color: var(--muted); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); background: var(--surface2); }
+.btn-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  border: 1px solid var(--danger-bg); background: var(--danger-bg); color: var(--danger);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s;
+}
+.btn-icon:hover { background: var(--danger); color: #fff; }
+
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+.badge { display: inline-flex; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+.badge-info { background: #ebf8ff; color: var(--primary); }
+.badge-warn { background: #fffaf0; color: var(--accent); }
+.badge-ok { background: #f0fff4; color: var(--success); }
+
+/* ─── FOOTER ─── */
+.main-footer { padding: 40px 20px; text-align: center; color: var(--dim); font-size: 0.75rem; border-top: 1px solid var(--border); margin-top: 40px; background: #ffffff; }
+
+@media print {
+  body { background: #ffffff; color: #000000; }
+  header, .no-print, .tab-nav, .btn-row, .preset-row { display: none !important; }
+  main { max-width: 100%; padding: 0; }
+  .card { border: 1px solid #000; box-shadow: none; margin-bottom: 20px; break-inside: avoid; }
+  .tab-panel.hidden { display: flex !important; }
+  .res-box { background: #fff !important; border: 1px solid #000; }
+}
+
+@media (max-width: 768px) {
+  header { height: auto; min-height: 56px; flex-wrap: wrap; padding: 10px 16px; gap: 10px; justify-content: center; }
+  .header-right { width: 100%; justify-content: center; }
+  .app-container { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .btn-row .btn { flex: 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="print-header no-print" id="print-header" style="display:none;">
+  <h1 id="ph-title">ProBuilder — Murverk</h1>
+  <div class="ph-meta" id="ph-meta"></div>
+</div>
+
+<header class="no-print">
+  <div class="header-left">
+    <a href="index.html" class="back-btn">← <span data-i18n="back">Tilbake</span></a>
+    <span class="page-title">🧱 <span data-i18n="page_title">Murverk Kalkulator</span></span>
+  </div>
+  <div class="header-right">
+    <div class="lang-group">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+    </div>
+  </div>
+</header>
+
+<div class="tab-nav no-print">
+  <button class="tab-btn active" data-tab="tab-main" onclick="switchTab('tab-main',this)">🧮 <span data-i18n="tab_main">Kalkulator</span></button>
+  <button class="tab-btn" data-tab="tab-lintel" onclick="switchTab('tab-lintel',this)">🏗️ <span data-i18n="tab_lintel">Sąramos & U-blokeliai</span></button>
+  <button class="tab-btn" data-tab="tab-mortar" onclick="switchTab('tab-mortar',this)">🪣 <span data-i18n="tab_mortar">Skiedinys & Armavimas</span></button>
+  <button class="tab-btn" data-tab="tab-insul" onclick="switchTab('tab-insul',this)">🌡️ <span data-i18n="tab_insul">Izoliacija</span></button>
+  <button class="tab-btn" data-tab="tab-ref" onclick="switchTab('tab-ref',this)">📚 <span data-i18n="tab_ref">Žinynas</span></button>
+</div>
+
+<main>
+  <!-- TAB 1: MAIN CALCULATOR -->
+  <div id="tab-main" class="tab-panel">
+    <div class="card">
+      <div class="card-title">📋 <span data-i18n="sec_project">Prosjektinfo</span></div>
+      <div class="form-grid-2">
+        <div class="field" style="grid-column:span 2;">
+          <label data-i18n="lbl_proj_name">Prosjektnavn</label>
+          <input type="text" id="proj_name" data-i18n-ph="ph_proj_name" placeholder="Prosjektnavn...">
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_date">Dato</label>
+          <input type="date" id="proj_date">
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_address">Adresse</label>
+          <input type="text" id="proj_address" data-i18n-ph="ph_address" placeholder="Adresse / Sted">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧱 <span data-i18n="sec_element">Murelement type</span></div>
+      <div class="preset-row" id="element-presets"></div>
+      <div class="form-grid">
+        <div class="field"><label data-i18n="lbl_el_length">Lengde (L)</label><input type="number" id="el_length" oninput="calcMain()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+        <div class="field"><label data-i18n="lbl_el_height">Høyde (H)</label><input type="number" id="el_height" oninput="calcMain()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+        <div class="field"><label data-i18n="lbl_el_depth">Dybde (D)</label><input type="number" id="el_depth" oninput="calcMain()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+        <div class="field"><label data-i18n="lbl_joint_h">Horisontal fuge</label><input type="number" id="joint_h" oninput="calcMain()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+        <div class="field"><label data-i18n="lbl_joint_v">Vertikal fuge</label><input type="number" id="joint_v" oninput="calcMain()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+        <div class="field"><label data-i18n="lbl_waste">Svinn %</label><input type="number" id="waste_pct" oninput="calcMain()"><span class="field-hint">%</span></div>
+      </div>
+      <div id="unit-info" class="info-box blue" style="margin-top:12px;display:none;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📐 <span data-i18n="sec_walls">Vegger</span></div>
+      <div id="wall-list"></div>
+      <button class="btn btn-outline no-print" onclick="addWall()" style="margin-top:8px;">+ <span data-i18n="btn_add_wall">Legg til vegg</span></button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🚪 <span data-i18n="sec_openings">Åpninger</span></div>
+      <div id="opening-list"></div>
+      <button class="btn btn-outline no-print" onclick="addOpening()" style="margin-top:8px;">+ <span data-i18n="btn_add_opening">Legg til åpning</span></button>
+    </div>
+
+    <div class="card no-print">
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="calcMain()">⚡ <span data-i18n="btn_calc">Beregn</span></button>
+        <button class="btn btn-outline" onclick="window.print()">🖨️ <span data-i18n="btn_print">Skriv ut</span></button>
+        <button class="btn btn-outline" onclick="exportJSON()">💾 <span data-i18n="btn_export">Lagre</span></button>
+        <label class="btn btn-outline" style="cursor:pointer;">📂 <span data-i18n="btn_import">Åpne</span><input type="file" accept=".json" onchange="importJSON(event)" style="display:none;"></label>
+        <button class="btn no-print" onclick="resetAll()" style="color:var(--danger); background:var(--danger-bg); border:1px solid var(--danger); font-weight:700;">↺ <span data-i18n="btn_reset">Nullstill</span></button>
+      </div>
+    </div>
+
+    <div class="card" id="result-card" style="display:none;">
+      <div class="card-title">📊 <span data-i18n="sec_results">Resultater</span></div>
+      <div id="area-section">
+        <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;" data-i18n="sec_areas">Arealer</div>
+        <div class="result-grid" id="area-results"></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;" data-i18n="sec_element_qty">Elementer</div>
+      <div class="result-grid-lg" id="qty-results"></div>
+      <div class="divider"></div>
+      <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;" data-i18n="sec_weight">Vekt</div>
+      <div class="result-grid" id="weight-results"></div>
+      <div id="notes-section" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: LINTELS -->
+  <div id="tab-lintel" class="tab-panel hidden">
+    <div class="card">
+      <div class="info-box blue" style="margin-bottom:14px;" data-i18n="lintel_info"></div>
+      <div class="card-title">🏗️ <span data-i18n="sec_lintel_input">Overliggere</span></div>
+      <div id="lintel-list"></div>
+      <button class="btn btn-outline no-print" onclick="addLintel()" style="margin-top:8px;">+ <span data-i18n="btn_add_lintel">Legg til</span></button>
+      <div style="margin-top:16px; display:none;" id="lintel-results-wrap">
+        <div class="divider"></div>
+        <div class="table-wrap">
+          <table id="lintel-table">
+            <thead>
+              <tr><th data-i18n="th_pos">Pos</th><th data-i18n="th_opening_w">Åpning</th><th data-i18n="th_support">Opplegg</th><th data-i18n="th_lintel_len">Lengde</th><th data-i18n="th_lintel_type">Type</th><th data-i18n="th_qty">Ant.</th></tr>
+            </thead>
+            <tbody id="lintel-tbody"></tbody>
+          </table>
+        </div>
+        <div class="result-grid" style="margin-top:14px;" id="lintel-summary"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔲 <span data-i18n="sec_ublokk">U-blokker</span></div>
+      <div class="info-box yellow" data-i18n="ublokk_info" style="margin-bottom:12px;"></div>
+      <div class="form-grid">
+        <div class="field"><label data-i18n="lbl_ublokk_len">Lengde</label><input type="number" id="ublokk_len" oninput="calcUblokk()"><span class="field-hint" data-i18n="hint_lm">lm</span></div>
+        <div class="field"><label data-i18n="lbl_ublokk_internal">Vidinis plotis</label><input type="number" id="ublokk_internal" oninput="calcUblokk()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+      </div>
+      <div class="result-grid" style="margin-top:12px;" id="ublokk-results"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: MORTAR -->
+  <div id="tab-mortar" class="tab-panel hidden">
+    <div class="card">
+      <div class="card-title">🪣 <span data-i18n="sec_mortar">Skiedinys</span></div>
+      <div class="info-box blue" data-i18n="mortar_info" style="margin-bottom:14px;"></div>
+      <div class="preset-row" id="mortar-presets"></div>
+      <div class="form-grid">
+        <div class="field"><label data-i18n="lbl_mortar_area">Areal</label><input type="number" id="mortar_area" oninput="calcMortar()"><span class="field-hint">m²</span></div>
+        <div class="field"><label data-i18n="lbl_mortar_kgm2">Forbruk</label><input type="number" id="mortar_kgm2" oninput="calcMortar()"><span class="field-hint" data-i18n="hint_kg_m2">kg/m²</span></div>
+        <div class="field"><label data-i18n="lbl_bag_weight">Sekkvekt</label><input type="number" id="bag_weight" oninput="calcMortar()"><span class="field-hint">kg</span></div>
+        <div class="field"><label data-i18n="lbl_mortar_waste">Svinn %</label><input type="number" id="mortar_waste" oninput="calcMortar()"><span class="field-hint">%</span></div>
+      </div>
+      <div class="result-grid" style="margin-top:14px;" id="mortar-results"></div>
+      <div class="divider"></div>
+      <div class="card-title" style="margin-top:4px;">🔩 <span data-i18n="sec_armering">Armering</span></div>
+      <div class="info-box blue" data-i18n="armering_info" style="margin-bottom:12px;"></div>
+      <div class="form-grid">
+        <div class="field"><label data-i18n="lbl_arm_wall_len">Lengde</label><input type="number" id="arm_wall_len" oninput="calcArmering()"><span class="field-hint">m</span></div>
+        <div class="field"><label data-i18n="lbl_arm_wall_h">Høyde</label><input type="number" id="arm_wall_h" oninput="calcArmering()"><span class="field-hint">m</span></div>
+        <div class="field"><label data-i18n="lbl_arm_spacing">Žingsnis</label><select id="arm_spacing" onchange="calcArmering()"><option value="0.25">250 mm</option><option value="0.5" selected>500 mm</option></select></div>
+      </div>
+      <div class="result-grid" style="margin-top:12px;" id="arm-results"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: INSULATION -->
+  <div id="tab-insul" class="tab-panel hidden">
+    <div class="card">
+      <div class="card-title">🌡️ <span data-i18n="sec_insul">Isolasjon</span></div>
+      <div class="info-box blue" data-i18n="insul_info" style="margin-bottom:14px;"></div>
+      <div class="form-grid">
+        <div class="field"><label data-i18n="lbl_insul_area">Areal</label><input type="number" id="insul_area" oninput="calcInsul()"><span class="field-hint">m²</span></div>
+        <div class="field"><label data-i18n="lbl_insul_thick">Storis</label><select id="insul_thick" onchange="calcInsul()"><option value="50">50 mm</option><option value="100" selected>100 mm</option><option value="150">150 mm</option><option value="200">200 mm</option></select></div>
+        <div class="field"><label data-i18n="lbl_insul_type">Tipas</label><select id="insul_type" onchange="calcInsul()"><option value="rockwool" data-i18n-opt="insul_rockwool">Rockwool</option><option value="eps" data-i18n-opt="insul_eps">EPS</option><option value="xps" data-i18n-opt="insul_xps">XPS</option></select></div>
+        <div class="field"><label data-i18n="lbl_plate_size">Dydis</label><select id="plate_size" onchange="calcInsul()"><option value="1.2">1200×600 mm</option><option value="1.0">1000×600 mm</option><option value="0.5625">750×750 mm</option></select></div>
+        <div class="field"><label data-i18n="lbl_holder_m2">Holdere/m²</label><input type="number" id="holder_m2" oninput="calcInsul()"><span class="field-hint" data-i18n="hint_per_m2">stk/m²</span></div>
+      </div>
+      <div class="result-grid-lg" style="margin-top:14px;" id="insul-results"></div>
+      <div class="divider"></div>
+      <div class="card-title">💧 <span data-i18n="sec_dampproof">Fuktsperre</span></div>
+      <div class="info-box yellow" data-i18n="dampproof_info" style="margin-bottom:12px;"></div>
+      <div class="form-grid">
+        <div class="field"><label data-i18n="lbl_dp_perimeter">Perimeter</label><input type="number" id="dp_perimeter" oninput="calcDampproof()"><span class="field-hint">m</span></div>
+        <div class="field"><label data-i18n="lbl_dp_width">Bredde</label><input type="number" id="dp_width" oninput="calcDampproof()"><span class="field-hint" data-i18n="hint_mm">mm</span></div>
+      </div>
+      <div class="result-grid" style="margin-top:12px;" id="dp-results"></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: REFERENCE -->
+  <div id="tab-ref" class="tab-panel hidden">
+    <div class="card">
+      <div class="card-title">📋 <span data-i18n="ref_elements_title">Standarder</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th data-i18n="th_type">Element</th><th data-i18n="th_dimensions">Mål</th><th data-i18n="th_per_m2">Stk/m²</th><th data-i18n="th_weight_unit">kg/stk</th><th data-i18n="th_weight_m2">kg/m²</th><th data-i18n="th_mortar_m2">Mørtel</th><th data-i18n="th_standard">Ref.</th></tr>
+          </thead>
+          <tbody id="ref-element-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">⚖️ <span data-i18n="ref_ns_title">NS Standarder</span></div><div id="ref-ns-content"></div></div>
+    <div class="card"><div class="card-title">❄️ <span data-i18n="ref_winter_title">Vintermuring</span></div><div class="info-box yellow" data-i18n="ref_winter_text" style="margin-bottom:0;"></div></div>
+    <div class="card"><div class="card-title">💡 <span data-i18n="ref_tips_title">Praktiske råd</span></div><div id="ref-tips-content"></div></div>
+  </div>
+</main>
+
+<footer class="main-footer">
+    © 2026 Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+</footer>
+
+<script>
+const T = {
+  no: {
+    back:'Tilbake', page_title:'Murverk Kalkulator', btn_reset:'Nullstill',
+    tab_main:'Kalkulator', tab_lintel:'Såramer & U-blokk', tab_mortar:'Mørtel & Armering', tab_insul:'Isolasjon', tab_ref:'Håndbok',
+    sec_project:'Prosjektinfo', lbl_proj_name:'Prosjektnavn', ph_proj_name:'Skriv inn prosjektnavn...', lbl_date:'Dato', lbl_address:'Adresse', ph_address:'Adresse / Sted',
+    sec_element:'Murelement type', lbl_el_length:'Lengde (L)', lbl_el_height:'Høyde (H)', lbl_el_depth:'Dybde (D)', lbl_joint_h:'Horisontal fuge', lbl_joint_v:'Vertikal fuge', lbl_waste:'Svinn',
+    hint_mm:'mm', hint_lm:'lm (løpemeter)',
+    sec_walls:'Vegger', btn_add_wall:'Legg til vegg', lbl_wall_len:'Lengde (m)', lbl_wall_h:'Høyde (m)', lbl_wall_label:'Beskrivelse',
+    sec_openings:'Åpninger (Vinduer / Dører)', btn_add_opening:'Legg til åpning', lbl_op_w:'Bredde (m)', lbl_op_h:'Høyde (m)', lbl_op_label:'Type',
+    btn_calc:'Beregn', btn_print:'Skriv ut', btn_export:'Eksporter JSON', btn_import:'Importer JSON',
+    sec_results:'Beregningsresultater', sec_areas:'Arealer', sec_element_qty:'Elementmengde', sec_weight:'Vekt / Transport',
+    res_gross:'Bruttoareal', res_opening:'Åpningsareal', res_net:'Nettoareal', res_per_m2:'Per m²', res_qty:'Antall stk', res_with_waste:'Med svinn', res_pallets:'Paller',
+    res_weight_el:'Vekt elementer', res_weight_mortar:'Vekt mørtel', res_weight_total:'Total vekt', res_tons:'Tonn',
+    sec_lintel_input:'Overliggere (Såramer)', btn_add_lintel:'Legg til åpning', lbl_lintel_opening:'Åpningsbredde (m)', lbl_lintel_type:'Type', lbl_support:'Opplegg mm',
+    lintel_info:'NS 3420: Min. opplegg 250 mm på hver side. For lett konstruksjon kan 150 mm aksepteres. Lengde = Åpning + 2×opplegg.',
+    th_pos:'Pos', th_opening_w:'Åpning', th_support:'Opplegg', th_lintel_len:'Lengde', th_lintel_type:'Type', th_qty:'Ant.',
+    sec_lintel_results:'Oversikt overliggere',
+    sec_ublokk:'U-blokker (Ringmur/Armering)', ublokk_info:'U-blokker brukes som forskalingsblokk for ringmur eller over åpninger. Fylles med armering og betong.',
+    lbl_ublokk_len:'Total lengde', lbl_ublokk_internal:'Indre bredde', hint_per_m2:'stk/m²',
+    sec_mortar:'Mørtelberegning', mortar_info:'NS 3420 — Mørtelforbruk avhenger av elementtype og fugetykkelse. Teglstein: 30–40 kg/m². Leca (tradisjonell): 10–15 kg/m². Leca Lim: 2.5–4 kg/m².',
+    lbl_mortar_area:'Muringsareal', lbl_mortar_kgm2:'Forbruk (kg/m²)', lbl_bag_weight:'Sekkvekt', lbl_mortar_waste:'Svinn %',
+    hint_kg_m2:'kg per m²',
+    sec_armering:'Armering (Murfor / Leca armering)', armering_info:'Legg armering i horisontalfuger hver 2. rad (ca. 250 mm OC) eller etter prosjekteringsanvisning.',
+    lbl_arm_wall_len:'Veggperimeter (m)', lbl_arm_wall_h:'Veggshøyde (m)', lbl_arm_spacing:'Avstand',
+    sec_insul:'Isolasjonsberegning', insul_info:'For tolagsvegg (hulmur): Norsk standard anbefaler 100–150 mm mineralull (Rockwool/Glava) eller XPS/EPS. Min. U-verdi krav TEK17: 0,22 W/m²K.',
+    lbl_insul_area:'Isolasjonsareal', lbl_insul_thick:'Tykkelse', lbl_insul_type:'Isolasjonstype', lbl_plate_size:'Platestørrelse', lbl_holder_m2:'Holdere pr m²',
+    insul_rockwool:'Mineralull (Rockwool/Glava)', insul_eps:'EPS (Isopor)', insul_xps:'XPS',
+    sec_dampproof:'Fuktsperre (Svillemembran)', dampproof_info:'Svillemembran under 1. steinrekke yra obligatorisk ihh. NS 8175. Regel: Bredde = murtykkelse + 50 mm på hver side.',
+    lbl_dp_perimeter:'Vegglengde totalt (m)', lbl_dp_width:'Fuktsperre bredde',
+    ref_elements_title:'Murelement standarder — NO/NS', ref_ns_title:'Relevante norske standarder', ref_winter_title:'Vintermuring', ref_tips_title:'Praktiske råd',
+    th_type:'Element', th_dimensions:'Mål (L×H×D mm)', th_per_m2:'Stk/m²', th_weight_unit:'kg/stk', th_weight_m2:'kg/m²', th_mortar_m2:'Mørtel kg/m²', th_standard:'Ref.',
+    ref_winter_text:'❄️ Vintermuring: Bruk varmmørtel (Rapid-variant) ved lufttemperatur < +5°C. Beskytt fersk mur mot frost i minst 24 timer. Bruk presenning og eventuelt varmtelt. Ikke mur ved temperaturer under -10°C uten spesialtiltak. Ref: NS 3420-M.',
+    btn_remove:'Fjern',
+  },
+  lt: {
+    back:'Atgal', page_title:'Mūro Skaičiuoklė', btn_reset:'Išvalyti',
+    tab_main:'Skaičiuoklė', tab_lintel:'Sąramos & U-blokeliai', tab_mortar:'Skiedinys & Armavimas', tab_insul:'Izoliacija', tab_ref:'Žinynas',
+    sec_project:'Projekto informacija', lbl_proj_name:'Projekto pavadinimas', ph_proj_name:'Įveskite pavadinimą...', lbl_date:'Data', lbl_address:'Adresas', ph_address:'Adresas / Vieta',
+    sec_element:'Mūro elemento tipas', lbl_el_length:'Ilgis (L)', lbl_el_height:'Aukštis (H)', lbl_el_depth:'Gylis (D)', lbl_joint_h:'Horizontali siūlė', lbl_joint_v:'Vertikali siūlė', lbl_waste:'Apkarpymai',
+    hint_mm:'mm', hint_lm:'lm (bėginiai metrai)',
+    sec_walls:'Sienos', btn_add_wall:'Pridėti sieną', lbl_wall_len:'Ilgis (m)', lbl_wall_h:'Aukštis (m)', lbl_wall_label:'Aprašymas',
+    sec_openings:'Angos (Langai / Durys)', btn_add_opening:'Pridėti angą', lbl_op_w:'Plotis (m)', lbl_op_h:'Aukštis (m)', lbl_op_label:'Tipas',
+    btn_calc:'Skaičiuoti', btn_print:'Spausdinti', btn_export:'Eksportuoti JSON', btn_import:'Importuoti JSON',
+    sec_results:'Skaičiavimo rezultatai', sec_areas:'Plotai', sec_element_qty:'Elementų kiekis', sec_weight:'Svoris / Transportas',
+    res_gross:'Bruto plotas', res_opening:'Angų plotas', res_net:'Neto plotas', res_per_m2:'Vienam m²', res_qty:'Kiekis vnt', res_with_waste:'Su apkarpymais', res_pallets:'Paletės',
+    res_weight_el:'Elementų svoris', res_weight_mortar:'Skiedinio svoris', res_weight_total:'Bendras svoris', res_tons:'Tonomis',
+    sec_lintel_input:'Sąramos (Overliggere)', btn_add_lintel:'Pridėti angą', lbl_lintel_opening:'Angos plotis (m)', lbl_lintel_type:'Tipas', lbl_support:'Rėmimasis mm',
+    lintel_info:'NS 3420: Min. rėmimosi gylis 250 mm iš abiejų pusių. Lengvoms konstrukcijoms galima 150 mm. Ilgis = Anga + 2×rėmimasis.',
+    th_pos:'Poz.', th_opening_w:'Anga', th_support:'Rėmimasis', th_lintel_len:'Ilgis', th_lintel_type:'Tipas', th_qty:'Kiek.',
+    sec_lintel_results:'Sąramų suvestinė',
+    sec_ublokk:'U-blokeliai (Žiedinis mūras)', ublokk_info:'U-blokeliai naudojami kaip klojinys žiediniam mūrui arba vietoje paruoštų sąramų – užpildomi armatūra ir betonu.',
+    lbl_ublokk_len:'Bendras ilgis', lbl_ublokk_internal:'Vidinis plotis', hint_per_m2:'vnt/m²',
+    sec_mortar:'Skiedinio skaičiavimas', mortar_info:'NS 3420 — Skiedinio sąnaudos priklauso nuo elemento tipo ir siūlių storio. Plytos: 30–40 kg/m². Leca (tradicinis): 10–15 kg/m². Leca klijai: 2.5–4 kg/m².',
+    lbl_mortar_area:'Mūravimo plotas', lbl_mortar_kgm2:'Sąnaudos (kg/m²)', lbl_bag_weight:'Maišo svoris', lbl_mortar_waste:'Atliekos %',
+    hint_kg_m2:'kg vienam m²',
+    sec_armering:'Armavimas (Murfor / Leca armatūra)', armering_info:'Dėti armavimą horizontaliose siūlėse kas 2-ą eilę (apie 250 mm žingsniu) arba pagal projektą.',
+    lbl_arm_wall_len:'Sienos perimetras (m)', lbl_arm_wall_h:'Sienos aukštis (m)', lbl_arm_spacing:'Žingsnis',
+    sec_insul:'Izoliacijos skaičiavimas', insul_info:'Dviejų sluoksnių sienai (oro tarpas): Norvegijos standartas rekomenduoja 100–150 mm mineralinės vatos (Rockwool/Glava) arba XPS/EPS. Min. U-vertė TEK17: 0,22 W/m²K.',
+    lbl_insul_area:'Izoliacijos plotas', lbl_insul_thick:'Storis', lbl_insul_type:'Izoliacijos tipas', lbl_plate_size:'Plokštės dydis', lbl_holder_m2:'Laikikliai m²',
+    insul_rockwool:'Mineralinė vata (Rockwool/Glava)', insul_eps:'EPS (polistirenas)', insul_xps:'XPS',
+    sec_dampproof:'Drėgmės barjeras (Svillemembran)', dampproof_info:'Drėgmės barjeras po pirma eile yra privalomas pagal NS 8175. Plotis = mūro storis + 50 mm iš abiejų pusių.',
+    lbl_dp_perimeter:'Bendras sienos ilgis (m)', lbl_dp_width:'Barjero plotis',
+    ref_elements_title:'Mūro elementų standartai — NO/NS', ref_ns_title:'Svarbūs Norvegijos standartai', ref_winter_title:'Žiemos darbai', ref_tips_title:'Praktiniai patarimai',
+    th_type:'Elementas', th_dimensions:'Matmenys (I×A×G mm)', th_per_m2:'Vnt/m²', th_weight_unit:'kg/vnt', th_weight_m2:'kg/m²', th_mortar_m2:'Skiedinys kg/m²', th_standard:'Šaltinis',
+    ref_winter_text:'❄️ Žiemos mūravimas: Naudoti šildomą skiedinį (Rapid variantas) kai oro temperatūra < +5°C. Apsaugoti šviežią mūrą nuo šalčio bent 24 val. Naudoti brezentu ir šildymo tentą. Nemūruoti esant < -10°C be specialių priemonių. Ref: NS 3420-M.',
+    btn_remove:'Pašalinti',
+  },
+  en: {
+    back:'Back', page_title:'Masonry Calculator', btn_reset:'Reset',
+    tab_main:'Calculator', tab_lintel:'Lintels & U-blocks', tab_mortar:'Mortar & Rebar', tab_insul:'Insulation', tab_ref:'Reference',
+    sec_project:'Project Info', lbl_proj_name:'Project Name', ph_proj_name:'Enter project name...', lbl_date:'Date', lbl_address:'Address', ph_address:'Address / Location',
+    sec_element:'Masonry Element Type', lbl_el_length:'Length (L)', lbl_el_height:'Height (H)', lbl_el_depth:'Depth (D)', lbl_joint_h:'Horizontal Joint', lbl_joint_v:'Vertical Joint', lbl_waste:'Waste',
+    hint_mm:'mm', hint_lm:'lm (linear meters)',
+    sec_walls:'Walls', btn_add_wall:'Add Wall', lbl_wall_len:'Length (m)', lbl_wall_h:'Height (m)', lbl_wall_label:'Description',
+    sec_openings:'Openings (Windows / Doors)', btn_add_opening:'Add Opening', lbl_op_w:'Width (m)', lbl_op_h:'Height (m)', lbl_op_label:'Type',
+    btn_calc:'Calculate', btn_print:'Print', btn_export:'Export JSON', btn_import:'Import JSON',
+    sec_results:'Calculation Results', sec_areas:'Areas', sec_element_qty:'Element Quantities', sec_weight:'Weight / Transport',
+    res_gross:'Gross Area', res_opening:'Opening Area', res_net:'Net Area', res_per_m2:'Per m²', res_qty:'Quantity pcs', res_with_waste:'With Waste', res_pallets:'Pallets',
+    res_weight_el:'Element Weight', res_weight_mortar:'Mortar Weight', res_weight_total:'Total Weight', res_tons:'Tonnes',
+    sec_lintel_input:'Lintels (Overliggere)', btn_add_lintel:'Add Opening', lbl_lintel_opening:'Opening Width (m)', lbl_lintel_type:'Type', lbl_support:'Bearing mm',
+    lintel_info:'NS 3420: Min. bearing 250 mm on each side. For light structures 150 mm may be accepted. Length = Opening + 2×bearing.',
+    th_pos:'Pos', th_opening_w:'Opening', th_support:'Bearing', th_lintel_len:'Length', th_lintel_type:'Type', th_qty:'Qty',
+    sec_lintel_results:'Lintel Summary',
+    sec_ublokk:'U-blocks (Ring beam / Arming)', ublokk_info:'U-blocks are used as formwork for ring beams or instead of prefab lintels — filled with rebar and concrete.',
+    lbl_ublokk_len:'Total Length', lbl_ublokk_internal:'Internal Width', hint_per_m2:'pcs/m²',
+    sec_mortar:'Mortar Calculation', mortar_info:'NS 3420 — Mortar consumption depends on element type and joint thickness. Brick: 30–40 kg/m². Leca (traditional): 10–15 kg/m². Leca Adhesive: 2.5–4 kg/m².',
+    lbl_mortar_area:'Masonry Area', lbl_mortar_kgm2:'Consumption (kg/m²)', lbl_bag_weight:'Bag Weight', lbl_mortar_waste:'Waste %',
+    hint_kg_m2:'kg per m²',
+    sec_armering:'Reinforcement (Murfor / Leca rebar)', armering_info:'Place reinforcement in horizontal joints every 2nd course (approx. 250 mm OC) or per engineering specification.',
+    lbl_arm_wall_len:'Wall Perimeter (m)', lbl_arm_wall_h:'Wall Height (m)', lbl_arm_spacing:'Spacing',
+    sec_insul:'Insulation Calculation', insul_info:'For cavity walls: Norwegian standard recommends 100–150 mm mineral wool (Rockwool/Glava) or XPS/EPS. Min. U-value TEK17: 0,22 W/m²K.',
+    lbl_insul_area:'Insulation Area', lbl_insul_thick:'Thickness', lbl_insul_type:'Insulation Type', lbl_plate_size:'Plate Size', lbl_holder_m2:'Holders per m²',
+    insul_rockwool:'Mineral Wool (Rockwool/Glava)', insul_eps:'EPS (Styrofoam)', insul_xps:'XPS',
+    sec_dampproof:'Damp-proof Course (Svillemembran)', dampproof_info:'Damp-proof membrane under first course is mandatory per NS 8175. Width = wall thickness + 50 mm each side.',
+    lbl_dp_perimeter:'Total Wall Length (m)', lbl_dp_width:'DPC Width',
+    ref_elements_title:'Masonry Element Standards — NO/NS', ref_ns_title:'Relevant Norwegian Standards', ref_winter_title:'Winter Masonry', ref_tips_title:'Practical Tips',
+    th_type:'Element', th_dimensions:'Dims (L×H×D mm)', th_per_m2:'Pcs/m²', th_weight_unit:'kg/pcs', th_weight_m2:'kg/m²', th_mortar_m2:'Mortar kg/m²', th_standard:'Ref.',
+    ref_winter_text:'❄️ Winter masonry: Use rapid/warm mortar when air temp < +5°C. Protect fresh masonry from frost for at least 24 hours. Use tarpaulins and heating tent. Do not lay masonry below -10°C without special measures. Ref: NS 3420-M.',
+    btn_remove:'Remove',
+  },
+  pl: {
+    back:'Wróć', page_title:'Kalkulator Murarski', btn_reset:'Resetuj',
+    tab_main:'Kalkulator', tab_lintel:'Nadproża i U-bloki', tab_mortar:'Zaprawa i Zbrojenie', tab_insul:'Izolacja', tab_ref:'Podręcznik',
+    sec_project:'Informacje o projekcie', lbl_proj_name:'Nazwa projektu', ph_proj_name:'Wpisz nazwę projektu...', lbl_date:'Data', lbl_address:'Adres', ph_address:'Adres / Lokalizacja',
+    sec_element:'Typ elementu murowego', lbl_el_length:'Długość (L)', lbl_el_height:'Wysokość (H)', lbl_el_depth:'Głębokość (D)', lbl_joint_h:'Spoina pozioma', lbl_joint_v:'Spoina pionowa', lbl_waste:'Odpad',
+    hint_mm:'mm', hint_lm:'mb (metry bieżące)',
+    sec_walls:'Ściany', btn_add_wall:'Dodaj ścianę', lbl_wall_len:'Długość (m)', lbl_wall_h:'Wysokość (m)', lbl_wall_label:'Opis',
+    sec_openings:'Otwory (Okna / Drzwi)', btn_add_opening:'Dodaj otwór', lbl_op_w:'Szerokość (m)', lbl_op_h:'Wysokość (m)', lbl_op_label:'Typ',
+    btn_calc:'Oblicz', btn_print:'Drukuj', btn_export:'Eksportuj JSON', btn_import:'Importuj JSON',
+    sec_results:'Wyniki obliczeń', sec_areas:'Powierzchnie', sec_element_qty:'Ilość elementów', sec_weight:'Waga / Transport',
+    res_gross:'Powierzchnia brutto', res_opening:'Powierzchnia otworów', res_net:'Powierzchnia netto', res_per_m2:'Na m²', res_qty:'Ilość sztuk', res_with_waste:'Z odpadem', res_pallets:'Palety',
+    res_weight_el:'Waga elementów', res_weight_mortar:'Waga zaprawy', res_weight_total:'Waga całkowita', res_tons:'Tony',
+    sec_lintel_input:'Nadproża (Såramer)', btn_add_lintel:'Dodaj otwór', lbl_lintel_opening:'Szerokość otworu (m)', lbl_lintel_type:'Typ', lbl_support:'Oparcie mm',
+    lintel_info:'NS 3420: Min. oparcie 250 mm z każdej strony. Dla lekkich konstrukcji dopuszczalne 150 mm. Długość = Otwór + 2×oparcie.',
+    th_pos:'Poz', th_opening_w:'Otwór', th_support:'Oparcie', th_lintel_len:'Długość', th_lintel_type:'Typ', th_qty:'Ilość',
+    sec_lintel_results:'Zestawienie nadproży',
+    sec_ublokk:'U-bloki (Wieniec/Zbrojenie)', ublokk_info:'U-bloki stosuje się jako szalunek tracony wieńca lub nad otworami. Wypełniane zbrojeniem i betonem.',
+    lbl_ublokk_len:'Całkowita długość', lbl_ublokk_internal:'Szerokość wewn.', hint_per_m2:'szt/m²',
+    sec_mortar:'Obliczanie zaprawy', mortar_info:'NS 3420 — Zużycie zaprawy zależy od typu elementu i grubości spoiny. Cegła: 30–40 kg/m². Leca (tradycyjna): 10–15 kg/m². Klej Leca: 2.5–4 kg/m².',
+    lbl_mortar_area:'Powierzchnia murowania', lbl_mortar_kgm2:'Zużycie (kg/m²)', lbl_bag_weight:'Waga worka', lbl_mortar_waste:'Odpad %',
+    hint_kg_m2:'kg na m²',
+    sec_armering:'Zbrojenie (Murfor / zbrojenie Leca)', armering_info:'Układać zbrojenie w spoinach poziomych co 2. warstwę (ok. 250 mm) lub zgodnie z projektem.',
+    lbl_arm_wall_len:'Obwód ścian (m)', lbl_arm_wall_h:'Wysokość ściany (m)', lbl_arm_spacing:'Rozstaw',
+    sec_insul:'Obliczanie izolacji', insul_info:'Dla ściany szczelinowej: Norweska norma zaleca 100–150 mm wełny mineralnej (Rockwool/Glava) lub XPS/EPS. Wymóg TEK17: U-max 0,22 W/m²K.',
+    lbl_insul_area:'Powierzchnia izolacji', lbl_insul_thick:'Grubość', lbl_insul_type:'Typ izolacji', lbl_plate_size:'Rozmiar płyty', lbl_holder_m2:'Uchwyty na m²',
+    insul_rockwool:'Wełna mineralna (Rockwool/Glava)', insul_eps:'EPS (Styropian)', insul_xps:'XPS',
+    sec_dampproof:'Izolacja pozioma (Svillemembran)', dampproof_info:'Izolacja pod 1. warstwą jest obowiązkowa wg NS 8175. Zasada: Szerokość = grubość muru + 50 mm z każdej strony.',
+    lbl_dp_perimeter:'Całkowita długość ścian (m)', lbl_dp_width:'Szerokość izolacji',
+    ref_elements_title:'Standardy elementów murowych — NO/NS', ref_ns_title:'Istotne norweskie normy', ref_winter_title:'Murowanie zimą', ref_tips_title:'Porady praktyczne',
+    th_type:'Element', th_dimensions:'Wymiary (I×A×G mm)', th_per_m2:'Szt/m²', th_weight_unit:'kg/szt', th_weight_m2:'kg/m²', th_mortar_m2:'Zaprawa kg/m²', th_standard:'Ref.',
+    ref_winter_text:'❄️ Murowanie zimą: Stosować zaprawę zimową (Rapid) przy temp. < +5°C. Chronić świeży mur prieš mrozem przez min. 24h. Stosować plandeki i nagrzewnice. Nie murować poniżej -10°C bez spec. środków. Ref: NS 3420-M.',
+    btn_remove:'Usuń',
+  }
+};
+
+const ELEMENTS = [
+  { id:'tegl',     no:'Teglstein NS',    lt:'Plytos NS',        en:'Brick NS',       l:228, h:62,  d:108, jh:12, jv:10, perM2:60, kgUnit:2.5, kgM2:150, mortarM2:35, pallet:500,  std:'NS 3420' },
+  { id:'tegl_fk',  no:'Tegl Flensburg', lt:'Plytos Flensburg', en:'Brick Flensburg',l:240, h:62,  d:115, jh:12, jv:10, perM2:57, kgUnit:2.7, kgM2:154, mortarM2:35, pallet:500,  std:'NS 3420' },
+  { id:'leca20',   no:'Leca 20cm',       lt:'Leca 20cm',       en:'Leca 20cm',      l:500, h:200, d:200, jh:10, jv:10, perM2:8,  kgUnit:15,  kgM2:120, mortarM2:12, pallet:64,   std:'NS-EN 771-3' },
+  { id:'leca15',   no:'Leca 15cm',       lt:'Leca 15cm',       en:'Leca 15cm',      l:500, h:200, d:150, jh:10, jv:10, perM2:8,  kgUnit:12,  kgM2:96,  mortarM2:10, pallet:64,   std:'NS-EN 771-3' },
+  { id:'leca10',   no:'Leca 10cm',       lt:'Leca 10cm',       en:'Leca 10cm',      l:500, h:200, d:100, jh:10, jv:10, perM2:8,  kgUnit:9,   kgM2:72,  mortarM2:8,  pallet:80,   std:'NS-EN 771-3' },
+  { id:'ytong20',  no:'Ytong/Siporex 20',lt:'Ytong 20cm',      en:'Ytong 20cm',     l:625, h:250, d:200, jh:3,  jv:3,  perM2:6,  kgUnit:8,   kgM2:48,  mortarM2:3,  pallet:48,   std:'NS-EN 771-4' },
+  { id:'ytong15',  no:'Ytong 15cm',      lt:'Ytong 15cm',      en:'Ytong 15cm',     l:625, h:250, d:150, jh:3,  jv:3,  perM2:6,  kgUnit:6,   kgM2:36,  mortarM2:2,  pallet:60,   std:'NS-EN 771-4' },
+  { id:'fsk',      no:'Forskalingsblokk',lt:'Klojinio blokelis',en:'Formwork block', l:500, h:200, d:200, jh:10, jv:10, perM2:8,  kgUnit:14,  kgM2:112, mortarM2:10, pallet:64,   std:'NS-EN 771-3' },
+  { id:'custom',   no:'Egendefinert',    lt:'Kitas',           en:'Custom',         l:228, h:62,  d:108, jh:12, jv:10, perM2:0,  kgUnit:2.5, kgM2:0,   mortarM2:35, pallet:500,  std:'' },
+];
+
+const STORAGE_KEY = 'murverk_v2';
+let lang = localStorage.getItem('pb_lang') || 'no';
+let currentElement = ELEMENTS[0];
+let walls = [];
+let openings = [];
+let lintels = [];
+let wallIdCounter = 0, openingIdCounter = 0, lintelIdCounter = 0;
+
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('pb_lang', l);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+  applyLang();
+  save();
+}
+
+function applyLang() {
+  const t = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.dataset.i18nPh;
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  buildElementPresets();
+  renderWalls();
+  renderOpenings();
+  renderLintels();
+  buildMortarPresets();
+  buildRefTable();
+  buildRefNS();
+  buildRefTips();
+  calcMain();
+  calcMortar();
+  calcArmering();
+  calcInsul();
+  calcDampproof();
+  calcUblokk();
+  updateLintelResults();
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.remove('hidden');
+  btn.classList.add('active');
+}
+
+function buildElementPresets() {
+  const container = document.getElementById('element-presets');
+  container.innerHTML = '';
+  ELEMENTS.forEach(el => {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn' + (el.id === currentElement.id ? ' active' : '');
+    btn.textContent = el[lang] || el.no;
+    btn.onclick = () => selectElement(el.id, btn);
+    container.appendChild(btn);
+  });
+}
+
+function selectElement(id, btn) {
+  currentElement = ELEMENTS.find(e => e.id === id);
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  setVal('el_length', currentElement.l);
+  setVal('el_height', currentElement.h);
+  setVal('el_depth', currentElement.d);
+  setVal('joint_h', currentElement.jh);
+  setVal('joint_v', currentElement.jv);
+  const info = document.getElementById('unit-info');
+  info.style.display = 'block';
+  info.textContent = `${currentElement[lang] || currentElement.no} — ${currentElement.l}×${currentElement.h}×${currentElement.d} mm | ~${currentElement.perM2} stk/m² | ${currentElement.kgUnit} kg/stk | ${currentElement.mortarM2} kg mørtel/m²`;
+  calcMain();
+  save();
+}
+
+function addWall(l='', h='', label='') {
+  const id = ++wallIdCounter;
+  walls.push({ id, l, h, label });
+  renderWalls();
+  calcMain();
+}
+
+function removeWall(id) {
+  walls = walls.filter(w => w.id !== id);
+  renderWalls();
+  calcMain();
+}
+
+function renderWalls() {
+  const container = document.getElementById('wall-list');
+  const t = T[lang];
+  container.innerHTML = '';
+  walls.forEach((w, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px;';
+    div.innerHTML = `
+      <div class="field"><label>${t.lbl_wall_label} ${i+1}</label><input type="text" value="${w.label}" placeholder="${t.lbl_wall_label}" oninput="walls[${i}].label=this.value;save();"></div>
+      <div class="field"><label>${t.lbl_wall_len}</label><input type="number" value="${w.l}" oninput="walls[${i}].l=parseFloat(this.value)||0;calcMain();save();"></div>
+      <div class="field"><label>${t.lbl_wall_h}</label><input type="number" value="${w.h}" oninput="walls[${i}].h=parseFloat(this.value)||0;calcMain();save();"></div>
+      <button class="btn-icon no-print" onclick="removeWall(${w.id})">✕</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addOpening(w='', h='', label='') {
+  const id = ++openingIdCounter;
+  openings.push({ id, w, h, label });
+  renderOpenings();
+  calcMain();
+}
+
+function removeOpening(id) {
+  openings = openings.filter(o => o.id !== id);
+  renderOpenings();
+  calcMain();
+}
+
+function renderOpenings() {
+  const container = document.getElementById('opening-list');
+  const t = T[lang];
+  container.innerHTML = '';
+  openings.forEach((o, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px;';
+    div.innerHTML = `
+      <div class="field"><label>${t.lbl_op_label} ${i+1}</label><input type="text" value="${o.label}" placeholder="${t.lbl_op_label}" oninput="openings[${i}].label=this.value;save();"></div>
+      <div class="field"><label>${t.lbl_op_w}</label><input type="number" value="${o.w}" oninput="openings[${i}].w=parseFloat(this.value)||0;calcMain();save();"></div>
+      <div class="field"><label>${t.lbl_op_h}</label><input type="number" value="${o.h}" oninput="openings[${i}].h=parseFloat(this.value)||0;calcMain();save();"></div>
+      <button class="btn-icon no-print" onclick="removeOpening(${o.id})">✕</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function calcMain() {
+  const t = T[lang];
+  const elL = parseFloat(document.getElementById('el_length')?.value) || currentElement.l;
+  const elH = parseFloat(document.getElementById('el_height')?.value) || currentElement.h;
+  const jH = parseFloat(document.getElementById('joint_h')?.value) || currentElement.jh;
+  const jV = parseFloat(document.getElementById('joint_v')?.value) || currentElement.jv;
+  const wPct = parseFloat(document.getElementById('waste_pct')?.value) || 5;
+  const effW = (elL + jV) / 1000;
+  const effH = (elH + jH) / 1000;
+  const perM2 = Math.round(1 / (effW * effH) * 10) / 10;
+  const grossArea = walls.reduce((s, w) => s + (w.l * w.h), 0);
+  const openingArea = openings.reduce((s, o) => s + (o.w * o.h), 0);
+  const netArea = Math.max(0, grossArea - openingArea);
+  const qty = netArea * perM2;
+  const qtyWithWaste = Math.ceil(qty * (1 + wPct/100));
+  const palletSize = currentElement.pallet || 500;
+  const pallets = Math.ceil(qtyWithWaste / palletSize);
+  const kgUnit = currentElement.kgUnit || 2.5;
+  const kgM2mortar = currentElement.mortarM2 || 35;
+  const weightEl = (qtyWithWaste * kgUnit) / 1000;
+  const weightMortar = (netArea * kgM2mortar) / 1000;
+  const weightTotal = weightEl + weightMortar;
+  const mortarBags = Math.ceil((netArea * kgM2mortar * 1.1) / 25);
+
+  if (netArea <= 0 && walls.length === 0) { document.getElementById('result-card').style.display = 'none'; return; }
+  document.getElementById('result-card').style.display = 'block';
+  const mortarAreaEl = document.getElementById('mortar_area');
+  if (mortarAreaEl && !mortarAreaEl.value) mortarAreaEl.value = netArea.toFixed(2);
+
+  function rb(val, lbl, cls='') { return `<div class="res-box${cls?' highlight':''}"><div class="res-val ${cls}">${val}</div><div class="res-lbl">${lbl}</div></div>`; }
+  document.getElementById('area-results').innerHTML = rb(n(grossArea,2)+' m²', t.res_gross) + rb(n(openingArea,2)+' m²', t.res_opening, 'warn') + rb(n(netArea,2)+' m²', t.res_net, 'ok');
+  document.getElementById('qty-results').innerHTML = rb(n(perM2,1), t.res_per_m2) + rb(n(Math.ceil(qty)), t.res_qty, 'info') + rb(n(qtyWithWaste), t.res_with_waste+` (+${wPct}%)`, 'accent') + rb(pallets+' stk', t.res_pallets) + rb(mortarBags+' sekker', (lang==='lt'?'Skiedinio maišai':(lang==='en'?'Mortar bags':(lang==='pl'?'Worki zaprawy':'Mørtel sekker'))));
+  document.getElementById('weight-results').innerHTML = rb(n(weightEl,2)+' t', t.res_weight_el) + rb(n(weightMortar,2)+' t', t.res_weight_mortar, 'warn') + rb(n(weightTotal,2)+' t', t.res_weight_total, 'accent');
+  const notes = document.getElementById('notes-section');
+  notes.innerHTML = '';
+  if (currentElement.id === 'fsk') {
+    const concVol = netArea * 0.013;
+    notes.innerHTML = `<div class="info-box orange">🧱 ${(lang==='no'?'Forskalingsblokker: Ca.':(lang==='lt'?'Klojinio blokeliai: Apie':(lang==='pl'?'Bloczki szalunkowe: ok.':'Formwork blocks: Approx.')))} <b>${n(concVol,2)} m³</b> ${(lang==='no'?'betong for å fylle hulrom':(lang==='lt'?'betono užpildymui':(lang==='pl'?'betonu do wypełnienia':'concrete to fill cavities')))}</div>`;
+  }
+  if (weightTotal > 20) {
+    notes.innerHTML += `<div class="info-box yellow">⚠️ ${(lang==='no'?`Total vekt ${n(weightTotal,1)} tonn — planlegg krantransport`:(lang==='lt'?`Bendras svoris ${n(weightTotal,1)} t — planuoti krano naudojimą`:(lang==='pl'?`Waga całkowita ${n(weightTotal,1)} t — zaplanuj transport dźwigiem`:`Total weight ${n(weightTotal,1)} t — plan crane transport`)))}</div>`;
+  }
+  updatePrintHeader();
+  save();
+}
+
+function addLintel(opening='', support=250, type='') {
+  const id = ++lintelIdCounter;
+  lintels.push({ id, opening, support, type });
+  renderLintels();
+}
+
+function removeLintel(id) {
+  lintels = lintels.filter(l => l.id !== id);
+  renderLintels();
+  updateLintelResults();
+}
+
+function renderLintels() {
+  const container = document.getElementById('lintel-list');
+  const t = T[lang];
+  container.innerHTML = '';
+  lintels.forEach((l, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px;';
+    const typeOpts = { no:['Prefab betong','Stålbjelke','U-blokk + betong','Tre (C24)'], lt:['Prefab betonas','Plieninė sija','U-blokelis + betonas','Mediena (C24)'], en:['Prefab concrete','Steel beam','U-block + concrete','Timber (C24)'], pl:['Prefab. beton','Belka stalowa','U-blok + beton','Drewno (C24)'] }[lang];
+    const opts = typeOpts.map((o,j) => `<option value="${j}" ${l.type==j?'selected':''}>${o}</option>`).join('');
+    div.innerHTML = `
+      <div class="field"><label>${t.lbl_lintel_opening} ${i+1}</label><input type="number" value="${l.opening}" oninput="lintels[${i}].opening=parseFloat(this.value)||0;updateLintelResults();save();"></div>
+      <div class="field"><label>${t.lbl_support}</label><input type="number" value="${l.support}" oninput="lintels[${i}].support=parseInt(this.value)||250;updateLintelResults();save();"></div>
+      <div class="field"><label>${t.lbl_lintel_type}</label><select onchange="lintels[${i}].type=parseInt(this.value);save();">${opts}</select></div>
+      <button class="btn-icon no-print" onclick="removeLintel(${l.id})">✕</button>
+    `;
+    container.appendChild(div);
+  });
+  updateLintelResults();
+}
+
+function updateLintelResults() {
+  const t = T[lang];
+  const tbody = document.getElementById('lintel-tbody');
+  const wrap = document.getElementById('lintel-results-wrap');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  if (lintels.length === 0) { wrap.style.display='none'; return; }
+  wrap.style.display = 'block';
+  const typeNames = { no:['Prefab betong','Stålbjelke','U-blokk + betong','Tre (C24)'], lt:['Prefab betonas','Plieninė sija','U-blokelis + betonas','Mediena (C24)'], en:['Prefab concrete','Steel beam','U-block + concrete','Timber (C24)'], pl:['Prefab. beton','Belka stalowa','U-blok + beton','Drewno (C24)'] }[lang];
+  let totalLen = 0;
+  lintels.forEach((l, i) => {
+    const supM = (l.support || 250) / 1000;
+    const lintelLen = l.opening + 2 * supM;
+    totalLen += lintelLen;
+    const warn = l.support < 250 ? ' <span class="badge badge-warn">!</span>' : '';
+    tbody.innerHTML += `<tr><td class="lbl">${i+1}</td><td class="val">${n(l.opening,2)} m</td><td class="${l.support < 250 ? 'warn' : 'ok'}">${l.support} mm${warn}</td><td class="val"><b>${n(lintelLen,2)} m</b></td><td class="lbl">${typeNames[l.type||0]}</td><td class="val">1 stk</td></tr>`;
+  });
+  document.getElementById('lintel-summary').innerHTML = `<div class="res-box"><div class="res-val info">${lintels.length}</div><div class="res-lbl">${(lang==='no'?'Ant. såramer':(lang==='lt'?'Sąramų sk.':(lang==='en'?'Lintels':(lang==='pl'?'Ilość nadproży':'Lintels'))))}</div></div><div class="res-box"><div class="res-val accent">${n(totalLen,2)} m</div><div class="res-lbl">${(lang==='no'?'Total lengde':(lang==='lt'?'Bendras ilgis':(lang==='en'?'Total length':(lang==='pl'?'Całkowita dł.':'Total length'))))}</div></div>`;
+  save();
+}
+
+function calcUblokk() {
+  const len = parseFloat(document.getElementById('ublokk_len')?.value) || 0;
+  const iw = parseFloat(document.getElementById('ublokk_internal')?.value) || 150;
+  const concreteM3 = len * (iw/1000) * (iw/1000) * 1.05;
+  const concreteBags = Math.ceil(concreteM3 / 0.025);
+  document.getElementById('ublokk-results').innerHTML = `<div class="res-box"><div class="res-val info">${n(len,1)} lm</div><div class="res-lbl">${(lang==='no'?'U-blokk lengde':(lang==='lt'?'U-blokelių ilgis':(lang==='pl'?'Długość U-bloków':'U-block length')))}</div></div><div class="res-box"><div class="res-val accent">${n(concreteM3,3)} m³</div><div class="res-lbl">Betong (m³)</div></div><div class="res-box"><div class="res-val warn">${concreteBags}</div><div class="res-lbl">Betongsekker</div></div>`;
+  save();
+}
+
+function buildMortarPresets() {
+  const container = document.getElementById('mortar-presets');
+  if (!container) return;
+  container.innerHTML = '';
+  const presets = [ {no:'Teglstein', lt:'Plytos', en:'Brick', pl:'Cegła', kg:35}, {no:'Leca tradisj.', lt:'Leca trad.', en:'Leca trad.', pl:'Leca trad.', kg:12}, {no:'Leca Lim', lt:'Leca klijai', en:'Leca Glue', pl:'Klej Leca', kg:3}, {no:'Ytong/Siporex', lt:'Ytong', en:'Ytong', pl:'Ytong', kg:2} ];
+  presets.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.textContent = `${p[lang]} (${p.kg} kg/m²)`;
+    btn.onclick = () => { setVal('mortar_kgm2', p.kg); document.querySelectorAll('#mortar-presets .preset-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); calcMortar(); };
+    container.appendChild(btn);
+  });
+}
+
+function calcMortar() {
+  const area = parseFloat(document.getElementById('mortar_area')?.value) || 0;
+  const kgm2 = parseFloat(document.getElementById('mortar_kgm2')?.value) || 35;
+  const bagW = parseFloat(document.getElementById('bag_weight')?.value) || 25;
+  const waste = parseFloat(document.getElementById('mortar_waste')?.value) || 10;
+  const totalKg = area * kgm2 * (1 + waste/100);
+  const bags = Math.ceil(totalKg / bagW);
+  const pallets = Math.ceil(bags / 40);
+  document.getElementById('mortar-results').innerHTML = `<div class="res-box"><div class="res-val info">${n(area,2)} m²</div><div class="res-lbl">Areal</div></div><div class="res-box"><div class="res-val accent">${n(totalKg,0)} kg</div><div class="res-lbl">Total mørtel</div></div><div class="res-box"><div class="res-val ok">${bags}</div><div class="res-lbl">Sekker (${bagW}kg)</div></div><div class="res-box"><div class="res-val warn">${pallets}</div><div class="res-lbl">Paller (40sek)</div></div>`;
+  save();
+}
+
+function calcArmering() {
+  const wl = parseFloat(document.getElementById('arm_wall_len')?.value) || 0;
+  const wh = parseFloat(document.getElementById('arm_wall_h')?.value) || 0;
+  const sp = parseFloat(document.getElementById('arm_spacing')?.value) || 0.5;
+  const rows = Math.floor(wh / sp);
+  const armLen = wl * rows * 1.1;
+  document.getElementById('arm-results').innerHTML = `<div class="res-box"><div class="res-val info">${rows}</div><div class="res-lbl">Armeringsrader</div></div><div class="res-box"><div class="res-val accent">${n(armLen,1)} m</div><div class="res-lbl">Armeringslengde</div></div>`;
+  save();
+}
+
+function calcInsul() {
+  const area = parseFloat(document.getElementById('insul_area')?.value) || 0;
+  const thick = parseInt(document.getElementById('insul_thick')?.value) || 100;
+  const plateM2 = parseFloat(document.getElementById('plate_size')?.value) || 1.2;
+  const holdersM2 = parseFloat(document.getElementById('holder_m2')?.value) || 4;
+  const type = document.getElementById('insul_type')?.value || 'rockwool';
+  const plates = Math.ceil(area / plateM2 * 1.05);
+  const holders = Math.ceil(area * holdersM2);
+  const rolls = Math.ceil(area / 5.4);
+  const unitLabel = type === 'rockwool' ? (lang==='lt'?'Ritiniai':(lang==='en'?'Rolls':(lang==='pl'?'Rolki':'Ruller'))) : (lang==='lt'?'Plokštės':(lang==='en'?'Plates':(lang==='pl'?'Płyty':'Plater')));
+  const unitQty = type === 'rockwool' ? rolls : plates;
+  document.getElementById('insul-results').innerHTML = `<div class="res-box"><div class="res-val info">${n(area,2)} m²</div><div class="res-lbl">Areal</div></div><div class="res-box"><div class="res-val accent">${thick} mm</div><div class="res-lbl">Tykkelse</div></div><div class="res-box"><div class="res-val ok">${unitQty}</div><div class="res-lbl">${unitLabel}</div></div><div class="res-box"><div class="res-val warn">${holders}</div><div class="res-lbl">Holdere</div></div>`;
+  save();
+}
+
+function calcDampproof() {
+  const peri = parseFloat(document.getElementById('dp_perimeter')?.value) || 0;
+  const w = parseFloat(document.getElementById('dp_width')?.value) || 200;
+  const rollLen = 50;
+  const rolls = Math.ceil(peri / rollLen * 1.1);
+  document.getElementById('dp-results').innerHTML = `<div class="res-box"><div class="res-val info">${n(peri,1)} m</div><div class="res-lbl">Perimeter</div></div><div class="res-box"><div class="res-val accent">${w} mm</div><div class="res-lbl">Bredde</div></div><div class="res-box"><div class="res-val ok">${rolls}</div><div class="res-lbl">Ruller (${rollLen}m)</div></div>`;
+  save();
+}
+
+function buildRefTable() {
+  const tbody = document.getElementById('ref-element-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  ELEMENTS.filter(e => e.id !== 'custom').forEach(el => {
+    tbody.innerHTML += `<tr><td class="lbl">${el[lang]||el.no}</td><td class="val">${el.l}×${el.h}×${el.d}</td><td class="val">${el.perM2}</td><td class="val">${el.kgUnit}</td><td class="val">${el.kgM2}</td><td class="warn">${el.mortarM2}</td><td class="lbl" style="font-size:0.7rem;color:var(--dim);">${el.std}</td></tr>`;
+  });
+}
+
+function buildRefNS() {
+  const el = document.getElementById('ref-ns-content');
+  if (!el) return;
+  const items = {
+    no: [
+      ['NS 3420-M','Beskrivelsessystem – Murverk. Definerer mengderegler og beskrivelsestekster for murarbeider.'],
+      ['NS-EN 771-1','Krav til murstein (teglstein).'],
+      ['NS-EN 771-3','Krav til lettklinkerelementer (Leca).'],
+      ['NS-EN 771-4','Krav til autoklavert lettbetong (Ytong/Siporex).'],
+      ['NS 8175','Lydforhold i bygninger — krav til lydisolasjon, inkl. krav til fuktsperre.'],
+      ['TEK17','Energikrav — U-verdi yttervegger maks 0,22 W/m²K.'],
+      ['NS-EN 1996-1-1','Eurocode 6: Prosjektering av murverkskonstruksjoner.'],
+    ],
+    lt: [
+      ['NS 3420-M','Aprašomoji sistema – Mūras. Apibrėžia kiekio taisykles ir aprašomosios tekstus mūro darbams.'],
+      ['NS-EN 771-1','Reikalavimai mūro vienetams (plytoms).'],
+      ['NS-EN 771-3','Reikalavimai lengvojo agregato blokeliams (Leca).'],
+      ['NS-EN 771-4','Reikalavimai autoklavintam aeruotam betonui (Ytong/Siporex).'],
+      ['NS 8175','Akustika pastatuose – reikalavimai garso izoliacijai ir drėgmės barjerui.'],
+      ['TEK17','Energijos reikalavimai — U-vertė išorinėms sienoms maks 0,22 W/m²K.'],
+      ['NS-EN 1996-1-1','Eurokodas 6: Mūro konstrukcijų projektavimas.'],
+    ],
+    en: [
+      ['NS 3420-M','Description system – Masonry. Defines quantity rules and description texts for masonry work.'],
+      ['NS-EN 771-1','Requirements for masonry units (brick).'],
+      ['NS-EN 771-3','Requirements for lightweight aggregate blocks (Leca).'],
+      ['NS-EN 771-4','Requirements for autoclaved aerated concrete (Ytong/Siporex).'],
+      ['NS 8175','Acoustics in buildings — sound insulation requirements, incl. damp-proof course.'],
+      ['TEK17','Energy requirements — max U-value external walls 0.22 W/m²K.'],
+      ['NS-EN 1996-1-1','Eurocode 6: Design of masonry structures.'],
+    ],
+    pl: [
+      ['NS 3420-M','System opisu – Murarstwo. Definiuje zasady ilościowe i teksty opisowe dla prac murarskich.'],
+      ['NS-EN 771-1','Wymagania dotyczące elementów murowych (cegła).'],
+      ['NS-EN 771-3','Wymagania dotyczące lekkich elementów kruszywowych (Leca).'],
+      ['NS-EN 771-4','Wymagania dotyczące autoklawizowanego betonu komórkowego (Ytong/Siporex).'],
+      ['NS 8175','Akustyka w budynkach — wymagania dotyczące izolacyjności akustycznej, w tym barier przeciwwilgociowych.'],
+      ['TEK17','Wymagania energetyczne — współczynnik U ścian zewnętrznych maks. 0,22 W/m²K.'],
+      ['NS-EN 1996-1-1','Eurokod 6: Projektowanie konstrukcji murowych.'],
+    ]
+  };
+  el.innerHTML = (items[lang] || items.no).map(([std,desc]) => `<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);"><span class="badge badge-info" style="flex-shrink:0;">${std}</span><span style="font-size:0.82rem;color:var(--muted); line-height:1.4;">${desc}</span></div>`).join('');
+}
+
+function buildRefTips() {
+  const el = document.getElementById('ref-tips-content');
+  if (!el) return;
+  const tips = {
+    no:[
+      ['💧 Drøgmesperre (Svillemembran)','Under 1. steinrekke er obligatorisk iht. NS 8175. Bredde = murtykkelse + 2×50 mm.'],
+      ['🌬️ Ventilasjonsfuger','Stå åpne vertikale fuger i forblendingsmur (annenhver stein) for luftsirkulasjon.'],
+      ['📏 Kampersetting','Kontroller loddretthet og vannretthet for hver 3. rad. Maks avvik: 5 mm per 5 m.'],
+      ['⚖️ Lastfordeling','Sørg for at såramer/overliggere har korrekt opplegg (min. 250 mm) for jevn lastfordeling.'],
+      ['🔩 Murfor armering','Murfor-armeringsnet klippes og legges i fugen — øker murens evne til å ta opp spenninger.'],
+      ['🧹 Skjøter','Rengjør tørkede rester fra steinoverflater med 5% eddikløsning. Aldri skrapeverktøy na Ytong.'],
+      ['📦 Pall-bestilling','Bestill alltid hele paller — delleveranser er dyrere. Beregn pall-plassering på byggeplassen.'],
+      ['🚰 Vanning av tegl','I varmt tørt vær: fukt teglstein lett før muring for bedre heft. Ikke nødvendig for Leca/Ytong.'],
+    ],
+    lt:[
+      ['💧 Drėgmės barjeras (Svillemembran)','Po pirma eile privalomas pagal NS 8175. Plotis = mūro storis + 2×50 mm.'],
+      ['🌬️ Ventiliacijos siūlės','Palikti atviras vertikalias siūles apdailos mūre (kas antrą plytą) oro cirkuliacijai.'],
+      ['📏 Gulsčiavimas','Tikrinti vertikalumą ir horizontalumą kas 3 eilę. Maks nukrypimas: 5 mm per 5 m.'],
+      ['⚖️ Apkrovų paskirstymas','Užtikrinkite, kad sąramos turėtų tinkamą rėmimąsi (min. 250 mm) tolygiam apkrovų pasiskirstymui.'],
+      ['🔩 Murfor armavimas','Murfor tinklelis pjaunamas ir dedamas į siūlę — padidina mūro atsparumą įtempimams.'],
+      ['🧹 Siūlių valymas','Valykite džiūvančias liekanas nuo plytų paviršiaus 5% acto tirpalu. Jokių grandiklių ant Ytong.'],
+      ['📦 Paletės','Visada užsakykite visas paletes — dalinės pristatymos brangesnės. Iš anksto suplanuokite paletių vietą.'],
+      ['🚰 Plytų drėkinimas','Karštomis sausomis dienomis: šiek tiek sudrėkinkite plytas prieš mūrijant geresniam sukibimui. Leca/Ytong nereikia.'],
+    ],
+    en:[
+      ['💧 Damp-proof Course','Required under first course per NS 8175. Width = wall thickness + 2×50 mm.'],
+      ['🌬️ Ventilation Joints','Leave open vertical joints in facing brick every other brick for air circulation.'],
+      ['📏 Plumbing & Leveling','Check plumb and level every 3rd course. Max deviation: 5 mm per 5 m.'],
+      ['⚖️ Load Distribution','Ensure lintels have correct bearing (min. 250 mm) for even load distribution.'],
+      ['🔩 Murfor Reinforcement','Murfor mesh is cut and laid in the bed joint — increases masonry resistance to stresses.'],
+      ['🧹 Joint Cleaning','Clean dried residue from brick surfaces with 5% vinegar solution. Never use scrapers on Ytong.'],
+      ['📦 Pallet Orders','Always order full pallets — partial deliveries cost more. Plan pallet placement on site.'],
+      ['🚰 Wetting Bricks','In hot dry weather: lightly wet bricks before laying for better adhesion. Not needed for Leca/Ytong.'],
+    ],
+    pl:[
+      ['💧 Izolacja pozioma','Pod 1. warstwą jest obowiązkowa wg NS 8175. Szerokość = grubość muru + 2×50 mm.'],
+      ['🌬️ Szczeliny wentylacyjne','Zostaw otwarte pionowe spoiny w murze licowym (co druga cegła) dla cyrkulacji powietrza.'],
+      ['📏 Pionowanie i poziomowanie','Sprawdzaj pion i poziom co 3 warstwy. Maks. odchyłka: 5 mm na 5 m.'],
+      ['⚖️ Rozkład obciążeń','Upewnij się, że nadproża mają odpowiednie oparcie (min. 250 mm) dla równomiernego rozkładu obciążeń.'],
+      ['🔩 Zbrojenie Murfor','Siatka Murfor jest przycinana i układana w spoinie – zwiększa odporność muru na naprężenia.'],
+      ['🧹 Czyszczenie spoin','Czyść zaschnięte resztki z powierzchni cegieł 5% roztworem octu. Nigdy nie używaj skrobaków na Ytong.'],
+      ['📦 Zamówienia paletowe','Zawsze zamawiaj pełne palety – dostawy częściowe kosztują więcej. Zaplanuj rozmieszczenie palet na budowie.'],
+      ['🚰 Moczenie cegieł','W gorące, suche dni: lekko zmocz cegły przed murowaniem dla lepszej przyczepności. Niewymagane dla Leca/Ytong.'],
+    ]
+  };
+  el.innerHTML = (tips[lang] || tips.en).map(([title, text]) => `<div style="padding:10px 0;border-bottom:1px solid var(--border);"><div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:4px;">${title}</div><div style="font-size:0.79rem;color:var(--muted);line-height:1.4;">${text}</div></div>`).join('');
+}
+
+function n(v, dec=0) { return (Math.round(v * Math.pow(10, dec)) / Math.pow(10, dec)).toLocaleString('nb-NO', {minimumFractionDigits: dec, maximumFractionDigits: dec}); }
+function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v; }
+function updatePrintHeader() { const name = document.getElementById('proj_name')?.value || ''; const date = document.getElementById('proj_date')?.value || ''; const addr = document.getElementById('proj_address')?.value || ''; document.getElementById('ph-title').textContent = `ProBuilder — Murverk${name ? ': ' + name : ''}`; document.getElementById('ph-meta').textContent = [addr, date].filter(Boolean).join(' | '); }
+
+function save() { try { const data = { lang, walls, openings, lintels, wallIdCounter, openingIdCounter, lintelIdCounter, elementId: currentElement.id }; document.querySelectorAll('input[id], select[id]').forEach(el => { data['__field_'+el.id] = el.type === 'checkbox' ? el.checked : el.value; }); localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {} }
+function load() { try { const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return; const data = JSON.parse(raw); lang = data.lang || 'no'; walls = data.walls || []; openings = data.openings || []; lintels = data.lintels || []; wallIdCounter = data.wallIdCounter || 0; openingIdCounter = data.openingIdCounter || 0; lintelIdCounter = data.lintelIdCounter || 0; if (data.elementId) { const el = ELEMENTS.find(e => e.id === data.elementId); if (el) currentElement = el; } Object.entries(data).forEach(([key, val]) => { if (!key.startsWith('__field_')) return; const id = key.replace('__field_', ''); const el = document.getElementById(id); if (!el) return; el.type === 'checkbox' ? (el.checked = val) : (el.value = val); }); } catch(e) {} }
+
+function resetAll() { if (!confirm((lang==='lt'?'Išvalyti?':(lang==='en'?'Reset?':(lang==='pl'?'Resetuj?':'Nullstill?'))))) return; localStorage.removeItem(STORAGE_KEY); location.reload(); }
+function exportJSON() { const data = { tool: 'ProBuilder Murverk', version: '2.0', exported: new Date().toISOString(), lang, walls, openings, lintels, project: { name: document.getElementById('proj_name')?.value, date: document.getElementById('proj_date')?.value, address: document.getElementById('proj_address')?.value }, element: currentElement }; const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `murverk_export.json`; a.click(); }
+function importJSON(evt) { const file = evt.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = e => { try { const data = JSON.parse(e.target.result); localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); location.reload(); } catch(ex) { alert('Feil'); } }; reader.readAsText(file); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  load();
+  if (!document.getElementById('proj_date').value) document.getElementById('proj_date').value = new Date().toISOString().slice(0,10);
+  if (walls.length === 0) { addWall(10, 2.8, ''); addWall(6, 2.8, ''); }
+  if (openings.length === 0) { addOpening(1.2, 1.2, ''); addOpening(0.9, 2.1, ''); }
+  applyLang();
+  document.addEventListener('input', save);
+  document.addEventListener('change', save);
+});
+
+<script src="js/pwa.js"></script>
+</body>
+</html>

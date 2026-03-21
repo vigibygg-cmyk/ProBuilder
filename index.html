@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProBuilder — Profesjonelle byggkalkulatorer | Vytautas Giedraitis</title>
+    <meta name="description" content="8 profesjonelle kalkulatorer for tømrere, snekkere og entreprenører. Utviklet av Vytautas Giedraitis. Gratis verktøy for det norske markedet på NO, LT, PL og EN.">
+    <meta name="keywords" content="byggkalkulator, tømrer verktøy, snekker kalkulator, materialberegning, stenderkalkulator, trappekalkulator, arealkalkulator, byggnormer, Norge">
+    <link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/index.html">
+    <meta name="theme-color" content="#2b6cb0">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="ProBuilder — Profesjonelle byggkalkulatorer">
+    <meta property="og:description" content="8 profesjonelle kalkulatorer for tømrere, snekkere og entreprenører. Utviklet av Vytautas Giedraitis.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/index.html">
+    <meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ProBuilder — Profesjonelle byggkalkulatorer">
+    <meta name="twitter:description" content="8 profesjonelle kalkulatorer for tømrere, snekkere og entreprenører. Utviklet av Vytautas Giedraitis.">
+    <meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ProBuilder",
+      "alternateName": "ProBuilder Construction Calculators",
+      "url": "https://vigibygg-cmyk.github.io/Calc/index.html",
+      "image": "https://vigibygg-cmyk.github.io/Calc/img/og-image.png",
+      "description": "Profesjonelle byggkalkulatorer for tømrere, snekkere og entreprenører.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "author": {
+        "@type": "Person",
+        "name": "Vytautas Giedraitis"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "NOK"
+      }
+    }
+    </script>
+
+    <style>
+        /* === CSS Variables === */
+        :root {
+            --bg: #f7f9fa;
+            --card: #ffffff;
+            --text: #1a202c;
+            --muted: #718096;
+            --primary: #2b6cb0;
+            --primary-dark: #1a4a8a;
+            --accent: #dd6b20;
+            --accent-dark: #b7521a;
+            --success: #276749;
+            --success-bg: #f0fff4;
+            --warning: #744210;
+            --warning-bg: #fffbeb;
+            --border: #e2e8f0;
+            --radius: 10px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* === Base Styles === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Prevent iOS zoom */
+        input, select, button, textarea {
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* === Navigation === */
+        .navbar {
+            background-color: var(--card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 70px;
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text);
+            font-weight: 500;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .phone-btn {
+            background-color: var(--success-bg);
+            color: var(--success);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+            border: 1px solid #9ae6b4;
+            transition: background 0.2s;
+        }
+
+        .phone-btn:hover {
+            background-color: #c6f6d5;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 4px;
+        }
+
+        .lang-btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background-color: var(--bg);
+            border-color: var(--border);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 24px;
+            min-height: 44px;
+            min-width: 44px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+        }
+
+        /* === Hero Section === */
+        .hero {
+            position: relative;
+            background-color: #f8fafc;
+            /* Subtle CSS background grid */
+            background-image: 
+                linear-gradient(to right, var(--border) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: center top;
+            padding: 80px 0;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Fading gradient over the grid */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%);
+            z-index: 1;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-text-col {
+            flex: 0 0 60%;
+        }
+
+        .hero-label {
+            display: inline-block;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--muted);
+            margin-bottom: 30px;
+            max-width: 550px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 12px 26px; /* slightly less padding due to border */
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--warning-bg);
+            color: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        /* Hero CSS Illustration */
+        .hero-gfx-col {
+            flex: 0 0 40%;
+            position: relative;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mockup-card {
+            position: absolute;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 16px;
+            width: 220px;
+            transition: transform 0.3s;
+        }
+
+        .mc-1 {
+            transform: rotate(-10deg) translate(-40px, -20px);
+            z-index: 3;
+        }
+        .mc-2 {
+            transform: rotate(5deg) translate(50px, -60px);
+            z-index: 2;
+            opacity: 0.9;
+        }
+        .mc-3 {
+            transform: rotate(15deg) translate(30px, 80px);
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .mc-top { display: flex; justify-content: space-between; margin-bottom: 12px;}
+        .mc-icon { font-size: 24px; }
+        .mc-line { height: 8px; background: var(--bg); border-radius: 4px; margin-bottom: 8px; }
+        .mc-line.short { width: 60%; }
+
+        /* === Trust Bar === */
+        .trust-bar {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 30px 0;
+        }
+
+        .trust-inner {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+        }
+
+        .trust-item h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .trust-item p {
+            font-size: 14px;
+            color: #bee3f8; /* light blue */
+        }
+
+        /* === Tool Grid Section === */
+        .tools-section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--muted);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: var(--muted);
+            transition: all 0.2s;
+            min-height: 44px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .tool-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .tool-card.hidden {
+            display: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            line-height: 1;
+        }
+
+        .badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid;
+            text-transform: uppercase;
+        }
+
+        /* Badge Colors */
+        .badge.top { background: #ebf8ff; color: #2b6cb0; border-color: #bee3f8; }
+        .badge.ny { background: #f0fff4; color: #276749; border-color: #9ae6b4; }
+        .badge.beta { background: #fffbeb; color: #744210; border-color: #fbd38d; }
+        .badge.test { background: #fff5f5; color: #742a2a; border-color: #feb2b2; }
+        .badge.mega { background: #faf5ff; color: #553c9a; border-color: #d6bcfa; }
+        .badge.default { background: var(--bg); color: var(--muted); border-color: var(--border); }
+
+        .tool-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .tool-card p {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 20px;
+            flex-grow: 1;
+            /* clamp to 2 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .lang-flags {
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        .btn-card {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            display: block;
+            transition: background 0.2s;
+            min-height: 44px;
+        }
+
+        .btn-card:hover {
+            background: var(--primary-dark);
+        }
+
+        /* === Features Section === */
+        .features {
+            background-color: var(--bg);
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feat-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .feat-card h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .feat-card p {
+            font-size: 15px;
+            color: var(--muted);
+        }
+
+        /* === ProNorm Spotlight === */
+        .spotlight {
+            background-color: #1a2744;
+            color: #fff;
+            padding: 80px 0;
+        }
+
+        .spot-inner {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .spot-text {
+            flex: 1;
+        }
+
+        .spot-badge {
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .spotlight h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .spotlight p {
+            color: #a0aec0;
+            font-size: 18px;
+            margin-bottom: 24px;
+        }
+
+        .spot-list {
+            margin-bottom: 30px;
+        }
+
+        .spot-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            min-height: 48px;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+
+        .btn-accent:hover {
+            background-color: var(--accent-dark);
+        }
+
+        /* ProNorm Mockup CSS */
+        .spot-mockup {
+            flex: 1;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mock-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .mock-title { font-weight: bold; color: #e2e8f0; }
+        
+        .mock-table { width: 100%; color: #94a3b8; font-size: 14px; }
+        .mock-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1e293b; }
+        .mock-row:last-child { border: none; }
+        .mock-row.bold { color: #f8fafc; font-weight: bold; }
+        
+        .mock-total {
+            background: var(--accent);
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-top: 16px;
+        }
+
+        /* === Coming Soon Section === */
+        .soon {
+            padding: 80px 0;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .soon h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .soon p {
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .notify-form {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .notify-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .notify-input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-notify {
+            background: var(--text);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .btn-notify:hover {
+            background: #2d3748;
+        }
+
+        .success-msg {
+            display: none;
+            color: var(--success);
+            background: var(--success-bg);
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid #9ae6b4;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* === Footer === */
+        footer {
+            background-color: #1a202c;
+            color: #a0aec0;
+            padding: 60px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .footer-col p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .bottom-bar {
+            border-top: 1px solid #2d3748;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* === Responsive === */
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-inner {
+                flex-wrap: wrap;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: var(--card);
+                padding: 20px 0;
+                border-top: 1px solid var(--border);
+                position: absolute;
+                top: 70px;
+                left: 0;
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .phone-btn {
+                order: -1;
+            }
+
+            .hero { padding: 40px 0; }
+            .hero h1 { font-size: 28px; }
+            .hero-inner { flex-direction: column; }
+            .hero-text-col, .hero-gfx-col { flex: 0 0 100%; }
+            .hero-gfx-col { display: none; } /* Hidden on mobile per instructions */
+
+            .trust-inner { flex-direction: column; gap: 24px; }
+            
+            .grid-container { grid-template-columns: 1fr; }
+            
+            .feat-grid { grid-template-columns: 1fr; }
+            
+            .spot-inner { flex-direction: column; }
+            .spot-mockup { width: 100%; }
+
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <div class="logo-area">
+                <div class="logo-title">🔨 ProBuilder</div>
+                <div class="logo-sub">by Vytautas Giedraitis</div>
+            </div>
+
+            <div class="nav-right">
+                <button class="hamburger" id="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html" class="nav-link active" data-i18n="nav_home">Hjem</a></li>
+                    <li><a href="tools.html" class="nav-link" data-i18n="nav_tools">Verktøy</a></li>
+                    <li><a href="how-to.html" class="nav-link" data-i18n="nav_howto">Slik bruker du</a></li>
+                    <li><a href="about.html" class="nav-link" data-i18n="nav_about">Om oss</a></li>
+                    <li><a href="contact.html" class="nav-link" data-i18n="nav_contact">Kontakt</a></li>
+                </ul>
+                <a href="tel:94844497" class="phone-btn">📞 94844497</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="no">NO</button>
+                    <button class="lang-btn" data-lang="lt">LT</button>
+                    <button class="lang-btn" data-lang="pl">PL</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container hero-inner">
+            <div class="hero-text-col">
+                <div class="hero-label" data-i18n="hero_label">🏗 Norges beste byggkalkulatorer</div>
+                <h1 data-i18n="hero_title">Beregn raskere. Bygg smartere.</h1>
+                <p class="hero-sub" data-i18n="hero_sub">8 profesjonelle kalkulatorer for tømrere, snekkere og entrepenører. Gratis. Alltid tilgjengelig. På norsk, litauisk, polsk og engelsk.</p>
+                <div class="hero-ctas">
+                    <a href="tools.html" class="btn-primary" data-i18n="hero_cta1">🧰 Se alle verktøy →</a>
+                    <a href="normcalc.html" class="btn-outline" data-i18n="hero_cta2">📋 Åpne ProNorm</a>
+                </div>
+            </div>
+            <div class="hero-gfx-col">
+                <div class="mockup-card mc-1">
+                    <div class="mc-top"><span class="mc-icon">🪜</span> <span class="badge top" style="font-size: 10px;">TOP ⭐</span></div>
+                    <div class="mc-line"></div><div class="mc-line short"></div>
+                </div>
+                <div class="mockup-card mc-2">
+                    <div class="mc-top"><span class="mc-icon">🪵</span> <span class="badge ny" style="font-size: 10px;">NY 🆕</span></div>
+                    <div class="mc-line"></div><div class="mc-line short"></div>
+                </div>
+                <div class="mockup-card mc-3">
+                    <div class="mc-top"><span class="mc-icon">📋</span> <span class="badge mega" style="font-size: 10px;">MEGA ⚡</span></div>
+                    <div class="mc-line"></div><div class="mc-line short"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Trust Bar -->
+    <section class="trust-bar">
+        <div class="container trust-inner">
+            <div class="trust-item">
+                <h3 data-i18n="trust_1_title">8 Kalkulatorer</h3>
+                <p data-i18n="trust_1_sub">Stender, betong, trapp og mer</p>
+            </div>
+            <div class="trust-item">
+                <h3 data-i18n="trust_2_title">4 Språk</h3>
+                <p data-i18n="trust_2_sub">Norsk · Litauisk · Polsk · Engelsk</p>
+            </div>
+            <div class="trust-item">
+                <h3 data-i18n="trust_3_title">Gratis for alle</h3>
+                <p data-i18n="trust_3_sub">Ingen konto, ingen app</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Grid -->
+    <section class="tools-section" id="tools">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="grid_title">🧰 Alle verktøy</h2>
+                <p data-i18n="grid_sub">Klikk for å åpne direkte i nettleseren — fungerer på mobil og PC</p>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all" data-i18n="filter_all">Alle</button>
+                <button class="filter-btn" data-filter="top" data-i18n="filter_top">⭐ Topp</button>
+                <button class="filter-btn" data-filter="ny" data-i18n="filter_new">🆕 Ny</button>
+                <button class="filter-btn" data-filter="beta" data-i18n="filter_beta">🧪 Beta</button>
+                <button class="filter-btn" data-filter="test" data-i18n="filter_test">🔬 Test</button>
+            </div>
+
+            <div class="grid-container" id="tool-grid">
+                <!-- 1. Stender -->
+                <div class="tool-card" data-status="top">
+                    <div class="card-header">
+                        <span class="card-icon">🪵</span>
+                        <span class="badge top">TOP ⭐</span>
+                    </div>
+                    <h3 data-i18n="tool_1_title">Stender kalkulator</h3>
+                    <p data-i18n="tool_1_desc">Beregn stenderplassering og antall lekter for vegger og tak automatisk. Vis tegning og skriv ut.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="stender.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 2. Lekter -->
+                <div class="tool-card" data-status="ny">
+                    <div class="card-header">
+                        <span class="card-icon">🏠</span>
+                        <span class="badge ny">NY 🆕</span>
+                    </div>
+                    <h3 data-i18n="tool_2_title">Lekter kalkulator</h3>
+                    <p data-i18n="tool_2_desc">Beregn lekteravstand for tak og kledning. Oppgi mål og få eksakt antall og plassering.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="lekter.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 3. Areal -->
+                <div class="tool-card" data-status="beta">
+                    <div class="card-header">
+                        <span class="card-icon">📐</span>
+                        <span class="badge beta">BETA 1.0</span>
+                    </div>
+                    <h3 data-i18n="tool_3_title">Arealberegning</h3>
+                    <p data-i18n="tool_3_desc">Rask og nøyaktig beregning av gulv- og overflatearealer for uregelmessige rom.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="areal.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 4. Material -->
+                <div class="tool-card" data-status="beta">
+                    <div class="card-header">
+                        <span class="card-icon">📦</span>
+                        <span class="badge beta">BETA 1.1</span>
+                    </div>
+                    <h3 data-i18n="tool_4_title">Materialkalkulator</h3>
+                    <p data-i18n="tool_4_desc">Beregn materialmengder for prosjektet. Reduser svinn og bestill riktig mengde.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="materialer.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 5. Trapp -->
+                <div class="tool-card" data-status="trapp">
+                    <div class="card-header">
+                        <span class="card-icon">🪜</span>
+                        <span class="badge default" data-i18n="badge_trapp">TRAPP</span>
+                    </div>
+                    <h3 data-i18n="tool_5_title">Trappekalkulator</h3>
+                    <p data-i18n="tool_5_desc">Design trapper etter norske byggeregler. Trinnhøyde, inntrinn og totalstigning beregnet.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="trapp.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 6. Betong -->
+                <div class="tool-card" data-status="test">
+                    <div class="card-header">
+                        <span class="card-icon">🧱</span>
+                        <span class="badge test">TEST 🔬</span>
+                    </div>
+                    <h3 data-i18n="tool_6_title">Betongkalkulator</h3>
+                    <p data-i18n="tool_6_desc">Beregn betongvolum for plater, fundament og søyler. Under utvikling.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="betong.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 7. Murverk -->
+                <div class="tool-card" data-status="test">
+                    <div class="card-header">
+                        <span class="card-icon">🔲</span>
+                        <span class="badge test">TEST 🔬</span>
+                    </div>
+                    <h3 data-i18n="tool_7_title">Murverk kalkulator</h3>
+                    <p data-i18n="tool_7_desc">Blokktelling, mørtelmengde og murflate. Under aktiv utvikling.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="murverk.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+
+                <!-- 8. ProNorm -->
+                <div class="tool-card" data-status="mega">
+                    <div class="card-header">
+                        <span class="card-icon">📋</span>
+                        <span class="badge mega">MEGA ⚡</span>
+                    </div>
+                    <h3 data-i18n="tool_8_title">ProNorm — Kalkyle</h3>
+                    <p data-i18n="tool_8_desc">Full kalkyle med arbeidsnormer, brigade, timepris, MVA og PDF-eksport. Flaggskipverktøyet.</p>
+                    <div class="card-footer">
+                        <span class="lang-flags">🇳🇴🇱🇹🇵🇱🇬🇧</span>
+                    </div>
+                    <a href="normcalc.html" class="btn-card" data-i18n="btn_open">Åpne verktøy →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-header" style="margin-bottom:0;" data-i18n="feat_title">Hvorfor ProBuilder?</h2>
+            <div class="feat-grid">
+                <div class="feat-card">
+                    <h4 data-i18n="feat_1_title">👷 Laget av en håndverker</h4>
+                    <p data-i18n="feat_1_desc">Ikke av et softwareselskap. Alle verktøyene er utviklet og testet av Vytautas Giedraitis — aktiv tømrer med erfaring fra norske byggeplasser.</p>
+                </div>
+                <div class="feat-card">
+                    <h4 data-i18n="feat_2_title">📱 Fungerer på byggeplassen</h4>
+                    <p data-i18n="feat_2_desc">Åpne fra mobilen din. Fungerer uten internett etter første besøk. Ingen app å installere — bare lagre siden på hjemmeskjermen.</p>
+                </div>
+                <div class="feat-card">
+                    <h4 data-i18n="feat_3_title">🌍 4 språk — ingen forvirring</h4>
+                    <p data-i18n="feat_3_desc">Norsk, litauisk, polsk og engelsk. Litauiske og polske snekkere kan bruke alle verktøyene på morsmålet sitt.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ProNorm Spotlight Section -->
+    <section class="spotlight">
+        <div class="container spot-inner">
+            <div class="spot-text">
+                <span class="spot-badge" data-i18n="spot_badge">⚡ FLAGGSKIP</span>
+                <h2 data-i18n="spot_title">ProNorm — Komplett kalkyle</h2>
+                <p data-i18n="spot_desc">Det eneste kalkyleprogrammet for norske byggeplasser med arbeidsnormer, brigadekonfigurasjon og flerspråklig støtte.</p>
+                <ul class="spot-list">
+                    <li data-i18n="spot_li_1">✅ Arbeidsnorm-katalog med hundrevis av arbeidstyper</li>
+                    <li data-i18n="spot_li_2">✅ Brigadekonfigurasjon — 1 til 5 mann</li>
+                    <li data-i18n="spot_li_3">✅ Timekostnad × normtid = automatisk sum</li>
+                    <li data-i18n="spot_li_4">✅ 25% MVA kalkulert automatisk</li>
+                    <li data-i18n="spot_li_5">✅ Lagre og åpne prosjekter (JSON)</li>
+                    <li data-i18n="spot_li_6">✅ Skriv ut som PDF-rapport</li>
+                    <li data-i18n="spot_li_7">✅ Norsk, litauisk, polsk og engelsk</li>
+                </ul>
+                <a href="normcalc.html" class="btn-accent" data-i18n="spot_cta">📋 Åpne ProNorm gratis →</a>
+            </div>
+            <div class="spot-mockup">
+                <div class="mock-header">
+                    <span class="mock-title">ProNorm Kalkyle</span>
+                    <span>NOK</span>
+                </div>
+                <table class="mock-table">
+                    <div class="mock-row"><span>1. Montering av stenderverk (100m2)</span> <span>12 500,-</span></div>
+                    <div class="mock-row"><span>2. Isolering 200mm (100m2)</span> <span>4 200,-</span></div>
+                    <div class="mock-row"><span>3. Gipsplater, 1 lag (100m2)</span> <span>8 100,-</span></div>
+                    <div class="mock-row"><span>MVA (25%)</span> <span>6 200,-</span></div>
+                </table>
+                <div class="mock-total">
+                    <span data-i18n="spot_mock_total">TOTALT:</span> <span>31 000 NOK</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Project Section -->
+    <section class="support-section" style="padding: 60px 0; background: #fffbeb; border-top: 1px solid #fef3c7; border-bottom: 1px solid #fef3c7;">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 28px; margin-bottom: 15px; color: var(--text);" data-i18n="supp_title">☕ Støtt prosjektet</h2>
+            <p style="color: #92400e; font-size: 18px; margin-bottom: 30px; max-width: 700px; margin-left: auto; margin-right: auto;" data-i18n="supp_desc">Liker du disse verktøyene? De er gratis mens de forbedres. Du kan støtte videreutvikling ved å spandere en kaffe.</p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="https://qr.vipps.no/28/2/01/031/4794844497?v=1" target="_blank" class="btn-primary" style="background: #ff5b24; color: white; display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 30px; font-weight: 800; border: none; text-decoration: none;">VIPPS</a>
+                <a href="https://paypal.me/94844497" target="_blank" style="background: #003087; color: white; display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 30px; font-weight: 800; border: none; text-decoration: none;">PayPal</a>
+                <a href="https://revolut.me/205rad" target="_blank" style="background: #000000; color: white; display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 30px; font-weight: 800; border: none; text-decoration: none;">Revolut</a>
+                <a href="https://contribee.com/vytautas-giedraitis" target="_blank" style="background: #f76b1c; color: white; display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 30px; font-weight: 800; border: none; text-decoration: none;">Contribee</a>
+            </div>
+            <p style="font-size: 13px; margin-top: 20px; color: #92400e; font-weight: 600;" data-i18n="supp_note">Takk for din støtte!</p>
+        </div>
+    </section>
+
+    <!-- Coming Soon Section -->
+    <section class="soon">
+        <div class="container">
+            <h2 data-i18n="soon_title">✨ Kommer snart</h2>
+            <p data-i18n="soon_sub">Nye verktøy er under utvikling. Bli varslet når vi lanserer.</p>
+            
+            <form id="notify-form" class="notify-form">
+                <input type="email" id="notify-email" class="notify-input" required placeholder="E-postadresse..." data-i18n-placeholder="soon_placeholder">
+                <button type="submit" class="btn-notify" data-i18n="soon_btn">Varsle meg</button>
+            </form>
+            <div id="success-msg" class="success-msg" data-i18n="soon_success">Takk! E-postadressen er lagret lokalt. Du får beskjed.</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>🔨 ProBuilder</h4>
+                    <p data-i18n="footer_brand_desc">Profesjonelle byggkalkulatorer for det norske markedet.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer_tools">Verktøy</h4>
+                    <ul class="footer-links">
+                        <li><a href="stender.html" data-i18n="tool_1_title">Stender kalkulator</a></li>
+                        <li><a href="lekter.html" data-i18n="tool_2_title">Lekter kalkulator</a></li>
+                        <li><a href="areal.html" data-i18n="tool_3_title">Arealberegning</a></li>
+                        <li><a href="materialer.html" data-i18n="tool_4_title">Materialkalkulator</a></li>
+                        <li><a href="trapp.html" data-i18n="tool_5_title">Trappekalkulator</a></li>
+                        <li><a href="betong.html" data-i18n="tool_6_title">Betongkalkulator</a></li>
+                        <li><a href="murverk.html" data-i18n="tool_7_title">Murverk kalkulator</a></li>
+                        <li><a href="normcalc.html" data-i18n="tool_8_title">ProNorm — Kalkyle</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer_contact">Kontakt</h4>
+                    <ul class="footer-links">
+                        <li>Vytautas Giedraitis</li>
+                        <li><a href="tel:94844497">📞 94844497</a></li>
+                        <li><a href="about.html" data-i18n="nav_about">Om oss</a></li>
+                        <li><a href="contact.html" data-i18n="nav_contact">Kontakt oss</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bottom-bar" data-i18n="footer_copy">
+                © 2026 ProBuilder by Vytautas Giedraitis — Alle beregninger kun for informasjonsformål.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // === Translations Data ===
+        const T = {
+            no: {
+                nav_home: "Hjem", nav_tools: "Verktøy", nav_howto: "Slik bruker du", nav_about: "Om oss", nav_contact: "Kontakt",
+                hero_label: "🏗 Norges beste byggkalkulatorer",
+                hero_title: "Beregn raskere. Bygg smartere.",
+                hero_sub: "8 profesjonelle kalkulatorer for tømrere og snekkere. Gratis i utviklingsfasen. På norsk, litauisk, polsk og engelsk.",
+                hero_cta1: "🧰 Se alle verktøy →", hero_cta2: "📋 Åpne ProNorm",
+                trust_1_title: "8 Kalkulatorer", trust_1_sub: "Stender, betong, trapp og mer",
+                trust_2_title: "4 Språk", trust_2_sub: "Norsk · Litauisk · Polsk · Engelsk",
+                trust_3_title: "Gratis i testfasen", trust_3_sub: "Ingen konto, ingen app",
+                grid_title: "🧰 Alle verktøy", grid_sub: "Klikk for å åpne — nøyaktige beregninger for fagfolk",
+                filter_all: "Alle", filter_top: "⭐ Topp", filter_new: "🆕 Ny", filter_beta: "🧪 Beta", filter_test: "🔬 Test",
+                tool_1_title: "Stender kalkulator", tool_1_desc: "Beregn stenderplassering, kappelengde og nøyaktige merker for vinduer og dører. Støtter flere svill-lag og hjørnetyper.",
+                tool_2_title: "Lekter kalkulator", tool_2_desc: "Beregn lekteravstand for tak og kledning. Oppgi mål og få eksakt antall og plassering.",
+                tool_3_title: "Arealberegning", tool_3_desc: "Rask og nøyaktig beregning av gulv- og overflatearealer for uregelmessige rom.",
+                tool_4_title: "Materialkalkulator", tool_4_desc: "Beregn materialmengder for prosjektet. Reduser svinn og bestill riktig mengde.",
+                tool_5_title: "Trappekalkulator", tool_5_desc: "Design trapper etter norske byggeregler. Trinnhøyde, inntrinn og totalstigning beregnet.",
+                tool_6_title: "Betongkalkulator", tool_6_desc: "Beregn betongvolum for plater, fundament og søyler. Under utvikling.",
+                tool_7_title: "Murverk kalkulator", tool_7_desc: "Blokktelling, mørtelmengde og murflate. Under aktiv utvikling.",
+                tool_8_title: "ProNorm — Kalkyle", tool_8_desc: "Full kalkyle med arbeidsnormer, brigade, timepris, MVA og PDF-eksport. Flaggskipverktøyet.",
+                badge_trapp: "TRAPP", btn_open: "Åpne verktøy →",
+                feat_title: "Hvorfor ProBuilder?",
+                feat_1_title: "👷 Laget av en håndverker", feat_1_desc: "Ikke av et softwareselskap. Alle verktøyene er utviklet og testet av Vytautas Giedraitis — aktiv tømrer med erfaring fra norske byggeplasser.",
+                feat_2_title: "📱 Fungerer på byggeplassen", feat_2_desc: "Åpne fra mobilen din. Fungerer uten internett etter første besøk. Ingen app å installere — bare lagre siden på hjemmeskjermen.",
+                feat_3_title: "🌍 4 språk — ingen forvirring", feat_3_desc: "Norsk, litauisk, polsk og engelsk. Litauiske og polske snekkere kan bruke alle verktøyene på morsmålet sitt.",
+                spot_badge: "⚡ FLAGGSKIP", spot_title: "ProNorm — Komplett kalkyle", spot_desc: "Det eneste kalkyleprogrammet for norske byggeplasser med arbeidsnormer, brigadekonfigurasjon og flerspråklig støtte.",
+                spot_li_1: "✅ Arbeidsnorm-katalog med hundrevis av arbeidstyper", spot_li_2: "✅ Brigadekonfigurasjon — 1 til 5 mann", spot_li_3: "✅ Timekostnad × normtid = automatisk sum", spot_li_4: "✅ 25% MVA kalkulert automatisk", spot_li_5: "✅ Lagre og åpne prosjekter (JSON)", spot_li_6: "✅ Skriv ut som PDF-rapport", spot_li_7: "✅ Norsk, litauisk, polsk og engelsk",
+                spot_cta: "📋 Åpne ProNorm gratis →",
+                supp_title: "☕ Støtt prosjektet",
+                supp_desc: "Liker du disse verktøyene? De er gratis mens de forbedres. Du kan støtte videreutvikling ved å spandere en kaffe.",
+                supp_note: "Takk for din støtte!", spot_mock_total: "TOTALT:",
+                soon_title: "✨ Kommer snart", soon_sub: "Nye verktøy er under utvikling. Bli varslet når vi lanserer.", soon_placeholder: "E-postadresse...", soon_btn: "Varsle meg", soon_success: "Takk! E-postadressen er lagret lokalt. Du får beskjed.",
+                footer_brand_desc: "Profesjonelle byggkalkulatorer for det norske markedet.", footer_tools: "Verktøy", footer_contact: "Kontakt", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Alle beregninger kun for informasjonsformål."
+            },
+            en: {
+                nav_home: "Home", nav_tools: "Tools", nav_howto: "How to use", nav_about: "About", nav_contact: "Contact",
+                hero_label: "🏗 Norway's best building calculators",
+                hero_title: "Calculate faster. Build smarter.",
+                hero_sub: "8 professional tools for carpenters. Free during the development phase. In Norwegian, Lithuanian, Polish and English.",
+                hero_cta1: "🧰 View all tools →", hero_cta2: "📋 Open ProNorm",
+                trust_1_title: "8 Calculators", trust_1_sub: "Studs, concrete, stairs and more",
+                trust_2_title: "4 Languages", trust_2_sub: "Norwegian · Lithuanian · Polish · English",
+                trust_3_title: "Free in beta", trust_3_sub: "No account, no app required",
+                grid_title: "🧰 All Tools", grid_sub: "Click to open — accurate calculations for professionals",
+                filter_all: "All", filter_top: "⭐ Top", filter_new: "🆕 New", filter_beta: "🧪 Beta", filter_test: "🔬 Test",
+                tool_1_title: "Stud Calculator", tool_1_desc: "Calculate stud placement, cut length, and precise marks for windows and doors. Supports multiple plate layers and corner types.",
+                tool_2_title: "Batten Calculator", tool_2_desc: "Calculate batten spacing for roofs and cladding. Enter dimensions and get exact amount.",
+                tool_3_title: "Area Calculation", tool_3_desc: "Fast and accurate calculation of floor and surface areas for irregular rooms.",
+                tool_4_title: "Material Calculator", tool_4_desc: "Calculate material quantities for the project. Reduce waste and order the right amount.",
+                tool_5_title: "Stair Calculator", tool_5_desc: "Design stairs according to Norwegian building regulations. Riser, tread, and total rise calculated.",
+                tool_6_title: "Concrete Calculator", tool_6_desc: "Calculate concrete volume for slabs, foundations, and columns. Under development.",
+                tool_7_title: "Masonry Calculator", tool_7_desc: "Block counting, mortar quantity, and wall area. Under active development.",
+                tool_8_title: "ProNorm — Estimation", tool_8_desc: "Full estimation with work norms, brigade, hourly rate, VAT, and PDF export. Flagship tool.",
+                badge_trapp: "STAIRS", btn_open: "Open tool →",
+                feat_title: "Why ProBuilder?",
+                feat_1_title: "👷 Made by a craftsman", feat_1_desc: "Not by a software company. All tools are developed and tested by Vytautas Giedraitis — active carpenter with experience from Norwegian construction sites.",
+                feat_2_title: "📱 Works on the site", feat_2_desc: "Open from your phone. Works without internet after the first visit. No app to install — just save the page to your home screen.",
+                feat_3_title: "🌍 4 languages — no confusion", feat_3_desc: "Norwegian, Lithuanian, Polish, and English. Lithuanian and Polish carpenters can use all tools in their native language.",
+                spot_badge: "⚡ FLAGSHIP", spot_title: "ProNorm — Complete Estimation", spot_desc: "The only estimation program for Norwegian construction sites with work norms, brigade configuration, and multilingual support.",
+                spot_li_1: "✅ Work norm catalog with hundreds of tasks", spot_li_2: "✅ Brigade configuration — 1 to 5 men", spot_li_3: "✅ Hourly cost × norm time = auto sum", spot_li_4: "✅ 25% VAT calculated automatically", spot_li_5: "✅ Save and open projects (JSON)", spot_li_6: "✅ Print as PDF report", spot_li_7: "✅ Norwegian, Lithuanian, Polish, and English",
+                spot_cta: "📋 Open ProNorm for free →",
+                supp_title: "☕ Support the project",
+                supp_desc: "Like these tools? They are currently free while being improved. You can support further development by buying a coffee.",
+                supp_note: "Thank you for your support!", spot_mock_total: "TOTAL:",
+                soon_title: "✨ Coming soon", soon_sub: "New tools are under development. Get notified when we launch.", soon_placeholder: "Email address...", soon_btn: "Notify me", soon_success: "Thank you! Your email is stored locally. You will be notified.",
+                footer_brand_desc: "Professional building calculators for the Norwegian market.", footer_tools: "Tools", footer_contact: "Contact", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Calculations are accurate but for orientational purposes only. User is responsible for final checks. Please report any errors."
+            },
+            lt: {
+                nav_home: "Pradžia", nav_tools: "Įrankiai", nav_howto: "Kaip naudotis", nav_about: "Apie mus", nav_contact: "Kontaktai",
+                hero_label: "🏗 Geriausios statybų skaičiuoklės Norvegijoje",
+                hero_title: "Skaičiuok greičiau. Statyk protingiau.",
+                hero_sub: "8 profesionalios skaičiuoklės dailidėms ir rangovams. Nemokamos vystymo laikotarpiu. Norvegų, lietuvių, lenkų ir anglų kalbomis.",
+                hero_cta1: "🧰 Žiūrėti visus įrankius →", hero_cta2: "📋 Atidaryti ProNorm",
+                trust_1_title: "8 Skaičiuoklės", trust_1_sub: "Karkasas, betonas, laiptai ir kt.",
+                trust_2_title: "4 Kalbos", trust_2_sub: "Norvegų · Lietuvių · Lenkų · Anglų",
+                trust_3_title: "Nemokama testavimo metu", trust_3_sub: "Jokios paskyros, jokios programėlės",
+                grid_title: "🧰 Visi įrankiai", grid_sub: "Tikslūs skaičiavimai profesionalams — veikia naršyklėje",
+                filter_all: "Visi", filter_top: "⭐ Top", filter_new: "🆕 Nauji", filter_beta: "🧪 Beta", filter_test: "🔬 Testas",
+                tool_1_title: "Karkaso skaičiuoklė", tool_1_desc: "Apskaičiuokite stenderių išdėstymą, pjovimo ilgį bei tikslius langų ir durų žymėjimus. Palaiko kelis sijų sluoksnius ir kampų tipus.",
+                tool_2_title: "Grėbėstų skaičiuoklė", tool_2_desc: "Apskaičiuokite grėbėstų atstumus stogams ir fasadams. Įveskite matmenis ir gaukite tikslų kiekį.",
+                tool_3_title: "Ploto skaičiuoklė", tool_3_desc: "Greitas ir tikslus netaisyklingų patalpų grindų ir paviršių ploto apskaičiavimas.",
+                tool_4_title: "Medžiagų skaičiuoklė", tool_4_desc: "Apskaičiuokite medžiagų kiekius projektui. Sumažinkite nuostolius ir užsakykite tikslų kiekį.",
+                tool_5_title: "Laiptų skaičiuoklė", tool_5_desc: "Projektuokite laiptus pagal Norvegijos statybos taisykles. Pakopos aukštis, gylis ir bendras kilimas.",
+                tool_6_title: "Betono skaičiuoklė", tool_6_desc: "Apskaičiuokite betono tūrį plokštėms, pamatams ir kolonoms. Kuriama.",
+                tool_7_title: "Mūro skaičiuoklė", tool_7_desc: "Blokelių skaičiavimas, skiedinio kiekis ir mūro plotas. Kuriama.",
+                tool_8_title: "ProNorm — Sąmatos", tool_8_desc: "Pilna sąmata su darbo normomis, brigadomis, valandiniu tarifu, PVM ir PDF eksportu. Pagrindinis įrankis.",
+                badge_trapp: "LAIPTAI", btn_open: "Atidaryti įrankį →",
+                feat_title: "Kodėl ProBuilder?",
+                feat_1_title: "👷 Sukurta meistro", feat_1_desc: "Ne programinės įrangos įmonės. Visus įrankius sukūrė ir išbandė Vytautas Giedraitis — aktyvus dailidė, turintis patirties Norvegijos statybvietėse.",
+                feat_2_title: "📱 Veikia statybvietėje", feat_2_desc: "Atidarykite telefone. Po pirmo apsilankymo veikia be interneto. Nereikia instaliuoti programėlės — tiesiog išsaugokite puslapį pagrindiniame ekrane.",
+                feat_3_title: "🌍 4 kalbos — jokios painiavos", feat_3_desc: "Norvegų, lietuvių, lenkų ir anglų. Lietuvių ir lenkų meistrai gali naudotis visais įrankiais savo gimtąja kalba.",
+                spot_badge: "⚡ PAGRINDINIS", spot_title: "ProNorm — Pilna sąmata", spot_desc: "Vienintelė sąmatų programa Norvegijos statybvietėms su darbo normomis, brigadų konfigūracija ir daugiakalbiu palaikymu.",
+                spot_li_1: "✅ Darbo normų katalogas su šimtais užduočių", spot_li_2: "✅ Brigados konfigūracija — nuo 1 iki 5 žmonių", spot_li_3: "✅ Valandos kaina × normos laikas = automatinė suma", spot_li_4: "✅ 25% PVM skaičiuojamas automatiškai", spot_li_5: "✅ Išsaugoti ir atidaryti projektus (JSON)", spot_li_6: "✅ Spausdinti kaip PDF ataskaitą", spot_li_7: "✅ Norvegų, lietuvių, lenkų ir anglų",
+                spot_cta: "📋 Atidaryti ProNorm nemokamai →",
+                supp_title: "☕ Paremkite projektą",
+                supp_desc: "Patinka šie įrankiai? Šiuo metu jie yra nemokami, kol yra tobulinami. Galite paremti jų kūrimą „nupirkdami kavos“.",
+                supp_note: "Ačiū už jūsų paramą!", spot_mock_total: "VISO:",
+                soon_title: "✨ Greitai pasirodys", soon_sub: "Kuriami nauji įrankiai. Gaukite pranešimą, kai startuosime.", soon_placeholder: "El. pašto adresas...", soon_btn: "Pranešti man", soon_success: "Ačiū! Jūsų el. paštas išsaugotas lokaliai. Mes jums pranešime.",
+                footer_brand_desc: "Profesionalios statybų skaičiuoklės Norvegijos rinkai.", footer_tools: "Įrankiai", footer_contact: "Kontaktai", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Beregningene er nøyaktige, men er ment som veiledende. Brukeren er selv ansvarlig for kontroll. Meld gjerne fra om feil."
+            },
+            pl: {
+                nav_home: "Główna", nav_tools: "Narzędzia", nav_howto: "Jak używać", nav_about: "O nas", nav_contact: "Kontakt",
+                hero_label: "🏗 Najlepsze kalkulatory budowlane w Norwegii",
+                hero_title: "Obliczaj szybciej. Buduj mądrzej.",
+                hero_sub: "8 profesjonalnych kalkulatorów dla stolarzy. Bezpłatne w fazie rozwoju. W języku norweskim, litewskim, polskim i angielskim.",
+                hero_cta1: "🧰 Zobacz wszystkie narzędzia →", hero_cta2: "📋 Otwórz ProNorm",
+                trust_1_title: "8 Kalkulatorer", trust_1_sub: "Stender, betong, trapp og mer",
+                trust_2_title: "4 Języki", trust_2_sub: "Norweski · Litewski · Polski · Angielski",
+                trust_3_title: "Darmowe w fazie testów", trust_3_sub: "Brak konta, brak aplikacji",
+                grid_title: "🧰 Wszystkie narzędzia", grid_sub: "Kliknij, aby otworzyć — dokładne obliczenia dla profesjonalistów",
+                filter_all: "Wszystkie", filter_top: "⭐ Top", filter_new: "🆕 Nowe", filter_beta: "🧪 Beta", filter_test: "🔬 Test",
+                tool_1_title: "Kalkulator słupków", tool_1_desc: "Oblicz rozmieszczenie słupków, długość cięcia oraz dokładne znaki dla okien i drzwi. Obsługuje wiele warstw oczepów i typy narożników.",
+                tool_2_title: "Kalkulator łat", tool_2_desc: "Oblicz rozstaw łat dla dachów i elewacji. Wprowadź wymiary i uzyskaj dokładną ilość.",
+                tool_3_title: "Obliczanie powierzchni", tool_3_desc: "Szybkie i dokładne obliczanie powierzchni podłóg i ścian dla nieregularnych pomieszczeń.",
+                tool_4_title: "Kalkulator materiałów", tool_4_desc: "Oblicz ilości materiałów dla projektu. Zmniejsz straty i zamów odpowiednią ilość.",
+                tool_5_title: "Kalkulator schodów", tool_5_desc: "Projektuj schody zgodnie z norweskimi przepisami budowlanymi. Obliczanie wysokości i głębokości stopnia.",
+                tool_6_title: "Kalkulator betonu", tool_6_desc: "Oblicz objętość betonu dla płyt, fundamentów i kolumn. W trakcie tworzenia.",
+                tool_7_title: "Kalkulator murarski", tool_7_desc: "Liczenie bloczków, ilość zaprawy i powierzchnia muru. W trakcie aktywnego rozwoju.",
+                tool_8_title: "ProNorm — Kosztorys", tool_8_desc: "Pełny kosztorys z normami pracy, brygadą, stawką godzinową, VAT i eksportem PDF. Główne narzędzie.",
+                badge_trapp: "SCHODY", btn_open: "Otwórz narzędzie →",
+                feat_title: "Dlaczego ProBuilder?",
+                feat_1_title: "👷 Stworzone przez rzemieślnika", feat_1_desc: "Nie przez firmę programistyczną. Wszystkie narzędzia zostały opracowane i przetestowane przez Vytautasa Giedraitisa — aktywnego cieślę z doświadczeniem na norweskich placach budowy.",
+                feat_2_title: "📱 Działa na budowie", feat_2_desc: "Otwórz w telefonie. Działa bez internetu po pierwszej wizycie. Nie trzeba instalować aplikacji — po prostu zapisz stronę na ekranie głównym.",
+                feat_3_title: "🌍 4 języki — bez nieporozumień", feat_3_desc: "Norweski, litewski, polski i angielski. Litewscy i polscy stolarze mogą korzystać ze wszystkich narzędzi w swoim ojczystym języku.",
+                spot_badge: "⚡ FLAGOWE", spot_title: "ProNorm — Kompletny kosztorys", spot_desc: "Jedyny program kosztorysowy dla norweskich placów budowy z normami pracy, konfiguracją brygady i obsługą wielu języków.",
+                spot_li_1: "✅ Katalog norm pracy z setkami zadań", spot_li_2: "✅ Konfiguracja brygady — od 1 do 5 osób", spot_li_3: "✅ Koszt godziny × czas normy = automatyczna suma", spot_li_4: "✅ 25% VAT obliczane automatycznie", spot_li_5: "✅ Zapisuj i otwieraj projekty (JSON)", spot_li_6: "✅ Drukuj jako raport PDF", spot_li_7: "✅ Norweski, litewski, polski i angielski",
+                spot_cta: "📋 Otwórz ProNorm za darmo →",
+                supp_title: "☕ Wesprzyj projekt",
+                supp_desc: "Podobają Ci się te narzędzia? Obecnie są one bezpłatne w fazie rozwoju. Możesz wesprzeć ich ulepszanie, fundując kawę.",
+                supp_note: "Dziękujemy za wsparcie!", spot_mock_total: "RAZEM:",
+                soon_title: "✨ Wkrótce", soon_sub: "Nowe narzędzia są w trakcie tworzenia. Otrzymaj powiadomienie po uruchomieniu.", soon_placeholder: "Adres e-mail...", soon_btn: "Powiadom mnie", soon_success: "Dziękujemy! Twój adres e-mail został zapisany lokalnie. Powiadomimy Cię.",
+                footer_brand_desc: "Profesjonalne kalkulatory budowlane na rynek norweski.", footer_tools: "Narzędzia", footer_contact: "Kontakt", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Obliczenia są dokładne, ale mają charakter orientacyjny. Użytkownik jest odpowiedzialny za kontrolę. Prosimy o zgłaszanie błędów."
+            }
+        };
+
+        // === Document Ready ===
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. i18n Language Setup ---
+            const langBtns = document.querySelectorAll('.lang-btn');
+            
+            function setLanguage(lang) {
+                if(!T[lang]) return;
+                
+                // Set HTML lang attribute
+                document.documentElement.lang = lang;
+                
+                // Update text strings
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if(T[lang][key]) {
+                        el.textContent = T[lang][key];
+                    }
+                });
+
+                // Update placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if(T[lang][key]) {
+                        el.placeholder = T[lang][key];
+                    }
+                });
+
+                // Update Active Button
+                langBtns.forEach(btn => {
+                    if(btn.dataset.lang === lang) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+
+                // Save to localStorage
+                localStorage.setItem('pb_lang', lang);
+            }
+
+            // Init language
+            const savedLang = localStorage.getItem('pb_lang') || 'no';
+            setLanguage(savedLang);
+
+            // Bind click events
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setLanguage(btn.dataset.lang);
+                });
+            });
+
+
+            // --- 2. Mobile Menu Toggle ---
+            const hamburger = document.getElementById('mobile-menu-btn');
+            const navLinks = document.getElementById('nav-links');
+            
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+
+            // --- 3. Tool Grid Filtering ---
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const toolCards = document.querySelectorAll('.tool-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active class on buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+
+                    // Filter cards
+                    toolCards.forEach(card => {
+                        if(filter === 'all') {
+                            card.classList.remove('hidden');
+                        } else {
+                            if(card.dataset.status === filter) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+
+            // --- 4. Notify Form Submission ---
+            const notifyForm = document.getElementById('notify-form');
+            const notifyInput = document.getElementById('notify-email');
+            const successMsg = document.getElementById('success-msg');
+
+            notifyForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = notifyInput.value.trim();
+                if(email) {
+                    localStorage.setItem('pb_notify_email', email);
+                    notifyForm.style.display = 'none';
+                    successMsg.style.display = 'block';
+                }
+            });
+        });
+    </script>
+    <script src="js/pwa.js"></script>
+</body>
+</html>

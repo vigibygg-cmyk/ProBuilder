@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<title>Kontakt oss — Support og tilbakemelding | ProBuilder</title>
+<meta name="description" content="Har du spørsmål eller tilbakemeldinger om ProBuilder? Kontakt oss her for support eller forslag til nye funksjoner.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/contact.html">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="Kontakt oss - ProBuilder">
+<meta property="og:description" content="Har du spørsmål eller tilbakemeldinger om ProBuilder? Kontakt oss her.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/contact.html">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kontakt oss - ProBuilder">
+<meta name="twitter:description" content="Har du spørsmål eller tilbakemeldinger om ProBuilder?">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<link rel="manifest" href="manifest.json">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Kontakt ProBuilder",
+  "description": "Side for kontakt og support for ProBuilder verktøy.",
+  "url": "https://vigibygg-cmyk.github.io/Calc/contact.html"
+}
+</script>
+
+    <meta name="theme-color" content="#2b6cb0">
+    <style>
+        :root {
+            --bg: #f7f9fa; --card: #ffffff; --text: #1a202c; --muted: #718096;
+            --primary: #2b6cb0; --primary-dark: #1a4a8a; --accent: #dd6b20;
+            --success: #276749; --success-bg: #f0fff4; --border: #e2e8f0; 
+            --radius: 10px; --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; color: var(--text); background: var(--bg); line-height: 1.6; }
+        a { text-decoration: none; color: var(--primary); }
+        ul { list-style: none; }
+        button, input, select, textarea { font-family: inherit; font-size: 16px; border: 1px solid var(--border); border-radius: 6px; padding: 12px; width: 100%; }
+        button { cursor: pointer; border: none; background: none; width: auto; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navbar */
+        .navbar { background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .navbar-inner { display: flex; justify-content: space-between; align-items: center; min-height: 70px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-title { font-weight: 700; font-size: 20px; color: var(--primary); }
+        .logo-sub { font-size: 12px; color: var(--muted); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-link { color: var(--text); font-weight: 500; }
+        .nav-link:hover, .nav-link.active { color: var(--primary); }
+        .phone-btn { background: var(--success-bg); color: var(--success); padding: 8px 16px; border-radius: 20px; font-weight: 600; border: 1px solid #9ae6b4; }
+        .lang-switcher { display: flex; gap: 4px; }
+        .lang-btn { padding: 6px; font-size: 18px; border: 1px solid transparent; }
+        .lang-btn.active { background: var(--bg); border-color: var(--border); }
+        .hamburger { display: none; font-size: 24px; }
+
+        /* Hero */
+        .hero { background: var(--card); padding: 40px 0; border-bottom: 1px solid var(--border); text-align: center; margin-bottom: 40px; }
+        .breadcrumb { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+        .hero h1 { font-size: 32px; font-weight: 700; }
+
+        /* Contact Info Cards */
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; text-align: center; }
+        .info-card { background: var(--card); padding: 30px 20px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .info-icon { font-size: 32px; margin-bottom: 10px; }
+        .info-title { font-weight: 700; font-size: 18px; margin-bottom: 5px; }
+        .info-link { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
+        .info-sub { font-size: 14px; color: var(--muted); }
+
+        /* Form Layout */
+        .form-layout { display: grid; grid-template-columns: 2fr 1.2fr; gap: 30px; margin-bottom: 60px; }
+        .form-card { background: var(--card); padding: 30px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 8px; }
+        .form-input { outline: none; transition: border-color 0.2s; }
+        .form-input:focus { border-color: var(--primary); }
+        .form-input.error { border-color: red; }
+        .error-msg { color: red; font-size: 12px; display: none; margin-top: 4px; }
+        .tool-select-wrapper { display: none; margin-top: 15px; }
+        .btn-submit { background: var(--primary); color: white; font-weight: bold; padding: 14px; width: 100%; border-radius: 8px; font-size: 18px; transition: background 0.2s; border:none; }
+        .btn-submit:hover { background: var(--primary-dark); }
+        .form-note { font-size: 13px; color: var(--muted); text-align: center; margin-top: 15px; }
+        
+        /* Success/Draft States */
+        .success-card { display: none; text-align: center; padding: 40px 20px; background: var(--success-bg); color: var(--success); border-radius: var(--radius); border: 1px solid #9ae6b4; }
+        .draft-tooltip { position: absolute; top: -15px; right: 20px; background: var(--accent); color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; display: none; }
+
+        /* Suggestions */
+        .suggest-card { background: var(--card); padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+        .suggest-card h3 { color: var(--text); font-size: 18px; }
+        .suggest-card p { color: var(--muted); font-size: 14px; }
+        .idea-btn { border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 10px 14px; border-radius: 20px; font-size: 13px; text-align: left; transition: all 0.2s; width: 100%; }
+        .idea-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Support Box */
+        .support-card { background: #fffbeb; border: 1px solid #fef3c7; padding: 25px; border-radius: var(--radius); text-align: center; }
+        .support-card h3 { font-size: 18px; margin-bottom: 8px; }
+        .support-card p { font-size: 14px; color: #92400e; margin-bottom: 15px; }
+        .support-options { display: flex; flex-direction: column; gap: 10px; }
+        .supp-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 15px; transition: transform 0.1s; color: white; width: 100%; border:none; }
+        .supp-btn:active { transform: scale(0.98); }
+        .btn-vipps { background: #ff5b24; }
+        .btn-paypal { background: #003087; }
+        .btn-revolut { background: #000000; }
+        .btn-contribee { background: #f76b1c; }
+
+        /* Footer */
+        footer { background: #1a202c; color: #a0aec0; padding: 40px 0 20px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .footer-col h4 { color: white; margin-bottom: 15px; }
+        .footer-col a { color: #a0aec0; display: block; margin-bottom: 8px; }
+        .bottom-bar { text-align: center; border-top: 1px solid #2d3748; padding-top: 20px; font-size: 12px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: var(--card); padding: 20px; border-bottom: 1px solid var(--border); }
+            .nav-links.active { display: flex; }
+            .hamburger { display: block; }
+            .info-grid { grid-template-columns: 1fr; }
+            .form-layout { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="logo-area" style="display:flex; flex-direction:column;">
+                <div class="logo-title">🔨 ProBuilder</div>
+                <div class="logo-sub">by Vytautas Giedraitis</div>
+            </a>
+            <div class="nav-right">
+                <button class="hamburger" id="mobile-menu-btn">☰</button>
+                <div class="nav-links" id="nav-links">
+                    <a href="index.html" class="nav-link" data-i18n="nav_home">Hjem</a>
+                    <a href="tools.html" class="nav-link" data-i18n="nav_tools">Verktøy</a>
+                    <a href="how-to.html" class="nav-link" data-i18n="nav_howto">Slik bruker du</a>
+                    <a href="about.html" class="nav-link" data-i18n="nav_about">Om oss</a>
+                    <a href="contact.html" class="nav-link active" data-i18n="nav_contact">Kontakt</a>
+                </div>
+                <a href="tel:94844497" class="phone-btn">📞 94844497</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="no">NO</button>
+                    <button class="lang-btn" data-lang="lt">LT</button>
+                    <button class="lang-btn" data-lang="pl">PL</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <div class="breadcrumb"><a href="index.html" data-i18n="nav_home">Hjem</a> / <span data-i18n="nav_contact">Kontakt</span></div>
+            <h1 data-i18n="hero_title">Kontakt Vytautas</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Info Cards -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-icon">📞</div>
+                <div class="info-title" data-i18n="info_phone_title">Ring direkte</div>
+                <a href="tel:94844497" class="info-link">94844497</a>
+                <div class="info-sub" data-i18n="info_phone_sub">Tilgjengelig hverdager 07:00–19:00</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">💬</div>
+                <div class="info-title" data-i18n="info_wa_title">WhatsApp</div>
+                <a href="https://wa.me/4794844497" target="_blank" class="info-link" data-i18n="info_wa_link">Send melding</a>
+                <div class="info-sub" data-i18n="info_wa_sub">Svar vanligvis innen 1–2 timer</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">📍</div>
+                <div class="info-title" data-i18n="info_loc_title">Sted</div>
+                <div class="info-link">Bergen, Norge</div>
+                <div class="info-sub" data-i18n="info_loc_sub">Betjener hele landet</div>
+            </div>
+        </div>
+
+        <div class="form-layout">
+            <!-- Form -->
+            <div class="form-card" id="form-container">
+                <div class="draft-tooltip" id="draft-tip" data-i18n="draft_tip">📝 Du har et uferdig utkast</div>
+                <form id="contact-form" action="https://formspree.io/f/xvzwbbva" method="POST">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_name">Navn</label>
+                        <input type="text" name="name" id="f_name" class="form-input" required>
+                        <div class="error-msg" data-i18n="err_req">Feltet er påkrevd</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_email">E-post</label>
+                        <input type="email" name="email" id="f_email" class="form-input" required>
+                        <div class="error-msg" data-i18n="err_req">Feltet er påkrevd</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_subject">Emne</label>
+                        <select name="subject" id="f_subject" class="form-input">
+                            <option value="new" data-i18n="opt_new">Forslag til nytt verktøy</option>
+                            <option value="bug" data-i18n="opt_bug">Feil/bug i verktøy</option>
+                            <option value="feedback" data-i18n="opt_feed">Gi tilbakemelding</option>
+                            <option value="other" data-i18n="opt_other">Annen henvendelse</option>
+                        </select>
+                        <div class="tool-select-wrapper" id="tool-select-wrap">
+                            <label class="form-label" style="margin-top:10px;" data-i18n="label_tool">Hvilket verktøy?</label>
+                            <select name="tool" id="f_tool" class="form-input">
+                                <option>Stender kalkulator</option>
+                                <option>Lekter kalkulator</option>
+                                <option>Arealberegning</option>
+                                <option>Materialkalkulator</option>
+                                <option>Trappekalkulator</option>
+                                <option>Betongkalkulator</option>
+                                <option>Murverk kalkulator</option>
+                                <option>ProNorm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="label_msg">Melding</label>
+                        <textarea name="message" id="f_msg" rows="6" class="form-input" required placeholder="Beskriv ditt forslag eller spørsmål..." data-i18n-placeholder="msg_ph"></textarea>
+                        <div class="error-msg" data-i18n="err_req">Feltet er påkrevd</div>
+                    </div>
+                    <button type="submit" class="btn-submit" data-i18n="btn_submit">📬 Send melding</button>
+                    <div class="form-note" data-i18n="form_note">ℹ️ Dette skjemaet sender meldingen direkte til Vytautas. Ring 94844497 for rask respons.</div>
+                </form>
+            </div>
+            
+            <div class="success-card" id="success-card">
+                <h2 style="margin-bottom:10px;">✅</h2>
+                <h3 data-i18n="succ_title">Takk for meldingen!</h3>
+                <p data-i18n="succ_sub">Vi kontakter deg snart.</p>
+            </div>
+
+            <!-- Sidebar -->
+            <div style="display:flex; flex-direction:column; gap:20px;">
+                <!-- Support Box -->
+                <div class="support-card">
+                    <h3 data-i18n="supp_title">☕ Støtt prosjektet</h3>
+                    <p data-i18n="supp_desc">Liker du disse verktøyene? Du kan støtte videreutvikling ved å spandere en kaffe.</p>
+                    <div class="support-options">
+                        <button class="supp-btn btn-vipps" onclick="window.open('https://qr.vipps.no/28/2/01/031/4794844497?v=1', '_blank')">
+                            <span>VIPPS</span>
+                        </button>
+                        <button class="supp-btn btn-paypal" onclick="window.open('https://paypal.me/94844497', '_blank')">
+                            <span>PayPal</span>
+                        </button>
+                        <button class="supp-btn btn-revolut" onclick="window.open('https://revolut.me/205rad', '_blank')">
+                            <span>Revolut</span>
+                        </button>
+                        <button class="supp-btn btn-contribee" onclick="window.open('https://contribee.com/vytautas-giedraitis', '_blank')">
+                            <span>Contribee</span>
+                        </button>
+                    </div>
+                    <p style="font-size:12px; margin-top:15px; color:#92400e; font-weight:600;" data-i18n="supp_note">Takk for din støtte!</p>
+                </div>
+
+                <!-- Suggestions -->
+                <div class="suggest-card">
+                    <h3 data-i18n="sug_title">💡 Foreslå et verktøy</h3>
+                    <p data-i18n="sug_desc">Er det et verktøy du savner på byggeplassen? Vytautas lager nye kalkulatorer basert på tilbakemelding.</p>
+                    <button class="idea-btn" id="idea-1"></button>
+                    <button class="idea-btn" id="idea-2"></button>
+                    <button class="idea-btn" id="idea-3"></button>
+                    <button class="idea-btn" id="idea-4"></button>
+                    <button class="idea-btn" id="idea-other"></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>🔨 ProBuilder</h4>
+                <p data-i18n="footer_brand">Profesjonelle byggkalkulatorer for det norske markedet.</p>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav_tools">Verktøy</h4>
+                <a href="stender.html">Stender kalkulator</a>
+                <a href="lekter.html">Lekter kalkulator</a>
+                <a href="normcalc.html">ProNorm</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav_contact">Kontakt</h4>
+                <a href="about.html" data-i18n="nav_about">Om oss</a>
+                <a href="contact.html" data-i18n="nav_contact">Kontakt oss</a>
+                <a href="tel:94844497">📞 94844497</a>
+            </div>
+        </div>
+        <div class="bottom-bar" data-i18n="footer_copy">© 2026 ProBuilder by Vytautas Giedraitis — Alle beregninger kun for informasjonsformål.</div>
+    </footer>
+
+    <script>
+        const T = {
+            no: { 
+                nav_home: "Hjem", nav_howto: "Slik bruker du", nav_about: "Om oss", nav_contact: "Kontakt", nav_tools: "Verktøy", hero_title: "Kontakt Vytautas", info_phone_title: "Ring direkte", info_phone_sub: "Tilgjengelig hverdager 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Send melding", info_wa_sub: "Svar vanligvis innen 1–2 timer", info_loc_title: "Sted", info_loc_sub: "Betjener hele landet", draft_tip: "📝 Du har et uferdig utkast", label_name: "Navn", label_email: "E-post", label_subject: "Emne", opt_new: "Forslag til nytt verktøy", opt_bug: "Feil/bug i verktøy", opt_feed: "Gi tilbakemelding", opt_other: "Annen henvendelse", label_tool: "Hvilket verktøy?", label_msg: "Melding", msg_ph: "Beskriv ditt forslag eller spørsmål...", err_req: "Feltet er påkrevd", btn_submit: "📬 Send melding", form_note: "ℹ️ Dette skjemaet sender meldingen direkte til Vytautas. Ring 94844497 for rask respons.", succ_title: "Takk for meldingen!", succ_sub: "Vi kontakter deg snart.", sug_title: "💡 Foreslå et verktøy", sug_desc: "Er det et verktøy du savner på byggeplassen? Vytautas lager nye kalkulatorer basert på tilbakemelding.", footer_brand: "Profesjonelle byggkalkulatorer.", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Beregningene er nøyaktige, men er ment som veiledende. Meld gjerne fra om du oppdager feil.",
+                idea_1: "🏗 Råfradragsberegning", idea_1_full: "Forslag: Råfradragsberegning for takkonstruksjon", idea_2: "🌡 U-verdi kalkulator", idea_2_full: "Forslag: U-verdi kalkulator for isolering", idea_3: "⚡ El-estimat grovkalkyle", idea_3_full: "Forslag: Grovkalkyle for elektriker-arbeid", idea_4: "🪟 Vindus/dørberegning", idea_4_full: "Forslag: Kalkulator for standard vindus- og døråpninger", idea_other: "+ Annet forslag", idea_other_full: "Jeg har et annet forslag til verktøy: ",
+                supp_title: "☕ Støtt prosjektet", supp_desc: "Liker du disse verktøyene? De er for øyeblikket gratis mens de forbedres. Du kan støtte videreutvikling ved å spandere en kaffe.", supp_note: "Takk for din støtte!"
+            },
+            en: { 
+                nav_home: "Home", nav_howto: "How to use", nav_about: "About", nav_contact: "Contact", nav_tools: "Tools", hero_title: "Contact Vytautas", info_phone_title: "Call directly", info_phone_sub: "Available weekdays 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Send message", info_wa_sub: "Usually replies in 1-2 hrs", info_loc_title: "Location", info_loc_sub: "Serves the whole country", draft_tip: "📝 You have a draft", label_name: "Name", label_email: "Email", label_subject: "Subject", opt_new: "Suggest new tool", opt_bug: "Bug/Error", opt_feed: "Feedback", opt_other: "Other", label_tool: "Which tool?", label_msg: "Message", msg_ph: "Describe your idea...", err_req: "Required", btn_submit: "📬 Send Message", form_note: "ℹ️ This form sends the message directly to Vytautas. Call 94844497 for quick response.", succ_title: "Thank you!", succ_sub: "We will contact you soon.", sug_title: "💡 Suggest a tool", sug_desc: "Missing a tool? Vytautas builds calculators based on feedback.", footer_brand: "Professional calculators.", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Calculations are accurate but meant as guidance. Please report any errors.",
+                idea_1: "🏗 Rafter calculation", idea_1_full: "Suggestion: Rafter deduction calculation for roof construction", idea_2: "🌡 U-value calculator", idea_2_full: "Suggestion: U-value calculator for insulation", idea_3: "⚡ Electrical estimate", idea_3_full: "Suggestion: Rough estimate for electrical work", idea_4: "🪟 Window/door calc", idea_4_full: "Suggestion: Calculator for standard window and door openings", idea_other: "+ Other suggestion", idea_other_full: "I have another tool suggestion: ",
+                supp_title: "☕ Support the project", supp_desc: "Like these tools? They are currently free while being improved. You can support further development by buying a coffee.", supp_note: "Thank you for your support!"
+            },
+            lt: { 
+                nav_home: "Pradžia", nav_howto: "Kaip naudotis", nav_about: "Apie mus", nav_contact: "Kontaktai", nav_tools: "Įrankiai", hero_title: "Susisiekite su Vytautu", info_phone_title: "Skambinti", info_phone_sub: "Darbo dienomis 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Siųsti žinutę", info_wa_sub: "Atsako per 1-2 val.", info_loc_title: "Vieta", info_loc_sub: "Aptarnauja visą šalį", draft_tip: "📝 Turite nebaigtą žinutę", label_name: "Vardas", label_email: "El. paštas", label_subject: "Tema", opt_new: "Naujo įrankio idėja", opt_bug: "Klaida", opt_feed: "Atsiliepimas", opt_other: "Kita", label_tool: "Kuris įrankis?", label_msg: "Žinutė", msg_ph: "Aprašykite savo idėją...", err_req: "Privalomas laukas", btn_submit: "📬 Siųsti", form_note: "ℹ️ Ši forma siunčia žinutę tiesiogiai Vytautui. Skambinkite 94844497.", succ_title: "Ačiū!", succ_sub: "Susisieksime netrukus.", sug_title: "💡 Siūlyti įrankį", sug_desc: "Trūksta skaičiuoklės? Vytautas kuria įrankius pagal jūsų poreikius.", footer_brand: "Profesionalios skaičiuoklės.", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Skaičiavimai yra tikslūs, tačiau orientacinio pobūdžio. Pastebėję klaidą, būtinai praneškite.",
+                idea_1: "🏗 Gegnių skaičiavimas", idea_1_full: "Pasiūlymas: Gegnių išskaičiavimas stogo konstrukcijai", idea_2: "🌡 U-vertės skaičiuoklė", idea_2_full: "Pasiūlymas: U-vertės skaičiuoklė izoliacijai", idea_3: "⚡ Elektros sąmata", idea_3_full: "Pasiūlymas: Preliminari elektros darbų sąmata", idea_4: "🪟 Langų/durų skaičiavimas", idea_4_full: "Pasiūlymas: Standartinių langų ir durų angų skaičiuoklė", idea_other: "+ Kitas pasiūlymas", idea_other_full: "Turiu kitą idėją įrankiui: ",
+                supp_title: "☕ Paremkite projektą", supp_desc: "Patinka šie įrankiai? Šiuo metu jie yra nemokami, kol yra tobulinami. Galite paremti jų kūrimą „nupirkdami kavos“.", supp_note: "Ačiū už jūsų paramą!"
+            },
+            pl: { 
+                nav_home: "Główna", nav_howto: "Jak używać", nav_about: "O nas", nav_contact: "Kontakt", nav_tools: "Narzędzia", hero_title: "Kontakt z Vytautasem", info_phone_title: "Zadzwoń", info_phone_sub: "Dni robocze 07:00–19:00", info_wa_title: "WhatsApp", info_wa_link: "Wyślij wiadomość", info_wa_sub: "Odpowiedź w 1-2 godz.", info_loc_title: "Lokalizacja", info_loc_sub: "Cały kraj", draft_tip: "📝 Masz wersję roboczą", label_name: "Imię", label_email: "E-mail", label_subject: "Temat", opt_new: "Propozycja narzędzia", opt_bug: "Błąd", opt_feed: "Opinia", opt_other: "Inne", label_tool: "Które narzędzie?", label_msg: "Wiadomość", msg_ph: "Opisz swój pomysł...", err_req: "Wymagane", btn_submit: "📬 Wyślij", form_note: "ℹ️ Ten formularz wysyła wiadomość bezpośrednio do Vytautasa. Zadzwoń 94844497.", succ_title: "Dziękujemy!", succ_sub: "Wkrótce się skontaktujemy.", sug_title: "💡 Zaproponuj narzędzie", sug_desc: "Brakuje kalkulatora? Vytautas tworzy je na podstawie opinii.", footer_brand: "Profesjonalne kalkulatory.", footer_copy: "© 2026 ProBuilder by Vytautas Giedraitis — Obliczenia są dokładne, ale mają charakter orientacyjny. W przypadku znalezienia błędu prosimy o kontakt.",
+                idea_1: "🏗 Obliczanie krokwi", idea_1_full: "Propozycja: Obliczanie konstrukcji dachu/krokwi", idea_2: "🌡 Kalkulator współczynnika U", idea_2_full: "Propozycja: Kalkulator współczynnika U dla izolacji", idea_3: "⚡ Kosztorys elektryki", idea_3_full: "Propozycja: Wstępny kosztorys prac elektrycznych", idea_4: "🪟 Pomiar okien/drzwi", idea_4_full: "Propozycja: Kalkulator standardowych otworów okiennych i drzwiowych", idea_other: "+ Inna propozycja", idea_other_full: "Mam inną propozycję narzędzia: ",
+                supp_title: "☕ Wesprzyj projekt", supp_desc: "Podobają Ci się te narzędzia? Obecnie są one bezpłatne w fazie rozwoju. Możesz wesprzeć ich ulepszanie, fundując kawę.", supp_note: "Dziękujemy za wsparcie!"
+            }
+        };
+
+        function setLang(lang) {
+            if(!T[lang]) return;
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(T[lang][key]) el.textContent = T[lang][key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if(T[lang][key]) el.placeholder = T[lang][key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+            
+            // Localize suggestion buttons
+            document.getElementById('idea-1').textContent = T[lang].idea_1;
+            document.getElementById('idea-2').textContent = T[lang].idea_2;
+            document.getElementById('idea-3').textContent = T[lang].idea_3;
+            document.getElementById('idea-4').textContent = T[lang].idea_4;
+            document.getElementById('idea-other').textContent = T[lang].idea_other;
+            
+            localStorage.setItem('pb_lang', lang);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('pb_lang') || 'no';
+            setLang(saved);
+            document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => document.getElementById('nav-links').classList.toggle('active'));
+
+            // Form Logic
+            const subj = document.getElementById('f_subject');
+            const toolWrap = document.getElementById('tool-select-wrap');
+            subj.addEventListener('change', () => {
+                toolWrap.style.display = subj.value === 'bug' ? 'block' : 'none';
+                saveDraft();
+            });
+
+            // Draft logic
+            const inputs =['f_name', 'f_email', 'f_subject', 'f_tool', 'f_msg'];
+            const draftTip = document.getElementById('draft-tip');
+            
+            function saveDraft() {
+                const data = {};
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) data[id] = el.value;
+                });
+                localStorage.setItem('pb_contact_draft', JSON.stringify(data));
+                draftTip.style.display = 'block';
+            }
+
+            const savedDraft = localStorage.getItem('pb_contact_draft');
+            if(savedDraft) {
+                const data = JSON.parse(savedDraft);
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.value = data[id] || '';
+                });
+                if(data.f_subject === 'bug') toolWrap.style.display = 'block';
+                draftTip.style.display = 'block';
+            }
+
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.addEventListener('input', saveDraft);
+            });
+
+            // Ideas buttons
+            const ideas = [
+                {id: 'idea-1', key: 'idea_1_full'},
+                {id: 'idea-2', key: 'idea_2_full'},
+                {id: 'idea-3', key: 'idea_3_full'},
+                {id: 'idea-4', key: 'idea_4_full'},
+                {id: 'idea-other', key: 'idea_other_full'}
+            ];
+
+            ideas.forEach(idea => {
+                document.getElementById(idea.id).addEventListener('click', () => {
+                    const lang = localStorage.getItem('pb_lang') || 'no';
+                    const msg = document.getElementById('f_msg');
+                    msg.value = T[lang][idea.key];
+                    subj.value = 'new';
+                    toolWrap.style.display = 'none';
+                    saveDraft();
+                    msg.focus();
+                });
+            });
+
+            // Formspree Handling
+            const form = document.getElementById('contact-form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Simple validation
+                let valid = true;
+                ['f_name', 'f_email', 'f_msg'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(!el.value.trim()) {
+                        el.classList.add('error');
+                        el.nextElementSibling.style.display = 'block';
+                        valid = false;
+                    } else {
+                        el.classList.remove('error');
+                        el.nextElementSibling.style.display = 'none';
+                    }
+                });
+
+                if(!valid) return;
+
+                const data = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.textContent = '...';
+
+                try {
+                    const response = await fetch("https://formspree.io/f/xvzwbbva", {
+                        method: 'POST',
+                        body: data,
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    
+                    if (response.ok) {
+                        document.getElementById('form-container').style.display = 'none';
+                        document.getElementById('success-card').style.display = 'block';
+                        localStorage.removeItem('pb_contact_draft');
+                    } else {
+                        alert("Beklager, det oppsto en feil. Vennligst prøv igjen senere.");
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                } catch (error) {
+                    alert("Beklager, det oppsto en feil. Sjekk internettforbindelsen.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            });
+        });
+    </script>
+    <script src="js/pwa.js"></script>
+</body>
+</html>

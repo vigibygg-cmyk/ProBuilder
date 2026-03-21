@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Materialkalkulator - ProBuilder</title>
+<meta name="description" content="Beregn materialbehov for ditt byggeprosjekt. Overslag på gipsplater, gulv, stendere og mer med ProBuilder materialkalkulator.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/materialer.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/materialer.html">
+<meta property="og:title" content="Materialkalkulator - ProBuilder">
+<meta property="og:description" content="Beregn materialbehov for ditt byggeprosjekt. Overslag på gipsplater, gulv, stendere og mer med ProBuilder materialkalkulator.">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://vigibygg-cmyk.github.io/Calc/materialer.html">
+<meta name="twitter:title" content="Materialkalkulator - ProBuilder">
+<meta name="twitter:description" content="Beregn materialbehov for ditt byggeprosjekt. Overslag på gipsplater, gulv, stendere og mer med ProBuilder materialkalkulator.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Materialkalkulator - ProBuilder",
+  "description": "Beregn materialbehov for ditt byggeprosjekt. Overslag på gipsplater, gulv, stendere og mer med ProBuilder materialkalkulator.",
+  "url": "https://vigibygg-cmyk.github.io/Calc/materialer.html",
+  "applicationCategory": "ConstructionTool",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "NOK"
+  }
+}
+</script>
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProBuilder">
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.back-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: #e8f0fe;
+}
+.page-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; color: var(--text); }
+.page-title span { color: var(--primary); }
+
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── TABS ─── */
+.tab-nav {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 1020px;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  min-height: 44px;
+}
+.tab-btn:hover {
+  color: var(--text);
+  border-color: #a0aec0;
+  background: var(--surface2);
+}
+.tab-btn.active {
+  background: #ebf8ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ─── MAIN ─── */
+main {
+  position: relative; z-index: 1;
+  max-width: 1020px; margin: 0 auto;
+  padding: 16px 16px 60px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.tab-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title, .ct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-title::after, .ct::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM ─── */
+.form-grid, .fg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.field, .f { display: flex; flex-direction: column; gap: 5px; }
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+input[type="number"], input[type="text"], input[type="date"], select, textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+input::placeholder { color: var(--dim); }
+.hint { font-size: 0.69rem; color: var(--dim); line-height: 1.4; }
+
+/* ─── DYNAMIC ROWS ─── */
+.dy { display: grid; gap: 8px; align-items: end; margin-bottom: 8px; }
+.dy2 { grid-template-columns: 2fr 1fr auto; }
+.dy3 { grid-template-columns: 2fr 1fr 1fr auto; }
+.dy4 { grid-template-columns: 2fr 1fr 1fr 1fr auto; }
+.dy5 { grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; }
+
+.xb {
+  width: 40px; height: 40px; border-radius: 6px;
+  border: 1px solid rgba(197, 48, 48, 0.3);
+  background: transparent; color: var(--danger);
+  cursor: pointer; font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s; align-self: flex-end;
+}
+.xb:hover { background: var(--danger-bg); border-color: var(--danger); }
+
+/* ─── RESULT BOXES ─── */
+.result-grid, .rg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.rb {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.rb.hi { border-color: var(--primary); background: #ebf8ff; }
+.rv {
+  font-family: 'Consolas', monospace;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.rv.ok { color: var(--success); }
+.rv.inf { color: var(--primary); }
+.rv.wa { color: var(--warn); }
+.rv.ac { color: var(--accent); }
+.rl {
+  font-size: 0.67rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* ─── INFO BOXES ─── */
+.ib { padding: 11px 14px; border-radius: var(--radius-sm); font-size: 0.83rem; line-height: 1.6; margin-bottom: 10px; }
+.ib.bl { background: #ebf8ff; border: 1px solid #bee3f8; color: #2b6cb0; }
+.ib.gr { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.ib.ye { background: var(--warn-bg); border: 1px solid #fbd38d; color: var(--warn); }
+
+.sl { font-size: 0.71rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.sl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ─── TOGGLES ─── */
+.tg-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.tg {
+  padding: 8px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--surface2); color: var(--muted); font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; min-height: 40px;
+}
+.tg:hover { border-color: var(--dim); }
+.tg.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+thead th {
+  padding: 9px 12px;
+  background: var(--surface2);
+  border-bottom: 2px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  text-align: left;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:nth-child(even) { background: #fbfbfc; }
+tbody tr:hover { background: #ebf8ff; }
+tbody td { padding: 9px 12px; font-size: 0.85rem; vertical-align: middle; }
+td.tl { font-weight: 600; color: var(--text); }
+td.tv { font-family: 'Consolas', monospace; color: var(--primary); font-weight: 600; }
+td.tm { color: var(--muted); }
+td.ta { font-family: 'Consolas', monospace; color: var(--accent); }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; font-family: inherit;
+  font-size: 0.84rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; min-height: 44px; white-space: nowrap;
+}
+.btn-primary, .bp { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(43,108,176,0.25); }
+.btn-primary:hover, .bp:hover { background: var(--primary-dark); }
+.btn-outline, .bo { background: transparent; border-color: var(--border); color: var(--muted); }
+.btn-outline:hover, .bo:hover { color: var(--text); border-color: #a0aec0; background: var(--surface2); }
+.btn-danger-outline, .bd { background: transparent; border-color: rgba(197,48,48,0.3); color: var(--danger); }
+.btn-danger-outline:hover, .bd:hover { background: var(--danger-bg); border-color: var(--danger); }
+.btn-add, .ba { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); width: 100%; justify-content: center; }
+.btn-add:hover, .ba:hover { background: #c6f6d5; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ─── FOOTER ─── */
+.main-footer {
+  margin-top: 40px; padding: 20px; border-top: 1px solid var(--border);
+  text-align: center; color: var(--dim); font-size: 0.8rem; background: var(--card);
+}
+
+/* ─── PRINT ─── */
+@media print {
+  header, .tab-nav, .no-print { display: none !important; }
+  main { padding: 0; max-width: 100%; }
+  body { background: #fff; color: #111; font-size: 10pt; }
+  .card { background: #fff; border: 1px solid #ccc; box-shadow: none; break-inside: avoid; padding: 12pt; }
+  .tab-panel.hidden { display: flex !important; }
+  .ph { display: block !important; }
+  canvas { display: none !important; }
+  footer.main-footer { display: block !important; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ccc; background: #fff; }
+}
+.ph { display: none; border-bottom: 2px solid #333; padding-bottom: 10pt; margin-bottom: 14pt; }
+.ph h1 { font-size: 16pt; font-weight: 700; }
+.ph .pm { font-size: 9pt; color: #555; margin-top: 4pt; }
+
+.hidden { display: none !important; }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  .btn-row .btn { width: 100%; justify-content: center; }
+  .fg { grid-template-columns: 1fr; }
+  .rg { grid-template-columns: repeat(2, 1fr); }
+  .dy3, .dy4, .dy5 { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="ph" id="ph"><h1 id="ph-t">ProBuilder — Material Quantities</h1><div class="pm" id="ph-m"></div></div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-left">
+    <a href="index.html" class="back-btn">← <span data-i="back"></span></a>
+    <span class="page-title">📦 <span data-i="ptitle"></span></span>
+  </div>
+  <div class="header-right">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="btn bd no-print" onclick="resetAll()" style="font-weight:900;text-transform:uppercase;min-height:36px;padding:4px 12px;">↺ <span data-i="btn_reset"></span></button>
+      <div class="lang-group">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+        <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+        <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ─── TABS ─── -->
+<div class="tab-nav no-print">
+  <button class="tab-btn active" data-tab="t1" onclick="sw('t1',this)">🪵 <span data-i="tab1"></span></button>
+  <button class="tab-btn" data-tab="t2" onclick="sw('t2',this)">📏 <span data-i="tab2"></span></button>
+  <button class="tab-btn" data-tab="t3" onclick="sw('t3',this)">🏡 <span data-i="tab3"></span></button>
+  <button class="tab-btn" data-tab="t4" onclick="sw('t4',this)">🏠 <span data-i="tab4"></span></button>
+  <button class="tab-btn" data-tab="t5" onclick="sw('t5',this)">📋 <span data-i="tab5"></span></button>
+  <button class="tab-btn" data-tab="t7" onclick="sw('t7',this)">📐 <span data-i="tab7"></span></button>
+  <button class="tab-btn" data-tab="t8" onclick="sw('t8',this)">📊 <span data-i="tab8"></span></button>
+</div>
+
+<main>
+
+<!-- PROJECT INFO -->
+<div class="card no-print">
+  <div class="ct"><span data-i="sec_proj"></span></div>
+  <div class="fg">
+    <div class="f" style="grid-column:span 2;"><label data-i="lbl_pname"></label><input type="text" id="proj_name" data-i-ph="ph_pname" oninput="updPH()"></div>
+    <div class="f"><label data-i="lbl_date"></label><input type="date" id="proj_date" oninput="updPH()"></div>
+    <div class="f"><label data-i="lbl_addr"></label><input type="text" id="proj_addr" data-i-ph="ph_addr" oninput="updPH()"></div>
+  </div>
+</div>
+
+<!-- T1: PARQUET -->
+<div id="t1" class="tab-panel">
+  <div class="card">
+    <div class="ct"><span data-i="sec_parquet"></span></div>
+    <div class="sl" data-i="sl_board"></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_bl"></label><input type="number" id="par_bl" inputmode="decimal" placeholder="1200" oninput="calcParquet()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_bw"></label><input type="number" id="par_bw" inputmode="decimal" placeholder="138" oninput="calcParquet()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_ppu"></label><input type="number" id="par_ppu" inputmode="decimal" placeholder="8" oninput="calcParquet()"><span class="hint" data-i="hint_pcs"></span></div>
+      <div class="f"><label data-i="lbl_waste_pct"></label><input type="number" id="par_waste" inputmode="decimal" placeholder="10" oninput="calcParquet()"><span class="hint">%</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="sl" data-i="sl_floor"></div>
+    <div class="fg" style="max-width:460px;margin-bottom:14px;">
+      <div class="f"><label data-i="lbl_floor_m2"></label><input type="number" id="par_m2" inputmode="decimal" placeholder="20.00" oninput="calcParquet()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_pattern"></label>
+        <select id="par_pattern" onchange="calcParquet()">
+          <option value="10" data-v="straight" data-i-opt="pat_str">Straight / Rett (10%)</option>
+          <option value="15" data-v="herring" data-i-opt="pat_her">Herringbone / Fiskebein (15%)</option>
+          <option value="12" data-v="diagonal" data-i-opt="pat_dia">Diagonal 45° (12%)</option>
+          <option value="10" data-v="brick" data-i-opt="pat_brk">Brick bond (10%)</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin:12px 0;"><canvas id="pat-canvas" height="160" style="width:100%;border-radius:8px;background:var(--surface2);"></canvas></div>
+    <div class="rg" id="par-results"></div>
+  </div>
+</div>
+
+<!-- T2: TRIMS -->
+<div id="t2" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i="sec_trims"></span></div>
+    <div class="ib bl" data-i="trims_info"></div>
+    <div class="sl" data-i="sl_rooms"></div>
+    <div id="room-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <button class="btn ba no-print" onclick="addRoom()" style="margin-top:12px;">+ <span data-i="btn_add_room"></span></button>
+    <div style="height:20px;"></div>
+    <div class="sl" data-i="sl_ceil"></div>
+    <div class="ib ye" data-i="ceil_info"></div>
+    <div id="ceil-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <button class="btn ba no-print" onclick="addCeil()" style="margin-top:12px;">+ <span data-i="btn_add_ceil"></span></button>
+    <div style="height:20px;"></div>
+    <div class="f" style="max-width:200px;"><label data-i="lbl_trim_waste"></label><input type="number" id="trim_waste" inputmode="decimal" placeholder="10" oninput="calcTrims()"><span class="hint">%</span></div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="trim-results"></div>
+  </div>
+</div>
+
+<!-- T3: TERRACE -->
+<div id="t3" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i="sec_terrace"></span></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_ter_l"></label><input type="number" id="ter_l" inputmode="decimal" placeholder="6000" oninput="calcTer()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_ter_w"></label><input type="number" id="ter_w" inputmode="decimal" placeholder="4000" oninput="calcTer()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_ter_bw"></label><input type="number" id="ter_bw" inputmode="decimal" placeholder="145" oninput="calcTer()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_ter_gap"></label><input type="number" id="ter_gap" inputmode="decimal" placeholder="4" oninput="calcTer()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_ter_len"></label><input type="number" id="ter_len" inputmode="decimal" placeholder="4800" oninput="calcTer()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_ter_cc"></label><input type="number" id="ter_cc" inputmode="decimal" placeholder="600" oninput="calcTer()"><span class="hint">mm CC</span></div>
+      <div class="f"><label data-i="lbl_ter_waste"></label><input type="number" id="ter_waste" inputmode="decimal" placeholder="7" oninput="calcTer()"><span class="hint">%</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="ter-res"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span data-i="sec_tsc"></span></div>
+    <div class="ib bl" data-i="tsc_info"></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_tsc_lm"></label><input type="number" id="tsc_lm" inputmode="decimal" placeholder="0" oninput="calcTSC()"><span class="hint">lm</span></div>
+      <div class="f"><label data-i="lbl_tsc_cc"></label><input type="number" id="tsc_cc" inputmode="decimal" placeholder="600" oninput="calcTSC()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_per_beam"></label><select id="tsc_per" onchange="calcTSC()"><option value="2">2</option><option value="3">3</option></select></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="tsc-res"></div>
+  </div>
+</div>
+
+<!-- T4: CLADDING -->
+<div id="t4" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i="sec_clad"></span></div>
+    <div class="tg-row">
+      <button class="tg active" id="clad-h" onclick="setCM('h',this)" data-i="clad_h"></button>
+      <button class="tg" id="clad-v" onclick="setCM('v',this)" data-i="clad_v"></button>
+    </div>
+    <div class="sl" data-i="sl_clad_params"></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_clad_bw"></label><input type="number" id="clad_bw" inputmode="decimal" placeholder="148" oninput="calcClad()"><span class="hint">mm</span></div>
+      <div class="f"><label id="clad-cov-lbl" data-i="lbl_clad_cov"></label><input type="number" id="clad_cov" inputmode="decimal" placeholder="137" oninput="calcClad()"><span class="hint">mm</span></div>
+      <div class="f" id="clad-ol-f" style="display:none;"><label data-i="lbl_clad_ol"></label><input type="number" id="clad_ol" inputmode="decimal" placeholder="20" oninput="calcClad()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_clad_bl"></label><input type="number" id="clad_bl" inputmode="decimal" placeholder="4800" oninput="calcClad()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_clad_waste"></label><input type="number" id="clad_waste" inputmode="decimal" placeholder="12" oninput="calcClad()"><span class="hint">%</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="sl" data-i="sl_walls"></div>
+    <div id="clad-wall-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <button class="btn ba no-print" onclick="addCW()" style="margin-top:10px;">+ <span data-i="btn_add_wall"></span></button>
+    <div style="height:16px;"></div>
+    <div class="sl" data-i="sl_ops"></div>
+    <div id="clad-op-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <button class="btn ba no-print" onclick="addCO()" style="margin-top:10px;">+ <span data-i="btn_add_op"></span></button>
+    <div style="height:20px;"></div>
+    <div class="rg" id="clad-res"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span data-i="sec_clad_fix"></span></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_fix_area"></label><input type="number" id="fix_area" inputmode="decimal" placeholder="0" oninput="calcFix()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_fix_type"></label><select id="fix_type" onchange="calcFix()"><option value="15" data-i-opt="fix_v">Vertical (15/m²)</option><option value="12" data-i-opt="fix_h">Horizontal (12/m²)</option></select></div>
+      <div class="f"><label data-i="lbl_fix_pack"></label><input type="number" id="fix_pack" inputmode="decimal" placeholder="200" oninput="calcFix()"><span class="hint" data-i="hint_pp"></span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="fix-res"></div>
+  </div>
+</div>
+
+<!-- T5: GYPSUM -->
+<div id="t5" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i="sec_gyp"></span></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_gyp_area"></label><input type="number" id="gyp_area" inputmode="decimal" placeholder="0" oninput="calcGyp()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_gyp_pl"></label><input type="number" id="gyp_pl" inputmode="decimal" placeholder="2400" oninput="calcGyp()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_gyp_pw"></label><input type="number" id="gyp_pw" inputmode="decimal" placeholder="1200" oninput="calcGyp()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_gyp_lay"></label><select id="gyp_lay" onchange="calcGyp()"><option value="1">1</option><option value="2">2</option></select></div>
+      <div class="f"><label data-i="lbl_gyp_waste"></label><input type="number" id="gyp_waste" inputmode="decimal" placeholder="7" oninput="calcGyp()"><span class="hint">%</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="gyp-res"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span data-i="sec_wi"></span></div>
+    <div class="tg-row">
+      <button class="tg active" id="sm-metal" onclick="setSM('metal',this)" data-i="stud_metal"></button>
+      <button class="tg" id="sm-wood" onclick="setSM('wood',this)" data-i="stud_wood"></button>
+    </div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_wi_area"></label><input type="number" id="wi_area" inputmode="decimal" placeholder="0" oninput="calcWI()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_wi_thick"></label><select id="wi_thick" onchange="calcWI()"><option value="48">48 mm</option><option value="73">73 mm</option><option value="98" selected>98 mm</option><option value="148">148 mm</option><option value="198">198 mm</option></select></div>
+      <div class="f"><label data-i="lbl_wi_type"></label><select id="wi_type" onchange="calcWI()"><option value="rock" data-i-opt="insul_rock">Rock Wool</option><option value="glass" data-i-opt="insul_glass">Glass Wool</option><option value="loose" data-i-opt="insul_loose">Loose Fill</option></select></div>
+      <div class="f"><label data-i="lbl_wi_waste"></label><input type="number" id="wi_waste" inputmode="decimal" placeholder="5" oninput="calcWI()"><span class="hint">%</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="wi-res"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span data-i="sec_gs"></span></div>
+    <div class="ib bl" data-i="gs_info"></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_gs_area"></label><input type="number" id="gs_area" inputmode="decimal" placeholder="0" oninput="calcGS()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_gs_lay"></label><select id="gs_lay" onchange="calcGS()"><option value="1">1</option><option value="2">2</option></select></div>
+      <div class="f"><label data-i="lbl_gs_pack"></label><input type="number" id="gs_pack" inputmode="decimal" placeholder="500" oninput="calcGS()"><span class="hint" data-i="hint_pp"></span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="gs-res"></div>
+  </div>
+</div>
+
+<!-- T7: UNIVERSAL -->
+<div id="t7" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i="sec_cu"></span></div>
+    <div class="ib bl" data-i="cu_info"></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_cu_area"></label><input type="number" id="cu_area" inputmode="decimal" placeholder="0" oninput="calcCu()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_cu_w"></label><input type="number" id="cu_w" inputmode="decimal" placeholder="148" oninput="calcCu()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_cu_ol"></label><input type="number" id="cu_ol" inputmode="decimal" placeholder="0" oninput="calcCu()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_cu_len"></label><input type="number" id="cu_len" inputmode="decimal" placeholder="4800" oninput="calcCu()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_cu_waste"></label><input type="number" id="cu_waste" inputmode="decimal" placeholder="10" oninput="calcCu()"><span class="hint">%</span></div>
+      <div class="f"><label data-i="lbl_cu_name"></label><input type="text" id="cu_name" placeholder="Material" oninput="calcCu()"></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="cu-res"></div>
+  </div>
+  <div class="card">
+    <div class="ct"><span data-i="sec_tiles"></span></div>
+    <div class="fg">
+      <div class="f"><label data-i="lbl_tile_area"></label><input type="number" id="tile_area" inputmode="decimal" placeholder="0" oninput="calcTiles()"><span class="hint">m²</span></div>
+      <div class="f"><label data-i="lbl_tile_l"></label><input type="number" id="tile_l" inputmode="decimal" placeholder="300" oninput="calcTiles()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_tile_w"></label><input type="number" id="tile_w" inputmode="decimal" placeholder="300" oninput="calcTiles()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_tile_j"></label><input type="number" id="tile_j" inputmode="decimal" placeholder="3" oninput="calcTiles()"><span class="hint">mm</span></div>
+      <div class="f"><label data-i="lbl_tile_lay"></label><select id="tile_diag" onchange="calcTiles()"><option value="10" data-i-opt="tile_str">Straight (10%)</option><option value="15" data-i-opt="tile_dia">Diagonal 45° (15%)</option></select></div>
+    </div>
+    <div style="height:16px;"></div>
+    <div class="rg" id="tiles-res"></div>
+  </div>
+</div>
+
+<!-- T8: SUMMARY -->
+<div id="t8" class="tab-panel hidden">
+  <div class="card">
+    <div class="ct"><span data-i="tab8"></span></div>
+    <div class="btn-row no-print" style="margin-bottom:16px;">
+      <button class="btn bp" onclick="window.print()">🖨️ <span data-i="btn_print"></span></button>
+      <button class="btn bo" onclick="exportJSON()">📤 <span data-i="btn_export"></span></button>
+      <label class="btn bo" style="cursor:pointer;">📥 <span data-i="btn_import"></span><input type="file" accept=".json" onchange="importJSON(event)" style="display:none;"></label>
+    </div>
+    <div class="table-wrap">
+      <table id="sum-t">
+        <thead><tr><th data-i="th_cat"></th><th data-i="th_mat"></th><th data-i="th_qty"></th><th data-i="th_unit"></th><th data-i="th_kg"></th></tr></thead>
+        <tbody id="sum-tbody"></tbody>
+      </table>
+    </div>
+    <div id="sum-foot" style="display:none;margin-top:16px;">
+      <div class="rg">
+        <div class="rb hi"><div class="rv ac" id="sum-kg">—</div><div class="rl" data-i="sum_kg"></div></div>
+        <div class="rb hi"><div class="rv wa" id="sum-t2">—</div><div class="rl" data-i="sum_t"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span data-i="ref_svinn"></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th data-i="th_mat"></th><th data-i="th_svinn"></th><th data-i="th_note"></th></tr></thead>
+        <tbody id="svinn-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="main-footer">
+    © 2026 Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+</footer>
+
+<script>
+// ════ TRANSLATIONS ════
+const T={
+en:{
+  back:'Back',ptitle:'Material Quantities',btn_reset:'Reset',
+  tab1:'Parquet',tab2:'Trims',tab3:'Terrace',tab4:'Cladding',tab5:'Gypsum',tab7:'Universal',tab8:'Summary',
+  sec_proj:'Project',lbl_pname:'Project Name',ph_pname:'Project name...',lbl_date:'Date',lbl_addr:'Address',ph_addr:'Address',
+  sec_parquet:'Parquet / Laminate',sl_board:'Board Parameters',lbl_bl:'Board Length',lbl_bw:'Board Width',lbl_ppu:'Pcs per Pack',lbl_waste_pct:'Waste %',
+  sl_floor:'Floor Area & Laying Pattern',lbl_floor_m2:'Floor Area (m²)',lbl_pattern:'Pattern',
+  pat_str:'Straight / Rett (10%)',pat_her:'Herringbone / Fiskebein (15%)',pat_dia:'Diagonal 45° (12%)',pat_brk:'Brick Bond (10%)',
+  hint_pcs:'pcs',hint_pp:'pcs/pack',
+  sec_trims:'Trims — Skirting, Door, Window & Ceiling',
+  trims_info:'Each room: perimeter in mm, door/window sizes in mm. Skirting deducts total door widths. Ceiling auto-fills from rooms (editable).',
+  sl_rooms:'Rooms / Areas',btn_add_room:'Add Room',
+  lbl_rm_name:'Label',lbl_rm_perim:'Perimeter (mm)',lbl_rm_dc:'Doors',lbl_rm_dw:'Door W (mm)',lbl_rm_dh:'Door H (mm)',lbl_rm_wc:'Windows',lbl_rm_ww:'Win W (mm)',lbl_rm_wh:'Win H (mm)',
+  lbl_trim_waste:'Waste %',
+  sl_ceil:'Ceiling Trims',ceil_info:'Auto-filled from rooms above. Each row is editable — adjust perimeter or add extra ceiling areas.',
+  btn_add_ceil:'Add Ceiling Row',lbl_ceil_lbl:'Label',lbl_ceil_perim:'Ceiling Perimeter (mm)',
+  sec_terrace:'Terrace — Boards',lbl_ter_l:'Length',lbl_ter_w:'Width',lbl_ter_bw:'Board Width',lbl_ter_gap:'Gap',lbl_ter_len:'Board Length',lbl_ter_cc:'Joist CC',lbl_ter_waste:'Waste %',
+  sec_tsc:'Terrace — Screws',tsc_info:'CC600: ~32–35 screws/m². 2 screws per board per joist. All dimensions in mm.',lbl_tsc_lm:'Boards (lm)',lbl_tsc_cc:'Joist CC (mm)',lbl_per_beam:'Screws/joist',
+  sec_clad:'Cladding / Wall Panels',clad_h:'⬛ Horizontal',clad_v:'▭ Vertical',
+  sl_clad_params:'Board Parameters',lbl_clad_bw:'Board Width',lbl_clad_cov:'Cover Width (dekkbredde)',lbl_clad_ol:'Overlap (omlegg)',lbl_clad_bl:'Board Length',lbl_clad_waste:'Waste %',
+  sl_walls:'Wall Sections (each wall separately)',btn_add_wall:'Add Wall',lbl_wall_lbl:'Wall / Label',lbl_wall_area:'Area (m²)',
+  sl_ops:'Openings to Deduct',btn_add_op:'Add Opening',lbl_op_lbl:'Label',lbl_op_w:'Width (mm)',lbl_op_h:'Height (mm)',lbl_op_cnt:'Count',
+  sec_clad_fix:'Cladding — Fixings',lbl_fix_area:'Area (m²)',lbl_fix_type:'Type',lbl_fix_pack:'Pack Size',fix_v:'Vertical (15/m²)',fix_h:'Horizontal (12/m²)',
+  sec_gyp:'Gypsum Boards',lbl_gyp_area:'Area (m²)',lbl_gyp_pl:'Plate Length (mm)',lbl_gyp_pw:'Plate Width (mm)',lbl_gyp_lay:'Layers',lbl_gyp_waste:'Waste %',
+  sec_wi:'Wall Insulation',stud_metal:'🔩 Metal Studs (CW)',stud_wood:'🪵 Timber Studs (C24)',
+  lbl_wi_area:'Area (m²)',lbl_wi_thick:'Thickness',lbl_wi_type:'Type',lbl_wi_waste:'Waste %',
+  insul_rock:'Rock Wool (Rockwool)',insul_glass:'Glass Wool (Ursa/Isover)',insul_loose:'Loose Fill / Blown',
+  sec_gs:'Gypsum Screws',gs_info:'Standard: 20 screws/m² at CC150–200 along studs. ~50 screws per board.',lbl_gs_area:'Gypsum Area (m²)',lbl_gs_lay:'Layers',lbl_gs_pack:'Pack Size',
+  sec_cu:'Universal Material Calculator',cu_info:'Cover width = Width − Overlap. All widths in mm.',
+  lbl_cu_area:'Area (m²)',lbl_cu_w:'Width (mm)',lbl_cu_ol:'Overlap (mm)',lbl_cu_len:'Length/piece (mm)',lbl_cu_waste:'Waste %',lbl_cu_name:'Material name',
+  sec_tiles:'Tiles',lbl_tile_area:'Area (m²)',lbl_tile_l:'Length (mm)',lbl_tile_w:'Width (mm)',lbl_tile_j:'Joint (mm)',lbl_tile_lay:'Layout',tile_str:'Straight (10%)',tile_dia:'Diagonal 45° (15%)',
+  th_cat:'Category',th_mat:'Material',th_qty:'Quantity',th_unit:'Unit',th_kg:'Est. kg',
+  sum_empty:'No calculations yet.',sum_kg:'Total weight (kg)',sum_t:'Total weight (t)',
+  ref_svinn:'Waste Coefficients',th_svinn:'Waste %',th_note:'Note',btn_print:'Print',btn_export:'Export JSON',btn_import:'Import JSON',
+},
+no:{
+  back:'Tilbake',ptitle:'Materialberegning',btn_reset:'Nullstill',
+  tab1:'Parkett',tab2:'Lister',tab3:'Terrasse',tab4:'Kledning',tab5:'Gips',tab7:'Universell',tab8:'Sumarisk',
+  sec_proj:'Prosjektinfo',lbl_pname:'Prosjektnavn',ph_pname:'Navn...',lbl_date:'Dato',lbl_addr:'Adresse',ph_addr:'Adresse',
+  sec_parquet:'Parkett / Laminat',sl_board:'Bord­parametre',lbl_bl:'Bord­lengde',lbl_bw:'Bord­bredde',lbl_ppu:'Stk per pakke',lbl_waste_pct:'Svinn %',
+  sl_floor:'Gulvareal & Mønster',lbl_floor_m2:'Gulvareal (m²)',lbl_pattern:'Leggemetode',
+  pat_str:'Rett (10%)',pat_her:'Fiskebein (15%)',pat_dia:'Diagonal 45° (12%)',pat_brk:'Halvsteinsforband (10%)',
+  hint_pcs:'stk',hint_pp:'stk/pakke',
+  sec_trims:'Lister — Gulv, Dør, Vindu & Tak',trims_info:'Hvert rom: Perimeter i mm, dør/vindu i mm. Golvlist trekker fra dørbredder. Takl. hentes fra rom.',
+  sl_rooms:'Rom',btn_add_room:'Legg til rom',
+  lbl_rm_name:'Navn',lbl_rm_perim:'Perimeter (mm)',lbl_rm_dc:'Dører',lbl_rm_dw:'Dørbredde (mm)',lbl_rm_dh:'Dørhøyde (mm)',lbl_rm_wc:'Vinduer',lbl_rm_ww:'Vindusbredde (mm)',lbl_rm_wh:'Vindushøyde (mm)',
+  lbl_trim_waste:'Svinn %',
+  sl_ceil:'Taklister',ceil_info:'Hentes automatisk fra rom. Juster fritt.',btn_add_ceil:'Legg til takrom',lbl_ceil_lbl:'Rom',lbl_ceil_perim:'Takperimeter (mm)',
+  sec_terrace:'Terrasse',lbl_ter_l:'Lengde',lbl_ter_w:'Bredde',lbl_ter_bw:'Bordbredde',lbl_ter_gap:'Glede',lbl_ter_len:'Bordlengde',lbl_ter_cc:'Bæreå CC',lbl_ter_waste:'Svinn %',
+  sec_tsc:'Terrasse — Skruer',tsc_info:'CC600: ~32–35 skruer/m². 2 per bord per bæreå.',lbl_tsc_lm:'Bord (lm)',lbl_tsc_cc:'Bæreå CC (mm)',lbl_per_beam:'Skruer/bæreå',
+  sec_clad:'Kledning',clad_h:'⬛ Liggende',clad_v:'▭ Stående',
+  sl_clad_params:'Bordparametre',lbl_clad_bw:'Bordbredde',lbl_clad_cov:'Dekkbredde',lbl_clad_ol:'Overlapp',lbl_clad_bl:'Bordlengde',lbl_clad_waste:'Svinn %',
+  sl_walls:'Veggseksjoner',btn_add_wall:'Legg til vegg',lbl_wall_lbl:'Vegg',lbl_wall_area:'Areal (m²)',
+  sl_ops:'Åpninger (fratrekk)',btn_add_op:'Legg til åpning',lbl_op_lbl:'Åpning',lbl_op_w:'Bredde (mm)',lbl_op_h:'Høyde (mm)',lbl_op_cnt:'Antall',
+  sec_clad_fix:'Kledning — Festemidler',lbl_fix_area:'Areal (m²)',lbl_fix_type:'Type',lbl_fix_pack:'Pakkestørrelse',fix_v:'Stående (15/m²)',fix_h:'Liggende (12/m²)',
+  sec_gyp:'Gipsplater',lbl_gyp_area:'Area (m²)',lbl_gyp_pl:'Platelengde (mm)',lbl_gyp_pw:'Platebredde (mm)',lbl_gyp_lay:'Lag',lbl_gyp_waste:'Svinn %',
+  sec_wi:'Isolasjon',stud_metal:'🔩 Metallstender (CW)',stud_wood:'🪵 Trestender (C24)',
+  lbl_wi_area:'Areal (m²)',lbl_wi_thick:'Tykkelse',lbl_wi_type:'Type',lbl_wi_waste:'Svinn %',
+  insul_rock:'Steinull',insul_glass:'Glassull',insul_loose:'Løsull',
+  sec_gs:'Gipsskruer',gs_info:'Standard: 20 skruer/m². 50 per plate.',lbl_gs_area:'Gipsareal (m²)',lbl_gs_lay:'Lag',lbl_gs_pack:'Pakke',
+  sec_cu:'Universell kalkulator',cu_info:'Dekkbredde = Bredde − Overlapp. Alle bredder i mm.',
+  lbl_cu_area:'Areal (m²)',lbl_cu_w:'Bredde (mm)',lbl_cu_ol:'Overlapp (mm)',lbl_cu_len:'Lengde/stk (mm)',lbl_cu_waste:'Svinn %',lbl_cu_name:'Navn',
+  sec_tiles:'Fliser',lbl_tile_area:'Areal (m²)',lbl_tile_l:'Lengde (mm)',lbl_tile_w:'Bredde (mm)',lbl_tile_j:'Fuge (mm)',lbl_tile_lay:'Mønster',tile_str:'Rett (10%)',tile_dia:'Diagonal 45° (15%)',
+  th_cat:'Kategori',th_mat:'Material',th_qty:'Mengde',th_unit:'Enhet',th_kg:'Est. kg',
+  sum_empty:'Ingen beregninger ennå.',sum_kg:'Total vekt (kg)',sum_t:'Total (t)',
+  ref_svinn:'Svinnkoeffisienter',th_svinn:'Svinn %',th_note:'Merknad',btn_print:'Skriv ut',btn_export:'Eksporter',btn_import:'Importer',
+},
+pl:{
+  back:'Wróć',ptitle:'Ilości Materiałów',btn_reset:'Resetuj',
+  tab1:'Parkiet',tab2:'Listwy',tab3:'Taras',tab4:'Elewacja',tab5:'Gips',tab7:'Uniwersalny',tab8:'Podsumowanie',
+  sec_proj:'Projekt',lbl_pname:'Nazwa projektu',ph_pname:'Nazwa...',lbl_date:'Data',lbl_addr:'Adres',ph_addr:'Adres',
+  sec_parquet:'Parkiet / Laminat',sl_board:'Parametry deski',lbl_bl:'Długość deski',lbl_bw:'Szerokość deski',lbl_ppu:'Szt. w paczce',lbl_waste_pct:'Odpad %',
+  sl_floor:'Powierzchnia i wzór',lbl_floor_m2:'Powierzchnia (m²)',lbl_pattern:'Wzór układania',
+  pat_str:'Prosty (10%)',pat_her:'Jodełka (15%)',pat_dia:'Diagonalny 45° (12%)',pat_brk:'Cegiełka (10%)',
+  hint_pcs:'szt',hint_pp:'szt/paczka',
+  sec_trims:'Listwy — Podłogowe, Drzwiowe, Okienne i Sufitowe',trims_info:'Każde pomieszczenie: perymetr w mm, rozmiary drzwi/okien w mm. Listwy przypodłogowe odejmują szerokość drzwi.',
+  sl_rooms:'Pomieszczenia',btn_add_room:'Dodaj pomieszczenie',
+  lbl_rm_name:'Nazwa',lbl_rm_perim:'Obwód (mm)',lbl_rm_dc:'Drzwi',lbl_rm_dw:'Szer. (mm)',lbl_rm_dh:'Wys. (mm)',lbl_rm_wc:'Okna',lbl_rm_ww:'Szer. (mm)',lbl_rm_wh:'Wys. (mm)',
+  lbl_trim_waste:'Odpad %',
+  sl_ceil:'Listwy sufitowe',ceil_info:'Automatycznie z pomieszczeń. Można edytować.',btn_add_ceil:'Dodaj sufit',lbl_ceil_lbl:'Nazwa',lbl_ceil_perim:'Obwód (mm)',
+  sec_terrace:'Taras',lbl_ter_l:'Długość',lbl_ter_w:'Szerokość',lbl_ter_bw:'Szerokość deski',lbl_ter_gap:'Szczelina',lbl_ter_len:'Długość deski',lbl_ter_cc:'Rozstaw belek CC',lbl_ter_waste:'Odpad %',
+  sec_tsc:'Taras — Wkręty',tsc_info:'CC600: ~32–35 wkrętów/m².',lbl_tsc_lm:'Deski (mb)',lbl_tsc_cc:'Rozstaw CC (mm)',lbl_per_beam:'Wkręty/belkę',
+  sec_clad:'Elewacja / Panele',clad_h:'⬛ Pozioma',clad_v:'▭ Pionowa',
+  sl_clad_params:'Parametry deski',lbl_clad_bw:'Szerokość deski',lbl_clad_cov:'Szerokość krycia',lbl_clad_ol:'Zakładka',lbl_clad_bl:'Długość deski',lbl_clad_waste:'Odpad %',
+  sl_walls:'Ściany',btn_add_wall:'Dodaj ścianę',lbl_wall_lbl:'Ściana',lbl_wall_area:'Powierzchnia (m²)',
+  sl_ops:'Otwory (odejmowane)',btn_add_op:'Dodaj otwór',lbl_op_lbl:'Otwór',lbl_op_w:'Szerokość (mm)',lbl_op_h:'Wysokość (mm)',lbl_op_cnt:'Ilość',
+  sec_clad_fix:'Mocowania',lbl_fix_area:'Powierzchnia (m²)',lbl_fix_type:'Typ',lbl_fix_pack:'Opakowanie',fix_v:'Pionowe (15/m²)',fix_h:'Poziome (12/m²)',
+  sec_gyp:'Płyty gipsowe',lbl_gyp_area:'Powierzchnia (m²)',lbl_gyp_pl:'Długość (mm)',lbl_gyp_pw:'Szerokość (mm)',lbl_gyp_lay:'Warstwy',lbl_gyp_waste:'Odpad %',
+  sec_wi:'Izolacja ścian',stud_metal:'🔩 Słupki metalowe',stud_wood:'🪵 Słupki drewniane',
+  lbl_wi_area:'Powierzchnia (m²)',lbl_wi_thick:'Grubość',lbl_wi_type:'Typ',lbl_wi_waste:'Odpad %',
+  insul_rock:'Wełna skalna',insul_glass:'Wełna szklana',insul_loose:'Izolacja sypka',
+  sec_gs:'Wkręty do gipsu',gs_info:'20 wkrętów/m². 50 na płytę.',lbl_gs_area:'Powierzchnia (m²)',lbl_gs_lay:'Warstwy',lbl_gs_pack:'Opakowanie',
+  sec_cu:'Uniwersalny',cu_info:'Szerokość krycia = Szerokość − Zakładka. Wymiary w mm.',
+  lbl_cu_area:'Powierzchnia (m²)',lbl_cu_w:'Szerokość (mm)',lbl_cu_ol:'Zakładka (mm)',lbl_cu_len:'Długość (mm)',lbl_cu_waste:'Odpad %',lbl_cu_name:'Nazwa',
+  sec_tiles:'Płytki',lbl_tile_area:'Powierzchnia (m²)',lbl_tile_l:'Długość (mm)',lbl_tile_w:'Szerokość (mm)',lbl_tile_j:'Fuga (mm)',lbl_tile_lay:'Wzór',tile_str:'Prosty (10%)',tile_dia:'Diagonalny (15%)',
+  th_cat:'Kategori',th_mat:'Materiał',th_qty:'Ilość',th_unit:'Jedn.',th_kg:'Waga kg',
+  sum_empty:'Brak danych.',sum_kg:'Waga całkowita (kg)',sum_t:'Waga (t)',
+  ref_svinn:'Współczynniki odpadów',th_svinn:'Odpad %',th_note:'Uwaga',btn_print:'Drukuj',btn_export:'Eksportuj',btn_import:'Importuj',
+},
+lt:{
+  back:'Atgal',ptitle:'Medžiagų Kiekiai',btn_reset:'Išvalyti',
+  tab1:'Parketas',tab2:'Apvadai',tab3:'Terasa',tab4:'Kledning',tab5:'Gipsas',tab7:'Universalus',tab8:'Suvestinė',
+  sec_proj:'Projektas',lbl_pname:'Pavadinimas',ph_pname:'Pavadinimas...',lbl_date:'Data',lbl_addr:'Adresas',ph_addr:'Adresas',
+  sec_parquet:'Parketas / Laminatas',sl_board:'Lentelės parametrai',lbl_bl:'Ilgis',lbl_bw:'Plotis',lbl_ppu:'Vnt pakuotėje',lbl_waste_pct:'Atliekos %',
+  sl_floor:'Grindų plotas & klojimas',lbl_floor_m2:'Grindų plotas (m²)',lbl_pattern:'Klojimo būdas',
+  pat_str:'Tiesias (10%)',pat_her:'Eglutė (15%)',pat_dia:'Diagonal 45° (12%)',pat_brk:'Rišimas (10%)',
+  hint_pcs:'vnt',hint_pp:'vnt/pakuotė',
+  sec_trims:'Apvadai — Grindys, Durys, Langai & Lubos',trims_info:'Kiekvienas kambarys: Perimetras mm, durys/langai mm. Grindjuostė atima durų plotus.',
+  sl_rooms:'Kambariai',btn_add_room:'Pridėti kambarį',
+  lbl_rm_name:'Pavadinimas',lbl_rm_perim:'Perimetras (mm)',lbl_rm_dc:'Durys',lbl_rm_dw:'Plotis (mm)',lbl_rm_dh:'Aukštis (mm)',lbl_rm_wc:'Langai',lbl_rm_ww:'Plotis (mm)',lbl_rm_wh:'Aukštis (mm)',
+  lbl_trim_waste:'Atliekos %',
+  sl_ceil:'Lubų apvadai',ceil_info:'Auto paimama iš kambarių. Galima keisti.',btn_add_ceil:'Pridėti lubų eilę',lbl_ceil_lbl:'Kambarys',lbl_ceil_perim:'Perimetras (mm)',
+  sec_terrace:'Terasa',lbl_ter_l:'Ilgis',lbl_ter_w:'Plotis',lbl_ter_bw:'Lentos plotis',lbl_ter_gap:'Tarpas',lbl_ter_len:'Lentos ilgis',lbl_ter_cc:'Sijos CC',lbl_ter_waste:'Atliekos %',
+  sec_tsc:'Terasa — Varžtai',tsc_info:'CC600: ~32–35 varžtų/m².',lbl_tsc_lm:'Lentos (lm)',lbl_tsc_cc:'Sijos CC (mm)',lbl_per_beam:'Varžtai/sija',
+  sec_clad:'Sienų apdaila',clad_h:'⬛ Horizontali',clad_v:'▭ Vertikali',
+  sl_clad_params:'Lentos parametrai',lbl_clad_bw:'Lentos plotis',lbl_clad_cov:'Dengimo plotis',lbl_clad_ol:'Užleidimas',lbl_clad_bl:'Lentos ilgis',lbl_clad_waste:'Atliekos %',
+  sl_walls:'Sienos',btn_add_wall:'Pridėti sieną',lbl_wall_lbl:'Siena',lbl_wall_area:'Plotas (m²)',
+  sl_ops:'Angos (atimamos)',btn_add_op:'Pridėti angą',lbl_op_lbl:'Anga',lbl_op_w:'Plotis (mm)',lbl_op_h:'Aukštis (mm)',lbl_op_cnt:'Kiekis',
+  sec_clad_fix:'Tvirtinimai',lbl_fix_area:'Plotas (m²)',lbl_fix_type:'Tipas',lbl_fix_pack:'Pakuotė',fix_v:'Vertikali (15/m²)',fix_h:'Horizontali (12/m²)',
+  sec_gyp:'Gipso plokštės',lbl_gyp_area:'Plotas (m²)',lbl_gyp_pl:'Ilgis (mm)',lbl_gyp_pw:'Plotis (mm)',lbl_gyp_lay:'Sluoksniai',lbl_gyp_waste:'Atliekos %',
+  sec_wi:'Sienų izoliacija',stud_metal:'🔩 Metaliniai stenderiai',stud_wood:'🪵 Mediniai stenderiai',
+  lbl_wi_area:'Plotas (m²)',lbl_wi_thick:'Storis',lbl_wi_type:'Tipas',lbl_wi_waste:'Atliekos %',
+  insul_rock:'Akmens vata',insul_glass:'Stiklo vata',insul_loose:'Biri izoliacija',
+  sec_gs:'Gipso varžtai',gs_info:'20 varžtų/m². 50 vienai plokštei.',lbl_gs_area:'Plotas (m²)',lbl_gs_lay:'Sluoksniai',lbl_gs_pack:'Pakuotė',
+  sec_cu:'Universalus',cu_info:'Dengimo plotis = Plotis − Užleidimas. Plotiai mm.',
+  lbl_cu_area:'Plotas (m²)',lbl_cu_w:'Plotis (mm)',lbl_cu_ol:'Užleidimas (mm)',lbl_cu_len:'Ilgis (mm)',lbl_cu_waste:'Atliekos %',lbl_cu_name:'Pavadinimas',
+  sec_tiles:'Plytelės',lbl_tile_area:'Plotas (m²)',lbl_tile_l:'Ilgis (mm)',lbl_tile_w:'Plotis (mm)',lbl_tile_j:'Siūlė (mm)',lbl_tile_lay:'Tipas',tile_str:'Tiesas (10%)',tile_dia:'Diagonal 45° (15%)',
+  th_cat:'Kategorija',th_mat:'Medžiaga',th_qty:'Kiekis',th_unit:'Vnt',th_kg:'Est. kg',
+  sum_empty:'Dar nėra duomenų.',sum_kg:'Svoris (kg)',sum_t:'Svoris (t)',
+  ref_svinn:'Atliekų koeficientai',th_svinn:'Atliekos %',th_note:'Pastaba',btn_print:'Spausdinti',btn_export:'Eksportuoti',btn_import:'Importuoti',
+}};
+
+// ════ STATE ════
+const SK='pb_mat_v4';
+let lang=localStorage.getItem('pb_lang')||'en';
+let cladMode='h', studMode='metal';
+let rooms=[], ceils=[], cwalls=[], cops=[];
+let rId=0,cId=0,cwId=0,coId=0, sumData={};
+
+// ════ UTILS ════
+const gv=id=>{const e=document.getElementById(id);return e?parseFloat(e.value)||0:0;};
+const gs=id=>{const e=document.getElementById(id);return e?e.value||'':''};
+const gi=id=>{const e=document.getElementById(id);return e?parseInt(e.value)||0:0;};
+const n=(v,d=0)=>(isNaN(v)||!isFinite(v))?'—':(Math.round(v*10**d)/10**d).toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});
+const rb=(val,lbl,cls='',hi=false)=>`<div class="rb${hi?' hi':''}"><div class="rv ${cls}">${val}</div><div class="rl">${lbl}</div></div>`;
+const d=()=>T[lang];
+
+// ════ LANG ════
+function setLang(l){lang=l;localStorage.setItem('pb_lang',l);document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));applyLang();save();}
+function applyLang(){
+  const t=d();
+  document.querySelectorAll('[data-i]').forEach(el=>{const k=el.dataset.i;if(t[k]!==undefined)el.textContent=t[k];});
+  document.querySelectorAll('[data-i-ph]').forEach(el=>{const k=el.dataset.iPh;if(t[k]!==undefined)el.placeholder=t[k];});
+  document.querySelectorAll('[data-i-opt]').forEach(el=>{const k=el.dataset.iOpt;if(t[k]!==undefined)el.textContent=t[k];});
+  renderRooms();renderCeils();renderCWalls();renderCOps();buildSvinnTable();calcAll();
+}
+
+// ════ TABS ════
+function sw(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.remove('hidden');btn.classList.add('active');
+  if(id==='t1')setTimeout(drawPat,50);
+  if(id==='t8')buildSummary();
+}
+
+// ════ T1: PARQUET ════
+function calcParquet(){
+  const bl=gv('par_bl')||1200, bw=gv('par_bw')||138, ppu=gv('par_ppu')||8;
+  const m2=gv('par_m2'), waste=gv('par_waste')||10;
+  if(!m2){document.getElementById('par-results').innerHTML='';return;}
+  const bm2=(bl/1000)*(bw/1000);
+  const totM2=m2*(1+waste/100);
+  const totPcs=Math.ceil(totM2/bm2);
+  const packs=Math.ceil(totPcs/ppu);
+  const underlay=m2*1.05;
+  document.getElementById('par-results').innerHTML=
+    rb(n(m2,2)+' m²','Floor area','mu')+
+    rb(n(totM2,2)+' m²',`Parquet incl. ${waste}% waste`,'inf',true)+
+    rb(n(totPcs)+' pcs','Total boards','ac')+
+    rb(n(packs)+' packs',`Packs (${ppu} pcs)`,'ok')+
+    rb(n(underlay,2)+' m²','Underlay (5%)','ac');
+  addSum('parquet','Parquet',n(totM2,2),'m²',totM2*8);
+  addSum('parquet','Underlay',n(underlay,2),'m²',underlay*0.5);
+  drawPat();save();
+}
+
+function drawPat(){
+  const canvas=document.getElementById('pat-canvas');if(!canvas)return;
+  const W=canvas.parentElement.offsetWidth||500;
+  canvas.width=W;canvas.height=160;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,160);
+  const sel=document.getElementById('par_pattern');
+  const pv=sel?.options[sel.selectedIndex]?.dataset.v||'straight';
+  const bl=Math.max(gv('par_bl')||1200,100), bw=Math.max(gv('par_bw')||138,30);
+  const sc=Math.min((W-20)/(bl*2.5),150/bw,0.055);
+  const BL=bl*sc,BW=bw*sc;
+  ctx.strokeStyle='rgba(43,108,176,0.6)';ctx.lineWidth=0.8;
+
+  if(pv==='straight'||pv==='brick'){
+    const c1='rgba(43,108,176,0.1)',c2='rgba(43,108,176,0.05)';
+    for(let row=0;row<Math.ceil(160/BW)+1;row++){
+      const off=(pv==='brick'&&row%2===1)?BL/2:0;
+      for(let col=-1;col<Math.ceil(W/BL)+2;col++){
+        const x=col*BL+off+10,y=row*BW+4;
+        ctx.fillStyle=row%2===0?c1:c2;ctx.fillRect(x,y,BL-1,BW-1);ctx.strokeRect(x,y,BL-1,BW-1);
+      }
+    }
+  } else if(pv==='herring'){
+    for(let r=0;r<7;r++){for(let c=0;c<10;c++){
+      const cx=c*(BL+BW)+10,cy=r*(BL+BW)+4;
+      ctx.fillStyle='rgba(43,108,176,0.08)';ctx.fillRect(cx,cy,BL-1,BW-1);ctx.strokeRect(cx,cy,BL-1,BW-1);
+      ctx.fillStyle='rgba(221,107,32,0.06)';ctx.fillRect(cx+BL,cy,BW-1,BL-1);ctx.strokeRect(cx+BL,cy,BW-1,BL-1);
+    }}
+  } else if(pv==='diagonal'){
+    ctx.save();ctx.translate(W/2,80);ctx.rotate(Math.PI/4);
+    for(let r=-6;r<10;r++){for(let c=-6;c<18;c++){
+      const x=c*BL,y=r*BW;
+      ctx.fillStyle=c%2===0?'rgba(39,103,73,0.06)':'rgba(43,108,176,0.08)';
+      ctx.fillRect(x,y,BL-1,BW-1);ctx.strokeRect(x,y,BL-1,BW-1);
+    }}ctx.restore();
+  }
+}
+
+// ════ T2: TRIMS ════
+function addRoom(name='',perim='',dc='',dw='',dh='',wc='',ww='',wh=''){
+  const id=++rId;rooms.push({id,name,perim,dc,dw,dh,wc,ww,wh});renderRooms();calcTrims();
+}
+function removeRoom(id){rooms=rooms.filter(r=>r.id!==id);renderRooms();calcTrims();}
+function renderRooms(){
+  const c=document.getElementById('room-list');c.innerHTML='';const t=d();
+  rooms.forEach((r,i)=>{
+    const div=document.createElement('div');div.className='card';div.style.background='var(--surface2)';div.style.padding='14px';
+    div.innerHTML=`
+      <div class="dy dy2">
+        <div class="f"><label>${t.lbl_rm_name} ${i+1}</label><input type="text" value="${r.name}" oninput="rooms[${i}].name=this.value;syncCeils(${i});save();"></div>
+        <div class="f"><label>${t.lbl_rm_perim}</label><input type="number" value="${r.perim}" oninput="rooms[${i}].perim=parseFloat(this.value)||0;syncCeils(${i});calcTrims();save();"></div>
+        <button class="xb no-print" onclick="removeRoom(${r.id})">×</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px;margin-top:8px;">
+        <div class="f"><label>${t.lbl_rm_dc}</label><input type="number" value="${r.dc}" oninput="rooms[${i}].dc=parseFloat(this.value)||0;calcTrims();save();"></div>
+        <div class="f"><label>${t.lbl_rm_dw}</label><input type="number" value="${r.dw}" oninput="rooms[${i}].dw=parseFloat(this.value)||0;calcTrims();save();"></div>
+        <div class="f"><label>${t.lbl_rm_wc}</label><input type="number" value="${r.wc}" oninput="rooms[${i}].wc=parseFloat(this.value)||0;calcTrims();save();"></div>
+        <div class="f"><label>${t.lbl_rm_ww}</label><input type="number" value="${r.ww}" oninput="rooms[${i}].ww=parseFloat(this.value)||0;calcTrims();save();"></div>
+      </div>`;
+    c.appendChild(div);
+  });
+}
+function syncCeils(i){const r=rooms[i];ceils.forEach(c=>{if(c.fromRoom===i){c.perim=r.perim;c.label=r.name||c.label;}});renderCeils();}
+function addCeil(label='',perim='',fromRoom=null){const id=++cId;ceils.push({id,label,perim,fromRoom});renderCeils();calcTrims();}
+function removeCeil(id){ceils=ceils.filter(c=>c.id!==id);renderCeils();calcTrims();}
+function renderCeils(){
+  const c=document.getElementById('ceil-list');c.innerHTML='';const t=d();
+  ceils.forEach((ci,i)=>{
+    const div=document.createElement('div');div.className='dy dy2';
+    div.innerHTML=`
+      <div class="f"><label>${t.lbl_ceil_lbl}</label><input type="text" value="${ci.label}" oninput="ceils[${i}].label=this.value;save();calcTrims();"></div>
+      <div class="f"><label>${t.lbl_ceil_perim}</label><input type="number" value="${ci.perim}" oninput="ceils[${i}].perim=parseFloat(this.value)||0;ceils[${i}].fromRoom=null;calcTrims();save();"></div>
+      <button class="xb no-print" onclick="removeCeil(${ci.id})">×</button>`;
+    c.appendChild(div);
+  });
+}
+function calcTrims(){
+  const waste=gv('trim_waste')/100||0.10, wf=1+waste;
+  let sk=0,dt=0,wt=0;
+  rooms.forEach(r=>{
+    const p=(r.perim||0)/1000, dc=r.dc||0, dw=(r.dw||0)/1000, dh=(r.dh||0)/1000;
+    const wc=r.wc||0, ww=(r.ww||0)/1000, wh=(r.wh||0)/1000;
+    sk+=Math.max(0,p-dc*dw);dt+=dc*(2*dh+dw)*2;wt+=wc*(2*wh+2*ww);
+  });
+  const ct=ceils.reduce((s,c)=>s+(c.perim||0)/1000,0);
+  document.getElementById('trim-results').innerHTML=
+    rb(n(sk*wf,1)+' lm',`Skirting (+${Math.round(waste*100)}%)`,'inf',true)+
+    rb(n(dt*wf,1)+' lm','Door trims','ac')+
+    rb(n(wt*wf,1)+' lm','Window trims','ok')+
+    rb(n(ct*wf,1)+' lm','Ceiling coving','ac');
+  addSum('trims','Skirting',n(sk*wf,1),'lm',sk*wf*1.2);
+  addSum('trims','Door/Win trims',n((dt+wt)*wf,1),'lm',(dt+wt)*wf*1.2);
+  addSum('trims','Ceiling coving',n(ct*wf,1),'lm',ct*wf*1.2);
+  save();
+}
+
+// ════ T3: TERRACE ════
+function calcTer(){
+  const l=gv('ter_l'),w=gv('ter_w'),bw=gv('ter_bw')||145;
+  const gap=gv('ter_gap')||4,len=gv('ter_len')||4800,cc=gv('ter_cc')||600,waste=gv('ter_waste')||7;
+  if(!l||!w){document.getElementById('ter-res').innerHTML='';return;}
+  const area=(l/1000)*(w/1000);
+  const lm=area/((bw+gap)/1000)*(1+waste/100);
+  const pcs=Math.ceil(lm/(len/1000));
+  const joistLm=(Math.ceil((w/1000)/(cc/1000))+1)*(l/1000)*1.05;
+  document.getElementById('ter-res').innerHTML=
+    rb(n(area,2)+' m²','Area','mu')+
+    rb(n(lm,1)+' lm',`Boards lm (+${waste}%)`,'inf',true)+
+    rb(n(pcs)+' pcs',`Boards (${len/1000}m)`,'ac')+
+    rb(n(joistLm,1)+' lm',`Joists CC${cc}mm`,'ok')+
+    rb(n(lm*10,0)+' kg','Est. weight','wa');
+  const e=document.getElementById('tsc_lm');if(e&&!e.value)e.value=n(lm,1);
+  addSum('terrace','Decking boards',n(lm,1),'lm',lm*10);save();
+}
+function calcTSC(){
+  const lm=gv('tsc_lm'),cc=gv('tsc_cc')||600,per=gi('tsc_per')||2;
+  if(!lm){document.getElementById('tsc-res').innerHTML='';return;}
+  const total=Math.ceil((lm/(cc/1000))*per*1.05);
+  document.getElementById('tsc-res').innerHTML=rb(n(total)+' pcs','Total screws','inf')+rb(n(Math.ceil(total/200))+' boxes','Boxes (200)','ac');
+  addSum('terrace','Terrace screws',n(total),'pcs',total*0.008);save();
+}
+
+// ════ T4: CLADDING ════
+function setCM(m,btn){
+  cladMode=m;
+  document.getElementById('clad-h').classList.toggle('active',m==='h');
+  document.getElementById('clad-v').classList.toggle('active',m==='v');
+  document.getElementById('clad-ol-f').style.display=m==='v'?'':'none';
+  const lbl=document.getElementById('clad-cov-lbl');
+  if(lbl)lbl.textContent=d()[m==='h'?'lbl_clad_cov':'lbl_clad_bw'];
+  calcClad();save();
+}
+function addCW(label='',area=''){const id=++cwId;cwalls.push({id,label,area});renderCWalls();calcClad();}
+function removeCW(id){cwalls=cwalls.filter(w=>w.id!==id);renderCWalls();calcClad();}
+function renderCWalls(){
+  const c=document.getElementById('clad-wall-list');c.innerHTML='';const t=d();
+  cwalls.forEach((w,i)=>{
+    const div=document.createElement('div');div.className='dy dy2';
+    div.innerHTML=`
+      <div class="f"><label>${t.lbl_wall_lbl} ${i+1}</label><input type="text" value="${w.label}" oninput="cwalls[${i}].label=this.value;save();"></div>
+      <div class="f"><label>${t.lbl_wall_area}</label><input type="number" value="${w.area}" oninput="cwalls[${i}].area=parseFloat(this.value)||0;calcClad();save();"></div>
+      <button class="xb no-print" onclick="removeCW(${w.id})">×</button>`;
+    c.appendChild(div);
+  });
+}
+function addCO(label='',w='',h='',cnt=''){const id=++coId;cops.push({id,label,w,h,cnt});renderCOps();calcClad();}
+function removeCO(id){cops=cops.filter(o=>o.id!==id);renderCOps();calcClad();}
+function renderCOps(){
+  const c=document.getElementById('clad-op-list');c.innerHTML='';const t=d();
+  cops.forEach((o,i)=>{
+    const div=document.createElement('div');div.className='dy dy4';
+    div.innerHTML=`
+      <div class="f"><label>${t.lbl_op_lbl} ${i+1}</label><input type="text" value="${o.label}" oninput="cops[${i}].label=this.value;save();"></div>
+      <div class="f"><label>${t.lbl_op_w}</label><input type="number" value="${o.w}" oninput="cops[${i}].w=parseFloat(this.value)||0;calcClad();save();"></div>
+      <div class="f"><label>${t.lbl_op_h}</label><input type="number" value="${o.h}" oninput="cops[${i}].h=parseFloat(this.value)||0;calcClad();save();"></div>
+      <button class="xb no-print" onclick="removeCO(${o.id})">×</button>`;
+    c.appendChild(div);
+  });
+}
+function calcClad(){
+  const bw=gv('clad_bw')||148,cov=gv('clad_cov')||137,ol=gv('clad_ol')||20;
+  const bl=gv('clad_bl')||4800,waste=gv('clad_waste')||12;
+  const gross=cwalls.reduce((s,w)=>s+(w.area||0),0);
+  const opA=cops.reduce((s,o)=>s+((o.w||0)/1000)*((o.h||0)/1000)*(o.cnt||1),0);
+  const net=Math.max(0,gross-opA);
+  if(net<=0&&gross<=0){document.getElementById('clad-res').innerHTML='';return;}
+  const dekk=cladMode==='h'?cov:bw-ol;
+  const lm=cladMode==='h'?(net/(dekk/1000))*(1+waste/100):(net/(dekk/1000))*2*(1+waste/100);
+  const pcs=Math.ceil(lm/(bl/1000));
+  document.getElementById('clad-res').innerHTML=
+    rb(n(gross,2)+' m²','Gross area','mu')+
+    rb(n(opA,2)+' m²','Openings','wa')+
+    rb(n(net,2)+' m²','Net area','ok')+
+    rb(n(dekk)+' mm','Cover width')+
+    rb(n(lm,1)+' lm',`Cladding (+${waste}%)`,'inf',true)+
+    rb(n(pcs)+' pcs',`Boards (${bl/1000}m)`,'ac');
+  const fe=document.getElementById('fix_area');if(fe&&!fe.value)fe.value=net.toFixed(2);
+  addSum('cladding','Cladding boards',n(lm,1),'lm',lm*10);save();
+}
+function calcFix(){
+  const area=gv('fix_area'),pm2=gv('fix_type')||15,pack=gv('fix_pack')||200;
+  if(!area){document.getElementById('fix-res').innerHTML='';return;}
+  const total=Math.ceil(area*pm2*1.05);
+  document.getElementById('fix-res').innerHTML=rb(n(total)+' pcs','Total fixings','inf')+rb(n(Math.ceil(total/pack))+' packs',`Packs (${pack})`,'ac');
+  addSum('cladding','Cladding fixings',n(total),'pcs',total*0.005);save();
+}
+
+// ════ T5: GYPSUM ════
+function calcGyp(){
+  const area=gv('gyp_area'),pl=gv('gyp_pl')||2400,pw=gv('gyp_pw')||1200;
+  const lay=gi('gyp_lay')||1,waste=gv('gyp_waste')||7;
+  if(!area){document.getElementById('gyp-res').innerHTML='';return;}
+  const plM2=(pl/1000)*(pw/1000);
+  const pcs=Math.ceil((area/plM2)*(1+waste/100))*lay;
+  document.getElementById('gyp-res').innerHTML=
+    rb(n(plM2,3)+' m²','Plate size','mu')+
+    rb(n(pcs)+' pcs',`Boards (${lay} layer)`,'inf',true)+
+    rb(n(area*lay*(1+waste/100),1)+' m²','Total area','ac')+
+    rb(n(pcs*9,0)+' kg','Est. weight','wa');
+  const ge=document.getElementById('gs_area');if(ge&&!ge.value)ge.value=area.toFixed(2);
+  addSum('gypsum','Gypsum boards',n(pcs),'pcs',pcs*9);save();
+}
+function setSM(m,btn){studMode=m;document.getElementById('sm-metal').classList.toggle('active',m==='metal');document.getElementById('sm-wood').classList.toggle('active',m==='wood');calcWI();save();}
+function calcWI(){
+  const area=gv('wi_area'),thick=gi('wi_thick')||98,waste=gv('wi_waste')||5;
+  const type=gs('wi_type')||'rock';
+  if(!area){document.getElementById('wi-res').innerHTML='';return;}
+  const vol=area*(thick/1000)*(1+waste/100);
+  document.getElementById('wi-res').innerHTML=
+    rb(n(area,2)+' m²','Area','mu')+
+    rb(n(vol,3)+' m³','Volume','inf',true)+
+    rb(n(vol/0.05,0)+' bags','Loose fill','ac')+
+    rb(n(area*(thick/1000)*3.6*1000,0)+' kg','Weight','wa');
+  addSum('insulation',`Wall insul ${thick}mm`,n(vol,3),'m³',area*(thick/1000)*3600);save();
+}
+function calcGS(){
+  const area=gv('gs_area'),lay=gi('gs_lay')||1,pack=gv('gs_pack')||500;
+  if(!area){document.getElementById('gs-res').innerHTML='';return;}
+  const total=Math.ceil(area*20*lay*1.05);
+  document.getElementById('gs-res').innerHTML=rb(n(total)+' pcs','Screws','inf')+rb(n(Math.ceil(total/pack))+' packs',`Packs (${pack})`,'ac');
+  addSum('gypsum','Gypsum screws',n(total),'pcs',total*0.003);save();
+}
+
+// ════ T7: UNIVERSAL ════
+function calcCu(){
+  const area=gv('cu_area'),w=gv('cu_w'),ol=gv('cu_ol')||0;
+  const len=gv('cu_len')||4800,waste=gv('cu_waste')||10;
+  const name=gs('cu_name')||'Material';
+  if(!area||!w){document.getElementById('cu-res').innerHTML='';return;}
+  const cover=(w-ol)/1000;
+  const lm=(area/cover)*(1+waste/100);
+  const pcs=Math.ceil(lm/(len/1000));
+  document.getElementById('cu-res').innerHTML=
+    rb(n(w-ol,0)+' mm','Cover width','mu')+
+    rb(n(lm,1)+' lm',`${name} lm`,'inf',true)+
+    rb(n(pcs)+' pcs',`Pieces (${len/1000}m)`,'ac');
+  addSum('custom',name,n(lm,1),'lm',lm*5);save();
+}
+function calcTiles(){
+  const area=gv('tile_area'),tl=gv('tile_l')||300,tw=gv('tile_w')||300,j=gv('tile_j')||3;
+  const waste=parseFloat(document.getElementById('tile_diag')?.value)||10;
+  if(!area){document.getElementById('tiles-res').innerHTML='';return;}
+  const effA=((tl+j)/1000)*((tw+j)/1000);
+  const total=Math.ceil((area/effA)*(1+waste/100));
+  document.getElementById('tiles-res').innerHTML=
+    rb(n(1/effA,1)+'/m²','Tiles/m²','mu')+
+    rb(n(total)+' pcs',`Tiles (+${waste}%)`,'inf',true)+
+    rb(n(area,2)+' m²','Area','ok');
+  addSum('tiles',`Tiles ${tl}×${tw}`,n(total),'pcs',total*((tl/1000)*(tw/1000)*20));save();
+}
+
+// ════ T8: SUMMARY ════
+function addSum(cat,name,qty,unit,kgEst){sumData[cat+'__'+name]={cat,name,qty,unit,kg:Math.round(kgEst||0)};}
+function buildSummary(){
+  const tbody=document.getElementById('sum-tbody');
+  const rows=Object.values(sumData).filter(r=>{const q=parseFloat(r.qty);return !isNaN(q)&&q>0;});
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--dim);">${d().sum_empty}</td></tr>`;document.getElementById('sum-foot').style.display='none';return;}
+  const icons={parquet:'🪵',trims:'📏',terrace:'🏡',cladding:'🏠',gypsum:'📋',insulation:'🌡️',custom:'📐',tiles:'🔲'};
+  let totalKg=0,prevCat='';tbody.innerHTML='';
+  rows.sort((a,b)=>a.cat.localeCompare(b.cat));
+  rows.forEach(r=>{
+    if(r.cat!==prevCat){tbody.innerHTML+=`<tr><td colspan="5" style="background:var(--surface2);padding:6px 12px;font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;">${icons[r.cat]||'▸'} ${r.cat}</td></tr>`;prevCat=r.cat;}
+    totalKg+=r.kg||0;
+    tbody.innerHTML+=`<tr><td></td><td class="tl">${r.name}</td><td class="tv">${r.qty}</td><td class="tm">${r.unit}</td><td class="ta">${r.kg>0?n(r.kg,0):'—'}</td></tr>`;
+  });
+  document.getElementById('sum-kg').textContent=n(totalKg,0)+' kg';
+  document.getElementById('sum-t2').textContent=n(totalKg/1000,2)+' t';
+  document.getElementById('sum-foot').style.display='block';
+}
+function buildSvinnTable(){
+  const rows=[['Tiles / Fliser','10%','15% diagonal'],['Gypsum / Gipsplater','5–8%','Room shape'],['Parquet / Parketas','10%','15% herringbone'],['Cladding','12–15%','More for vertical'],['Trims / Lister','10%','Corners extra']];
+  document.getElementById('svinn-tbody').innerHTML=rows.map(([m,p,no])=>`<tr><td class="tl">${m}</td><td class="tv">${p}</td><td class="tm">${no}</td></tr>`).join('');
+}
+
+// ════ SAVE/LOAD ════
+function save(){try{const data={lang,rooms,ceils,cwalls,cops,rId,cId,cwId,coId,sumData};document.querySelectorAll('input[id],select[id]').forEach(el=>{data['f_'+el.id]=el.value;});localStorage.setItem(SK,JSON.stringify(data));}catch(e){}}
+function load(){try{const raw=localStorage.getItem(SK);if(!raw)return;const data=JSON.parse(raw);lang=data.lang||'en';rooms=data.rooms||[];ceils=data.ceils||[];cwalls=data.cwalls||[];cops=data.cops||[];rId=data.rId||0;cId=data.cId||0;cwId=data.cwId||0;coId=data.coId||0;if(data.sumData)sumData=data.sumData;Object.entries(data).forEach(([k,v])=>{if(!k.startsWith('f_'))return;const el=document.getElementById(k.slice(2));if(el)el.value=v;});}catch(e){}}
+function resetAll(){if(!confirm('Reset all data?'))return;localStorage.removeItem(SK);location.reload();}
+function calcAll(){calcParquet();calcTrims();calcTer();calcTSC();calcClad();calcFix();calcGyp();calcWI();calcGS();calcCu();calcTiles();}
+function updPH(){document.getElementById('ph-t').textContent='ProBuilder — '+gs('proj_name');document.getElementById('ph-m').textContent=gs('proj_addr')+' | '+gs('proj_date');save();}
+function exportJSON(){const blob=new Blob([JSON.stringify({sumData,rooms,ceils,cwalls,cops},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='probuilder_materials.json';a.click();}
+function importJSON(evt){const file=evt.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(data.rooms)rooms=data.rooms;if(data.sumData)sumData=data.sumData;applyLang();calcAll();}catch{alert('Invalid JSON');}};reader.readAsText(file);}
+
+// ════ INIT ════
+window.addEventListener('DOMContentLoaded',()=>{
+  load();applyLang();buildSvinnTable();
+  if(!document.getElementById('proj_date').value)document.getElementById('proj_date').value=new Date().toISOString().slice(0,10);
+  if(rooms.length===0){addRoom('Living room','14000','1','900','2100','2','1200','1200');addRoom('Bedroom','10000','1','800','2100','1','1000','1000');}
+  if(ceils.length===0)rooms.forEach((r,i)=>addCeil(r.name||`Room ${i+1}`,r.perim,i));
+  if(cwalls.length===0){addCW('North wall',24.5);addCW('East wall',18);}
+  calcAll();setTimeout(drawPat,100);updPH();
+});
+document.addEventListener('input',save);document.addEventListener('change',save);
+window.addEventListener('resize',()=>drawPat());
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

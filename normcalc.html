@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>ProNorm Kalkyle - Kostnad & Tid | ProBuilder</title>
+<meta name="description" content="Profesjonell kalkyle for tidsbruk og kostnader i byggeprosjekter basert på norske standarder.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/normcalc.html">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="ProNorm Kalkyle - ProBuilder">
+<meta property="og:description" content="Profesjonell kalkyle for tidsbruk og kostnader i byggeprosjekter basert på norske standarder.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/normcalc.html">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ProNorm Kalkyle - ProBuilder">
+<meta name="twitter:description" content="Profesjonell kalkyle for tidsbruk og kostnader i byggeprosjekter basert på norske standarder.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProBuilder">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ProNorm Kalkyle",
+  "url": "https://vigibygg-cmyk.github.io/Calc/normcalc.html",
+  "image": "https://vigibygg-cmyk.github.io/Calc/img/og-image.png",
+  "description": "Profesjonelt verktøy for tidsestimering og kostnadsberegning i byggebransjen.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any",
+  "author": {
+    "@type": "Person",
+    "name": "Vytautas Giedraitis"
+  }
+}
+</script>
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color: transparent;}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.logo-area h1 { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); white-space: nowrap; }
+.logo-area h1 span { color: var(--primary); }
+
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── MOBILE TABS ─── */
+.mobile-tabs { 
+    display: none; 
+    position: sticky; 
+    top: 56px; 
+    z-index: 999; 
+    background: #ffffff; 
+    border-bottom: 1px solid var(--border); 
+}
+.tab-btn { 
+    flex: 1; 
+    padding: 14px; 
+    border: none; 
+    background: none; 
+    font-weight: 700; 
+    color: var(--muted); 
+    border-bottom: 2px solid transparent; 
+    font-size: 0.8rem; 
+    cursor: pointer; 
+    transition: 0.2s;
+    font-family: inherit;
+}
+.tab-btn.active { 
+    color: var(--primary); 
+    border-bottom-color: var(--primary); 
+    background: var(--primary-glow); 
+}
+
+/* ─── CONTAINER ─── */
+.app-container { 
+    position: relative; 
+    z-index: 1; 
+    display: grid; 
+    grid-template-columns: 380px 1fr; 
+    gap: 16px; 
+    max-width: 1400px; 
+    margin: 20px auto; 
+    padding: 0 16px 140px; 
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.card-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center; gap: 10px;
+}
+.card-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM ─── */
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.search-box, .field-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px; /* CRITICAL: prevents iOS zoom */
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px; /* CRITICAL: touch target */
+}
+.search-box:focus, .field-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+
+/* ─── ACCORDION & TASK ROWS ─── */
+.accordion-item { 
+    border: 1px solid var(--border); 
+    border-radius: var(--radius-sm); 
+    margin-bottom: 8px; 
+    background: #ffffff; 
+    overflow: hidden;
+}
+.accordion-header { 
+    width: 100%; 
+    padding: 12px 16px; 
+    text-align: left; 
+    background: var(--surface2); 
+    border: none; 
+    color: var(--text); 
+    font-weight: 600; 
+    cursor: pointer; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-size: 0.88rem; 
+    font-family: inherit;
+}
+.accordion-header:after { content: '→'; font-size: 0.8rem; color: var(--dim); transition: 0.3s; }
+.accordion-item.active .accordion-header { color: var(--primary); border-bottom: 1px solid var(--border); }
+.accordion-item.active .accordion-header:after { transform: rotate(90deg); color: var(--primary); }
+.accordion-content { display: none; padding: 0; background: #ffffff; max-height: 400px; overflow-y: auto; }
+.accordion-item.active .accordion-content { display: block; }
+
+.task-row { 
+    padding: 12px 16px; 
+    border-bottom: 1px solid var(--border); 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    cursor: pointer; 
+    transition: 0.2s; 
+}
+.task-row:hover { background: var(--surface2); }
+.task-name { font-size: 0.85rem; font-weight: 500; color: var(--text); flex: 1; }
+.task-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; font-family: 'Consolas', 'Courier New', monospace; }
+.task-btn { 
+    background: var(--primary-glow); 
+    color: var(--primary); 
+    border: 1px solid var(--primary); 
+    border-radius: 5px; 
+    padding: 4px 10px; 
+    font-weight: 700; 
+    font-size: 0.8rem; 
+    cursor: pointer;
+}
+
+/* ─── ESTIMATE TABLE ─── */
+.table-container { 
+    overflow-x: auto; 
+    border-radius: var(--radius-sm); 
+    border: 1px solid var(--border); 
+    background: #ffffff;
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+thead th { 
+    text-align: left; 
+    padding: 12px; 
+    background: var(--surface2); 
+    border-bottom: 2px solid var(--border); 
+    font-size: 0.68rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    color: var(--muted); 
+    letter-spacing: 0.05em;
+}
+tbody td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+tbody tr:nth-child(even) { background: #fbfcfe; }
+tbody tr:hover { background: #f0f7ff; }
+
+.qty-input { 
+    width: 65px; 
+    background: var(--surface2); 
+    border: 1px solid var(--border); 
+    border-radius: 4px; 
+    color: var(--text); 
+    padding: 6px; 
+    text-align: center; 
+    font-family: 'Consolas', monospace; 
+    font-weight: 700; 
+    outline: none;
+    font-size: 0.9rem;
+}
+.qty-input:focus { border-color: var(--primary); background: #ffffff; }
+
+.comment-input { 
+    width: 100%; 
+    background: transparent; 
+    border: 1px dashed var(--border); 
+    border-radius: 4px; 
+    color: var(--muted); 
+    padding: 6px; 
+    font-size: 0.75rem; 
+    font-family: inherit; 
+    margin-top: 6px; 
+    outline: none; 
+    resize: vertical; 
+}
+.comment-input:focus { border-color: var(--primary); color: var(--text); background: #fff; }
+
+/* ─── SUMMARY FOOTER ─── */
+.summary-footer { 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    background: #1a202c; 
+    border-top: 1px solid rgba(255,255,255,0.1); 
+    padding: 12px 20px; 
+    z-index: 2000; 
+    transition: transform 0.3s; 
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    color: #ffffff;
+}
+.summary-footer.collapsed { transform: translateY(calc(100% - 44px)); }
+.summary-header-toggle { display: flex; justify-content: center; padding: 0 0 10px; cursor: pointer; }
+.toggle-line { width: 36px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.sum-block { 
+    background: rgba(255,255,255,0.05); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: var(--radius-sm); 
+    padding: 10px; 
+    text-align: center; 
+}
+.sum-block label { 
+    display: block; 
+    font-size: 0.62rem; 
+    color: var(--dim); 
+    text-transform: uppercase; 
+    margin-bottom: 4px; 
+    letter-spacing: 0.05em; 
+}
+.sum-block .val { 
+    font-family: 'Consolas', monospace; 
+    font-size: 1.15rem; 
+    font-weight: 700; 
+    color: #ffffff; 
+}
+
+.sum-total-row { 
+    grid-column: span 4; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 10px; 
+    padding-top: 12px; 
+    border-top: 1px solid rgba(255,255,255,0.1); 
+}
+.grand-total-val { 
+    font-family: 'Consolas', monospace; 
+    color: #ffffff; 
+    font-size: 1.5rem; 
+    font-weight: 700; 
+}
+.btn-print { 
+    background: var(--primary); 
+    color: #fff; 
+    border: none; 
+    padding: 10px 24px; 
+    border-radius: 8px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    font-family: inherit;
+    box-shadow: 0 4px 12px rgba(43,108,176,0.4);
+}
+
+/* ─── BADGES ─── */
+.bgp, .bgs, .bgx { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-left: 8px; }
+.bgp { background: #ebf8ff; color: var(--primary); border: 1px solid rgba(43,108,176,0.2); }
+.bgs { background: #f0fff4; color: var(--success); border: 1px solid rgba(39,103,73,0.2); }
+.bgx { background: #fff5f5; color: var(--danger); border: 1px solid rgba(197,48,48,0.2); }
+
+/* ─── BUTTONS ─── */
+.btn-action { 
+    background: var(--surface2); 
+    border: 1px solid var(--border); 
+    color: var(--muted); 
+    padding: 10px 14px; 
+    border-radius: 8px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    text-transform: uppercase; 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 7px; 
+    font-family: inherit;
+}
+.btn-action:hover { border-color: var(--primary); color: var(--primary); background: #ffffff; }
+
+/* ─── FACTORS & CHIPS ─── */
+.factor-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.chip { 
+    padding: 8px 14px; 
+    border-radius: 20px; 
+    border: 1px solid var(--border); 
+    background: var(--surface2); 
+    font-size: 0.78rem; 
+    font-weight: 600; 
+    color: var(--muted); 
+    cursor: pointer; 
+    transition: 0.2s; 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    flex: 1; 
+}
+.chip.active { 
+    background: #ebf8ff; 
+    border-color: var(--primary); 
+    color: var(--primary); 
+}
+.p-input { 
+    width: 65px; 
+    background: #ffffff; 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+    color: var(--primary); 
+    padding: 8px; 
+    text-align: center; 
+    font-weight: 800; 
+    font-family: 'Consolas', monospace; 
+    outline: none; 
+}
+
+/* ─── SCREEN FOOTER ─── */
+.screen-footer { 
+    text-align: center; 
+    padding: 40px 20px; 
+    color: var(--dim); 
+    font-size: 0.75rem; 
+    border-top: 1px solid var(--border); 
+    margin-top: 40px; 
+    background: #ffffff;
+}
+
+/* ─── PRINT ─── */
+.print-report-header, .print-summary-box, .print-auth-footer { display: none; }
+.print-comment { display: none; font-style: italic; color: #444; font-size: 0.8rem; margin-top: 4px; }
+
+@media (max-width: 900px) {
+    header { height: auto; min-height: 56px; flex-wrap: wrap; padding: 10px 16px; gap: 10px; justify-content: center; }
+    .header-right { width: 100%; justify-content: center; }
+    .mobile-tabs { display: flex; top: 0; }
+    .app-container { grid-template-columns: 1fr; margin-top: 0; padding-top: 0; padding-bottom: 160px; }
+    .sidebar, .estimate-area { display: none; }
+    .sidebar.active, .estimate-area.active { display: block; }
+    .card { border-radius: 0; border-left: none; border-right: none; box-shadow: none; border-top: none; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .sum-total-row { flex-direction: column; gap: 12px; text-align: center; }
+}
+
+@media print {
+    header, .no-print, .mobile-tabs, .sidebar, .summary-footer, .btn-del, .card-header button, .lang-group, .comment-input, .screen-footer { display: none !important; }
+    body { background: #fff !important; color: #000 !important; font-family: 'Segoe UI', sans-serif !important; }
+    body::before { display: none; }
+    .app-container { display: block !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .estimate-area { display: block !important; }
+    .card { background: #fff !important; border: none !important; border-bottom: 2px solid #000 !important; padding: 10px 0 !important; border-radius: 0 !important; margin-bottom: 20px !important; }
+    .card-header { color: #000 !important; border-bottom: 1px solid #000 !important; font-size: 1.1rem !important; }
+    .field-input, .qty-input { border: none !important; background: none !important; color: #000 !important; padding: 0 !important; font-weight: 800 !important; font-size: 1.2rem !important; }
+    table { background: #fff !important; color: #000 !important; width: 100% !important; border-collapse: collapse !important; }
+    th { background: #eee !important; color: #000 !important; border: 1px solid #000 !important; padding: 8px !important; font-size: 0.8rem !important; }
+    td { border: 1px solid #000 !important; color: #000 !important; padding: 8px !important; font-size: 0.9rem !important; }
+    .print-report-header { display: block !important; border-bottom: 4px solid #000; margin-bottom: 30px; padding-bottom: 10px; }
+    .print-summary-box { display: block !important; margin-top: 30px; border-top: 3px solid #000; padding-top: 20px; }
+    .print-sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .print-total { font-size: 2.2rem !important; font-weight: 900 !important; margin-top: 15px; }
+    .print-comment { display: block !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="no-print">
+  <div class="logo-area"><h1>ProNorm Calc <span>v.2</span> by Vytautas Giedraitis</h1></div>
+  <div class="header-right">
+    <div class="lang-group">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-tabs no-print">
+  <button class="tab-btn active" id="tab-cat-btn" onclick="switchTab('catalog', this)" data-i18n="tab_catalog">📚 Catalog</button>
+  <button class="tab-btn" id="tab-est-btn" onclick="switchTab('estimate', this)"><span data-i18n="tab_estimate">📑 Estimate</span> (<span id="count-badge">0</span>)</button>
+</div>
+
+<div class="app-container">
+  <!-- SIDEBAR: CATALOG & SETTINGS -->
+  <div id="catalog-sec" class="sidebar active no-print">
+    <div class="card">
+      <div class="card-header">
+        <span data-i18n="db_title">Task Database</span>
+        <small id="db-total-items" style="color:var(--dim); font-family:'Consolas', monospace">0</small>
+      </div>
+      <div class="card-body">
+        <input type="text" id="dbSearch" class="search-box" data-i18n-ph="search_ph" placeholder="Search tasks..." onkeyup="handleSearch()">
+        <div id="accordion-container" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" data-i18n="settings_title">Team & Settings</div>
+      <div class="card-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+          <div class="field">
+            <label data-i18n="hourly_rate">Hourly (NOK)</label>
+            <input type="number" id="hourlyRate" class="field-input" value="650" onchange="calculate()">
+          </div>
+          <div class="field">
+            <label data-i18n="team_size">Team (PPL)</label>
+            <input type="number" id="teamSize" class="field-input" value="1" min="1" onchange="calculate()">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:16px;">
+          <label data-i18n="day_hours">Hours per day</label>
+          <input type="number" id="dayHours" class="field-input" value="7.5" step="0.5" onchange="calculate()">
+        </div>
+        
+        <label style="font-size:0.65rem; color:var(--muted); font-weight:700; text-transform:uppercase; display:block; margin-bottom:10px;" data-i18n="factors_title">Additional Factors (%)</label>
+        <div class="factors-container">
+          <div class="factor-row">
+            <label class="chip" id="chip-renov"><input type="checkbox" id="cRenov" hidden onchange="calculate()"> <span data-i18n="c_renov">Renovation</span></label>
+            <input type="number" id="pRenov" class="p-input" value="10" onchange="calculate()">
+          </div>
+          <div class="factor-row">
+            <label class="chip" id="chip-small"><input type="checkbox" id="cSmall" hidden onchange="calculate()"> <span data-i18n="c_small">Small room</span></label>
+            <input type="number" id="pSmall" class="p-input" value="20" onchange="calculate()">
+          </div>
+          <div class="factor-row">
+            <label class="chip" id="chip-height"><input type="checkbox" id="cHeight" hidden onchange="calculate()"> <span data-i18n="c_height">Height</span></label>
+            <input type="number" id="pHeight" class="p-input" value="15" onchange="calculate()">
+          </div>
+          <div class="factor-row">
+            <label class="chip" id="chip-logi"><input type="checkbox" id="cLogi" hidden onchange="calculate()"> <span data-i18n="c_logi">Logistics</span></label>
+            <input type="number" id="pLogi" class="p-input" value="10" onchange="calculate()">
+          </div>
+          <div class="factor-row" style="border-top:1px solid var(--border); padding-top:10px; margin-top:5px;">
+            <span style="flex:1; font-size:0.8rem; font-weight:600; color:var(--muted)" data-i18n="c_custom">Other (%)</span>
+            <input type="number" id="pCustom" class="p-input" value="0" onchange="calculate()" style="color:var(--accent); border-color:var(--accent);">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button class="btn-action" onclick="exportData()">📤 <span data-i18n="btn_export">Save</span></button>
+          <button class="btn-action" onclick="document.getElementById('importFile').click()">📥 <span data-i18n="btn_import">Open</span></button>
+          <input type="file" id="importFile" style="display:none" onchange="importData(this)" accept=".json">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN: ESTIMATE AREA -->
+  <div id="estimate-sec" class="estimate-area">
+    <div class="print-report-header">
+      <h1 style="font-size:2rem; margin:0;" data-i18n="print_title">ProNorm Kalkyle</h1>
+      <p id="p-date" style="font-size:1rem; color:#666;"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-header" data-i18n="project_info">Project Info</div>
+      <div class="card-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="field">
+            <label class="no-print" data-i18n="project_name_lbl">Project</label>
+            <input type="text" id="projectName" class="field-input" data-i18n-ph="project_name_ph" placeholder="Project name">
+          </div>
+          <div class="field">
+            <label class="no-print" data-i18n="client_lbl">Client</label>
+            <input type="text" id="clientInfo" class="field-input" data-i18n-ph="client_ph" placeholder="Client / Address">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span data-i18n="estimate_title">Estimate</span>
+        <button class="no-print" onclick="clearAll()" style="color:var(--danger); background:var(--danger-bg); border:1px solid var(--danger); padding:4px 10px; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.75rem; text-transform:uppercase;" data-i18n="btn_clear">Clear</button>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:55%;" data-i18n="col_task">Task</th>
+                <th style="text-align:center;" data-i18n="col_qty">Qty</th>
+                <th style="text-align:center;" data-i18n="col_h">H</th>
+                <th style="text-align:right;" data-i18n="col_price">Total</th>
+                <th class="no-print"></th>
+              </tr>
+            </thead>
+            <tbody id="estimateBody"></tbody>
+          </table>
+        </div>
+        <div id="empty-msg" style="padding:3rem; text-align:center; color:var(--dim);" data-i18n="empty_msg">Estimate is empty</div>
+      </div>
+    </div>
+
+    <div class="print-summary-box">
+      <div class="print-sum-grid">
+        <div>
+          <p><strong><span data-i18n="sum_hours">Hours</span>:</strong> <span id="p-hours">0</span></p>
+          <p><strong><span data-i18n="sum_days">Days</span>:</strong> <span id="p-days">0</span></p>
+          <p><strong><span data-i18n="sum_team">Team</span>:</strong> <span id="p-team">1</span> <span data-i18n="ppl">ppl</span></p>
+        </div>
+        <div style="text-align:right;">
+          <p><strong><span data-i18n="sum_ex_mva">Excl. VAT</span>:</strong> <span id="p-exmva">0</span> NOK</p>
+          <div class="print-total">TOTAL: <span id="p-grand">0</span> NOK</div>
+          <p style="font-size:0.8rem;">(Incl. 25% VAT)</p>
+        </div>
+      </div>
+      <div style="margin-top:30px; padding-top:10px; border-top:1px solid #eee; font-size:0.8rem; display:flex; justify-content:space-between; color:#666;">
+        <span>© 2026 ProNorm Calc by Vytautas Giedraitis tel. 94844497</span>
+        <span>alle beregninger kun for informasjonsformål.</span>
+      </div>
+    </div>
+
+    <footer class="screen-footer no-print">
+      © 2026 ProNorm Calc by Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+    </footer>
+  </div>
+</div>
+
+<!-- STICKY SUMMARY BAR -->
+<div id="summaryBar" class="summary-footer no-print">
+  <div class="summary-header-toggle" onclick="toggleSummary()"><div class="toggle-line"></div></div>
+  <div class="summary-grid">
+    <div class="sum-block"><label data-i18n="sum_hours">Hours</label><div class="val" id="totalH">0.0</div></div>
+    <div class="sum-block"><label data-i18n="sum_days">Days</label><div class="val" id="totalDays">0.0</div></div>
+    <div class="sum-block"><label data-i18n="sum_ex_mva">Excl. VAT</label><div class="val" id="totalExMva">0</div></div>
+    <div class="sum-block"><label data-i18n="sum_team">Team</label><div class="val"><span id="team-val">1</span> <span data-i18n="ppl">ppl</span></div></div>
+    <div class="sum-total-row">
+      <div class="grand-total-val" id="grandTotal">0 NOK</div>
+      <button class="btn-print" onclick="preparePrint()" data-i18n="btn_pdf">PRINT PDF</button>
+    </div>
+  </div>
+</div>
+
+<script src="work_norms.js"></script>
+<script>
+const uiTrans = {
+  no: {
+    tab_catalog: "📚 KATALOG", tab_estimate: "📑 KALKYLE", db_title: "ARBEIDSBASE", search_ph: "Søk i databasen...",
+    settings_title: "LAG OG INNSTILLINGER", hourly_rate: "TIMEPRIS (NOK)", team_size: "LAG (PERS.)", day_hours: "TIMER PER DAG",
+    factors_title: "TILLEGG I PROSENT (%)", c_renov: "Rehab", c_small: "Lite rom", c_height: "Høyde", c_logi: "Logistikk", c_custom: "Annet (%)",
+    project_info: "PROSJEKT", project_name_lbl: "PROSJEKT", client_lbl: "KUNDE", project_name_ph: "Prosjektnavn", client_ph: "Kunde / Adresse", 
+    estimate_title: "KALKYLE", btn_clear: "TØM ALT", col_task: "OPPGAVE", col_qty: "MENGDE", col_h: "T", col_price: "SUM", 
+    empty_msg: "Kalkylen er tom", sum_hours: "Timer", sum_days: "Dager", sum_ex_mva: "Eks. MVA", sum_team: "Lag", 
+    ppl: "pers", btn_pdf: "SKRIV UT PDF", btn_export: "💾 LAGRE", btn_import: "📂 ÅPNE", confirm_clear: "Slette hele kalkylen?",
+    print_title: "PRONORM KALKYLE", comm_ph: "Skriv kommentar her..."
+  },
+  lt: {
+    tab_catalog: "📚 KATALOGAS", tab_estimate: "📑 SĄMATA", db_title: "DARBŲ BAZĖ", search_ph: "Ieškoti darbų...",
+    settings_title: "BRIGADA IR NUSTATYMAI", hourly_rate: "VALANDINIS (NOK)", team_size: "BRIGADA (ŽM.)", day_hours: "DIENOS VALANDOS",
+    factors_title: "PAPILDOMI PRIEDAI (%)", c_renov: "Renovacija", c_small: "Trangiai", c_height: "Aukštis", c_logi: "Logistika", c_custom: "Kitas (%)",
+    project_info: "PROJEKTAS", project_name_lbl: "PROJEKTAS", client_lbl: "KLIENTAS", project_name_ph: "Projekto pavadinimas", client_ph: "Klientas / Adresas", 
+    estimate_title: "SĄMATA", btn_clear: "IŠVALYTI", col_task: "DARBAS", col_qty: "KIEKIS", col_h: "VAL.", col_price: "SUMA", 
+    empty_msg: "Sąmata tuščia", sum_hours: "Valandos", sum_days: "Dienos", sum_ex_mva: "Be PVM", sum_team: "Brigada", 
+    ppl: "žm.", btn_pdf: "SPAUSDINTI PDF", btn_export: "💾 IŠSAUGOTI", btn_import: "📂 ATIDARYTI", confirm_clear: "Išvalyti visą sąmatą?",
+    print_title: "PRONORM SĄMATA", comm_ph: "Rašyti komentarą..."
+  },
+  en: {
+    tab_catalog: "📚 CATALOG", tab_estimate: "📑 ESTIMATE", db_title: "TASK DATABASE", search_ph: "Search tasks...",
+    settings_title: "TEAM & SETTINGS", hourly_rate: "HOURLY (NOK)", team_size: "TEAM (PPL)", day_hours: "HOURS PER DAY",
+    factors_title: "ADDITIONAL FACTORS (%)", c_renov: "Renovation", c_small: "Small room", c_height: "Height", c_logi: "Logistics", c_custom: "Other (%)",
+    project_info: "PROJECT", project_name_lbl: "PROJECT", client_lbl: "CLIENT", project_name_ph: "Project name", client_ph: "Client / Address", 
+    estimate_title: "ESTIMATE", btn_clear: "CLEAR ALL", col_task: "TASK", col_qty: "QTY", col_h: "H", col_price: "TOTAL", 
+    empty_msg: "Estimate is empty", sum_hours: "Hours", sum_days: "Days", sum_ex_mva: "Excl. VAT", sum_team: "Team", 
+    ppl: "ppl", btn_pdf: "PRINT PDF", btn_export: "💾 SAVE", btn_import: "📂 OPEN", confirm_clear: "Clear entire estimate?",
+    print_title: "PRONORM ESTIMATE", comm_ph: "Type comment here..."
+  },
+  pl: {
+    tab_catalog: "📚 KATALOG", tab_estimate: "📑 KOSZTORYS", db_title: "BAZA PRAC", search_ph: "Szukaj prac...",
+    settings_title: "EKIPA I USTAWIENIA", hourly_rate: "STAWKA (NOK)", team_size: "EKIPA (OS.)", day_hours: "GODZ. DZIENNIE",
+    factors_title: "DODATKOWE PROCENTY (%)", c_renov: "Remont", c_small: "Małe pom.", c_height: "Wysokość", c_logi: "Logistyka", c_custom: "Inne (%)",
+    project_info: "PROJEKT", project_name_lbl: "PROJEKT", client_lbl: "KLIENT", project_name_ph: "Nazwa projektu", client_ph: "Klient / Adres", 
+    estimate_title: "KOSZTORYS", btn_clear: "WYCZYŚĆ", col_task: "PRACA", col_qty: "ILOŚĆ", col_h: "GODZ.", col_price: "SUMA", 
+    empty_msg: "Kosztorys jest pusty", sum_hours: "Godziny", sum_days: "Dni", sum_ex_mva: "Netto", sum_team: "Ekipa", 
+    ppl: "os.", btn_pdf: "DRUKUJ PDF", btn_export: "💾 ZAPISZ", btn_import: "📂 OTWÓRZ", confirm_clear: "Czy na pewno wyczyścić?",
+    print_title: "PRONORM KOSZTORYS", comm_ph: "Wpisz komentarz..."
+  }
+};
+
+let estimate = [];
+let lang = localStorage.getItem('pb_lang') || 'no';
+
+window.onload = () => { loadDB(); loadStorage(); setLang(lang); calculate(); };
+
+function setLang(l) {
+  lang = l; localStorage.setItem('pb_lang', l);
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(uiTrans[lang][k]) el.innerText = uiTrans[lang][k]; });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { const k = el.getAttribute('data-i18n-ph'); if(uiTrans[lang][k]) el.placeholder = uiTrans[lang][k]; });
+  loadDB(); calculate();
+}
+
+function toggleSummary() { document.getElementById('summaryBar').classList.toggle('collapsed'); }
+
+function loadDB() {
+  const container = document.getElementById('accordion-container'); if (typeof masterDB === 'undefined') return;
+  document.getElementById('db-total-items').innerText = masterDB.reduce((a,c) => a + c.tasks.length, 0);
+  container.innerHTML = '';
+  masterDB.forEach((cat, idx) => {
+    const catName = (typeof cat.category === 'object') ? (cat.category[lang] || cat.category['no']) : cat.category;
+    const item = document.createElement('div'); item.className = 'accordion-item';
+    item.innerHTML = `<button class="accordion-header" onclick="toggleAccordion(this)">${catName}</button>
+      <div class="accordion-content">${cat.tasks.map((t, taskIdx) => {
+        const taskName = (typeof t.n === 'object') ? (t.n[lang] || t.n['no']) : t.n;
+        return `<div class="task-row" onclick="add(this, ${idx}, ${taskIdx})">
+          <div class="task-name">${taskName}<div class="task-meta">${t.t} h / <span class="bgp">${t.u}</span></div></div><button class="task-btn">+</button></div>`
+      }).join('')}</div>`;
+    container.appendChild(item);
+  });
+}
+
+function toggleAccordion(btn) { 
+  const item = btn.parentElement; 
+  const isActive = item.classList.contains('active'); 
+  document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active')); 
+  if (!isActive) item.classList.add('active'); 
+}
+
+function handleSearch() {
+  const q = document.getElementById('dbSearch').value.toLowerCase(); const c = document.getElementById('accordion-container');
+  if (q.length < 2) { loadDB(); return; }
+  let res = []; masterDB.forEach((cat, catIdx) => cat.tasks.forEach((t, taskIdx) => { 
+    const searchable = (typeof t.n === 'object') ? Object.values(t.n).join(' ').toLowerCase() : t.n.toLowerCase();
+    if (searchable.includes(q)) res.push({ task: t, catIdx, taskIdx });
+  }));
+  c.innerHTML = `<div class="accordion-item active"><div class="accordion-header">Results (${res.length})</div><div class="accordion-content" style="display:block">
+    ${res.slice(0,100).map(item => {
+      const t = item.task; const taskName = (typeof t.n === 'object') ? (t.n[lang] || t.n['no']) : t.n;
+      return `<div class="task-row" onclick="add(this, ${item.catIdx}, ${item.taskIdx})"><div class="task-name">${taskName}<div class="task-meta">${t.t} h / <span class="bgp">${t.u}</span></div></div><button class="task-btn">+</button></div>`
+    }).join('')}</div></div>`;
+}
+
+function add(el, catIdx, taskIdx) { 
+  const t = masterDB[catIdx].tasks[taskIdx]; 
+  const name = (typeof t.n === 'object') ? (t.n[lang] || t.n['no']) : t.n; 
+  const ex = estimate.find(i => i.n === name); 
+  if (ex) ex.q += 1; else estimate.push({ n: name, t: t.t, u: t.u, q: 1, c: '' }); 
+  calculate(); 
+}
+
+function updateQty(idx, val) { estimate[idx].q = parseFloat(val) || 0; calculate(); }
+function updateComm(idx, val) { estimate[idx].c = val; saveStorage(); }
+function remove(idx) { estimate.splice(idx, 1); calculate(); }
+
+function calculate() {
+  const body = document.getElementById('estimateBody'); body.innerHTML = '';
+  let totalH = 0; const hRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+  const team = parseFloat(document.getElementById('teamSize').value) || 1; const dHours = parseFloat(document.getElementById('dayHours').value) || 7.5;
+  
+  let totalMultiplier = 1.0;
+  const factors = [ { id: 'cRenov', p: 'pRenov' }, { id: 'cSmall', p: 'pSmall' }, { id: 'cHeight', p: 'pHeight' }, { id: 'cLogi', p: 'pLogi' } ];
+  factors.forEach(f => {
+    const isChecked = document.getElementById(f.id).checked;
+    const percent = parseFloat(document.getElementById(f.p).value) || 0;
+    if (isChecked) { totalMultiplier += (percent / 100); document.getElementById('chip-' + f.id.substring(1).toLowerCase()).classList.add('active'); }
+    else { document.getElementById('chip-' + f.id.substring(1).toLowerCase()).classList.remove('active'); }
+  });
+  totalMultiplier += (parseFloat(document.getElementById('pCustom').value) || 0) / 100;
+
+  estimate.forEach((item, idx) => {
+    const h = item.q * item.t * totalMultiplier; const p = h * hRate; totalH += h;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>
+        <div style="font-weight:600; color:var(--primary)">${item.n}</div>
+        <textarea class="comment-input" onchange="updateComm(${idx}, this.value)" placeholder="${uiTrans[lang].comm_ph}">${item.c || ''}</textarea>
+        <div class="print-comment">${item.c || ''}</div>
+      </td>
+      <td style="text-align:center;"><input type="number" class="qty-input" value="${item.q}" onchange="updateQty(${idx}, this.value)"></td>
+      <td style="font-weight:700; font-family:'Consolas', monospace; text-align:center;">${h.toFixed(1)}</td><td style="font-weight:700; font-family:'Consolas', monospace; text-align:right;">${Math.round(p).toLocaleString('no-NO')}</td>
+      <td class="no-print" style="text-align:right;"><button onclick="remove(${idx})" style="color:var(--danger); background:none; border:none; font-size:1.1rem; cursor:pointer;">×</button></td>`;
+    body.appendChild(tr);
+  });
+
+  document.getElementById('empty-msg').style.display = estimate.length ? 'none' : 'block';
+  document.getElementById('count-badge').innerText = estimate.length;
+  const exMva = totalH * hRate; const grand = exMva * 1.25; const days = (totalH / dHours / team).toFixed(1);
+  document.getElementById('totalH').innerText = totalH.toFixed(1); document.getElementById('totalDays').innerText = days;
+  document.getElementById('totalExMva').innerText = Math.round(exMva).toLocaleString('no-NO'); document.getElementById('grandTotal').innerText = Math.round(grand).toLocaleString('no-NO') + ' NOK';
+  document.getElementById('team-val').innerText = team;
+  document.getElementById('p-hours').innerText = totalH.toFixed(1); document.getElementById('p-days').innerText = days; document.getElementById('p-team').innerText = team;
+  document.getElementById('p-exmva').innerText = Math.round(exMva).toLocaleString('no-NO'); document.getElementById('p-grand').innerText = Math.round(grand).toLocaleString('no-NO');
+  saveStorage();
+}
+
+function switchTab(tab, btn) { 
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+  btn.classList.add('active'); 
+  document.getElementById('catalog-sec').classList.toggle('active', tab === 'catalog'); 
+  document.getElementById('estimate-sec').classList.toggle('active', tab === 'estimate'); 
+}
+
+function clearAll() { if (confirm(uiTrans[lang].confirm_clear)) { estimate = []; calculate(); } }
+function exportData() { 
+  const data = localStorage.getItem('pronorm_v2_final'); 
+  const blob = new Blob([data], {type: 'application/json'}); 
+  const a = document.createElement('a'); 
+  a.href = URL.createObjectURL(blob); 
+  a.download = `Kalkyle_${document.getElementById('projectName').value || 'Export'}.json`; 
+  a.click(); 
+}
+function importData(input) { 
+  const r = new FileReader(); 
+  r.onload = (e) => { 
+    localStorage.setItem('pronorm_v2_final', e.target.result); 
+    location.reload(); 
+  }; 
+  r.readAsText(input.files[0]); 
+}
+function preparePrint() { 
+  document.getElementById('p-date').innerText = new Date().toLocaleDateString(); 
+  window.print(); 
+}
+function saveStorage() { 
+  localStorage.setItem('pronorm_v2_final', JSON.stringify({ estimate, rate: document.getElementById('hourlyRate').value, team: document.getElementById('teamSize').value, dHours: document.getElementById('dayHours').value, lang, project: document.getElementById('projectName').value, client: document.getElementById('clientInfo').value, pRenov: document.getElementById('pRenov').value, pSmall: document.getElementById('pSmall').value, pHeight: document.getElementById('pHeight').value, pLogi: document.getElementById('pLogi').value, pCustom: document.getElementById('pCustom').value })); 
+}
+function loadStorage() { 
+  const raw = localStorage.getItem('pronorm_v2_final'); if (!raw) return; 
+  const d = JSON.parse(raw); 
+  estimate = d.estimate || []; 
+  document.getElementById('hourlyRate').value = d.rate || 650; 
+  document.getElementById('teamSize').value = d.team || 1; 
+  document.getElementById('dayHours').value = d.dHours || 7.5; 
+  document.getElementById('projectName').value = d.project || ''; 
+  document.getElementById('clientInfo').value = d.client || ''; 
+  document.getElementById('pRenov').value = d.pRenov || 10; 
+  document.getElementById('pSmall').value = d.pSmall || 20; 
+  document.getElementById('pHeight').value = d.pHeight || 15; 
+  document.getElementById('pLogi').value = d.pLogi || 10; 
+  document.getElementById('pCustom').value = d.pCustom || 0; 
+  lang = d.lang || 'no'; 
+}
+
+<script src="js/pwa.js"></script>
+</body>
+</html>

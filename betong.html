@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Betongkalkulator - ProBuilder</title>
+<meta name="description" content="Beregn nøyaktig betongvolum og armering for ditt prosjekt med ProBuilder betongkalkulator. Enkelt verktøy for fundamenter, gulv og vegger.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/betong.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/betong.html">
+<meta property="og:title" content="Betongkalkulator - ProBuilder">
+<meta property="og:description" content="Beregn nøyaktig betongvolum og armering for ditt prosjekt med ProBuilder betongkalkulator. Enkelt verktøy for fundamenter, gulv og vegger.">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://vigibygg-cmyk.github.io/Calc/betong.html">
+<meta name="twitter:title" content="Betongkalkulator - ProBuilder">
+<meta name="twitter:description" content="Beregn nøyaktig betongvolum og armering for ditt prosjekt med ProBuilder betongkalkulator. Enkelt verktøy for fundamenter, gulv og vegger.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Betongkalkulator - ProBuilder",
+  "description": "Beregn nøyaktig betongvolum og armering for ditt prosjekt med ProBuilder betongkalkulator. Enkelt verktøy for fundamenter, gulv og vegger.",
+  "url": "https://vigibygg-cmyk.github.io/Calc/betong.html",
+  "applicationCategory": "ConstructionTool",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "NOK"
+  }
+}
+</script>
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProBuilder">
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.back-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: #e8f0fe;
+}
+.page-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; color: var(--text); }
+.page-title span { color: var(--primary); }
+
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── TABS ─── */
+.tab-nav {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 960px;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  min-height: 44px;
+}
+.tab-btn:hover {
+  color: var(--text);
+  border-color: #a0aec0;
+  background: var(--surface2);
+}
+.tab-btn.active {
+  background: #ebf8ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ─── MAIN ─── */
+main {
+  position: relative; z-index: 1;
+  max-width: 960px; margin: 0 auto;
+  padding: 16px 16px 60px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.tab-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title, .ct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center; gap: 7px;
+}
+.card-title::after, .ct::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM ─── */
+.form-grid, .fg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.field, .f { display: flex; flex-direction: column; gap: 5px; }
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+input[type="number"], input[type="text"], input[type="date"], select, textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+input::placeholder { color: var(--dim); }
+.hint { font-size: 0.69rem; color: var(--dim); line-height: 1.4; }
+.sp2 { grid-column: span 2; }
+
+/* ─── RADIO SELECTORS ─── */
+.radio-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.radio-opt { position: relative; flex: 1; min-width: 100px; }
+.radio-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.radio-opt label {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600;
+  color: var(--muted); transition: all 0.18s; min-height: 44px; text-align: center;
+}
+.radio-opt input:checked + label {
+  background: #ebf8ff; border-color: var(--primary); color: var(--primary);
+}
+.radio-opt label:hover { border-color: #a0aec0; }
+
+/* ─── RESULT BOXES ─── */
+.result-grid, .rg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.res-box, .rb {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.res-val, .rv {
+  font-family: 'Consolas', monospace;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.res-val.ok, .rv.ok { color: var(--success); }
+.res-val.inf, .rv.inf { color: var(--primary); }
+.res-val.wa, .rv.wa { color: var(--warn); }
+.res-val.ac, .rv.ac { color: var(--accent); }
+.res-lbl, .rl {
+  font-size: 0.67rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* ─── INFO BOXES ─── */
+.ib { padding: 11px 14px; border-radius: var(--radius-sm); font-size: 0.83rem; line-height: 1.6; margin-bottom: 10px; }
+.ib.bl { background: #ebf8ff; border: 1px solid #bee3f8; color: #2b6cb0; }
+.ib.gr { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.ib.ye { background: var(--warn-bg); border: 1px solid #fbd38d; color: var(--warn); }
+.ib.re { background: var(--danger-bg); border: 1px solid #feb2b2; color: var(--danger); }
+
+/* ─── TOGGLE ─── */
+.toggle-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.toggle-wrap { position: relative; display: inline-block; cursor: pointer; width: 42px; height: 24px; }
+.toggle-wrap input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 12px; transition: .2s;
+}
+.toggle-wrap input:checked + .toggle-track { background: var(--primary); border-color: var(--primary); }
+.toggle-thumb {
+  position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px;
+  background: #ffffff; border-radius: 50%; transition: .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-wrap input:checked + .toggle-track .toggle-thumb { transform: translateX(18px); }
+.toggle-label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+
+/* ─── BADGES ─── */
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; font-family: 'Consolas', monospace; }
+.b-b20 { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.b-b30 { background: #ebf8ff; border: 1px solid #bee3f8; color: var(--primary); }
+.b-b35 { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; }
+
+/* ─── TIPS GRID ─── */
+.tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.tip-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; }
+.tip-head { font-size: 0.78rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.tip-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; font-family: inherit;
+  font-size: 0.84rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; min-height: 44px; white-space: nowrap;
+}
+.btn-primary, .bp { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(43,108,176,0.25); }
+.btn-primary:hover, .bp:hover { background: var(--primary-dark); }
+.btn-outline, .bo { background: transparent; border-color: var(--border); color: var(--muted); }
+.btn-outline:hover, .bo:hover { color: var(--text); border-color: #a0aec0; background: var(--surface2); }
+.btn-danger-outline, .bd { background: transparent; border-color: rgba(197,48,48,0.3); color: var(--danger); }
+.btn-danger-outline:hover, .bd:hover { background: var(--danger-bg); border-color: var(--danger); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ─── FOOTER ─── */
+.main-footer {
+  margin-top: 40px; padding: 20px; border-top: 1px solid var(--border);
+  text-align: center; color: var(--dim); font-size: 0.8rem; background: var(--card);
+}
+
+/* ─── PRINT ─── */
+@media print {
+  header, .tab-nav, .no-print, .np { display: none !important; }
+  main { padding: 0; max-width: 100%; }
+  body { background: #fff; color: #111; font-size: 11pt; }
+  .card { background: #fff; border: 1px solid #ccc; box-shadow: none; break-inside: avoid; padding: 12pt; }
+  .tab-panel.hidden { display: flex !important; }
+  .ph { display: block !important; }
+  canvas { border: 1px solid #ccc; }
+  footer.main-footer { display: block !important; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ccc; background: #fff; }
+}
+.ph { display: none; border-bottom: 2px solid #333; padding-bottom: 10pt; margin-bottom: 14pt; }
+.ph h1 { font-size: 16pt; font-weight: 700; }
+.ph .pm { font-size: 9pt; color: #555; margin-top: 4pt; }
+
+.cw { overflow-x: auto; margin: 8px 0; }
+.cw canvas { display: block; border-radius: var(--radius-sm); background: var(--surface2); max-width: 100%; }
+
+.summary-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+
+.hidden { display: none !important; }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  .btn-row .btn { width: 100%; justify-content: center; }
+  .fg { grid-template-columns: 1fr; }
+  .sp2 { grid-column: span 1; }
+  .rg { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="ph" id="ph"><h1 id="pht">ProBuilder — Concrete Calculator</h1><div class="pm" id="phm"></div></div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-left">
+    <a href="index.html" class="back-btn">← <span data-i18n="back"></span></a>
+    <span class="page-title">🪨 <span data-i18n="page_title"></span></span>
+  </div>
+  <div class="header-right">
+    <div class="lang-group">
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── TABS ─── -->
+<div class="tab-nav no-print">
+  <button class="tab-btn active" data-tab="tab-betong" onclick="switchTab('tab-betong',this)">🧱 <span data-i18n="tab_betong"></span></button>
+  <button class="tab-btn" data-tab="tab-flytsparkel" onclick="switchTab('tab-flytsparkel',this)">🪣 <span data-i18n="tab_flytsparkel"></span></button>
+  <button class="tab-btn" data-tab="tab-armering" onclick="switchTab('tab-armering',this)">🔩 <span data-i18n="tab_armering"></span></button>
+  <button class="tab-btn" data-tab="tab-tips" onclick="switchTab('tab-tips',this)">💡 <span data-i18n="tab_tips"></span></button>
+</div>
+
+<main>
+
+  <!-- ══ CONCRETE ══ -->
+  <div id="tab-betong" class="tab-panel">
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_project"></span></div>
+      <div class="fg">
+        <div class="f sp2"><label data-i18n="lbl_proj_name"></label><input type="text" id="proj_name" data-i18n-ph="ph_proj_name"></div>
+        <div class="f"><label data-i18n="lbl_date"></label><input type="date" id="proj_date"></div>
+        <div class="f sp2"><label data-i18n="lbl_notes"></label><textarea id="proj_notes" rows="2" data-i18n-ph="ph_notes"></textarea></div>
+      </div>
+      <div class="btn-row no-print" style="margin-top:14px">
+        <button class="btn bo" onclick="exportJSON()">📤 <span data-i18n="btn_export"></span></button>
+        <label class="btn bo" style="cursor:pointer">📥 <span data-i18n="btn_import"></span><input type="file" accept=".json" onchange="importJSON(event)" style="display:none"></label>
+        <button class="btn bp" onclick="doPrint()">🖨 <span data-i18n="btn_print"></span></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_type"></span></div>
+      <div class="radio-row">
+        <div class="radio-opt"><input type="radio" name="work_type" id="wt_gulv" value="gulv" checked onchange="onWorkTypeChange()"><label for="wt_gulv">🏠 <span data-i18n="wt_gulv"></span></label></div>
+        <div class="radio-opt"><input type="radio" name="work_type" id="wt_fundament" value="fundament" onchange="onWorkTypeChange()"><label for="wt_fundament">🏗️ <span data-i18n="wt_fundament"></span></label></div>
+        <div class="radio-opt"><input type="radio" name="work_type" id="wt_vegg" value="vegg" onchange="onWorkTypeChange()"><label for="wt_vegg">🧱 <span data-i18n="wt_vegg"></span></label></div>
+        <div class="radio-opt"><input type="radio" name="work_type" id="wt_soyle" value="soyle" onchange="onWorkTypeChange()"><label for="wt_soyle">🔵 <span data-i18n="wt_soyle"></span></label></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_dim"></span></div>
+      <div class="fg" id="dim-fields"></div>
+      <div style="margin-top:16px">
+        <div class="toggle-row"><label class="toggle-wrap"><input type="checkbox" id="use_pump" onchange="calc()"><span class="toggle-track"><span class="toggle-thumb"></span></span></label><span class="toggle-label" data-i18n="lbl_pump"></span></div>
+        <div class="toggle-row"><label class="toggle-wrap"><input type="checkbox" id="outdoor" onchange="calc()"><span class="toggle-track"><span class="toggle-thumb"></span></span></label><span class="toggle-label" data-i18n="lbl_outdoor"></span></div>
+      </div>
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn bd" onclick="resetBetong()">↺ <span data-i18n="btn_reset"></span></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_results"></span></div>
+      <div id="betong-empty" class="ib bl">🧮 <span data-i18n="empty_msg"></span></div>
+      <div id="betong-content" class="hidden">
+        <div class="result-grid" id="betong-summary"></div>
+        <div id="betong-class-box" style="margin-bottom:12px; display:flex; align-items:center; gap:10px;"></div>
+        <div class="cw"><canvas id="betong-canvas" height="220" style="width:100%;"></canvas></div>
+        <div id="betong-info-boxes"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FLYTSPARKEL ══ -->
+  <div id="tab-flytsparkel" class="tab-panel hidden">
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_flytsparkel"></span></div>
+      <div class="fg">
+        <div class="f">
+          <label data-i18n="lbl_fs_area"></label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="fs_area_m2" placeholder="20" oninput="syncFS('m2')">
+            <span style="align-self:center; font-weight:700; color:var(--dim)">m²</span>
+          </div>
+        </div>
+        <div class="f"><label data-i18n="lbl_fs_thick"></label><input type="number" id="fs_thick" placeholder="50" oninput="calcFS()"><span class="hint">mm</span></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="radio-row">
+          <div class="radio-opt"><input type="radio" name="fs_type" id="fs_normal" value="normal" checked onchange="calcFS()"><label for="fs_normal"><span data-i18n="fs_normal"></span></label></div>
+          <div class="radio-opt"><input type="radio" name="fs_type" id="fs_varmekabel" value="varmekabel" onchange="calcFS()"><label for="fs_varmekabel">🔥 <span data-i18n="fs_varmekabel"></span></label></div>
+        </div>
+      </div>
+      <div style="margin-top:16px"><button class="btn bd" onclick="resetFS()">↺ <span data-i18n="btn_reset"></span></button></div>
+    </div>
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_results"></span></div>
+      <div id="fs-empty" class="ib bl">🪣 <span data-i18n="empty_msg"></span></div>
+      <div id="fs-content" class="hidden">
+        <div class="result-grid" id="fs-summary"></div>
+        <div class="cw"><canvas id="fs-canvas" height="180" style="width:100%;"></canvas></div>
+        <div id="fs-info"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ARMERING ══ -->
+  <div id="tab-armering" class="tab-panel hidden">
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_armering"></span></div>
+      <div class="radio-row" style="margin-bottom:16px">
+        <div class="radio-opt"><input type="radio" name="arm_type" id="arm_nett" value="nett" checked onchange="onArmTypeChange()"><label for="arm_nett">🔲 <span data-i18n="arm_nett"></span></label></div>
+        <div class="radio-opt"><input type="radio" name="arm_type" id="arm_stav" value="stav" onchange="onArmTypeChange()"><label for="arm_stav">📏 <span data-i18n="arm_stav"></span></label></div>
+      </div>
+      <div id="arm-nett-fields">
+        <div class="fg">
+          <div class="f"><label data-i18n="lbl_arm_area"></label><input type="number" id="arm_area_m2" placeholder="30" oninput="calcArm()"><span class="hint">m²</span></div>
+          <div class="f"><label data-i18n="lbl_nett_w"></label><input type="number" id="nett_w" placeholder="2000" oninput="calcArm()"><span class="hint">mm</span></div>
+          <div class="f"><label data-i18n="lbl_nett_l"></label><input type="number" id="nett_l" placeholder="5000" oninput="calcArm()"><span class="hint">mm</span></div>
+          <div class="f"><label data-i18n="lbl_layers"></label><input type="number" id="arm_layers" value="1" oninput="calcArm()"></div>
+        </div>
+      </div>
+      <div id="arm-stav-fields" class="hidden">
+        <div class="fg">
+          <div class="f"><label data-i18n="lbl_stav_len"></label><input type="number" id="stav_total_m" placeholder="50" oninput="calcArm()"><span class="hint">m</span></div>
+          <div class="f"><label data-i18n="lbl_stav_dia"></label><input type="number" id="stav_dia" placeholder="12" oninput="calcArm()"><span class="hint">Ø mm</span></div>
+          <div class="f"><label data-i18n="lbl_location"></label><select id="stav_location" onchange="calcArm()"><option value="inne">Indoor</option><option value="ute">Outdoor</option></select></div>
+        </div>
+      </div>
+      <div style="margin-top:16px"><button class="btn bd" onclick="resetArm()">↺ <span data-i18n="btn_reset"></span></button></div>
+    </div>
+    <div class="card">
+      <div class="ct"><span data-i18n="sec_results"></span></div>
+      <div id="arm-empty" class="ib bl">🔩 <span data-i18n="empty_msg"></span></div>
+      <div id="arm-content" class="hidden">
+        <div class="summary-strip" id="arm-summary"></div>
+        <div class="cw"><canvas id="arm-canvas" height="220" style="width:100%;"></canvas></div>
+        <div id="arm-info"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TIPS ══ -->
+  <div id="tab-tips" class="tab-panel hidden">
+    <div class="card"><div class="ct"><span data-i18n="sec_tips"></span></div><div class="tips-grid" id="tips-grid"></div></div>
+    <div class="card"><div class="ct"><span data-i18n="sec_classes"></span></div><div id="classes-table"></div></div>
+  </div>
+
+</main>
+
+<footer class="main-footer">
+    © 2026 Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+</footer>
+
+<script>
+const T={
+en:{back:"Back",page_title:"Concrete Calculator",tab_betong:"Concrete",tab_flytsparkel:"Self-levelling",tab_armering:"Reinforcement",tab_tips:"Tips & Classes",sec_project:"Project Info",lbl_proj_name:"Project name",ph_proj_name:"e.g. Garage slab",lbl_date:"Date",lbl_notes:"Notes / Comments",ph_notes:"Any remarks...",btn_export:"Export JSON",btn_import:"Import JSON",btn_print:"Print",sec_type:"Work Type",lbl_work_type:"Select construction type",wt_gulv:"Floor / Slab",wt_fundament:"Foundation",wt_vegg:"Wall",wt_soyle:"Column / Pile",sec_dim:"Dimensions",lbl_extras:"Options",lbl_length:"Length (mm)",lbl_width:"Width (mm)",lbl_height:"Thickness / Height (mm)",lbl_diameter:"Diameter (mm)",hint_length:"Enter in mm, e.g. 5400",hint_width:"Enter in mm",hint_height:"e.g. 100 = 10 cm",hint_diameter:"Inner diameter in mm",lbl_pump:"Concrete pump (+0.3 m³ hose residue)",lbl_outdoor:"Outdoor exposure (selects correct class)",btn_reset:"Reset",sec_results:"Results",empty_msg:"Enter dimensions and press Calculate",res_vol:"Net volume",res_order:"Order (m³)",res_bags:"Bags (25 kg)",res_water:"Water (L)",rec_class:"Recommended class",pump_note:"+0.3 m³ pump residue included",margin_note:"+10% waste margin included",sec_flytsparkel:"Self-levelling Compound",lbl_fs_area:"Area",lbl_fs_thick:"Thickness (mm)",fs_normal:"Standard levelling",fs_varmekabel:"Heating cables (min. 20 mm cover)",res_fs_kg:"Dry mix (kg)",res_fs_bags:"Bags (20 kg)",res_fs_water:"Water (L)",fs_varmekabel_warn:"⚡ TEK17 / NEK 400: Cables must have at least 15–20 mm concrete cover above the cable (not from the bottom). Ensure calculated thickness exceeds cable diameter + 20 mm.",sec_armering:"Reinforcement Calculation",arm_nett:"Mesh / Net",arm_stav:"Rebar / Bars",lbl_arm_area:"Floor area (m²)",lbl_nett_w:"Sheet width (mm)",lbl_nett_l:"Sheet length (mm)",lbl_layers:"Layers",lbl_stav_len:"Total bar length (m)",lbl_stav_dia:"Diameter (mm)",lbl_location:"Location",loc_inne:"Indoors (30 mm cover)",loc_ute:"Outdoors / soil (50 mm cover)",res_arm_nets:"Mesh sheets (pcs)",res_arm_bars:"Bars à 6 m (pcs)",res_arm_overlap:"Splice length (mm)",res_arm_cover:"Required cover (mm)",res_nett_overlap:"Overlap (mm)",floor_base:"Concrete / Subfloor",sec_tips:"Tips & Practical Advice",sec_classes:"Concrete Classes (NS-EN 206)",tip_weight_title:"Concrete weight",tip_weight:"1 m³ fresh concrete weighs approx. <strong>2,400 kg</strong> (2.4 tonnes). Important for load calculations and trailer transport.",tip_winter_title:"Winter concreting",tip_winter:"Below <strong>+5 °C</strong> curing stops. Use <strong>insulating blankets</strong> and curing cables. Order warm concrete from the plant.",tip_slump_title:"Slump (consistency)",tip_slump:"<strong>180–200 mm</strong>: Fluid, easy to pour walls/floors. <strong>90–120 mm</strong>: Stiffer — use for bathroom floors needing a drain slope.",tip_dry_title:"Drying time",tip_dry:"Rule of thumb: <strong>1 cm = 1 week drying</strong>. 100 mm slab → ~10 weeks. Always measure moisture before laying floor coverings.",tip_fuge_title:"Expansion joints",tip_fuge:"Over <strong>30–40 m²</strong>: Cut expansion joints so concrete cracks in controlled locations, not randomly.",tip_fiber_title:"Fibre concrete",tip_fiber:"Alternative to mesh: steel or plastic fibres mixed in at the plant. Saves time, but not suitable for all load-bearing structures.",tip_vibrator_title:"Vibrator",tip_vibrator:"Always use a <strong>poker vibrator</strong> when casting walls and foundations — otherwise air pockets form and weaken the structure.",class_b20:"B20 (C20/25) — Indoors, non-structural. Not frost-resistant.",class_b30:"B30 (C30/37) — Universal. Foundations, retaining walls, outdoor stairs, load-bearing structures.",class_b35:"B35 / M45 — Outdoor, frost-resistant. Terraces, driveways, concrete near the sea. Always with 4–6% air entrainment."},
+no:{back:"Tilbake",page_title:"Betongkalkulator",tab_betong:"Betong",tab_flytsparkel:"Flytsparkel",tab_armering:"Armering",tab_tips:"Tips & klasser",sec_project:"Prosjektinfo",lbl_proj_name:"Prosjektnavn",ph_proj_name:"F.eks. Garasjeplate Olsen",lbl_date:"Dato",lbl_notes:"Notater / Kommentarer",ph_notes:"Eventuelle merknader...",btn_export:"Eksporter JSON",btn_import:"Importer JSON",btn_print:"Skriv ut",sec_type:"Arbeidstype",lbl_work_type:"Velg konstruksjonstype",wt_gulv:"Gulv / Såle",wt_fundament:"Fundament / Grunnmur",wt_vegg:"Vegg",wt_soyle:"Søyle / Pel",sec_dim:"Dimensjoner",lbl_extras:"Tilvalg",lbl_length:"Lengde (mm)",lbl_width:"Bredde (mm)",lbl_height:"Tykkelse / Høyde (mm)",lbl_diameter:"Diameter (mm)",hint_length:"Skriv i mm, f.eks. 5400",hint_width:"Skriv i mm",hint_height:"F.eks. 100 = 10 cm",hint_diameter:"Indre diameter i mm",lbl_pump:"Betongpumpe (+0.3 m³ pumprest)",lbl_outdoor:"Utendørs eksponering (velger riktig klasse)",btn_reset:"Nullstill",sec_results:"Resultater",empty_msg:"Fyll inn dimensjoner og trykk Beregn",res_vol:"Netto volum",res_order:"Bestill (m³)",res_bags:"Sekker (25 kg)",res_water:"Vann (L)",rec_class:"Anbefalt klasse",pump_note:"+0.3 m³ pumprest inkludert",margin_note:"+10% svinnmargin inkludert",sec_flytsparkel:"Flytsparkel / Avrettingsmasse",lbl_fs_area:"Areal",lbl_fs_thick:"Tykkelse (mm)",fs_normal:"Vanlig avrettning",fs_varmekabel:"Varmekabel (min. 20 mm dekke)",res_fs_kg:"Tørrmiks (kg)",res_fs_bags:"Sekker (20 kg)",res_fs_water:"Vann (L)",fs_varmekabel_warn:"⚡ TEK17 / NEK 400: Kablene må ha minst 15–20 mm betongdekke over kabelen (ikke fra bunnen). Påse at beregnet tykkelse overstiger kabeldiameter + 20 mm.",sec_armering:"Armeringsberegning",arm_nett:"Armeringsnett",arm_stav:"Kamstål / Stenger",lbl_arm_area:"Gulvareal (m²)",lbl_nett_w:"Nettbredde (mm)",lbl_nett_l:"Nettlengde (mm)",lbl_layers:"Lag",lbl_stav_len:"Total stenglelengde (m)",lbl_stav_dia:"Diameter (mm)",lbl_location:"Plassering",loc_inne:"Innendørs (30 mm dekke)",loc_ute:"Utendørs / jord (50 mm dekke)",res_arm_nets:"Nett (stk)",res_arm_bars:"Stenger à 6 m (stk)",res_arm_overlap:"Skjøtelengde (mm)",res_arm_cover:"Påkrevd dekke (mm)",res_nett_overlap:"Overlapp (mm)",floor_base:"Betong / Undergulv",sec_tips:"Tips & praktiske råd",sec_classes:"Betongklasser (NS-EN 206)",tip_weight_title:"Betongvekt",tip_weight:"1 m³ fersk betong veier ca. <strong>2 400 kg</strong> (2.4 tonn). Viktig ved lastberegning og transport med henger.",tip_winter_title:"Vinterstøp",tip_winter:"Under <strong>+5 °C</strong> stopper herding. Bruk <strong>Vintermatter</strong> og evt. herdingskabler. Bestill varm betong fra fabrikk.",tip_slump_title:"Synkmål (slump)",tip_slump:"<strong>180–200 mm</strong>: Flytende, lett å støpe vegger/gulv. <strong>90–120 mm</strong>: Stivere — bruk til bad-gulv med fall mot sluk.",tip_dry_title:"Tørketid",tip_dry:"Faustregelen: <strong>1 cm = 1 ukes tørking</strong>. 100 mm plate → ~10 uker. Mål alltid med fuktighetsmåler før legging av gulvbelegg.",tip_fuge_title:"Deformasjonsfuger",tip_fuge:"Over <strong>30–40 m²</strong>: Lag sagsnitt (ekspansjonsfuger) så betongen sprekker kontrollert, ikke tilfeldig.",tip_fiber_title:"Fiberbetong",tip_fiber:"Alternativ til nett: stål- eller plastfiber blandes inn på fabrikk. Sparer tid, men egner seg ikke for alle bærende konstruksjoner.",tip_vibrator_title:"Vibrator",tip_vibrator:"Bruk alltid <strong>stavvibrator</strong> ved støp av vegger og fundament, ellers oppstår luftlommer (kråkereir) som svekker konstruksjonen.",class_b20:"B20 (C20/25) — Innendørs, ikke-bærende. Ikke frostbestandig.",class_b30:"B30 (C30/37) — Universell. Fundament, støttemurer, trapper, utendørs konstruksjoner.",class_b35:"B35 / M45 — Utendørs, frostbestandig. Terrasser, innkjørsler, betong nær sjø. Alltid luftinnblanding 4–6%."},
+lt:{back:"Atgal",page_title:"Betono skaičiuoklė",tab_betong:"Betonas",tab_flytsparkel:"Išsilyginantis",tab_armering:"Armatūra",tab_tips:"Patarimai",sec_project:"Projekto info",lbl_proj_name:"Projekto pavadinimas",ph_proj_name:"Pvz. Garažo plokštė",lbl_date:"Data",lbl_notes:"Pastabos / Komentarai",ph_notes:"Pastabos...",btn_export:"Eksportuoti JSON",btn_import:"Importuoti JSON",btn_print:"Spausdinti",sec_type:"Darbo tipas",lbl_work_type:"Pasirinkite konstrukcijos tipą",wt_gulv:"Grindys / Plokštuma",wt_fundament:"Pamatas",wt_vegg:"Siena",wt_soyle:"Kolona / Pamatas",sec_dim:"Matmenys",lbl_extras:"Papildomai",lbl_length:"Ilgis (mm)",lbl_width:"Plotis (mm)",lbl_height:"Storis / Aukštis (mm)",lbl_diameter:"Skersmuo (mm)",hint_length:"Įveskite mm, pvz. 5400",hint_width:"Įveskite mm",hint_height:"Pvz. 100 = 10 cm",hint_diameter:"Vidinis skersmuo mm",lbl_pump:"Betono siurblys (+0.3 m³ žarnų likutis)",lbl_outdoor:"Lauko aplinka (parenka klasę)",btn_reset:"Išvalyti",sec_results:"Rezultatai",empty_msg:"Įveskite matmenis ir paspauskite Skaičiuoti",res_vol:"Grynasis tūris",res_order:"Užsakyti (m³)",res_bags:"Maišai (25 kg)",res_water:"Vanduo (L)",rec_class:"Rekomenduojama klasė",pump_note:"+0.3 m³ siurblio likutis įskaičiuotas",margin_note:"+10% atsarga įskaičiuota",sec_flytsparkel:"Savaime išsilyginantis mišinys",lbl_fs_area:"Plotas",lbl_fs_thick:"Storis (mm)",fs_normal:"Paprastas išlyginimas",fs_varmekabel:"Šildymo kabeliai (min. 20 mm danga)",res_fs_kg:"Sausas mišinys (kg)",res_fs_bags:"Maišai (20 kg)",res_fs_water:"Vanduo (L)",fs_varmekabel_warn:"⚡ TEK17 / NEK 400: Kabeliai turi būti uždengti mažiausiai 15–20 mm betono sluoksniu nuo kabelio viršaus (ne nuo dugno). Storis turi viršyti kabelio skersmenį + 20 mm.",sec_armering:"Armatūros skaičiavimas",arm_nett:"Armatūros tinklas",arm_stav:"Armatūros strypai",lbl_arm_area:"Grindų plotas (m²)",lbl_nett_w:"Tinklo plotis (mm)",lbl_nett_l:"Tinklo ilgis (mm)",lbl_layers:"Sluoksniai",lbl_stav_len:"Bendras strypų ilgis (m)",lbl_stav_dia:"Skersmuo (mm)",lbl_location:"Vieta",loc_inne:"Viduje (30 mm danga)",loc_ute:"Lauke / žemėje (50 mm danga)",res_arm_nets:"Tinklai (vnt.)",res_arm_bars:"Strypai à 6 m (vnt.)",res_arm_overlap:"Persidengimo ilgis (mm)",res_arm_cover:"Reik. apsauginis sluoksnis (mm)",res_nett_overlap:"Persidengimas (mm)",floor_base:"Betonas / Pagrindas",sec_tips:"Patarimai ir praktiniai sprendimai",sec_classes:"Betono klasės (NS-EN 206)",tip_weight_title:"Betono svoris",tip_weight:"1 m³ šlapio betono sveria apie <strong>2 400 kg</strong> (2.4 tonos). Svarbu vertinant apkrovas ir transportuojant.",tip_winter_title:"Betonavimas žiemą",tip_winter:"Žemiau <strong>+5 °C</strong> kietėjimas sustoja. Naudokite <strong>šiltinamuosius kilimėlius</strong> ir kietėjimo kabelius. Galima užsakyti šiltą betoną.",tip_slump_title:"Slankumas (synkmål)",tip_slump:"<strong>180–200 mm</strong>: Skysta – lengvai liejama. <strong>90–120 mm</strong>: Kietesnė – vonios grindims su nuolydžiu prie sifonės.",tip_dry_title:"Džiūvimo laikas",tip_dry:"Taisyklė: <strong>1 cm = 1 savaitė džiūvimas</strong>. 100 mm plokštė → ~10 savaičių. Prieš klojant grindis matuokite drėgmę.",tip_fuge_title:"Deformacinės siūlės",tip_fuge:"Plotuose virš <strong>30–40 m²</strong>: darykite pjūvius, kad betonas trūktų tiksliai.",tip_fiber_title:"Pluoštinis betonas",tip_fiber:"Alternatyva tinklams: plieno ar plastiko pluoštas maišomas gamykloje. Taupo laiką, bet netinka visoms laikančiosioms konstrukcijoms.",tip_vibrator_title:"Vibratorius",tip_vibrator:"Visada naudokite <strong>giluminį vibratorių</strong> pilant sienas ir pamatus – kitaip lieka oro kišenės.",class_b20:"B20 (C20/25) — Vidaus, nelaikančios. Neatsparus šalčiui.",class_b30:"B30 (C30/37) — Universali. Pamatai, atraminės sienos, lauko laiptai.",class_b35:"B35 / M45 — Lauko, atsparus šalčiui. Terasos, įvažiavimai, prie jūros. Su oro įmaišymu 4–6%."},
+pl:{back:"Wróć",page_title:"Kalkulator betonu",tab_betong:"Beton",tab_flytsparkel:"Samopoziomujący",tab_armering:"Zbrojenie",tab_tips:"Porady i klasy",sec_project:"Info o projekcie",lbl_proj_name:"Nazwa projektu",ph_proj_name:"np. Płyta garażowa",lbl_date:"Data",lbl_notes:"Notatki / Komentarze",ph_notes:"Ewentualne uwagi...",btn_export:"Eksportuj JSON",btn_import:"Importuj JSON",btn_print:"Drukuj",sec_type:"Rodzaj pracy",lbl_work_type:"Wybierz typ konstrukcji",wt_gulv:"Podłoga / Płyta",wt_fundament:"Fundament",wt_vegg:"Ściana",wt_soyle:"Słup / Pal",sec_dim:"Wymiary",lbl_extras:"Opcje",lbl_length:"Długość (mm)",lbl_width:"Szerokość (mm)",lbl_height:"Grubość / Wysokość (mm)",lbl_diameter:"Średnica (mm)",hint_length:"Podaj w mm, np. 5400",hint_width:"Podaj w mm",hint_height:"np. 100 = 10 cm",hint_diameter:"Wewnętrzna średnica w mm",lbl_pump:"Pompa do betonu (+0.3 m³ reszta w wężu)",lbl_outdoor:"Ekspozycja zewnętrzna (dobiera klasę)",btn_reset:"Resetuj",sec_results:"Wyniki",empty_msg:"Wpisz wymiary i kliknij Oblicz",res_vol:"Objętość netto",res_order:"Zamów (m³)",res_bags:"Worki (25 kg)",res_water:"Woda (L)",rec_class:"Zalecana klasa",pump_note:"+0.3 m³ reszty pompy wliczone",margin_note:"+10% margines strat wliczony",sec_flytsparkel:"Masa samopoziomująca",lbl_fs_area:"Powierzchnia",lbl_fs_thick:"Grubość (mm)",fs_normal:"Standardowe wyrównanie",fs_varmekabel:"Kable grzewcze (min. 20 mm przykrycia)",res_fs_kg:"Sucha mieszanka (kg)",res_fs_bags:"Worki (20 kg)",res_fs_water:"Woda (L)",fs_varmekabel_warn:"⚡ TEK17 / NEK 400: Kable muszą mieć co najmniej 15–20 mm przykrycia betonem ponad kablem (nie od dołu). Upewnij się, że obliczona grubość przekracza średnicę kabla + 20 mm.",sec_armering:"Obliczanie zbrojenia",arm_nett:"Siatka zbrojeniowa",arm_stav:"Pręty zbrojeniowe",lbl_arm_area:"Powierzchnia podłogi (m²)",lbl_nett_w:"Szerokość siatki (mm)",lbl_nett_l:"Długość siatki (mm)",lbl_layers:"Warstwy",lbl_stav_len:"Całkowita długość prętów (m)",lbl_stav_dia:"Średnica (mm)",lbl_location:"Lokalizacja",loc_inne:"Wewnątrz (30 mm przykrycia)",loc_ute:"Na zewnątrz / grunt (50 mm przykrycia)",res_arm_nets:"Siatki (szt.)",res_arm_bars:"Pręty à 6 m (szt.)",res_arm_overlap:"Długość zakładu (mm)",res_arm_cover:"Wymagane przykrycie (mm)",res_nett_overlap:"Zakład (mm)",floor_base:"Beton / Podłoże",sec_tips:"Porady praktyczne",sec_classes:"Klasy betonu (NS-EN 206)",tip_weight_title:"Ciężar betonu",tip_weight:"1 m³ świeżego betonu waży ok. <strong>2 400 kg</strong> (2.4 tony). Ważne przy obliczeniach obciążeń i transporcie przyczepą.",tip_winter_title:"Betonowanie zimą",tip_winter:"Poniżej <strong>+5 °C</strong> twardnienie zatrzymuje się. Używaj <strong>mat izolacyjnych</strong> i kabli grzewczych. Zamawiaj ciepły beton z wytwórni.",tip_slump_title:"Opad stożka",tip_slump:"<strong>180–200 mm</strong>: Płynny, łatwy do wylewania. <strong>90–120 mm</strong>: Sztywniejszy — do łazienek z odpływem podłogowym.",tip_dry_title:"Czas schnięcia",tip_dry:"Zasada: <strong>1 cm = 1 tydzień schnięcia</strong>. Płyta 100 mm → ~10 tygodni. Zawsze mierz wilgotność przed układaniem posadzek.",tip_fuge_title:"Szczeliny dylatacyjne",tip_fuge:"Powyżej <strong>30–40 m²</strong>: Wykonaj nacięcia dylatacyjne, aby beton pękał w kontrolowanych miejscach.",tip_fiber_title:"Beton włóknisty",tip_fiber:"Alternatywa dla siatek: włókna stalowe lub plastikowe mieszane w wytwórni. Oszczędza czas, ale nie do wszystkich konstrukcji nośnych.",tip_vibrator_title:"Wibrator",tip_vibrator:"Zawsze używaj <strong>wibratora wgłębnego</strong> przy ścianach i fundamentach — inaczej tworzą się kieszenie powietrzne.",class_b20:"B20 (C20/25) — Wewnętrzny, nienośny. Nieodporny na mróz.",class_b30:"B30 (C30/37) — Uniwersalny. Fundamenty, mury oporowe, schody zewnętrzne.",class_b35:"B35 / M45 — Zewnętrzny, mrozoodporny. Tarasy, podjazdy, beton przy morzu. Zawsze napowietrzenie 4–6%."}
+};
+
+let lang=localStorage.getItem('pb_lang')||'en';
+function n(v,d=2){return v.toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:d})}
+
+function setLang(l){
+  lang=l; localStorage.setItem('pb_lang',l);
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  applyLang(); buildDimFields(); buildTips(); buildClassTable(); calc(); calcFS(); calcArm();
+}
+function applyLang(){
+  const d=T[lang];
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(d[k]!==undefined)el.textContent=d[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(d[k]!==undefined)el.placeholder=d[k];});
+}
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.remove('hidden'); btn.classList.add('active');
+}
+function getWT(){return document.querySelector('input[name="work_type"]:checked')?.value||'gulv';}
+
+function buildDimFields(){
+  const d=T[lang], wt=getWT(), c=document.getElementById('dim-fields');
+  let h='';
+  if(wt==='gulv'||wt==='fundament'){
+    h=`<div class="f"><label>${d.lbl_length}</label><input type="number" id="dim_l" placeholder="5400" oninput="calc()"><span class="hint">${d.hint_length}</span></div>
+       <div class="f"><label>${d.lbl_width}</label><input type="number" id="dim_w" placeholder="3000" oninput="calc()"><span class="hint">${d.hint_width}</span></div>
+       <div class="f"><label>${d.lbl_height}</label><input type="number" id="dim_h" placeholder="100" oninput="calc()"><span class="hint">${d.hint_height}</span></div>`;
+  }else if(wt==='vegg'){
+    h=`<div class="f"><label>${d.lbl_length}</label><input type="number" id="dim_l" placeholder="6000" oninput="calc()"><span class="hint">${d.hint_length}</span></div>
+       <div class="f"><label>${d.lbl_height}</label><input type="number" id="dim_h_wall" placeholder="2400" oninput="calc()"><span class="hint">${d.hint_height}</span></div>
+       <div class="f"><label>${d.lbl_width}</label><input type="number" id="dim_w" placeholder="200" oninput="calc()"><span class="hint">${d.hint_width}</span></div>`;
+  }else{
+    h=`<div class="f"><label>${d.lbl_diameter}</label><input type="number" id="dim_dia" placeholder="300" oninput="calc()"><span class="hint">${d.hint_diameter}</span></div>
+       <div class="f"><label>${d.lbl_height}</label><input type="number" id="dim_h_col" placeholder="3000" oninput="calc()"><span class="hint">${d.hint_height}</span></div>`;
+  }
+  c.innerHTML=h;
+}
+function onWorkTypeChange(){ buildDimFields(); calc(); saveState(); }
+
+function calc(){
+  const d=T[lang], wt=getWT();
+  const pump=document.getElementById('use_pump').checked;
+  const outdoor=document.getElementById('outdoor').checked;
+  let vmm3=0, dims={};
+  if(wt==='gulv'||wt==='fundament'){
+    const l=parseFloat(document.getElementById('dim_l')?.value)||0, w=parseFloat(document.getElementById('dim_w')?.value)||0, h=parseFloat(document.getElementById('dim_h')?.value)||0;
+    vmm3=l*w*h; dims={l,w,h};
+  }else if(wt==='vegg'){
+    const l=parseFloat(document.getElementById('dim_l')?.value)||0, hw=parseFloat(document.getElementById('dim_h_wall')?.value)||0, w=parseFloat(document.getElementById('dim_w')?.value)||0;
+    vmm3=l*hw*w; dims={l,h:hw,w};
+  }else{
+    const dia=parseFloat(document.getElementById('dim_dia')?.value)||0, hc=parseFloat(document.getElementById('dim_h_col')?.value)||0;
+    vmm3=Math.PI*(dia/2)*(dia/2)*hc; dims={dia,h:hc};
+  }
+  if(vmm3<=0){document.getElementById('betong-empty').style.display='block';document.getElementById('betong-content').classList.add('hidden');return;}
+  const vm3=vmm3/1e9;
+  const ord=vm3*1.10+(pump?0.3:0);
+  const bags=Math.ceil(vm3*80);
+  const water=Math.round(bags*2.75);
+  let cls,badge;
+  if(outdoor){cls='B35 / M45';badge='b-b35';}
+  else if(wt==='fundament'||wt==='vegg'){cls='B30';badge='b-b30';}
+  else{cls='B20';badge='b-b20';}
+  document.getElementById('betong-summary').innerHTML=`
+    <div class="rb"><div class="rv inf">${n(vm3,3)}</div><div class="rl">${d.res_vol} (m³)</div></div>
+    <div class="rb"><div class="rv ok">${n(ord,2)}</div><div class="rl">${d.res_order}</div></div>
+    <div class="rb"><div class="rv ac">${bags}</div><div class="rl">${d.res_bags}</div></div>
+    <div class="rb"><div class="rv">${water}</div><div class="rl">${d.res_water}</div></div>`;
+  document.getElementById('betong-class-box').innerHTML=`<span class="rl">${d.rec_class}:</span><span class="badge ${badge}">${cls}</span>`;
+  document.getElementById('betong-info-boxes').innerHTML=`
+    <div class="ib bl">ℹ️ ${d.margin_note}</div>
+    ${pump?`<div class="ib ye">🚰 ${d.pump_note}</div>`:''}`;
+  document.getElementById('betong-empty').style.display='none';
+  document.getElementById('betong-content').classList.remove('hidden');
+  drawBetong(wt,dims); saveState();
+}
+
+function syncFS(from){ calcFS(); }
+function calcFS(){
+  const d=T[lang];
+  const am2=parseFloat(document.getElementById('fs_area_m2').value)||0;
+  const thick=parseFloat(document.getElementById('fs_thick').value)||0;
+  const isK=document.querySelector('input[name="fs_type"]:checked')?.value==='varmekabel';
+  if(am2<=0||thick<=0){document.getElementById('fs-empty').style.display='block';document.getElementById('fs-content').classList.add('hidden');return;}
+  const kg=am2*thick*1.7, bags=Math.ceil(kg/20), water=Math.round(bags*3.4);
+  document.getElementById('fs-summary').innerHTML=`
+    <div class="rb"><div class="rv">${n(am2,1)}</div><div class="rl">${d.lbl_fs_area}</div></div>
+    <div class="rb"><div class="rv ok">${Math.round(kg)}</div><div class="rl">${d.res_fs_kg}</div></div>
+    <div class="rb"><div class="rv ac">${bags}</div><div class="rl">${d.res_fs_bags}</div></div>
+    <div class="rb"><div class="rv">${water}</div><div class="rl">${d.res_fs_water}</div></div>`;
+  document.getElementById('fs-info').innerHTML=`${isK?`<div class="ib re">${d.fs_varmekabel_warn}</div>`:''}`;
+  document.getElementById('fs-empty').style.display='none';
+  document.getElementById('fs-content').classList.remove('hidden');
+  drawFS(am2,thick,isK); saveState();
+}
+
+function onArmTypeChange(){
+  const isN=document.querySelector('input[name="arm_type"]:checked')?.value==='nett';
+  document.getElementById('arm-nett-fields').classList.toggle('hidden',!isN);
+  document.getElementById('arm-stav-fields').classList.toggle('hidden',isN);
+  calcArm();
+}
+function calcArm(){
+  const d=T[lang];
+  const isN=document.querySelector('input[name="arm_type"]:checked')?.value==='nett';
+  if(isN){
+    const am2=parseFloat(document.getElementById('arm_area_m2').value)||0;
+    const nw=parseFloat(document.getElementById('nett_w').value)||2000;
+    const nl=parseFloat(document.getElementById('nett_l').value)||5000;
+    const lay=parseInt(document.getElementById('arm_layers').value)||1;
+    if(am2<=0){document.getElementById('arm-empty').style.display='block';document.getElementById('arm-content').classList.add('hidden');return;}
+    const sheetNomM2=(nw/1000)*(nl/1000);
+    const nets=Math.ceil((am2/(sheetNomM2*0.85))*lay);
+    document.getElementById('arm-summary').innerHTML=`
+      <div class="rb"><div class="rv">${n(am2,1)}</div><div class="rl">m²</div></div>
+      <div class="rb"><div class="rv ok">${nets}</div><div class="rl">${d.res_arm_nets}</div></div>
+      <div class="rb"><div class="rv ac">${Math.round(Math.min(nw,nl)*0.15)}</div><div class="rl">${d.res_arm_overlap}</div></div>`;
+    drawArm(true,{nw,nl,am2,nets,overlapMm:Math.round(Math.min(nw,nl)*0.15),lay});
+  }else{
+    const lm=parseFloat(document.getElementById('stav_total_m').value)||0;
+    const dia=parseInt(document.getElementById('stav_dia').value)||12;
+    const loc=document.getElementById('stav_location').value;
+    if(lm<=0){document.getElementById('arm-empty').style.display='block';document.getElementById('arm-content').classList.add('hidden');return;}
+    const bars=Math.ceil(lm/6), overlap=dia*50, cover=loc==='ute'?50:30;
+    document.getElementById('arm-summary').innerHTML=`
+      <div class="rb"><div class="rv">${n(lm,1)}</div><div class="rl">m</div></div>
+      <div class="rb"><div class="rv ok">${bars}</div><div class="rl">${d.res_arm_bars}</div></div>
+      <div class="rb"><div class="rv wa">${overlap}</div><div class="rl">${d.res_arm_overlap}</div></div>
+      <div class="rb"><div class="rv ac">${cover}</div><div class="rl">${d.res_arm_cover}</div></div>`;
+    drawArm(false,null,{lM:lm,dia,overlap,cover,bars});
+  }
+  document.getElementById('arm-empty').style.display='none';
+  document.getElementById('arm-content').classList.remove('hidden');
+  saveState();
+}
+
+function buildTips(){
+  const d=T[lang];
+  const tips=[
+    ['tip_weight_title','tip_weight','⚖️'],
+    ['tip_winter_title','tip_winter','❄️'],
+    ['tip_slump_title','tip_slump','🌊'],
+    ['tip_dry_title','tip_dry','⏱️'],
+    ['tip_fuge_title','tip_fuge','✂️'],
+    ['tip_fiber_title','tip_fiber','🧶'],
+    ['tip_vibrator_title','tip_vibrator','⚡']
+  ];
+  document.getElementById('tips-grid').innerHTML=tips.map(([tk,ck,ico])=>
+    `<div class="tip-card"><div class="tip-head">${ico} ${d[tk]}</div><p>${d[ck]}</p></div>`
+  ).join('');
+}
+function buildClassTable(){
+  const d=T[lang];
+  document.getElementById('classes-table').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div class="ib gr">🟢 <strong>B20:</strong> ${d.class_b20}</div>
+      <div class="ib bl">🔵 <strong>B30:</strong> ${d.class_b30}</div>
+      <div class="ib" style="background:#faf5ff;border:1px solid #d6bcfa;color:#553c9a;">🟣 <strong>B35/M45:</strong> ${d.class_b35}</div>
+    </div>`;
+}
+
+function resetBetong(){ ['dim_l','dim_w','dim_h','dim_h_wall','dim_h_col','dim_dia'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); calc(); }
+function resetFS(){ document.getElementById('fs_area_m2').value=''; document.getElementById('fs_thick').value=''; calcFS(); }
+function resetArm(){ ['arm_area_m2','nett_w','nett_l','arm_layers','stav_total_m','stav_dia'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); calcArm(); }
+
+const SK='pb_betong_final';
+function gatherState(){
+  const s={lang,wt:getWT()};
+  ['proj_name','proj_date','proj_notes','dim_l','dim_w','dim_h','dim_h_wall','dim_h_col','dim_dia','fs_area_m2','fs_thick','arm_area_m2','nett_w','nett_l','arm_layers','stav_total_m','stav_dia'].forEach(id=>{const e=document.getElementById(id);if(e)s[id]=e.value;});
+  ['use_pump','outdoor'].forEach(id=>{const e=document.getElementById(id);if(e)s[id]=e.checked;});
+  return s;
+}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify(gatherState()));}catch(e){}}
+function loadState(){try{const raw=localStorage.getItem(SK);if(!raw)return;const s=JSON.parse(raw);if(s.lang)lang=s.lang;if(s.wt){const r=document.querySelector(`input[name="work_type"][value="${s.wt}"]`);if(r)r.checked=true;}Object.entries(s).forEach(([k,v])=>{const e=document.getElementById(k);if(e){if(e.type==='checkbox')e.checked=v;else e.value=v;}});}catch(e){}}
+
+/* ─── CANVAS DRAWING ─── */
+function setupCanvas(id, w, h){
+  const c=document.getElementById(id); if(!c)return null;
+  const dpr=window.devicePixelRatio||1; c.width=w*dpr; c.height=h*dpr;
+  c.style.width=w+'px'; c.style.height=h+'px';
+  const ctx=c.getContext('2d'); ctx.scale(dpr,dpr); return ctx;
+}
+function cvColors(){
+  return{
+    bg:'#f0f4f8', bg2:'#e8eef5', border:'#e2e8f0',
+    text:'#1a202c', muted:'#718096', dim:'#a0aec0',
+    primary:'#2b6cb0', accent:'#dd6b20', success:'#276749',
+    warn:'#744210', danger:'#c53030', purple:'#553c9a',
+    concrete:'rgba(160,170,190,0.55)', steel:'rgba(43,108,176,0.7)',
+    ground:'rgba(100,80,50,0.35)', cable:'rgba(180,100,20,0.9)'
+  };
+}
+function dimLine(ctx,x1,y1,x2,y2,label,C,side='top'){
+  const c=C||{muted:'#718096',text:'#1a202c'};
+  ctx.save();
+  ctx.strokeStyle=c.muted; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  const isH=Math.abs(y2-y1)<2;
+  if(isH){
+    ctx.beginPath();ctx.moveTo(x1,y1-5);ctx.lineTo(x1,y1+5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x2,y2-5);ctx.lineTo(x2,y2+5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  }else{
+    ctx.beginPath();ctx.moveTo(x1-5,y1);ctx.lineTo(x1+5,y1);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x2-5,y2);ctx.lineTo(x2+5,y2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.fillStyle=c.text; ctx.font='bold 11px Segoe UI,sans-serif'; ctx.textAlign='center';
+  if(isH) ctx.fillText(label,(x1+x2)/2,side==='top'?y1-10:y1+18);
+  else ctx.fillText(label,x1-30,(y1+y2)/2+4);
+  ctx.restore();
+}
+
+/* ── BETONG CANVAS ── */
+function drawBetong(wt, dims){
+  const W=600, H=220;
+  const ctx=setupCanvas('betong-canvas',W,H); if(!ctx)return;
+  const C=cvColors(), d=T[lang];
+  ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,H);
+  const pad=60, top=40;
+
+  if(wt==='gulv'||wt==='fundament'){
+    const {l,w,h}=dims;
+    const drawW=W-pad*2, drawH=Math.max(30,Math.min(100,h/l*drawW));
+    const x=pad, y=top+(H-top-pad-drawH)/2;
+    // ground hatch
+    ctx.fillStyle='rgba(140,110,70,0.18)'; ctx.fillRect(x,y+drawH,drawW,24);
+    for(let i=0;i<drawW;i+=12){
+      ctx.strokeStyle='rgba(140,110,70,0.4)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x+i,y+drawH);ctx.lineTo(x+i-12,y+drawH+24);ctx.stroke();
+    }
+    // concrete slab
+    ctx.fillStyle=C.concrete; ctx.strokeStyle=C.primary; ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x,y,drawW,drawH,4);ctx.fill();ctx.stroke();
+    ctx.fillStyle=C.text; ctx.font='bold 13px Segoe UI,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(wt==='fundament'?'FUNDAMENT':'GULV/SÅLE',x+drawW/2,y+drawH/2+5);
+    dimLine(ctx,x,y-18,x+drawW,y-18,`${n(l/1000,2)} m`,C,'top');
+    dimLine(ctx,x+drawW+10,y,x+drawW+10,y+drawH,`${n(h,0)} mm`,C,'right');
+    if(wt==='fundament'){
+      ctx.fillStyle=C.warn; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='left';
+      ctx.fillText('⟵ 50mm dekke/danga',x+4,y+drawH-6);
+    }
+
+  }else if(wt==='vegg'){
+    const {l,h,w}=dims;
+    const drawW=W-pad*2, drawH=Math.min(120,Math.max(60,h/l*drawW));
+    const x=pad, y=top+(H-top-pad-drawH)/2;
+    ctx.fillStyle='rgba(140,110,70,0.18)'; ctx.fillRect(x-10,y+drawH,drawW+20,16);
+    ctx.fillStyle=C.concrete; ctx.strokeStyle=C.primary; ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(x,y,drawW,drawH,3);ctx.fill();ctx.stroke();
+    const faceW=Math.max(14,Math.min(40,w/l*drawW));
+    ctx.fillStyle='rgba(43,108,176,0.2)'; ctx.strokeStyle=C.primary; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.rect(x,y,faceW,drawH);ctx.fill();ctx.stroke();
+    ctx.fillStyle=C.text; ctx.font='bold 12px Segoe UI,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('VEGG',x+drawW/2,y+drawH/2+5);
+    dimLine(ctx,x,y-18,x+drawW,y-18,`${n(l/1000,2)} m`,C,'top');
+    dimLine(ctx,x+drawW+10,y,x+drawW+10,y+drawH,`${n(h/1000,2)} m`,C,'right');
+    ctx.fillStyle=C.primary; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(`${n(w,0)}mm`,x+faceW/2,y+drawH+14);
+
+  }else{ // soyle/column
+    const {dia,h}=dims;
+    const cxC=W/2, cyC=H/2-10;
+    const rDraw=Math.min(70,Math.max(30,(dia/2)/h*180));
+    ctx.fillStyle='rgba(140,110,70,0.25)'; ctx.fillRect(cxC-rDraw-20,cyC+rDraw,rDraw*2+40,20);
+    ctx.fillStyle=C.concrete; ctx.strokeStyle=C.primary; ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.ellipse(cxC,cyC-rDraw*0.3,rDraw,rDraw*0.25,0,Math.PI,0);
+    ctx.lineTo(cxC+rDraw,cyC+rDraw);
+    ctx.ellipse(cxC,cyC+rDraw,rDraw,rDraw*0.25,0,0,Math.PI);
+    ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='rgba(180,190,210,0.6)'; ctx.strokeStyle=C.primary;
+    ctx.beginPath();ctx.ellipse(cxC,cyC-rDraw*0.3,rDraw,rDraw*0.25,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle=C.text; ctx.font='bold 12px Segoe UI,sans-serif'; ctx.textAlign='center';
+    ctx.fillText('SØYLE/KOLONA',cxC,cyC+rDraw*0.6);
+    ctx.fillStyle=C.muted; ctx.font='11px Consolas,monospace'; ctx.textAlign='left';
+    ctx.fillText(`Ø ${n(dia,0)} mm`,cxC+rDraw+8,cyC-rDraw*0.3);
+    ctx.fillText(`H ${n(h/1000,2)} m`,cxC+rDraw+8,cyC+rDraw*0.4);
+  }
+  ctx.fillStyle=C.dim; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='left';
+  ctx.fillText(d.sec_dim||'SECTION',8,14);
+}
+
+/* ── FLYTSPARKEL CANVAS ── */
+function drawFS(am2, thickMm, isKabel){
+  const W=600, H=180;
+  const ctx=setupCanvas('fs-canvas',W,H); if(!ctx)return;
+  const C=cvColors(), d=T[lang];
+  ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,H);
+  const pad=60, floorY=H-50, structH=28;
+  const drawW=W-pad*2, x=pad;
+
+  // structural floor
+  ctx.fillStyle='rgba(140,110,70,0.25)'; ctx.strokeStyle=C.border; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.rect(x,floorY,drawW,structH);ctx.fill();ctx.stroke();
+  ctx.fillStyle=C.muted; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='center';
+  ctx.fillText(d.floor_base||'Betong/Undergulv',x+drawW/2,floorY+structH/2+4);
+
+  const layerH=Math.min(80,Math.max(16,thickMm/200*80));
+  const layerY=floorY-layerH;
+
+  if(isKabel){
+    const cableY=layerY+layerH*0.55;
+    const cableSpacing=24;
+    for(let cx=x+cableSpacing;cx<x+drawW-cableSpacing/2;cx+=cableSpacing){
+      ctx.strokeStyle=C.cable; ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(cx,cableY,5,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle=C.cable;ctx.beginPath();ctx.arc(cx,cableY,2,0,Math.PI*2);ctx.fill();
+    }
+    ctx.fillStyle=C.accent; ctx.font='bold 10px Segoe UI,sans-serif'; ctx.textAlign='left';
+    ctx.fillText('⚡ '+(d.fs_varmekabel||'Varmekabel'),x+4,cableY-8);
+    const topCoverY=layerY+2, botCoverY=cableY-5;
+    ctx.strokeStyle=C.accent; ctx.lineWidth=1; ctx.setLineDash([2,2]);
+    ctx.beginPath();ctx.moveTo(x+drawW-12,topCoverY);ctx.lineTo(x+drawW-12,botCoverY);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=C.accent; ctx.font='10px Consolas,monospace'; ctx.textAlign='right';
+    ctx.fillText('≥20mm',x+drawW-16,(topCoverY+botCoverY)/2+4);
+  }
+
+  ctx.fillStyle='rgba(43,108,176,0.18)'; ctx.strokeStyle=C.primary; ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(x,layerY,drawW,layerH,3);ctx.fill();ctx.stroke();
+  ctx.fillStyle=C.text; ctx.font='bold 12px Segoe UI,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('FLYTSPARKEL',x+drawW/2,layerY+layerH/2+5);
+
+  dimLine(ctx,x-12,layerY,x-12,floorY,`${n(thickMm,0)}mm`,C,'left');
+  ctx.fillStyle=C.success; ctx.font='11px Consolas,monospace'; ctx.textAlign='right';
+  ctx.fillText(`${n(am2,1)} m²`,x+drawW-4,layerY-8);
+  ctx.fillStyle=C.dim; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='left';
+  ctx.fillText(d.sec_flytsparkel||'CROSS SECTION',8,14);
+}
+
+/* ── ARMERING CANVAS ── */
+function drawArm(isNett, nettData, stavData){
+  const W=600, H=220;
+  const ctx=setupCanvas('arm-canvas',W,H); if(!ctx)return;
+  const C=cvColors(), d=T[lang];
+  ctx.fillStyle=C.bg; ctx.fillRect(0,0,W,H);
+
+  if(isNett){
+    const {nw,nl,am2,nets,overlapMm,lay}=nettData;
+    const pad=50, fw=W-pad*2, fh=H-80;
+    const fx=pad, fy=38;
+
+    // floor area
+    ctx.fillStyle='rgba(200,210,225,0.5)'; ctx.strokeStyle=C.border; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(fx,fy,fw,fh,4);ctx.fill();ctx.stroke();
+
+    const sheetAspect=nl>0&&nw>0?nl/nw:2.5;
+    const sheetW=Math.min(fw*0.35,80);
+    const sheetH=sheetW*sheetAspect;
+    const overlapPx=Math.min(10,overlapMm/nw*sheetW);
+
+    let drawn=0;
+    for(let row=0;row<4&&drawn<Math.min(nets*lay,12);row++){
+      for(let col=0;col<5&&drawn<Math.min(nets*lay,12);col++){
+        const sx=fx+4+col*(sheetW-overlapPx);
+        const sy=fy+4+row*(sheetH-overlapPx);
+        if(sx+sheetW>fx+fw-4||sy+sheetH>fy+fh-4)continue;
+        ctx.fillStyle=`rgba(43,108,176,${drawn<nets?'0.22':'0.08'})`;
+        ctx.strokeStyle=drawn<nets?C.primary:'rgba(43,108,176,0.25)';
+        ctx.lineWidth=drawn<nets?1.5:1;
+        ctx.beginPath();ctx.rect(sx,sy,sheetW,sheetH);ctx.fill();ctx.stroke();
+        ctx.strokeStyle=`rgba(43,108,176,${drawn<nets?'0.35':'0.15'})`;
+        ctx.lineWidth=0.5;
+        for(let gi=4;gi<sheetW;gi+=sheetW/5){ctx.beginPath();ctx.moveTo(sx+gi,sy);ctx.lineTo(sx+gi,sy+sheetH);ctx.stroke();}
+        for(let gi=4;gi<sheetH;gi+=sheetH/5){ctx.beginPath();ctx.moveTo(sx,sy+gi);ctx.lineTo(sx+sheetW,sy+gi);ctx.stroke();}
+        ctx.fillStyle=C.primary; ctx.font='bold 9px Consolas,monospace'; ctx.textAlign='center';
+        ctx.fillText(drawn+1,sx+sheetW/2,sy+sheetH/2+3);
+        drawn++;
+      }
+    }
+    if(nets>drawn){
+      ctx.fillStyle=C.muted; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='center';
+      ctx.fillText(`+${nets-drawn} ${d.res_arm_nets||'stk'}...`,fx+fw/2,fy+fh-8);
+    }
+    if(overlapPx>2){
+      ctx.fillStyle='rgba(116,66,16,0.2)'; ctx.strokeStyle=C.accent; ctx.lineWidth=1; ctx.setLineDash([3,2]);
+      ctx.beginPath();ctx.rect(fx+4+sheetW-overlapPx,fy+4,overlapPx,sheetH);ctx.fill();ctx.stroke();ctx.setLineDash([]);
+    }
+    ctx.fillStyle=C.text; ctx.font='bold 11px Segoe UI,sans-serif'; ctx.textAlign='left';
+    ctx.fillText(`${nets} stk × ${lay} lag`,fx,fy+fh+18);
+    ctx.fillStyle=C.muted; ctx.font='10px Consolas,monospace'; ctx.textAlign='right';
+    ctx.fillText(`${n(nw,0)}×${n(nl,0)} mm`,fx+fw,fy+fh+18);
+    ctx.fillStyle=C.accent; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='right';
+    ctx.fillText(`${d.res_nett_overlap||'Overlap'}: ${overlapMm} mm`,fx+fw,fy-6);
+    ctx.fillStyle=C.dim; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='left';
+    ctx.fillText(d.arm_nett||'MESH — TOP VIEW',8,14);
+
+  }else{
+    const {lM,dia,overlap,cover,bars}=stavData;
+    const midY=H/2, pad=60;
+    const barH=Math.max(6,Math.min(18,dia/16*18));
+    const blockW=W-pad*2, bx=pad, by=midY-50;
+
+    // concrete block
+    ctx.fillStyle=C.concrete; ctx.strokeStyle=C.border; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(bx,by,blockW,90,6);ctx.fill();ctx.stroke();
+    ctx.fillStyle=C.muted; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='left';
+    ctx.fillText('BETONG',bx+6,by+14);
+
+    // cover zones
+    ctx.fillStyle='rgba(116,66,16,0.08)'; ctx.strokeStyle='rgba(116,66,16,0.3)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.rect(bx,by,blockW,cover/dia*barH*2.5+4);ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.rect(bx,by+90-(cover/dia*barH*2.5+4),blockW,cover/dia*barH*2.5+4);ctx.fill();ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=C.warn; ctx.font='9px Consolas,monospace'; ctx.textAlign='left';
+    ctx.fillText(`${cover}mm`,bx+3,by+cover/dia*barH*2.5+14);
+
+    const bar1x=bx+10, bar2x=bx+blockW/2-10;
+    const overlapPx=Math.min(blockW*0.35,overlap/6000*blockW*2);
+    const barY=midY-barH/2;
+
+    // bar 1
+    ctx.fillStyle=C.steel; ctx.strokeStyle=C.primary; ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(bar1x,barY,blockW/2+overlapPx/2,barH,barH/2);ctx.fill();ctx.stroke();
+    // bar 2
+    ctx.beginPath();ctx.roundRect(bx+blockW/2-overlapPx/2,barY+barH+4,blockW/2+overlapPx/2-10,barH,barH/2);ctx.fill();ctx.stroke();
+
+    // overlap brace
+    const olx=bx+blockW/2-overlapPx/2, olx2=olx+overlapPx;
+    ctx.strokeStyle=C.accent; ctx.lineWidth=1.5; ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(olx,barY-10);ctx.lineTo(olx,barY-4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(olx2,barY-10);ctx.lineTo(olx2,barY-4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(olx,barY-8);ctx.lineTo(olx2,barY-8);ctx.stroke();
+    ctx.fillStyle=C.accent; ctx.font='bold 10px Consolas,monospace'; ctx.textAlign='center';
+    ctx.fillText(`${overlap} mm`,(olx+olx2)/2,barY-14);
+
+    // diameter label
+    ctx.strokeStyle=C.success; ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(bar1x+20,barY);ctx.lineTo(bar1x+20,barY+barH);ctx.stroke();
+    ctx.fillStyle=C.success; ctx.font='10px Consolas,monospace'; ctx.textAlign='left';
+    ctx.fillText(`Ø${dia}mm`,bar1x+24,barY+barH/2+4);
+
+    ctx.fillStyle=C.text; ctx.font='bold 11px Segoe UI,sans-serif'; ctx.textAlign='left';
+    ctx.fillText(`${bars} stk à 6m`,bx,by+90+18);
+    ctx.fillStyle=C.dim; ctx.font='10px Segoe UI,sans-serif'; ctx.textAlign='left';
+    ctx.fillText((d.arm_stav||'REBAR')+' — SPLICE DETAIL',8,14);
+  }
+}
+
+function exportJSON(){const b=new Blob([JSON.stringify(gatherState())],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='concrete_calc.json';a.click();}
+function importJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{applyState(JSON.parse(ev.target.result));setLang(lang);}catch(err){alert('Invalid JSON');}};r.readAsText(f);}
+function doPrint(){window.print();}
+
+window.onload=()=>{
+  loadState(); setLang(lang);
+  if(!document.getElementById('proj_date').value)document.getElementById('proj_date').value=new Date().toISOString().slice(0,10);
+};
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

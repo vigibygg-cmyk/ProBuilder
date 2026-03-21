@@ -1,0 +1,3242 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Stenderkalkulator - ProBuilder</title>
+<meta name="description" content="Beregn stenderplassering, kappelengde, hjørnetyper og nøyaktige merker for vinduer og dører.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/stender.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Stenderkalkulator - ProBuilder">
+<meta property="og:description" content="Beregn stenderplassering, kappelengde, hjørnetyper og nøyaktige merker for vinduer og dører.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/stender.html">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stenderkalkulator - ProBuilder">
+<meta name="twitter:description" content="Beregn stenderplassering, kappelengde, hjørnetyper og nøyaktige merker for vinduer og dører.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Stenderkalkulator - ProBuilder",
+  "url": "https://vigibygg-cmyk.github.io/Calc/stender.html",
+  "image": "https://vigibygg-cmyk.github.io/Calc/img/og-image.png",
+  "description": "Profesjonell kalkulator for stenderplassering, kappelengde, hjørnetyper og nøyaktige merker for vinduer og dører.",
+  "applicationCategory": "ConstructionApplication",
+  "operatingSystem": "Any",
+  "author": {
+    "@type": "Person",
+    "name": "Vytautas Giedraitis"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "NOK"
+  }
+}
+</script>
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header-left { display: flex; align-items: center; gap: 10px; }
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.back-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: #e8f0fe;
+}
+
+.page-title {
+  font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--text);
+}
+.page-title span { color: var(--primary); }
+
+.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+/* Lang group */
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── MAIN LAYOUT ─── */
+main {
+  position: relative; z-index: 1;
+  max-width: 900px; margin: 0 auto;
+  padding: 20px 16px 60px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* ─── TABS ─── */
+.tab-nav {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 960px;
+  margin: 0 auto 4px;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  min-height: 44px;
+}
+.tab-btn:hover {
+  color: var(--text);
+  border-color: #a0aec0;
+  background: var(--surface2);
+}
+.tab-btn.active {
+  background: #ebf8ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.tab-panel { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 16px; }
+.hidden { display: none !important; }
+
+/* ─── CARD ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+
+.card-title, .ct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-title::after, .ct::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM GRID ─── */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+
+input::placeholder, textarea::placeholder { color: var(--dim); }
+
+textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
+
+.field-hint {
+  font-size: 0.69rem; color: var(--dim); line-height: 1.4;
+}
+
+/* ─── RADIO / OPTION GROUPS ─── */
+.option-group {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.option-label {
+  font-size: 0.73rem; font-weight: 600;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.radio-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+
+.radio-opt { position: relative; }
+.radio-opt input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.radio-opt label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--muted);
+  transition: all 0.18s;
+  min-height: 40px;
+}
+.radio-opt input:checked + label {
+  background: #ebf8ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.radio-opt label:hover { color: var(--text); border-color: #a0aec0; }
+
+/* ─── CORNER SUB-FIELDS ─── */
+.corner-fields {
+  display: none;
+  margin-top: 10px;
+  padding: 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  gap: 12px;
+}
+.corner-fields.visible { display: flex; flex-wrap: wrap; }
+.corner-fields .field { flex: 1; min-width: 160px; }
+
+/* ─── TOGGLE SWITCH ─── */
+.toggle-wrap { position: relative; display: inline-block; cursor: pointer; }
+.toggle-wrap input { position: absolute; opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  display: block;
+  width: 42px;
+  height: 24px;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e0;
+  border-radius: 12px;
+  transition: all 0.2s;
+  position: relative;
+}
+.toggle-wrap input:checked + .toggle-track {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.toggle-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+.toggle-wrap input:checked + .toggle-track .toggle-thumb {
+  left: 20px;
+}
+
+/* ─── ACTION BUTTONS ─── */
+.btn-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.btn-primary, .bp {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(43,108,176,0.25);
+}
+.btn-primary:hover, .bp:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-outline, .bo {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+}
+.btn-outline:hover, .bo:hover {
+  color: var(--text);
+  border-color: #a0aec0;
+  background: var(--surface2);
+}
+
+.btn-danger-outline, .bd {
+  background: transparent;
+  border-color: rgba(197,48,48,0.3);
+  color: var(--danger);
+}
+.btn-danger-outline:hover, .bd:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+.btn-success, .ba {
+  background: var(--success-bg);
+  border: 1px solid rgba(39,103,73,0.3);
+  color: var(--success);
+}
+.btn-success:hover, .ba:hover {
+  background: #c6f6d5;
+}
+
+/* Optimize button inside warn */
+.btn-optimize {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; margin-top: 6px;
+  background: rgba(221,107,32,0.15);
+  border: 1px solid rgba(221,107,32,0.4);
+  border-radius: 6px;
+  color: var(--accent); font-size: 0.78rem; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  transition: all 0.18s;
+  min-height: 36px;
+}
+.btn-optimize:hover { background: rgba(221,107,32,0.25); }
+
+/* ─── RESULTS ─── */
+.result-empty {
+  text-align: center; padding: 40px 20px;
+  color: var(--dim); font-size: 0.88rem;
+}
+.result-empty .ico { font-size: 2rem; margin-bottom: 10px; }
+
+/* Summary strip */
+.summary-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sum-box, .rb {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.sum-val, .rv {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.sum-val.ok,   .rv.ok   { color: var(--success); }
+.sum-val.warn, .rv.wa   { color: var(--warn); }
+.sum-val.danger,.rv.er  { color: var(--danger); }
+.rv.inf { color: var(--primary); }
+.rv.ac  { color: var(--accent); }
+
+.sum-lbl, .rl {
+  font-size: 0.67rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* Warning box */
+.warn-box {
+  display: none;
+  padding: 11px 14px;
+  background: var(--warn-bg);
+  border: 1px solid #fbd38d;
+  border-radius: var(--radius-sm);
+  font-size: 0.83rem;
+  color: var(--warn);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.warn-box.visible { display: flex; gap: 8px; align-items: flex-start; }
+.warn-box .ico { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+
+/* Stud table */
+.stud-table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+thead th {
+  padding: 9px 12px;
+  background: var(--surface2);
+  border-bottom: 2px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:hover { background: #ebf8ff; }
+tbody td {
+  padding: 9px 12px;
+  font-size: 0.85rem;
+  vertical-align: middle;
+  color: var(--text);
+}
+
+td.num, td.pos, td.edge, td.gap, td.mn {
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+td.edge { color: var(--primary); font-weight: 600; }
+td.num  { color: var(--muted); }
+td.gap  { color: var(--muted); }
+
+.badge-ok   { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+.badge-warn { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--warn); }
+.badge-bad  { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+
+/* Visual ruler */
+.ruler-wrap {
+  overflow-x: auto;
+  padding: 16px 0 8px;
+  margin-bottom: 8px;
+}
+
+canvas { background: var(--surface2); border-radius: 8px; }
+.ruler-svg { display: block; min-width: 300px; }
+
+/* ─── EXPORT/IMPORT row ─── */
+.io-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ─── FOOTER ─── */
+.main-footer {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.8rem;
+  background: var(--card);
+}
+
+/* ─── PRINT ─── */
+@media print {
+  header, .no-print, .tab-nav { display: none !important; }
+  main { padding: 0; max-width: 100%; }
+  body { background: #fff; color: #111; font-size: 11pt; }
+  .card {
+    background: #fff; border: 1px solid #ccc;
+    box-shadow: none; break-inside: avoid;
+    padding: 12pt;
+  }
+  .btn-row, .io-row { display: none !important; }
+  .warn-box { background: #fffbe6; color: #7a5c00; border-color: #e0c040; }
+  .sum-box { background: #f5f5f5; border-color: #ddd; }
+  .sum-val { color: #111 !important; }
+  table { font-size: 10pt; }
+  thead th { background: #f0f0f0; color: #444; }
+  .print-header { display: block !important; }
+  td.pos { color: #000 !important; }
+  td.edge { color: #1a56b0 !important; }
+  footer.main-footer { display: block !important; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ccc; color: #000; font-size: 9pt; background: #fff; text-align: center; padding: 10px 0; }
+}
+
+.print-header { display: none; border-bottom: 2px solid #333; padding-bottom: 10pt; margin-bottom: 14pt; }
+.print-header h1 { font-size: 16pt; font-weight: 700; }
+.print-header .ph-meta { font-size: 9pt; color: #555; margin-top: 4pt; }
+.print-header .ph-notes { font-size: 9pt; color: #333; margin-top: 6pt; white-space: pre-wrap; }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  header {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 10px;
+  }
+  .header-right {
+    width: 100%;
+    justify-content: center;
+    order: 3;
+  }
+  .lang-group {
+    width: 100%;
+    justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .btn-row, .io-row { flex-direction: column; gap: 8px; }
+  .btn-row .btn, .io-row .btn { width: 100%; justify-content: center; }
+  .summary-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  main { padding: 10px 10px 50px; }
+  .card { padding: 14px; }
+  .lang-btn { padding: 4px 7px; font-size: 0.68rem; }
+  .back-btn { padding: 5px 9px; }
+  .page-title { font-size: 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .summary-strip { grid-template-columns: 1fr; }
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.3s ease both; }
+
+/* ─── OPENING stud style in table ─── */
+tr.stud-in-opening td { color: var(--dim) !important; font-style: italic; }
+tr.stud-opening-edge td.pos { color: var(--accent) !important; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ─── PRINT HEADER (only visible on print) ─── -->
+<div class="print-header" id="print-header">
+  <h1 id="print-title-text">ProBuilder — Stud Layout by Vytautas Giedraitis</h1>
+  <div class="ph-meta" id="print-meta"></div>
+  <div class="ph-notes" id="print-notes-text"></div>
+</div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-left">
+    <a href="index.html" class="back-btn">← <span data-i18n="back"></span></a>
+    <span class="page-title">🪵 <span data-i18n="page_title"></span></span>
+  </div>
+  <div class="header-right">
+    <div class="lang-group">
+            <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+            <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+            <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+          </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ─── TAB NAV ─── -->
+  <div class="tab-nav no-print">
+    <button class="tab-btn active" data-tab="tab-layout" onclick="switchTab('tab-layout', this)">
+      📐 <span data-i18n="tab_layout"></span>
+    </button>
+    <button class="tab-btn" data-tab="tab-openmarks" onclick="switchTab('tab-openmarks', this)">
+      🪟 <span data-i18n="tab_openmarks"></span>
+    </button>
+    <button class="tab-btn" data-tab="tab-height" onclick="switchTab('tab-height', this)">
+      📏 <span data-i18n="tab_height"></span>
+    </button>
+  </div>
+
+  <!-- ══════════ TAB: STUD LAYOUT ══════════ -->
+  <div id="tab-layout" class="tab-panel">
+
+  <!-- ─── PROJECT INFO ─── -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_project"></span></div>
+    <div class="form-grid">
+      <div class="field" style="grid-column: span 2;">
+        <label data-i18n="lbl_proj_name"></label>
+        <input type="text" id="proj_name" data-i18n-ph="ph_proj_name">
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_date"></label>
+        <input type="date" id="proj_date">
+      </div>
+      <div class="field" style="grid-column: span 2;">
+        <label data-i18n="lbl_notes"></label>
+        <textarea id="proj_notes" data-i18n-ph="ph_notes"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── WALL PARAMETERS ─── -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_wall"></span></div>
+    <div class="form-grid">
+      <div class="field">
+        <label data-i18n="lbl_wall_len"></label>
+        <input type="number" id="wall_length" min="100" max="50000" step="1" inputmode="decimal" placeholder="3400">
+        <span class="field-hint" data-i18n="hint_wall_len"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_stud_pitch"></label>
+        <input type="number" id="stud_pitch" min="50" max="2000" step="1" inputmode="decimal" placeholder="600">
+        <span class="field-hint" data-i18n="hint_pitch"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_stud_thick"></label>
+        <input type="number" id="stud_thick" min="20" max="300" step="1" inputmode="decimal" placeholder="48">
+        <span class="field-hint" data-i18n="hint_thick"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_min_gap"></label>
+        <input type="number" id="min_gap" min="0" max="500" step="1" inputmode="decimal" placeholder="100">
+        <span class="field-hint" data-i18n="hint_min_gap"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── LEFT END (tape start) ─── -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_left"></span></div>
+    <div class="option-group">
+      <div class="option-label" data-i18n="lbl_left_type"></div>
+      <div class="radio-row">
+        <div class="radio-opt">
+          <input type="radio" name="left_type" id="lt_outer" value="outer" checked onchange="onLeftChange()">
+          <label for="lt_outer">🔲 <span data-i18n="opt_outer_corner"></span></label>
+        </div>
+        <div class="radio-opt">
+          <input type="radio" name="left_type" id="lt_inner" value="inner" onchange="onLeftChange()">
+          <label for="lt_inner">🔳 <span data-i18n="opt_inner_corner"></span></label>
+        </div>
+        <div class="radio-opt">
+          <input type="radio" name="left_type" id="lt_free" value="free" onchange="onLeftChange()">
+          <label for="lt_free">↔ <span data-i18n="opt_free_end"></span></label>
+        </div>
+      </div>
+
+      <!-- Sub-fields for outer corner left (optional adj wall) -->
+      <div class="corner-fields" id="left_outer_fields">
+        <div class="field">
+          <label data-i18n="lbl_adj_wall_thick"></label>
+          <input type="number" id="left_outer_adj_thick" min="0" max="1000" step="1" inputmode="decimal" placeholder="—">
+          <span class="field-hint" data-i18n="hint_adj_wall_optional"></span>
+        </div>
+      </div>
+
+      <!-- Sub-fields for inner corner left -->
+      <div class="corner-fields" id="left_inner_fields">
+        <div class="field">
+          <label data-i18n="lbl_adj_wall_thick"></label>
+          <input type="number" id="left_adj_thick" min="0" max="1000" step="1" inputmode="decimal" placeholder="198">
+          <span class="field-hint" data-i18n="hint_adj_wall"></span>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_second_stud"></label>
+          <div style="display:flex; gap:6px; align-items:flex-end;">
+            <div style="flex:1;">
+              <input type="number" id="left_second_manual" min="0" max="50000" step="1" inputmode="decimal" placeholder="—">
+              <span class="field-hint" data-i18n="hint_second_manual"></span>
+            </div>
+            <button class="btn btn-outline" style="flex-shrink:0; font-size:0.76rem; padding:8px 10px;" onclick="autoCalcSecondLeft()" data-i18n="btn_auto_calc"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── RIGHT END ─── -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_right"></span></div>
+    <div class="option-group">
+      <div class="option-label" data-i18n="lbl_right_type"></div>
+      <div class="radio-row">
+        <div class="radio-opt">
+          <input type="radio" name="right_type" id="rt_free" value="free" checked onchange="onRightChange()">
+          <label for="rt_free">↔ <span data-i18n="opt_free_end"></span></label>
+        </div>
+        <div class="radio-opt">
+          <input type="radio" name="right_type" id="rt_outer" value="outer" onchange="onRightChange()">
+          <label for="rt_outer">🔲 <span data-i18n="opt_outer_corner"></span></label>
+        </div>
+        <div class="radio-opt">
+          <input type="radio" name="right_type" id="rt_inner" value="inner" onchange="onRightChange()">
+          <label for="rt_inner">🔳 <span data-i18n="opt_inner_corner"></span></label>
+        </div>
+      </div>
+
+      <!-- Sub-fields for outer/inner corner right -->
+      <div class="corner-fields" id="right_corner_fields">
+        <div class="field">
+          <label data-i18n="lbl_adj_wall_thick"></label>
+          <input type="number" id="right_adj_thick" min="0" max="1000" step="1" inputmode="decimal" placeholder="198">
+          <span class="field-hint" data-i18n="hint_adj_wall"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── OPENINGS (windows / doors) ─── -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_opening"></span></div>
+    <div class="option-group">
+      <!-- Enable toggle -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <label class="toggle-wrap">
+          <input type="checkbox" id="opening_enabled" onchange="onOpeningToggle()">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+        <span style="font-size:0.85rem; color:var(--muted);" data-i18n="lbl_opening_enable"></span>
+      </div>
+      <!-- Dynamic list -->
+      <div id="opening_fields" style="display:none;">
+        <div id="openings-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <button class="btn btn-outline" style="margin-top:10px; width:100%;" onclick="addOpening()">
+          + <span data-i18n="btn_add_opening"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ACTION ROW ─── -->
+  <div class="card no-print">
+    <!-- Primary action -->
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <button class="btn btn-primary" style="flex:1; min-width:140px; font-size:1rem;" onclick="calculate()">⚡ <span data-i18n="btn_calc"></span></button>
+      <button class="btn btn-danger-outline" style="min-width:48px; font-weight:900;" onclick="resetAll()" title="Reset">↺</button>
+    </div>
+    <!-- Secondary actions -->
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-outline" style="flex:1;" onclick="exportJSON()">📤 <span data-i18n="btn_export"></span></button>
+      <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('import_file').click()">📥 <span data-i18n="btn_import"></span></button>
+      <input type="file" id="import_file" accept=".json" style="display:none" onchange="importJSON(event)">
+      <button class="btn btn-outline" style="flex:1;" onclick="window.print()">🖨 <span data-i18n="btn_print"></span></button>
+    </div>
+  </div>
+
+  <!-- ─── RESULTS ─── -->
+  <div class="card" id="results-card">
+    <div class="card-title"><span data-i18n="sec_results"></span></div>
+
+    <div id="result-empty" class="result-empty">
+      <div class="ico">📏</div>
+      <p data-i18n="result_empty"></p>
+    </div>
+
+    <div id="result-content" class="hidden fade-in">
+
+      <!-- Summary -->
+      <div class="summary-strip" id="summary-strip"></div>
+
+      <!-- Warning -->
+      <div class="warn-box" id="warn-box">
+        <span class="ico">⚠️</span>
+        <div><span id="warn-text"></span></div>
+      </div>
+
+      <!-- Gap adjustment box -->
+      <div id="shift-box" style="display:none; margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;"><span data-i18n="sec_adjust"></span></div>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:12px;" id="shift-hint-text"></p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <!-- First gap -->
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px;">
+            <label style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); display:block; margin-bottom:6px;" data-i18n="lbl_first_gap"></label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="first_gap_input" min="0" max="5000" step="1" inputmode="decimal"
+                style="flex:1; background:var(--card); border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; min-height:44px;"
+                oninput="applyGapAdjust()">
+              <span style="font-size:0.75rem; color:var(--dim);">mm</span>
+            </div>
+            <div style="font-size:0.7rem; color:var(--dim); margin-top:4px;" id="first_gap_current"></div>
+          </div>
+          <!-- Last gap -->
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px;">
+            <label style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); display:block; margin-bottom:6px;" data-i18n="lbl_last_gap"></label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="number" id="last_gap_input" min="0" max="5000" step="1" inputmode="decimal"
+                style="flex:1; background:var(--card); border:1px solid var(--border); border-radius:6px; padding:8px 10px; color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; min-height:44px;"
+                oninput="applyGapAdjust()">
+              <span style="font-size:0.75rem; color:var(--dim);">mm</span>
+            </div>
+            <div style="font-size:0.7rem; color:var(--dim); margin-top:4px;" id="last_gap_current"></div>
+          </div>
+        </div>
+        <div style="margin-top:8px;">
+          <button class="btn btn-danger-outline" style="font-size:0.8rem; font-weight:900;" onclick="resetGapAdjust()" data-i18n="btn_reset_gap"></button>
+        </div>
+        <p style="font-size:0.73rem; color:var(--dim); margin-top:8px;" data-i18n="hint_gap_adjust"></p>
+      </div>
+
+      <!-- Visual ruler -->
+      <div class="ruler-wrap">
+        <div class="mark-side-row no-print" style="display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+          <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted);" data-i18n="lbl_mark_side"></span>
+          <div class="radio-row" style="gap:6px;">
+            <div class="radio-opt">
+              <input type="radio" name="mark_side" id="ms_left" value="left" checked onchange="if(lastStuds.length) drawRuler(lastStuds, getInputs())">
+              <label for="ms_left" style="font-size:0.8rem; padding:6px 12px;">← <span data-i18n="opt_left_edge"></span></label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="mark_side" id="ms_right" value="right" onchange="if(lastStuds.length) drawRuler(lastStuds, getInputs())">
+              <label for="ms_right" style="font-size:0.8rem; padding:6px 12px;"><span data-i18n="opt_right_edge"></span> →</label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="mark_side" id="ms_center" value="center" onchange="if(lastStuds.length) drawRuler(lastStuds, getInputs())">
+              <label for="ms_center" style="font-size:0.8rem; padding:6px 12px;">⊕ <span data-i18n="opt_center"></span></label>
+            </div>
+          </div>
+        </div>
+        <canvas id="ruler-canvas" height="120" style="width:100%; display:block;"></canvas>
+      </div>
+
+      <!-- Stud table -->
+      <div class="stud-table-wrap">
+        <table id="stud-table">
+          <thead>
+            <tr>
+              <th data-i18n="th_num"></th>
+              <th data-i18n="th_left_edge"></th>
+              <th data-i18n="th_center"></th>
+              <th data-i18n="th_right_edge"></th>
+              <th data-i18n="th_gap_after"></th>
+              <th data-i18n="th_status"></th>
+            </tr>
+          </thead>
+          <tbody id="stud-tbody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  </div><!-- /tab-layout -->
+
+  <!-- ══════════ TAB: OPENING LEVEL MARKS ══════════ -->
+  <div id="tab-openmarks" class="tab-panel hidden">
+
+    <!-- Floor level reference card -->
+    <div class="card">
+      <div class="card-title">🏗 <span data-i18n="sec_openmarks_ref"></span></div>
+      <div class="form-grid">
+        <div class="field">
+          <label data-i18n="lbl_floor_mark"></label>
+          <input type="number" id="om_floor_mark" min="0" max="999999" step="1" inputmode="decimal" placeholder="17000" oninput="calcOpenMarks()">
+          <span class="field-hint" data-i18n="hint_floor_mark"></span>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_finished_floor"></label>
+          <input type="number" id="om_finished_floor" min="0" max="999999" step="1" inputmode="decimal" placeholder="15620" oninput="calcOpenMarks()">
+          <span class="field-hint" data-i18n="hint_finished_floor"></span>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_default_gap_bottom"></label>
+          <input type="number" id="om_gap_bottom" min="0" max="100" step="1" inputmode="decimal" value="15" oninput="calcOpenMarks()">
+          <span class="field-hint" data-i18n="hint_default_gap_bottom"></span>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_default_gap_top"></label>
+          <input type="number" id="om_gap_top" min="0" max="100" step="1" inputmode="decimal" value="15" oninput="calcOpenMarks()">
+          <span class="field-hint" data-i18n="hint_default_gap_top"></span>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_default_gap_side"></label>
+          <input type="number" id="om_gap_side" min="0" max="100" step="1" inputmode="decimal" value="10" oninput="calcOpenMarks()">
+          <span class="field-hint" data-i18n="hint_default_gap_side"></span>
+        </div>
+      </div>
+
+      <!-- Floor level display -->
+      <div id="om_floor_diff_box" style="display:none; margin-top:14px; padding:12px 16px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm);">
+        <span style="font-size:0.75rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.07em;" data-i18n="lbl_floor_diff"></span>
+        <span id="om_floor_diff_val" style="font-family:'Consolas','Courier New',monospace; font-size:1.3rem; font-weight:700; color:var(--primary); margin-left:12px;"></span>
+        <span style="font-size:0.8rem; color:var(--muted); margin-left:4px;">mm</span>
+        <span style="font-size:0.75rem; color:var(--dim); margin-left:8px;" id="om_floor_diff_formula"></span>
+      </div>
+    </div>
+
+    <!-- Openings list card -->
+    <div class="card">
+      <div class="card-title">🪟 <span data-i18n="sec_openmarks_list"></span></div>
+
+      <div id="om_items_container" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-outline" style="flex:1;" onclick="omAddItem('window')">🪟 + <span data-i18n="btn_add_window"></span></button>
+        <button class="btn btn-outline" style="flex:1;" onclick="omAddItem('door')">🚪 + <span data-i18n="btn_add_door"></span></button>
+        <button class="btn btn-danger-outline" style="min-width:48px; font-weight:900; font-size:1.1rem;" onclick="omResetAll()" title="Reset">↺</button>
+      </div>
+    </div>
+
+    <!-- Results table card -->
+    <div class="card" id="om_results_card" style="display:none;">
+      <div class="card-title">📊 <span data-i18n="sec_openmarks_results"></span></div>
+
+      <div style="overflow-x:auto;">
+        <table id="om_result_table" style="width:100%; border-collapse:collapse; font-size:0.84rem;">
+          <thead>
+            <tr>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); text-align:left; white-space:nowrap;" data-i18n="th_om_name"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); text-align:left; white-space:nowrap;" data-i18n="th_om_size"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--success); text-align:center; white-space:nowrap;" data-i18n="th_om_opening_size"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--primary); text-align:center; white-space:nowrap;" data-i18n="th_om_bot_mark"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); text-align:center; white-space:nowrap;" data-i18n="th_om_top_mark"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); text-align:left; white-space:nowrap;" data-i18n="th_om_bh"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); text-align:center; white-space:nowrap;" data-i18n="th_om_side_gap"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); text-align:center; white-space:nowrap;" data-i18n="th_om_bot_gap"></th>
+              <th style="padding:9px 10px; background:var(--surface2); border-bottom:2px solid var(--border); font-size:0.67rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); text-align:center; white-space:nowrap;" data-i18n="th_om_top_gap"></th>
+            </tr>
+          </thead>
+          <tbody id="om_result_tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Visualization canvas -->
+      <div id="om_viz_wrap" style="margin-top:20px; overflow-x:auto;">
+        <canvas id="om_canvas" style="display:block; border-radius:8px; background:var(--surface2); min-width:300px;"></canvas>
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;" class="no-print">
+        <button class="btn btn-outline" style="flex:1;" onclick="omExportJSON()">📤 <span data-i18n="btn_export"></span></button>
+        <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('om_import_file').click()">📥 <span data-i18n="btn_import"></span></button>
+        <input type="file" id="om_import_file" accept=".json" style="display:none" onchange="omImportJSON(event)">
+        <button class="btn btn-outline" style="flex:1;" onclick="window.print()">🖨 <span data-i18n="btn_print"></span></button>
+      </div>
+    </div>
+
+    <!-- Info card -->
+    <div class="card">
+      <div class="card-title"><span data-i18n="sec_openmarks_info"></span></div>
+      <p style="font-size:0.82rem; color:var(--muted); line-height:1.7;" data-i18n="openmarks_info_text"></p>
+    </div>
+
+  </div><!-- /tab-openmarks -->
+
+  <div id="tab-height" class="tab-panel hidden">
+
+    <div class="card">
+      <div class="card-title"><span data-i18n="sec_height"></span></div>
+
+      <!-- Total wall height - prominent -->
+      <div style="margin-bottom:18px;">
+        <label style="font-size:0.73rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); display:block; margin-bottom:6px;" data-i18n="lbl_h_total"></label>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <input type="number" id="h_total" min="100" max="10000" step="1" inputmode="decimal" placeholder="2400"
+            style="flex:1; max-width:180px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; color:var(--text); font-family:'Consolas', 'Courier New', monospace; font-size:1.1rem; font-weight:600; outline:none; min-height:48px;"
+            oninput="calcHeight()">
+          <span style="font-size:0.85rem; color:var(--muted);">mm</span>
+        </div>
+        <span style="font-size:0.72rem; color:var(--dim); display:block; margin-top:4px;" data-i18n="hint_h_total"></span>
+      </div>
+
+      <!-- Bottom plates (Bunnsvill) -->
+      <div style="margin-bottom:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <span style="font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em;" data-i18n="lbl_bunn_section"></span>
+          <button class="btn btn-outline" style="font-size:0.75rem; padding:5px 12px; min-height:34px;" onclick="addSvill('bunn')">+ <span data-i18n="btn_add_svill"></span></button>
+        </div>
+        <div id="bunn-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+      <!-- Top plates (Topsvill) -->
+      <div style="margin-bottom:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <span style="font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em;" data-i18n="lbl_topp_section"></span>
+          <button class="btn btn-outline" style="font-size:0.75rem; padding:5px 12px; min-height:34px;" onclick="addSvill('topp')">+ <span data-i18n="btn_add_svill"></span></button>
+        </div>
+        <div id="topp-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+      <!-- Result -->
+      <div id="height-result" style="display:none; padding:16px 18px; background:var(--success-bg); border:1px solid rgba(39,103,73,0.3); border-radius:var(--radius-sm);">
+        <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.09em; color:var(--muted); margin-bottom:6px;" data-i18n="lbl_stud_cut_length"></div>
+        <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;">
+          <div>
+            <span id="height-result-val" style="font-family:'Consolas', 'Courier New', monospace; font-size:2.6rem; font-weight:600; color:var(--success); line-height:1;">—</span>
+            <span style="font-size:0.85rem; color:var(--muted); margin-left:4px;">mm</span>
+          </div>
+        </div>
+        <div id="height-result-formula" style="margin-top:8px; font-size:0.8rem; color:var(--dim); font-family:'Consolas', 'Courier New', monospace; line-height:1.9;"></div>
+      </div>
+    </div>
+
+    <!-- Info card -->
+    <div class="card">
+      <div class="card-title"><span data-i18n="sec_height_info"></span></div>
+      <p style="font-size:0.82rem; color:var(--muted); line-height:1.7;" data-i18n="height_info_text"></p>
+    </div>
+
+  </div><!-- /tab-height -->
+
+</main>
+<footer class="main-footer">
+    © 2026 Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+</footer>
+
+
+
+<script>
+/* ════════════════════════════════════════════
+   TRANSLATIONS
+════════════════════════════════════════════ */
+const T = {
+  en: {
+    tab_layout: 'Stud layout',
+    tab_height: 'Stud height',
+    height_proj_note: 'Project info is shared with the Layout tab.',
+    sec_height_info: 'How it works',
+    height_info_text: 'The stud cut length = total wall height minus the combined thickness of all horizontal plates (svill). In Norway the standard is one bunnsvill (bottom plate) and two topsvill (double top plate), each 48 mm thick.',
+    back: 'Back',
+    page_title: 'Wall Framing — Stud Layout',
+    sec_height: 'Stud height — Bindingsverk',
+    lbl_h_total: 'Total wall height H (mm)',
+    hint_h_total: 'From subfloor (or slab) to top of top plate',
+    lbl_bunn_thick: 'Bunnsvill thickness (mm)',
+    lbl_bunn_count: 'Bunnsvill count',
+    lbl_topp_thick: 'Topsvill thickness (mm)',
+    lbl_topp_count: 'Topsvill count',
+    hint_svill_thick: 'Standard Norway: 48 mm',
+    lbl_stud_cut_length: 'Stud cut length',
+    height_formula: (H, bt, bn, bTot, tt, tn, tTot, res) =>
+      `${H} − (${bt}×${bn}=${bTot}) − (${tt}×${tn}=${tTot}) = ${res} mm`,
+    sec_project: 'Project',
+    lbl_proj_name: 'Project name',
+    ph_proj_name: 'e.g. Living room north wall',
+    lbl_date: 'Date',
+    lbl_notes: 'Notes / comments',
+    ph_notes: 'Additional notes, room, floor…',
+    sec_wall: 'Wall parameters',
+    lbl_wall_len: 'Wall length (mm)',
+    hint_wall_len: 'Total wall length from end to end',
+    lbl_stud_pitch: 'Stud spacing OC (mm)',
+    hint_pitch: 'Standard: 600 mm. Also common: 400, 300',
+    lbl_stud_thick: 'Stud width (mm)',
+    hint_thick: 'Timber section width, e.g. 48 mm',
+    lbl_min_gap: 'Minimum gap warning (mm)',
+    hint_min_gap: 'Show warning if gap between studs is below this',
+    sec_left: 'Left end — tape zero point',
+    lbl_left_type: 'Left end type',
+    opt_outer_corner: 'Outer corner',
+    opt_inner_corner: 'Inner corner',
+    opt_free_end: 'Free end',
+    lbl_adj_wall_thick: 'Adjacent wall thickness (mm)',
+    hint_adj_wall: 'Thickness of the intersecting wall',
+    hint_adj_wall_optional: 'Optional — leave blank if no adjacent wall',
+    lbl_second_stud: '2nd stud centre (mm) — override',
+    hint_second_manual: 'Leave blank for auto / enter to override',
+    btn_auto_calc: 'Auto',
+    sec_right: 'Right end',
+    lbl_right_type: 'Right end type',
+    sec_results: 'Results — stud positions',
+    result_empty: 'Enter parameters above and press Calculate',
+    btn_calc: 'Calculate',
+    btn_reset: 'Reset',
+    btn_export: 'Export JSON',
+    btn_import: 'Import JSON',
+    btn_print: 'Print / PDF',
+    sum_last_gap: 'Last gap between studs (mm)',
+    sum_waste: 'End gap ok',
+    warn_small_gap: (g, min) => `⚠ Last gap is ${g} mm — below minimum ${min} mm.`,
+    shift_hint: 'Adjust first or last gap to shift the whole stud layout. Changing one value recalculates all stud positions.',
+    lbl_first_gap: 'First gap (mm)',
+    lbl_last_gap: 'Last gap (mm)',
+    gap_current: (v) => `Current: ${v} mm`,
+    sec_adjust: 'Fine-tune layout',
+    hint_gap_adjust: 'Tip: change first gap to shift layout left/right. Change last gap to control the closing space.',
+    btn_reset_gap: 'Reset to default',
+    th_left_edge: 'Left edge (mm)',
+    th_center: 'Centre (mm)',
+    th_right_edge: 'Right edge (mm)',
+    th_gap_after: 'Gap between studs (mm)',
+    th_status: '',
+    lbl_mark_side: 'Mark line on:',
+    opt_left_edge: 'Left edge',
+    opt_right_edge: 'Right edge',
+    opt_center: 'Centre',
+    sum_studs: 'Studs',
+    sum_spacing: 'Typical OC (mm)',
+    th_num: '#',
+    status_warn: 'Short',
+    status_corner: 'Corner',
+    mark_line: (n, c, le, re) => `#${n}  centre: ${c} mm   |   mark lines: ${le} mm ← | → ${re} mm`,
+    btn_add_opening: 'Add opening',
+    opening_label: 'Opening',
+    btn_remove: 'Remove',
+    lbl_bunn_section: 'Bottom plates — Bunnsvill',
+    lbl_topp_section: 'Top plates — Topsvill',
+    lbl_bunnsvill: 'Bunnsvill',
+    lbl_toppsvill: 'Topsvill',
+    btn_add_svill: 'Add plate',
+    height_formula_result: (H, b, t, res) => `${H} − ${b} − ${t} = ${res} mm`,
+    sec_opening: 'Opening (window / door)',
+    lbl_opening_enable: 'Add window or door opening',
+    lbl_opening_from: 'Opening start from left (mm)',
+    hint_opening_from: 'Distance from tape zero to left edge of opening',
+    lbl_opening_width: 'Opening width (mm)',
+    hint_opening_width: 'Clear width of the opening',
+    opening_preview: (f, t, w) => `Opening: ${f} mm → ${t} mm  (width ${w} mm)`,
+    print_meta: (name, date) => `Project: ${name}   |   Date: ${date}`,
+    optimised_note: 'Optimised',
+    tab_openmarks: 'Window & Door Openings',
+    sec_openmarks_ref: 'Floor Level Reference',
+    lbl_floor_mark: 'Height mark on concrete wall (mm above sea)',
+    hint_floor_mark: 'e.g. 17000 — the mark stamped/painted on the concrete wall',
+    lbl_finished_floor: 'Finished floor level from drawings (mm above sea)',
+    hint_finished_floor: 'e.g. 15620 — finished floor elevation from section drawings',
+    lbl_default_gap_bottom: 'Default clearance — bottom (mm)',
+    hint_default_gap_bottom: 'Gap between concrete and bottom of frame opening (typically 10–15 mm)',
+    lbl_default_gap_top: 'Default clearance — top (mm)',
+    hint_default_gap_top: 'Gap between top of frame and top of concrete opening (typically 10–15 mm)',
+    lbl_default_gap_side: 'Default clearance — sides (mm)',
+    hint_default_gap_side: 'Gap on each side between frame and concrete (typically 10 mm)',
+    th_om_opening_size: 'Wall opening (P×K mm)',
+    th_om_side_gap: 'Side gap',
+    lbl_floor_diff: 'Floor level below reference mark:',
+    sec_openmarks_list: 'Windows & Doors',
+    btn_add_window: 'Add window',
+    btn_add_door: 'Add door',
+    sec_openmarks_results: 'Window & door opening marks — from reference (down = negative)',
+    th_om_name: 'Name',
+    th_om_size: 'BxH (mm)',
+    th_om_bh: 'Bh. (mm)',
+    th_om_bot_gap: 'Bot. gap',
+    th_om_top_gap: 'Top gap',
+    th_om_bot_mark: '▼ Bottom mark (mm)',
+    th_om_top_mark: '▲ Top mark (mm)',
+    sec_openmarks_info: 'How it works',
+    openmarks_info_text: 'Enter the height mark printed on the concrete wall and the finished floor level from section drawings. The calculator finds how far below the concrete mark the finished floor is, then computes the exact bottom and top opening marks for each window or door — accounting for the sill height (Bh.) and any clearance gaps. All marks are shown relative to the concrete reference mark: negative = below, positive = above.',
+    lbl_om_name: 'Name',
+    lbl_om_width: 'Width B (mm)',
+    lbl_om_height: 'Height H (mm)',
+    lbl_om_bh: 'Sill height Bh. (mm)',
+    lbl_om_bh_door: 'Threshold height Bh. (mm)',
+    viz_wall: 'CONCRETE WALL',
+    viz_ref_mark: 'Ref. mark',
+    viz_floor: 'Floor (FF)',
+    viz_bot: '▼ bottom',
+    viz_top: '▲ top',
+    viz_leg_ref: 'Ref. mark (± 0)',
+    viz_leg_floor: 'Floor (FF)',
+    viz_leg_bot: '▼ Bottom opening mark',
+    viz_leg_top: '▲ Top opening mark',
+    lbl_om_gap_bot: 'Bot. gap (mm)',
+    lbl_om_gap_top: 'Top gap (mm)',
+    lbl_om_gap_side: 'Side gap (mm)',
+    lbl_om_custom_gaps: 'Custom gaps for this item',
+    om_type_window: 'Window',
+    om_type_door: 'Door',
+    om_bot_formula: (floorDiff, bh, gapBot) => `floor(−${floorDiff}) + Bh(${bh}) − gap(${gapBot})`,
+    om_top_formula: (floorDiff, bh, H, gapTop) => `floor(−${floorDiff}) + Bh(${bh}) + H(${H}) + gap(${gapTop})`,
+    lbl_floor_diff: 'Floor below mark:',
+  },
+  no: {
+    tab_layout: 'Stenderoppsett',
+    tab_height: 'Stenderhøyde',
+    height_proj_note: 'Prosjektinfo deles med Oppsett-fanen.',
+    sec_height_info: 'Slik fungerer det',
+    height_info_text: 'Stender kappelengde = samlet vegghøyde minus samlet tykkelse av alle svill. I Norge er standarden én bunnsvill og to topsvill (dobbeltsvill), hver 48 mm tykk.',
+    back: 'Tilbake',
+    page_title: 'Veggreisverk — Stenderavstand',
+    sec_height: 'Stenderhøyde — Bindingsverk',
+    lbl_h_total: 'Samlet vegghøyde H (mm)',
+    hint_h_total: 'Fra undergulv (eller betongdekke) til topp av toppsvill',
+    lbl_bunn_thick: 'Bunnsvill tykkelse (mm)',
+    lbl_bunn_count: 'Antall bunnsvill',
+    lbl_topp_thick: 'Topsvill tykkelse (mm)',
+    lbl_topp_count: 'Antall topsvill',
+    hint_svill_thick: 'Standard Norge: 48 mm',
+    lbl_stud_cut_length: 'Stender kappelengde',
+    height_formula: (H, bt, bn, bTot, tt, tn, tTot, res) =>
+      `${H} − (${bt}×${bn}=${bTot}) − (${tt}×${tn}=${tTot}) = ${res} mm`,
+    sec_project: 'Prosjekt',
+    lbl_proj_name: 'Prosjektnavn',
+    ph_proj_name: 'f.eks. Stue nordvegg',
+    lbl_date: 'Dato',
+    lbl_notes: 'Notater / kommentarer',
+    ph_notes: 'Tilleggsinfo, rom, etasje…',
+    sec_wall: 'Veggparametere',
+    lbl_wall_len: 'Vegglengde (mm)',
+    hint_wall_len: 'Total vegglengde fra ende til ende',
+    lbl_stud_pitch: 'Stenderavstand OC (mm)',
+    hint_pitch: 'Standard: 600 mm. Vanlig også: 400, 300',
+    lbl_stud_thick: 'Stenderbredde (mm)',
+    hint_thick: 'Treseksjon bredde, f.eks. 48 mm',
+    lbl_min_gap: 'Minimumsavstand varsel (mm)',
+    hint_min_gap: 'Vis advarsel hvis avstand er under dette',
+    sec_left: 'Venstre ende — rullemeterstokk nullpunkt',
+    lbl_left_type: 'Type venstre ende',
+    opt_outer_corner: 'Ytre hjørne',
+    opt_inner_corner: 'Indre hjørne',
+    opt_free_end: 'Fri ende',
+    lbl_adj_wall_thick: 'Naboveggtykkelse (mm)',
+    hint_adj_wall: 'Tykkelse på den kryssende veggen',
+    hint_adj_wall_optional: 'Valgfritt — la stå tom hvis ingen nabogg',
+    lbl_second_stud: '2. stender senter (mm) — overstyr',
+    hint_second_manual: 'La stå tom for auto / fyll inn for å overstyre',
+    btn_auto_calc: 'Auto',
+    sec_right: 'Høyre ende',
+    lbl_right_type: 'Type høyre ende',
+    sec_results: 'Resultater — stenderposisjoner',
+    result_empty: 'Fyll inn parametere ovenfor og trykk Beregn',
+    btn_calc: 'Beregn',
+    btn_reset: 'Nullstill',
+    btn_export: 'Eksporter JSON',
+    btn_import: 'Importer JSON',
+    btn_print: 'Skriv ut / PDF',
+    sum_last_gap: 'Siste avstand mellom stendere (mm)',
+    sum_waste: 'Avstand ok',
+    warn_small_gap: (g, min) => `⚠ Siste avstand er ${g} mm — under minimum ${min} mm.`,
+    shift_hint: 'Juster første eller siste avstand for å forskyve hele stenderoppsettet.',
+    lbl_first_gap: 'Første avstand (mm)',
+    lbl_last_gap: 'Siste avstand (mm)',
+    gap_current: (v) => `Nå: ${v} mm`,
+    sec_adjust: 'Finjuster oppsett',
+    hint_gap_adjust: 'Tips: endre første avstand for å forskyve oppsettet. Endre siste avstand for å justere sluttrommet.',
+    btn_reset_gap: 'Nullstill',
+    th_num: '#',
+    th_left_edge: 'Venstre kant (mm)',
+    th_center: 'Senter (mm)',
+    th_right_edge: 'Høyre kant (mm)',
+    th_gap_after: 'Avstand mellom stendere (mm)',
+    th_status: '',
+    lbl_mark_side: 'Merkelinje på:',
+    opt_left_edge: 'Venstre kant',
+    opt_right_edge: 'Høyre kant',
+    opt_center: 'Senter',
+    sum_studs: 'Stendere',
+    sum_spacing: 'Typisk OC (mm)',
+    status_ok: 'OK',
+    status_warn: 'Kort',
+    status_corner: 'Hjørne',
+    mark_line: (n, c, le, re) => `#${n}  senter: ${c} mm   |   merkelinjer: ${le} mm ← | → ${re} mm`,
+    btn_add_opening: 'Legg til åpning',
+    opening_label: 'Åpning',
+    btn_remove: 'Fjern',
+    lbl_bunn_section: 'Bunnsvill',
+    lbl_topp_section: 'Topsvill / Dobbeltsvill',
+    lbl_bunnsvill: 'Bunnsvill',
+    lbl_toppsvill: 'Topsvill',
+    btn_add_svill: 'Legg til svill',
+    height_formula_result: (H, b, t, res) => `${H} − ${b} − ${t} = ${res} mm`,
+    sec_opening: 'Åpning (vindu / dør)',
+    lbl_opening_enable: 'Legg til vindu eller dør',
+    lbl_opening_from: 'Åpning start fra venstre (mm)',
+    hint_opening_from: 'Avstand fra rullemeterstokk null til åpningens venstre kant',
+    lbl_opening_width: 'Åpningsbredde (mm)',
+    hint_opening_width: 'Fri bredde på åpningen',
+    opening_preview: (f, t, w) => `Åpning: ${f} mm → ${t} mm  (bredde ${w} mm)`,
+    print_meta: (name, date) => `Prosjekt: ${name}   |   Dato: ${date}`,
+    optimised_note: 'Optimalisert',
+    tab_openmarks: 'Vindu- og dørmerker',
+    sec_openmarks_ref: 'Referansenivå — etasjehøyde',
+    lbl_floor_mark: 'Høydekote på betongen (mm over havet)',
+    hint_floor_mark: 'f.eks. 17000 — koten stemplet/malt på betongen',
+    lbl_finished_floor: 'Ferdig gulv-kote fra tegninger (mm over havet)',
+    hint_finished_floor: 'f.eks. 15620 — ferdig gulvhøyde fra snittegninger',
+    lbl_default_gap_bottom: 'Standard klaring — bunn (mm)',
+    hint_default_gap_bottom: 'Gap mellom betong og nedre karm (typisk 10–15 mm)',
+    lbl_default_gap_top: 'Standard klaring — topp (mm)',
+    hint_default_gap_top: 'Gap mellom overkant karm og betong (typisk 10–15 mm)',
+    lbl_default_gap_side: 'Standard klaring — sider (mm)',
+    hint_default_gap_side: 'Gap på hver side mellom karm og betong (typisk 10 mm)',
+    th_om_opening_size: 'Veggåpning (B×H mm)',
+    th_om_side_gap: 'Side-klaring',
+    lbl_om_gap_bot: 'Bunn-klaring (mm)',
+    lbl_om_gap_top: 'Topp-klaring (mm)',
+    lbl_om_gap_side: 'Side-klaring (mm)',
+    lbl_floor_diff: 'Gulv under referansemerke:',
+    sec_openmarks_list: 'Vinduer og dører',
+    btn_add_window: 'Legg til vindu',
+    btn_add_door: 'Legg til dør',
+    sec_openmarks_results: 'Vindu- og dørmerker — fra referansekote (nedover = negativt)',
+    th_om_name: 'Navn',
+    th_om_size: 'BxH (mm)',
+    th_om_bh: 'Bh. (mm)',
+    th_om_bot_gap: 'Bunn-klaring',
+    th_om_top_gap: 'Topp-klaring',
+    th_om_bot_mark: '▼ Bunn-merke (mm)',
+    th_om_top_mark: '▲ Topp-merke (mm)',
+    sec_openmarks_info: 'Slik fungerer det',
+    openmarks_info_text: 'Angi høydekoten på betongen og ferdig gulvkote fra snittegningene. Kalkulatoren finner hvor mye lavere ferdigsgulvet er enn betongkoten, og beregner nøyaktige bunn- og toppmerker for hver åpning — med hensyn til lysningshøyde (Bh.) og klaringsgap. Alle merker vises relativt til betong-referansekoten: negativt = under koten, positivt = over.',
+    lbl_om_name: 'Navn',
+    lbl_om_width: 'Bredde B (mm)',
+    lbl_om_height: 'Høyde H (mm)',
+    lbl_om_bh: 'Lysningshøyde Bh. (mm)',
+    lbl_om_bh_door: 'Terskelhøyde Bh. (mm)',
+    viz_wall: 'BETONVEGG',
+    viz_ref_mark: 'Ref. merke',
+    viz_floor: 'Gulv (FF)',
+    viz_bot: '▼ bunn',
+    viz_top: '▲ topp',
+    viz_leg_ref: 'Ref. merke (± 0)',
+    viz_leg_floor: 'Gulv (FF)',
+    viz_leg_bot: '▼ Nedre åpningsmerke',
+    viz_leg_top: '▲ Øvre åpningsmerke',
+    lbl_om_gap_bot: 'Bunn-klaring (mm)',
+    lbl_om_gap_top: 'Topp-klaring (mm)',
+    lbl_om_custom_gaps: 'Egne klaringer for dette elementet',
+    om_type_window: 'Vindu',
+    om_type_door: 'Dør',
+    om_bot_formula: (floorDiff, bh, gapBot) => `gulv(−${floorDiff}) + Bh(${bh}) − gap(${gapBot})`,
+    om_top_formula: (floorDiff, bh, H, gapTop) => `gulv(−${floorDiff}) + Bh(${bh}) + H(${H}) + gap(${gapTop})`,
+  },
+  pl: {
+    tab_layout: 'Układ słupków',
+    tab_height: 'Wysokość słupka',
+    height_proj_note: 'Informacje o projekcie są wspólne z zakładką Układ.',
+    sec_height_info: 'Jak to działa',
+    height_info_text: 'Długość cięcia słupka = całkowita wysokość ściany minus łączna grubość wszystkich oczepów (svill). W Norwegii standard to jeden oczepa dolny i dwa górne (dobbeltsvill), każdy 48 mm.',
+    back: 'Powrót',
+    page_title: 'Szkielet ściany — Rozstaw słupków',
+    sec_height: 'Wysokość słupka — Bindingsverk',
+    lbl_h_total: 'Całkowita wysokość ściany H (mm)',
+    hint_h_total: 'Od podłogi surowej (lub płyty) do wierzchu górnego oczepа',
+    lbl_bunn_thick: 'Grubość dolnego oczepа (Bunnsvill, mm)',
+    lbl_bunn_count: 'Liczba dolnych oczepów',
+    lbl_topp_thick: 'Grubość górnego oczepа (Topsvill, mm)',
+    lbl_topp_count: 'Liczba górnych oczepów',
+    hint_svill_thick: 'Standard Norwegia: 48 mm',
+    lbl_stud_cut_length: 'Długość cięcia słupka',
+    height_formula: (H, bt, bn, bTot, tt, tn, tTot, res) =>
+      `${H} − (${bt}×${bn}=${bTot}) − (${tt}×${tn}=${tTot}) = ${res} mm`,
+    sec_project: 'Projekt',
+    lbl_proj_name: 'Nazwa projektu',
+    ph_proj_name: 'np. Salon ściana północna',
+    lbl_date: 'Data',
+    lbl_notes: 'Uwagi / komentarze',
+    ph_notes: 'Dodatkowe informacje, pomieszczenie, piętro…',
+    sec_wall: 'Parametry ściany',
+    lbl_wall_len: 'Długość ściany (mm)',
+    hint_wall_len: 'Całkowita długość ściany od końca do końca',
+    lbl_stud_pitch: 'Rozstaw słupków o/o (mm)',
+    hint_pitch: 'Standard: 600 mm. Często też: 400, 300',
+    lbl_stud_thick: 'Szerokość słupka (mm)',
+    hint_thick: 'Szerokość przekroju drewna, np. 48 mm',
+    lbl_min_gap: 'Min. prześwit — ostrzeżenie (mm)',
+    hint_min_gap: 'Pokaż ostrzeżenie jeśli prześwit poniżej tej wartości',
+    sec_left: 'Lewy koniec — zero taśmy mierniczej',
+    lbl_left_type: 'Typ lewego końca',
+    opt_outer_corner: 'Narożnik zewnętrzny',
+    opt_inner_corner: 'Narożnik wewnętrzny',
+    opt_free_end: 'Wolny koniec',
+    lbl_adj_wall_thick: 'Grubość ściany prostopadłej (mm)',
+    hint_adj_wall: 'Grubość ściany przecinającej',
+    hint_adj_wall_optional: 'Opcjonalnie — zostaw puste jeśli brak ściany sąsiedniej',
+    lbl_second_stud: '2. słupek oś (mm) — nadpisanie',
+    hint_second_manual: 'Zostaw puste dla auto / wpisz aby nadpisać',
+    btn_auto_calc: 'Auto',
+    sec_right: 'Prawy koniec',
+    lbl_right_type: 'Typ prawego końca',
+    sec_results: 'Wyniki — pozycje słupków',
+    result_empty: 'Wprowadź parametry powyżej i naciśnij Oblicz',
+    btn_calc: 'Oblicz',
+    btn_reset: 'Resetuj',
+    btn_export: 'Eksportuj JSON',
+    btn_import: 'Importuj JSON',
+    btn_print: 'Drukuj / PDF',
+    sum_last_gap: 'Ostatni odstęp między słupkami (mm)',
+    sum_waste: 'Odstęp ok',
+    warn_small_gap: (g, min) => `⚠ Ostatni odstęp wynosi ${g} mm — poniżej minimum ${min} mm.`,
+    shift_hint: 'Dostosuj pierwszy lub ostatni odstęp, aby przesunąć cały układ słupków.',
+    lbl_first_gap: 'Pierwszy odstęp (mm)',
+    lbl_last_gap: 'Ostatni odstęp (mm)',
+    gap_current: (v) => `Teraz: ${v} mm`,
+    sec_adjust: 'Precyzyjne dopasowanie',
+    hint_gap_adjust: 'Wskazówka: zmień pierwszy odstęp, aby przesunąć układ. Zmień ostatni odstęp, aby kontrolować przestrzeń końcową.',
+    btn_reset_gap: 'Resetuj',
+    th_num: '#',
+    th_left_edge: 'Lewa krawędź (mm)',
+    th_center: 'Oś (mm)',
+    th_right_edge: 'Prawa krawędź (mm)',
+    th_gap_after: 'Odstęp między słupkami (mm)',
+    th_status: '',
+    lbl_mark_side: 'Linia znakowania na:',
+    opt_left_edge: 'Lewa krawędź',
+    opt_right_edge: 'Prawa krawędź',
+    opt_center: 'Oś',
+    sum_studs: 'Słupki',
+    sum_spacing: 'Typowy rozstaw (mm)',
+    status_ok: 'OK',
+    status_warn: 'Krótki',
+    status_corner: 'Narożnik',
+    mark_line: (n, c, le, re) => `#${n}  oś: ${c} mm   |   linie znakowania: ${le} mm ← | → ${re} mm`,
+    btn_add_opening: 'Dodaj otwór',
+    opening_label: 'Otwór',
+    btn_remove: 'Usuń',
+    lbl_bunn_section: 'Dolny oczep — Bunnsvill',
+    lbl_topp_section: 'Górny oczep — Topsvill',
+    lbl_bunnsvill: 'Bunnsvill',
+    lbl_toppsvill: 'Topsvill',
+    btn_add_svill: 'Dodaj oczep',
+    height_formula_result: (H, b, t, res) => `${H} − ${b} − ${t} = ${res} mm`,
+    sec_opening: 'Otwór (okno / drzwi)',
+    lbl_opening_enable: 'Dodaj otwór okienny lub drzwiowy',
+    lbl_opening_from: 'Początek otworu od lewej (mm)',
+    hint_opening_from: 'Odległość od zera taśmy do lewej krawędzi otworu',
+    lbl_opening_width: 'Szerokość otworu (mm)',
+    hint_opening_width: 'Wolna szerokość otworu',
+    opening_preview: (f, t, w) => `Otwór: ${f} mm → ${t} mm  (szerokość ${w} mm)`,
+    print_meta: (name, date) => `Projekt: ${name}   |   Data: ${date}`,
+    optimised_note: 'Zoptymalizowano',
+    tab_openmarks: 'Okna i drzwi — znaki',
+    sec_openmarks_ref: 'Referencyjna wysokość piętra',
+    lbl_floor_mark: 'Rzędna na betonie (mm n.p.m.)',
+    hint_floor_mark: 'np. 17000 — rzędna wymalowana/wytłoczona na ścianie betonowej',
+    lbl_finished_floor: 'Rzędna podłogi gotowej z rysunków (mm n.p.m.)',
+    hint_finished_floor: 'np. 15620 — rzędna podłogi gotowej z rysunków przekrojowych',
+    lbl_default_gap_bottom: 'Domyślny luz — dół (mm)',
+    hint_default_gap_bottom: 'Gap między betonem a dolną częścią ościeżnicy (typowo 10–15 mm)',
+    lbl_default_gap_top: 'Domyślny luz — góra (mm)',
+    hint_default_gap_top: 'Gap między górą ościeżnicy a betonem (typowo 10–15 mm)',
+    lbl_default_gap_side: 'Domyślny luz — boki (mm)',
+    hint_default_gap_side: 'Gap po każdej stronie między ościeżnicą a betonem (typowo 10 mm)',
+    th_om_opening_size: 'Otwór ścienny (S×W mm)',
+    th_om_side_gap: 'Luz boki',
+    lbl_om_gap_bot: 'Luz dół (mm)',
+    lbl_om_gap_top: 'Luz góra (mm)',
+    lbl_om_gap_side: 'Luz boki (mm)',
+    lbl_floor_diff: 'Podłoga poniżej znaku:',
+    sec_openmarks_list: 'Okna i drzwi',
+    btn_add_window: 'Dodaj okno',
+    btn_add_door: 'Dodaj drzwi',
+    sec_openmarks_results: 'Znaki otworów okiennych i drzwiowych — od rzędnej referencyjnej (w dół = ujemne)',
+    th_om_name: 'Nazwa',
+    th_om_size: 'BxH (mm)',
+    th_om_bh: 'Bh. (mm)',
+    th_om_bot_gap: 'Luz dół',
+    th_om_top_gap: 'Luz góra',
+    th_om_bot_mark: '▼ Znak dołu (mm)',
+    th_om_top_mark: '▲ Znak góry (mm)',
+    sec_openmarks_info: 'Jak to działa',
+    openmarks_info_text: 'Podaj rzędną wybitą na betonie i rzędną gotowej podłogi z rysunków przekrojowych. Kalkulator wyznacza różnicę i oblicza dokładne znaki dolne i górne dla każdego otworu — uwzględniając wysokość parapetu (Bh.) i luzy montażowe. Wszystkie znaki są podawane względem rzędnej referencyjnej betonu: ujemne = poniżej, dodatnie = powyżej.',
+    lbl_om_name: 'Nazwa',
+    lbl_om_width: 'Szerokość B (mm)',
+    lbl_om_height: 'Wysokość H (mm)',
+    lbl_om_bh: 'Wysokość parapetu Bh. (mm)',
+    lbl_om_bh_door: 'Wysokość progu Bh. (mm)',
+    viz_wall: 'ŚCIANA BETONOWA',
+    viz_ref_mark: 'Rzędna ref.',
+    viz_floor: 'Podłoga (FF)',
+    viz_bot: '▼ dół',
+    viz_top: '▲ góra',
+    viz_leg_ref: 'Rzędna ref. (± 0)',
+    viz_leg_floor: 'Podłoga (FF)',
+    viz_leg_bot: '▼ Dolny znak otworu',
+    viz_leg_top: '▲ Górny znak otworu',
+    lbl_om_gap_bot: 'Luz dół (mm)',
+    lbl_om_gap_top: 'Luz góra (mm)',
+    lbl_om_gap_side: 'Luz boki (mm)',
+    lbl_om_custom_gaps: 'Własne luzy dla tego elementu',
+    om_type_window: 'Okno',
+    om_type_door: 'Drzwi',
+    om_bot_formula: (floorDiff, bh, gapBot) => `podłoga(−${floorDiff}) + Bh(${bh}) − luz(${gapBot})`,
+    om_top_formula: (floorDiff, bh, H, gapTop) => `podłoga(−${floorDiff}) + Bh(${bh}) + H(${H}) + luz(${gapTop})`,
+  },
+  lt: {
+    tab_layout: 'Stenderių išdėstymas',
+    tab_height: 'Stenderio aukštis',
+    height_proj_note: 'Projekto informacija bendra su išdėstymo kortelė.',
+    sec_height_info: 'Kaip tai veikia',
+    height_info_text: 'Stenderio pjovimo ilgis = bendras sienos aukštis atėmus visų horizontalių sijų bendrą storį. Norvegijos standartas: viena apatinė sija (bunnsvill) ir dvi viršutinės (dobbeltsvill), kiekviena po 48 mm.',
+    back: 'Atgal',
+    page_title: 'Sienų karkasas — Stenderių išdėstymas',
+    sec_height: 'Stenderio aukštis — Bindingsverk',
+    lbl_h_total: 'Bendras sienos aukštis H (mm)',
+    hint_h_total: 'Nuo juodgrindžių (arba perdangos) iki viršutinės sijos viršaus',
+    lbl_bunn_thick: 'Apatinės sijos storis (Bunnsvill, mm)',
+    lbl_bunn_count: 'Apatinių sijų skaičius',
+    lbl_topp_thick: 'Viršutinės sijos storis (Topsvill, mm)',
+    lbl_topp_count: 'Viršutinių sijų skaičius',
+    hint_svill_thick: 'Norvegiški standartai: 48 mm',
+    lbl_stud_cut_length: 'Stenderio pjovimo ilgis',
+    height_formula: (H, bt, bn, bTot, tt, tn, tTot, res) =>
+      `${H} − (${bt}×${bn}=${bTot}) − (${tt}×${tn}=${tTot}) = ${res} mm`,
+    sec_project: 'Projektas',
+    lbl_proj_name: 'Projekto pavadinimas',
+    ph_proj_name: 'pvz. Svetainė šiaurinė siena',
+    lbl_date: 'Data',
+    lbl_notes: 'Pastabos / komentarai',
+    ph_notes: 'Papildoma informacija, patalpa, aukštas…',
+    sec_wall: 'Sienos parametrai',
+    lbl_wall_len: 'Sienos ilgis (mm)',
+    hint_wall_len: 'Bendras sienos ilgis nuo galo iki galo',
+    lbl_stud_pitch: 'Stenderio žingsnis ašys (mm)',
+    hint_pitch: 'Standartas: 600 mm. Taip pat naudojama: 400, 300',
+    lbl_stud_thick: 'Stenderio plotis (mm)',
+    hint_thick: 'Medienos skerspjūvio plotis, pvz. 48 mm',
+    lbl_min_gap: 'Min. tarpas — įspėjimas (mm)',
+    hint_min_gap: 'Rodyti įspėjimą jei tarpas mažesnis už šią reikšmę',
+    sec_left: 'Kairysis galas — ruletės nulio taškas',
+    lbl_left_type: 'Kairiojo galo tipas',
+    opt_outer_corner: 'Išorinis kampas',
+    opt_inner_corner: 'Vidinis kampas',
+    opt_free_end: 'Laisvas galas',
+    lbl_adj_wall_thick: 'Gretimos sienos storis (mm)',
+    hint_adj_wall: 'Susikertančios sienos storis',
+    hint_adj_wall_optional: 'Neprivaloma — palikti tuščią jei gretimos sienos nėra',
+    lbl_second_stud: '2-ojo stenderio centras (mm) — perrašymas',
+    hint_second_manual: 'Palikti tuščią — auto / įvesti — perrašyti',
+    btn_auto_calc: 'Auto',
+    sec_right: 'Dešinysis galas',
+    lbl_right_type: 'Dešiniojo galo tipas',
+    sec_results: 'Rezultatai — stenderių pozicijos',
+    result_empty: 'Įveskite parametrus viršuje ir spauskite Skaičiuoti',
+    btn_calc: 'Skaičiuoti',
+    btn_reset: 'Nustatyti iš naujo',
+    btn_export: 'Eksportuoti JSON',
+    btn_import: 'Importuoti JSON',
+    btn_print: 'Spausdinti / PDF',
+    sum_last_gap: 'Paskutinis tarpas tarp stenderių (mm)',
+    sum_waste: 'Tarpas tinkamas',
+    warn_small_gap: (g, min) => `⚠ Paskutinis tarpas yra ${g} mm — mažiau nei minimumas ${min} mm.`,
+    shift_hint: 'Keiskite pirmąjį arba paskutinįjį tarpą, kad pastumtumėte visą stenderių išdėstymą.',
+    lbl_first_gap: 'Pirmasis tarpas (mm)',
+    lbl_last_gap: 'Paskutinis tarpas (mm)',
+    gap_current: (v) => `Dabar: ${v} mm`,
+    sec_adjust: 'Tikslus koregavimas',
+    hint_gap_adjust: 'Patarimas: keiskite pirmąjį tarpą, kad pastumtumėte išdėstymą. Keiskite paskutinįjį, kad valdytumėte baigiamąjį tarpą.',
+    btn_reset_gap: 'Atstatyti',
+    th_num: '#',
+    th_left_edge: 'Kairysis kraštas (mm)',
+    th_center: 'Centras (mm)',
+    th_right_edge: 'Dešinysis kraštas (mm)',
+    th_gap_after: 'Tarpas tarp stenderių (mm)',
+    th_status: '',
+    lbl_mark_side: 'Žymėjimo brūkšnys ant:',
+    opt_left_edge: 'Kairysis kraštas',
+    opt_right_edge: 'Dešinysis kraštas',
+    opt_center: 'Centras',
+    sum_studs: 'Stenderiai',
+    sum_spacing: 'Tipinis žingsnis (mm)',
+    status_ok: 'OK',
+    status_warn: 'Per mažas',
+    status_corner: 'Kampas',
+    mark_line: (n, c, le, re) => `#${n}  centras: ${c} mm   |   brūkšniai: ${le} mm ← | → ${re} mm`,
+    btn_add_opening: 'Pridėti angą',
+    opening_label: 'Anga',
+    btn_remove: 'Pašalinti',
+    lbl_bunn_section: 'Apatinės sijos — Bunnsvill',
+    lbl_topp_section: 'Viršutinės sijos — Topsvill',
+    lbl_bunnsvill: 'Bunnsvill',
+    lbl_toppsvill: 'Topsvill',
+    btn_add_svill: 'Pridėti siją',
+    height_formula_result: (H, b, t, res) => `${H} − ${b} − ${t} = ${res} mm`,
+    sec_opening: 'Anga (langas / durys)',
+    lbl_opening_enable: 'Pridėti langą arba duris',
+    lbl_opening_from: 'Angos pradžia nuo kairės (mm)',
+    hint_opening_from: 'Atstumas nuo ruletės nulio iki kairiojo angos krašto',
+    lbl_opening_width: 'Angos plotis (mm)',
+    hint_opening_width: 'Laisvas angos plotis',
+    opening_preview: (f, t, w) => `Anga: ${f} mm → ${t} mm  (plotis ${w} mm)`,
+    print_meta: (name, date) => `Projektas: ${name}   |   Data: ${date}`,
+    optimised_note: 'Optimizuota',
+    tab_openmarks: 'Langų/durų angos',
+    sec_openmarks_ref: 'Aukščio atskaitinis ženklas',
+    lbl_floor_mark: 'Aukščio žyma ant betono (mm virš jūros lygio)',
+    hint_floor_mark: 'pvz. 17000 — žyma ant betoninės sienos',
+    lbl_finished_floor: 'Baigtų grindų aukštis iš brėžinių (mm virš jūros lygio)',
+    hint_finished_floor: 'pvz. 15620 — baigtų grindų aukščio kota iš pjūvio brėžinių',
+    lbl_default_gap_bottom: 'Numatytasis laisvumas — apačia (mm)',
+    hint_default_gap_bottom: 'Tarpas tarp betono ir rėmo apačios (paprastai 10–15 mm)',
+    lbl_default_gap_top: 'Numatytasis laisvumas — viršus (mm)',
+    hint_default_gap_top: 'Tarpas tarp rėmo viršaus ir betono (paprastai 10–15 mm)',
+    lbl_default_gap_side: 'Numatytasis laisvumas — šonai (mm)',
+    hint_default_gap_side: 'Tarpas kiekviename šone tarp rėmo ir betono (paprastai 10 mm)',
+    th_om_opening_size: 'Sienos anga (P×A mm)',
+    th_om_side_gap: 'Šono laisv.',
+    lbl_floor_diff: 'Grindys žemiau atskaitinės žymos:',
+    sec_openmarks_list: 'Langai ir durys',
+    btn_add_window: 'Pridėti langą',
+    btn_add_door: 'Pridėti duris',
+    sec_openmarks_results: 'Langų/durų angų žymos — nuo atskaitinės žymos (žemyn = neigiamas)',
+    th_om_name: 'Pavadinimas',
+    th_om_size: 'PxA (mm)',
+    th_om_bh: 'Bh. (mm)',
+    th_om_bot_gap: 'Apačios laisv.',
+    th_om_top_gap: 'Viršaus laisv.',
+    th_om_bot_mark: '▼ Apatinė žyma (mm)',
+    th_om_top_mark: '▲ Viršutinė žyma (mm)',
+    sec_openmarks_info: 'Kaip tai veikia',
+    openmarks_info_text: 'Įveskite aukščio žymą ant betoninio aukšto sienos ir baigtų grindų aukštį iš pjūvio brėžinių. Skaičiuotuvas apskaičiuoja, kiek baigtų grindų lygis yra žemiau atskaitinės betono žymos, tada apskaičiuoja tikslias apatinės ir viršutinės angos žymas kiekvienam langui ar durims — atsižvelgiant į palangės aukštį (Bh.) ir laisvumo tarpus. Visos žymos pateikiamos atskaičiuojant nuo betono atskaitinės žymos: neigiamas — žemiau, teigiamas — aukščiau.',
+    lbl_om_name: 'Pavadinimas',
+    lbl_om_width: 'Plotis P (mm)',
+    lbl_om_height: 'Aukštis A (mm)',
+    lbl_om_bh: 'Palangės aukštis Bh. (mm)',
+    lbl_om_bh_door: 'Slenksčio aukštis Bh. (mm)',
+    viz_wall: 'BETONO SIENA',
+    viz_ref_mark: 'Ref. žyma',
+    viz_floor: 'Grindys (FF)',
+    viz_bot: '▼ apačia',
+    viz_top: '▲ viršus',
+    viz_leg_ref: 'Ref. žyma (± 0)',
+    viz_leg_floor: 'Grindys (FF)',
+    viz_leg_bot: '▼ Apatinė angos žyma',
+    viz_leg_top: '▲ Viršutinė angos žyma',
+    lbl_om_gap_bot: 'Apačios laisv. (mm)',
+    lbl_om_gap_top: 'Viršaus laisv. (mm)',
+    lbl_om_gap_side: 'Šono laisv. (mm)',
+    lbl_om_custom_gaps: 'Atskiri laisvumai šiam elementui',
+    om_type_window: 'Langas',
+    om_type_door: 'Durys',
+    om_bot_formula: (floorDiff, bh, gapBot) => `grindys(−${floorDiff}) + Bh(${bh}) − laisv.(${gapBot})`,
+    om_top_formula: (floorDiff, bh, H, gapTop) => `grindys(−${floorDiff}) + Bh(${bh}) + A(${H}) + laisv.(${gapTop})`,
+  }
+};
+
+/* ════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════ */
+let lang = localStorage.getItem('pb_lang') || 'en';
+let lastStuds =[];          // computed stud array
+let optimised = false;       // flag
+
+/* ════════════════════════════════════════════
+   TAB SWITCHING
+════════════════════════════════════════════ */
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.remove('hidden');
+  btn.classList.add('active');
+  // recalc height if switching to height tab
+  if (tabId === 'tab-height') calcHeight();
+}
+
+function applyLang() {
+  const d = T[lang];
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    if (typeof d[k] === 'string') el.textContent = d[k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const k = el.dataset.i18nPh;
+    if (d[k]) el.placeholder = d[k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === lang)
+  );
+
+  // Re-render table headers
+  if (lastStuds.length) renderResults(lastStuds);
+  // Re-render opening marks items
+  if (omItems.length) { omRenderItems(); calcOpenMarks(); }
+}
+
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('pb_lang', l);
+  applyLang();
+}
+
+/* ════════════════════════════════════════════
+   UI TOGGLE HELPERS
+════════════════════════════════════════════ */
+function onLeftChange() {
+  const v = document.querySelector('input[name="left_type"]:checked').value;
+  document.getElementById('left_inner_fields').classList.toggle('visible', v === 'inner');
+  document.getElementById('left_outer_fields').classList.toggle('visible', v === 'outer');
+}
+
+function onRightChange() {
+  const v = document.querySelector('input[name="right_type"]:checked').value;
+  const f = document.getElementById('right_corner_fields');
+  f.classList.toggle('visible', v === 'inner' || v === 'outer');
+}
+
+function autoCalcSecondLeft() {
+  const pitch      = parseFloat(document.getElementById('stud_pitch').value)  || 600;
+  const studThick  = parseFloat(document.getElementById('stud_thick').value)  || 48;
+  const adjThick   = parseFloat(document.getElementById('left_adj_thick').value) || 0;
+  // gypsum trim offset assumed 70 mm → second stud = pitch - 70 - adjThick
+  const second = pitch - 70 - adjThick;
+  document.getElementById('left_second_manual').value = Math.max(0, Math.round(second));
+}
+
+/* ════════════════════════════════════════════
+   CORE CALCULATION
+════════════════════════════════════════════ */
+function getInputs() {
+  return {
+    wallLen    : parseFloat(document.getElementById('wall_length').value)      || 0,
+    pitch      : parseFloat(document.getElementById('stud_pitch').value)       || 600,
+    studThick  : parseFloat(document.getElementById('stud_thick').value)       || 48,
+    minGap     : parseFloat(document.getElementById('min_gap').value)          ?? 100,
+    leftType   : document.querySelector('input[name="left_type"]:checked').value,
+    leftAdj    : parseFloat(document.getElementById('left_adj_thick').value)        || 0,
+    leftOuterAdj: parseFloat(document.getElementById('left_outer_adj_thick').value) || 0,
+    leftSecond : parseFloat(document.getElementById('left_second_manual').value)    || null,
+    rightType  : document.querySelector('input[name="right_type"]:checked').value,
+    rightAdj   : parseFloat(document.getElementById('right_adj_thick').value)  || 0,
+    openingOn  : document.getElementById('opening_enabled')?.checked || false,
+  };
+}
+
+function buildStuds(inp, secondOverride) {
+  const half  = inp.studThick / 2;
+  const studs =[];
+
+  /* ══ LAST (closing) stud centre — always flush with wall end ══
+     The last stud's right edge = wallLen in ALL cases.
+     rightAdj (adjacent wall thickness) is shown visually in the canvas only —
+     it does NOT move the last stud inward.
+     Same applies to leftOuterAdj on the left side.
+  */
+  const lastCentre = inp.wallLen - half;  // always wallLen - half
+
+  /* ══ FIRST stud centre — fixed anchor from the left ══ */
+  const firstCentre = half;   // always flush with left edge
+
+  /* ══ SECOND stud centre ══
+     outer corner (left): gypsum trim offset → pitch - 70  (e.g. 530 for 600)
+     inner corner (left): pitch - 70 - adjWallThick
+     free end           : pitch - 70 (same as outer, no special reason to shift)
+     manual override always wins.
+  */
+  let secondCentre;
+  if (secondOverride !== undefined && secondOverride !== null && !isNaN(secondOverride) && secondOverride > 0) {
+    secondCentre = secondOverride;
+  } else if (inp.leftType === 'inner' && inp.leftAdj > 0) {
+    secondCentre = inp.pitch - 70 - inp.leftAdj;
+    if (secondCentre <= firstCentre) secondCentre = inp.pitch; // safety
+  } else if (inp.leftType === 'free') {
+    secondCentre = inp.pitch - 70; // free end: same 530mm rule as outer corner
+  } else {
+    // outer corner default
+    secondCentre = inp.pitch - 70;
+  }
+
+  /* ══ REGULAR studs: march from secondCentre in steps of pitch,
+       STOP before we would overlap or touch the last stud.
+       A stud is valid only if its RIGHT edge clears the last stud's LEFT edge
+       by at least 1 mm (they may end up overlapping — that's ok physically,
+       the algorithm still keeps them, we just show negative gap).
+       Actually per user: if studs overlap they can be nailed together,
+       but we must NOT place a regular stud PAST the last stud's centre.
+  ══ */
+  studs.push(firstCentre);
+  if (secondCentre > firstCentre + 1) studs.push(secondCentre);
+
+  let cur = secondCentre + inp.pitch;
+  while (true) {
+    // Stop if this regular stud's centre would be at or past the last stud centre
+    if (cur >= lastCentre - 1) break;
+    studs.push(cur);
+    cur += inp.pitch;
+  }
+
+  /* ══ Add last stud (always) — only skip if it duplicates the previous one ══ */
+  if (Math.abs(lastCentre - studs[studs.length - 1]) > 1) {
+    studs.push(lastCentre);
+  }
+
+  /* ══ Build stud objects ══ */
+  return studs.map((c, i) => {
+    const le = c - half;
+    const re = c + half;
+    const gapAfter = i < studs.length - 1
+      ? (studs[i + 1] - half) - (c + half)   // can be negative = overlap
+      : null;
+    const overlap = gapAfter !== null && gapAfter < 0;
+    return {
+      idx: i + 1,
+      centre:    Math.round(c),
+      leftEdge:  Math.round(le),
+      rightEdge: Math.round(re),
+      gapAfter:  gapAfter !== null ? Math.round(gapAfter) : null,
+      overlap,
+    };
+  });
+}
+
+/* ════════════════════════════════════════════
+   STUD HEIGHT CALCULATOR (Bindingsverk) — dynamic svill layers
+════════════════════════════════════════════ */
+let bunnLayers = [];   // [{id, thick}]
+let toppLayers = [];   // [{id, thick}]
+let svillIdSeq = 0;
+
+function addSvill(type, thick = 48) {
+  const id = 'svill_' + (++svillIdSeq);
+  const layer = { id, thick };
+  if (type === 'bunn') bunnLayers.push(layer);
+  else                  toppLayers.push(layer);
+  renderSvillList(type);
+  calcHeight();
+}
+
+function removeSvill(type, id) {
+  if (type === 'bunn') bunnLayers = bunnLayers.filter(l => l.id !== id);
+  else                  toppLayers = toppLayers.filter(l => l.id !== id);
+  renderSvillList(type);
+  calcHeight();
+}
+
+function renderSvillList(type) {
+  const layers = type === 'bunn' ? bunnLayers : toppLayers;
+  const el = document.getElementById(type + '-list');
+  const d = T[lang];
+  el.innerHTML = '';
+  layers.forEach((layer, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; align-items:center; gap:8px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 12px;';
+    row.innerHTML = `
+      <span style="font-size:0.75rem; color:var(--dim); min-width:22px;">#${i+1}</span>
+      <input type="number" value="${layer.thick}" min="20" max="200" step="1" inputmode="decimal"
+        style="flex:1; max-width:100px; background:var(--card); border:1px solid var(--border); border-radius:6px; padding:7px 10px; color:var(--text); font-family:'Consolas', 'Courier New', monospace; font-size:0.9rem; outline:none; min-height:40px;"
+        oninput="updateSvillThick('${type}','${layer.id}',this.value)">
+      <span style="font-size:0.8rem; color:var(--dim);">mm</span>
+      <span style="font-size:0.75rem; color:var(--muted); flex:1;">${type === 'bunn' ? d.lbl_bunnsvill : d.lbl_toppsvill}</span>
+      ${layers.length > 1 ? `<button onclick="removeSvill('${type}','${layer.id}')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:1.1rem;padding:4px 6px;line-height:1;" title="Remove">×</button>` : ''}
+    `;
+    el.appendChild(row);
+  });
+}
+
+function updateSvillThick(type, id, val) {
+  const layers = type === 'bunn' ? bunnLayers : toppLayers;
+  const layer = layers.find(l => l.id === id);
+  if (layer) layer.thick = parseFloat(val) || 0;
+  calcHeight();
+}
+
+function calcHeight() {
+  const hTotal = parseFloat(document.getElementById('h_total')?.value);
+  if (isNaN(hTotal)) { document.getElementById('height-result').style.display = 'none'; return; }
+
+  const bunnTotal = bunnLayers.reduce((s, l) => s + (l.thick || 0), 0);
+  const toppTotal = toppLayers.reduce((s, l) => s + (l.thick || 0), 0);
+  const studH = hTotal - bunnTotal - toppTotal;
+
+  const resBox = document.getElementById('height-result');
+  resBox.style.display = 'block';
+
+  const valEl = document.getElementById('height-result-val');
+  valEl.textContent = studH > 0 ? studH : '—';
+  valEl.style.color = studH > 0 ? 'var(--success)' : 'var(--danger)';
+
+  // Formula lines
+  const d = T[lang];
+  const bunnLines = bunnLayers.map((l, i) => `${d.lbl_bunnsvill} #${i+1}: ${l.thick} mm`).join('\n');
+  const toppLines = toppLayers.map((l, i) => `${d.lbl_toppsvill} #${i+1}: ${l.thick} mm`).join('\n');
+  const formulaEl = document.getElementById('height-result-formula');
+  formulaEl.textContent =
+    `H = ${hTotal} mm\n` +
+    (bunnLines ? bunnLines + '\n' : '') +
+    (toppLines ? toppLines + '\n' : '') +
+    `─────────────────\n` +
+    d.height_formula_result(hTotal, bunnTotal, toppTotal, studH);
+
+  saveState();
+}
+
+function calculate() {
+  optimised = false;
+  const inp = getInputs();
+  if (inp.wallLen < 100) { alert('⚠ ' + (lang === 'lt' ? 'Įveskite sienos ilgį!' : lang === 'no' ? 'Angi vegglengde!' : lang === 'pl' ? 'Podaj długość ściany!' : 'Enter wall length!')); return; }
+
+  const rawSecond = parseFloat(document.getElementById('left_second_manual').value);
+  const second = (inp.leftType === 'inner' && !isNaN(rawSecond) && rawSecond > 0) ? rawSecond : null;
+  let studs = buildStuds(inp, second);
+  studs = applyOpenings(studs, inp);
+  lastStuds = studs;
+  renderResults(lastStuds);
+}
+
+/* ════════════════════════════════════════════
+   OPENINGS (windows / doors) — dynamic list
+════════════════════════════════════════════ */
+let openings = [];   //[{id, from, width}]
+let openingIdSeq = 0;
+
+function onOpeningToggle() {
+  const on = document.getElementById('opening_enabled').checked;
+  document.getElementById('opening_fields').style.display = on ? 'block' : 'none';
+  if (on && openings.length === 0) addOpening();
+  if (lastStuds.length) calculate();
+}
+
+function addOpening() {
+  const id = 'op_' + (++openingIdSeq);
+  openings.push({ id, from: '', width: '' });
+  renderOpeningsList();
+}
+
+function removeOpening(id) {
+  openings = openings.filter(o => o.id !== id);
+  renderOpeningsList();
+  if (lastStuds.length) calculate();
+}
+
+function updateOpening(id, field, val) {
+  const op = openings.find(o => o.id === id);
+  if (op) op[field] = val;
+  if (lastStuds.length) calculate();
+}
+
+function renderOpeningsList() {
+  const el = document.getElementById('openings-list');
+  const d = T[lang];
+  el.innerHTML = '';
+  openings.forEach((op, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px;';
+    row.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em;">
+          🚪 ${d.opening_label} #${i+1}
+        </span>
+        ${openings.length > 1 ? `<button onclick="removeOpening('${op.id}')" style="background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-size:0.78rem;padding:3px 10px;">✕ ${d.btn_remove}</button>` : ''}
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div>
+          <label style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--dim); display:block; margin-bottom:4px;" data-i18n="lbl_opening_from"></label>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <input type="number" value="${op.from}" min="0" max="50000" step="1" inputmode="decimal" placeholder="600"
+              style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;min-height:44px;"
+              oninput="updateOpening('${op.id}','from',this.value)">
+            <span style="font-size:0.72rem;color:var(--dim);">mm</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--dim); display:block; margin-bottom:4px;" data-i18n="lbl_opening_width"></label>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <input type="number" value="${op.width}" min="50" max="10000" step="1" inputmode="decimal" placeholder="900"
+              style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;min-height:44px;"
+              oninput="updateOpening('${op.id}','width',this.value)">
+            <span style="font-size:0.72rem;color:var(--dim);">mm</span>
+          </div>
+        </div>
+      </div>
+      ${op.from && op.width ? `<div style="margin-top:6px;font-size:0.75rem;color:var(--primary);font-family:'Consolas', 'Courier New', monospace;">${d.opening_preview(parseFloat(op.from), parseFloat(op.from)+parseFloat(op.width), parseFloat(op.width))}</div>` : ''}
+    `;
+    el.appendChild(row);
+  });
+}
+
+function applyOpenings(studs, inp) {
+  if (!inp.openingOn || openings.length === 0) return studs;
+
+  let result = studs.map(s => ({ ...s, inOpening: false, isOpLeft: false, isOpRight: false }));
+  const half = inp.studThick / 2;
+
+  for (const op of openings) {
+    const opStart = parseFloat(op.from);
+    const opW     = parseFloat(op.width);
+    if (isNaN(opStart) || isNaN(opW) || opW <= 0) continue;
+    const opEnd = opStart + opW;
+
+    // Mark studs inside this opening
+    result.forEach(s => {
+      if (s.leftEdge >= opStart && s.rightEdge <= opEnd) s.inOpening = true;
+    });
+
+    // Opening edge studs
+    const opLC = opStart - half;
+    const opRC = opEnd   + half;
+
+    function mergeOrAdd(centre, flagL, flagR) {
+      let merged = false;
+      for (const s of result) {
+        if (Math.abs(s.centre - centre) <= inp.studThick) {
+          if (flagL) s.isOpLeft  = true;
+          if (flagR) s.isOpRight = true;
+          s.inOpening = false;
+          merged = true; break;
+        }
+      }
+      if (!merged && centre > half && centre < inp.wallLen - half) {
+        result.push({ idx: 0, centre: Math.round(centre),
+          leftEdge: Math.round(centre - half), rightEdge: Math.round(centre + half),
+          gapAfter: null, overlap: false, inOpening: false,
+          isOpLeft: flagL, isOpRight: flagR });
+      }
+    }
+
+    mergeOrAdd(opLC, true,  false);
+    mergeOrAdd(opRC, false, true);
+  }
+
+  result.sort((a, b) => a.centre - b.centre);
+  return result.map((s, i) => {
+    s.idx = i + 1;
+    s.gapAfter = i < result.length - 1
+      ? (result[i+1].centre - half) - (s.centre + half) : null;
+    s.overlap = s.gapAfter !== null && s.gapAfter < 0;
+    return s;
+  });
+}
+
+/* ════════════════════════════════════════════
+   GAP ADJUSTMENT (first & last)
+════════════════════════════════════════════ */
+function applyGapAdjust() {
+  const inp  = getInputs();
+  const half = inp.studThick / 2;
+  const fgRaw = parseFloat(document.getElementById('first_gap_input').value);
+  const lgRaw = parseFloat(document.getElementById('last_gap_input').value);
+  const hasFG = !isNaN(fgRaw) && fgRaw >= 0;
+  const hasLG = !isNaN(lgRaw) && lgRaw >= 0;
+
+  // ── FIRST GAP: shifts stud#2, all subsequent studs follow at pitch ──
+  // After building, check if last gap (centre-to-centre) exceeds pitch.
+  // If so, insert one more regular stud before the last stud.
+  let newSecond = null;
+  if (hasFG) {
+    newSecond = fgRaw + inp.studThick + half;
+  }
+
+  let studs = buildStuds(inp, newSecond);
+
+  // Auto-fix: if last centre gap > pitch, insert extra stud
+  if (hasFG && studs.length >= 2) {
+    const lastC      = studs[studs.length - 1].centre;
+    const penultC    = studs[studs.length - 2].centre;
+    const centreDist = lastC - penultC;
+    if (centreDist > inp.pitch) {
+      // Insert stud(s) at pitch intervals between penultimate and last
+      const centres = studs.slice(0, -1).map(s => s.centre);
+      let cur = penultC + inp.pitch;
+      while (cur < lastC - 1) {
+        centres.push(cur);
+        cur += inp.pitch;
+      }
+      centres.push(lastC);
+      studs = centres.map((c, i) => {
+        const le = c - half;
+        const re = c + half;
+        const gapAfter = i < centres.length - 1
+          ? (centres[i + 1] - half) - (c + half) : null;
+        const overlap = gapAfter !== null && gapAfter < 0;
+        return { idx: i + 1, centre: Math.round(c), leftEdge: Math.round(le),
+                 rightEdge: Math.round(re),
+                 gapAfter: gapAfter !== null ? Math.round(gapAfter) : null, overlap };
+      });
+    }
+  }
+
+  // ── LAST GAP: only moves the PENULTIMATE stud, last stud stays fixed ──
+  // last stud left edge is fixed = wallLen - studThick
+  // penultimate new centre = lastStud.leftEdge - lgRaw - half
+  if (hasLG && studs.length >= 3) {
+    const lastLeftEdge    = studs[studs.length - 1].leftEdge;
+    const newPenultCentre = lastLeftEdge - lgRaw - half;
+    const prevRE          = studs[studs.length - 3].rightEdge;
+    if (newPenultCentre - half > prevRE) {
+      const centres = studs.map(s => s.centre);
+      centres[centres.length - 2] = newPenultCentre;
+      studs = centres.map((c, i) => {
+        const le = c - half;
+        const re = c + half;
+        const gapAfter = i < centres.length - 1
+          ? (centres[i + 1] - half) - (c + half) : null;
+        const overlap = gapAfter !== null && gapAfter < 0;
+        return { idx: i + 1, centre: Math.round(c), leftEdge: Math.round(le),
+                 rightEdge: Math.round(re),
+                 gapAfter: gapAfter !== null ? Math.round(gapAfter) : null, overlap };
+      });
+    }
+  }
+
+  lastStuds = applyOpenings(studs, inp);
+  renderResults(lastStuds);
+}
+
+function resetGapAdjust() {
+  document.getElementById('first_gap_input').value = '';
+  document.getElementById('last_gap_input').value  = '';
+  calculate();
+}
+
+/* ════════════════════════════════════════════
+   RENDER
+════════════════════════════════════════════ */
+function renderResults(studs) {
+  const inp    = getInputs();
+  const d      = T[lang];
+  const half   = inp.studThick / 2;
+
+  document.getElementById('result-empty').classList.add('hidden');
+  const content = document.getElementById('result-content');
+  content.classList.remove('hidden');
+
+  /* Summary */
+  const lastGap = studs.length >= 2
+    ? studs[studs.length - 1].leftEdge - studs[studs.length - 2].rightEdge
+    : null;
+  const gapOk = lastGap === null || lastGap >= inp.minGap;
+
+  document.getElementById('summary-strip').innerHTML = `
+    <div class="sum-box">
+      <div class="sum-val">${studs.length}</div>
+      <div class="sum-lbl">${d.sum_studs}</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-val">${inp.pitch}</div>
+      <div class="sum-lbl">${d.sum_spacing}</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-val ${lastGap !== null ? (lastGap < inp.minGap ? 'danger' : 'ok') : ''}">${lastGap !== null ? lastGap : '—'}</div>
+      <div class="sum-lbl">${d.sum_last_gap}</div>
+    </div>
+    <div class="sum-box">
+      <div class="sum-val ${gapOk ? 'ok' : 'danger'}">${gapOk ? '✓' : '✗'}</div>
+      <div class="sum-lbl">${d.sum_waste}</div>
+    </div>
+  `;
+
+  /* Warning */
+  const warnBox = document.getElementById('warn-box');
+  if (lastGap !== null && lastGap < inp.minGap) {
+    document.getElementById('warn-text').textContent = d.warn_small_gap(lastGap, inp.minGap);
+    warnBox.classList.add('visible');
+  } else {
+    warnBox.classList.remove('visible');
+  }
+
+  /* First gap shift box — always show after calculation */
+  const shiftBox = document.getElementById('shift-box');
+  shiftBox.style.display = 'block';
+
+  const firstGap = studs.length >= 2
+    ? studs[1].leftEdge - studs[0].rightEdge : null;
+  const lastGapVal = studs.length >= 2
+    ? studs[studs.length-1].leftEdge - studs[studs.length-2].rightEdge : null;
+
+  document.getElementById('shift-hint-text').textContent = d.shift_hint;
+  document.getElementById('first_gap_current').textContent =
+    firstGap !== null ? d.gap_current(firstGap) : '';
+  document.getElementById('last_gap_current').textContent =
+    lastGapVal !== null ? d.gap_current(lastGapVal) : '';
+
+  // Pre-fill inputs only if they are empty (don't overwrite user input)
+  const fgi = document.getElementById('first_gap_input');
+  const lgi = document.getElementById('last_gap_input');
+  if (!fgi.value && firstGap !== null)   fgi.value = firstGap;
+  if (!lgi.value && lastGapVal !== null) lgi.value = lastGapVal;
+
+  /* Table */
+  const tbody = document.getElementById('stud-tbody');
+  tbody.innerHTML = '';
+  studs.forEach((s, i) => {
+    const isFirst   = i === 0;
+    const isLast    = i === studs.length - 1;
+    const isCorner  = isFirst || isLast;
+    const isOpEdge  = s.isOpLeft || s.isOpRight;
+    const inOp      = s.inOpening;
+    const gapBad    = s.gapAfter !== null && s.gapAfter < inp.minGap && !s.overlap && !inOp;
+    const gapStr    = s.gapAfter === null ? '—'
+                    : s.overlap           ? `⚠ ${s.gapAfter}`
+                    : s.gapAfter;
+    const gapColor  = s.overlap ? 'color:var(--danger);'
+                    : gapBad    ? 'color:var(--warn);' : '';
+
+    let badge;
+    if (isOpEdge)      badge = `<span title="⊡" style="font-size:1rem;">🚪</span>`;
+    else if (inOp)     badge = `<span style="color:var(--dim); font-size:0.75rem;">—</span>`;
+    else if (s.overlap)badge = `<span class="badge-bad"></span>`;
+    else if (isCorner) badge = `<span class="badge-warn" title="${d.status_corner}"></span>`;
+    else if (gapBad)   badge = `<span class="badge-bad" title="${d.status_warn}"></span>`;
+    else               badge = `<span class="badge-ok" title="${d.status_ok}"></span>`;
+
+    const rowClass = inOp ? 'stud-in-opening' : (isOpEdge ? 'stud-opening-edge' : '');
+    const dimStyle = inOp ? 'opacity:0.45; font-style:italic;' : '';
+
+    tbody.innerHTML += `
+      <tr class="${rowClass}">
+        <td class="num" style="${dimStyle}">${s.idx}</td>
+        <td class="edge" style="${dimStyle}">${s.leftEdge}</td>
+        <td class="pos" style="${dimStyle} ${isOpEdge ? 'color:var(--accent);font-weight:700;' : ''}">${s.centre}</td>
+        <td class="edge" style="${dimStyle}">${s.rightEdge}</td>
+        <td class="gap" style="${gapColor}${dimStyle}">${gapStr}</td>
+        <td>${badge}</td>
+      </tr>`;
+  });
+
+
+  /* Ruler canvas */
+  drawRuler(studs, inp);
+
+  /* Print metadata */
+  const pn = document.getElementById('proj_name').value || '—';
+  const pd = document.getElementById('proj_date').value || '—';
+  const pnotes = document.getElementById('proj_notes').value || '';
+  document.getElementById('print-title-text').textContent = `ProBuilder — ${d.page_title}`;
+  document.getElementById('print-meta').textContent = d.print_meta(pn, pd);
+  document.getElementById('print-notes-text').textContent = pnotes;
+
+  saveState();
+}
+
+/* ════════════════════════════════════════════
+   CANVAS RULER
+════════════════════════════════════════════ */
+function drawRuler(studs, inp) {
+  const canvas = document.getElementById('ruler-canvas');
+  // Get width from card container, not hidden parent
+  const W = Math.max(canvas.offsetWidth || 0, canvas.parentElement?.offsetWidth || 0,
+                     document.querySelector('.grid-outer')?.offsetWidth || 0, 320);
+  canvas.width  = W;
+  canvas.height = 120;
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, 120);
+  if (!studs.length) return;
+
+  const markSide = document.querySelector('input[name="mark_side"]:checked')?.value || 'left';
+
+  /* ── Corner logic ──
+     OUTER corner (either side) → adjacent wall INTRUDES into our wall (dashed overlay)
+     INNER corner (either side) → adjacent wall APPENDED outside our wall end
+  */
+  const leftOuter  = inp.leftType  === 'outer' && inp.leftOuterAdj > 0;
+  const leftInner  = inp.leftType  === 'inner'  && inp.leftAdj     > 0;
+  const rightOuter = inp.rightType === 'outer';   // no adj thickness stored for right outer currently
+  const rightInner = inp.rightType === 'inner'  && inp.rightAdj    > 0;
+
+  // Extra canvas space needed only for INNER corners (appended outside)
+  const leftAppend  = leftInner  ? inp.leftAdj  : 0;
+  const rightAppend = rightInner ? inp.rightAdj : 0;
+  const totalSpan   = leftAppend + inp.wallLen + rightAppend;
+
+  const pad    = 20;
+  const scale  = (W - pad * 2) / totalSpan;
+  const ox     = pad + leftAppend * scale;   // px where our wall LEFT edge is
+  const wallPx = inp.wallLen * scale;
+
+  const y1 = 42, y2 = 76, yMid = (y1 + y2) / 2;
+
+  /* ── helper: draw adj wall box (no dimension text) ── */
+  function drawAdjWall(px, pw, dashed) {
+    ctx.fillStyle = 'rgba(116,66,16,0.12)';
+    ctx.fillRect(px, y1, pw, y2 - y1);
+    ctx.strokeStyle = 'rgba(116,66,16,0.55)';
+    ctx.lineWidth = 1.5;
+    if (dashed) ctx.setLineDash([4, 3]);
+    ctx.strokeRect(px, y1, pw, y2 - y1);
+    ctx.setLineDash([]);
+  }
+
+  // ── Left INNER corner: appended block to the left of our wall ──
+  if (leftInner)  drawAdjWall(pad, leftAppend * scale, false);
+
+  // ── Right INNER corner: appended block to the right of our wall ──
+  if (rightInner) drawAdjWall(ox + wallPx, rightAppend * scale, false);
+
+  // ── Wall fill ──
+  ctx.fillStyle = 'rgba(43,108,176,0.08)';
+  ctx.fillRect(ox, y1, wallPx, y2 - y1);
+
+  // ── Left OUTER corner: dashed intrusion from left edge inward ──
+  if (leftOuter)  drawAdjWall(ox, inp.leftOuterAdj * scale, true);
+
+  // ── Right OUTER corner: dashed intrusion from right edge inward ──
+  if (rightOuter && inp.rightAdj > 0) drawAdjWall(ox + wallPx - inp.rightAdj * scale, inp.rightAdj * scale, true);
+
+  // ── Wall boundary lines ──
+  ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 2;[ox, ox + wallPx].forEach(x => {
+    ctx.beginPath(); ctx.moveTo(x, y1 - 14); ctx.lineTo(x, y2 + 14); ctx.stroke();
+  });
+
+  // ── Baseline ──
+  ctx.strokeStyle = '#cbd5e0'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ox, yMid); ctx.lineTo(ox + wallPx, yMid); ctx.stroke();
+
+  // ── Wall dimension arrow ──
+  const dimY = 22;
+  ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(ox, dimY); ctx.lineTo(ox + wallPx, dimY); ctx.stroke();
+  [ox, ox + wallPx].forEach(x => {
+    ctx.beginPath(); ctx.moveTo(x, dimY - 4); ctx.lineTo(x, dimY + 4); ctx.stroke();
+  });
+  ctx.fillStyle = '#1a202c';
+  ctx.font = 'bold 9px Consolas, Courier New, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(inp.wallLen + ' mm', ox + wallPx / 2, dimY - 7);
+
+  // ── Opening zone ──
+  if (inp.openingOn && inp.openingW > 0) {
+    const opX = ox + inp.openingFrom * scale;
+    const opW = inp.openingW * scale;
+    // semi-transparent opening zone
+    ctx.fillStyle = 'rgba(116,66,16,0.10)';
+    ctx.fillRect(opX, y1, opW, y2 - y1);
+    // dashed border
+    ctx.strokeStyle = 'rgba(116,66,16,0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.strokeRect(opX, y1, opW, y2 - y1);
+    ctx.setLineDash([]);
+    // opening dimension below wall
+    ctx.strokeStyle = 'rgba(116,66,16,0.4)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(opX, y2 + 6); ctx.lineTo(opX + opW, y2 + 6); ctx.stroke();
+    [opX, opX + opW].forEach(x => {
+      ctx.beginPath(); ctx.moveTo(x, y2 + 2); ctx.lineTo(x, y2 + 10); ctx.stroke();
+    });
+    ctx.fillStyle = '#744210';
+    ctx.font = '500 8px Consolas, Courier New, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(inp.openingW + ' mm', opX + opW / 2, y2 + 20);
+  }
+
+  // ── Studs ──
+  const markPxArr = studs.map(s =>
+    markSide === 'left'  ? ox + s.leftEdge  * scale :
+    markSide === 'right' ? ox + s.rightEdge * scale :
+                           ox + s.centre    * scale
+  );
+
+  studs.forEach((s, i) => {
+    const lx     = ox + s.leftEdge  * scale;
+    const sw     = Math.max((s.rightEdge - s.leftEdge) * scale, 2);
+    const isEnd  = i === 0 || i === studs.length - 1;
+    const isOpEdge = s.isOpLeft || s.isOpRight;
+    const inOp   = s.inOpening;
+
+    // Stud fill & stroke
+    if (inOp) {
+      // dashed / ghosted stud inside opening
+      ctx.fillStyle = 'rgba(43,108,176,0.08)';
+      ctx.fillRect(lx, y1, sw, y2 - y1);
+      ctx.strokeStyle = 'rgba(43,108,176,0.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.strokeRect(lx, y1, sw, y2 - y1);
+      ctx.setLineDash([]);
+    } else if (isOpEdge) {
+      ctx.fillStyle   = 'rgba(221,107,32,0.35)';
+      ctx.strokeStyle = '#dd6b20';
+      ctx.lineWidth   = 1.5;
+      ctx.fillRect(lx, y1, sw, y2 - y1);
+      ctx.strokeRect(lx, y1, sw, y2 - y1);
+    } else {
+      ctx.fillStyle   = isEnd ? 'rgba(85,60,154,0.38)' : 'rgba(43,108,176,0.30)';
+      ctx.strokeStyle = isEnd ? '#553c9a' : '#2b6cb0';
+      ctx.lineWidth   = 1;
+      ctx.fillRect(lx, y1, sw, y2 - y1);
+      ctx.strokeRect(lx, y1, sw, y2 - y1);
+    }
+
+    // Mark line — skip for in-opening studs
+    if (!inOp) {
+      const markX   = markPxArr[i];
+      const markVal = markSide === 'left'  ? s.leftEdge
+                    : markSide === 'right' ? s.rightEdge : s.centre;
+
+      ctx.strokeStyle = isOpEdge ? '#dd6b20' : '#744210';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(markX, y1 - 5); ctx.lineTo(markX, y2 + 5); ctx.stroke();
+      ctx.fillStyle = isOpEdge ? '#dd6b20' : '#744210';
+      ctx.beginPath();
+      ctx.moveTo(markX - 3, y1 - 5); ctx.lineTo(markX + 3, y1 - 5);
+      ctx.lineTo(markX, y1); ctx.closePath(); ctx.fill();
+
+      const skip = i > 0 && Math.abs(markX - markPxArr[i - 1]) < 20;
+      if (!skip) {
+        const labelY = y2 + (i % 2 === 0 ? 13 : 24);
+        ctx.fillStyle = isOpEdge ? '#b7521a' : '#744210';
+        ctx.font = '500 8px Consolas, Courier New, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(markVal, markX, labelY);
+      }
+    }
+  });
+}
+
+/* ════════════════════════════════════════════
+   OPENING MARKS CALCULATOR
+════════════════════════════════════════════ */
+let omItems = [];
+let omIdSeq = 0;
+
+function omAddItem(type) {
+  const d = T[lang];
+  const id = ++omIdSeq;
+  const defaultGapBot = parseFloat(document.getElementById('om_gap_bottom').value) || 15;
+  const defaultGapTop = parseFloat(document.getElementById('om_gap_top').value) || 15;
+  const defaultGapSide = parseFloat(document.getElementById('om_gap_side').value) || 10;
+
+  const item = {
+    id,
+    type,
+    name: '',
+    width: '',
+    height: '',
+    bh: '',
+    customGaps: false,
+    gapBot: defaultGapBot,
+    gapTop: defaultGapTop,
+    gapSide: defaultGapSide,
+  };
+  omItems.push(item);
+  omRenderItems();
+  calcOpenMarks();
+}
+
+function omRemoveItem(id) {
+  omItems = omItems.filter(i => i.id !== id);
+  omRenderItems();
+  calcOpenMarks();
+}
+
+function omRenderItems() {
+  const d = T[lang];
+  const container = document.getElementById('om_items_container');
+  container.innerHTML = '';
+
+  omItems.forEach(item => {
+    const icon = item.type === 'window' ? '🪟' : '🚪';
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;';
+    div.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px;">
+        <span style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em;">${icon} ${item.type === 'window' ? d.om_type_window : d.om_type_door} #${item.id}</span>
+        <button class="btn btn-danger-outline" style="padding:4px 10px; font-size:0.75rem; min-height:32px;" onclick="omRemoveItem(${item.id})">✕</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:10px;">
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${d.lbl_om_name}</label>
+          <input type="text" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.name}" placeholder="${item.type === 'window' ? 'V-09' : 'VD-01'}" 
+            oninput="omItems.find(x=>x.id===${item.id}).name=this.value; calcOpenMarks();">
+        </div>
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${d.lbl_om_width}</label>
+          <input type="number" inputmode="decimal" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.width}" placeholder="990"
+            oninput="omItems.find(x=>x.id===${item.id}).width=this.value; calcOpenMarks();">
+        </div>
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${d.lbl_om_height}</label>
+          <input type="number" inputmode="decimal" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.height}" placeholder="1740"
+            oninput="omItems.find(x=>x.id===${item.id}).height=this.value; calcOpenMarks();">
+        </div>
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${item.type === 'door' ? d.lbl_om_bh_door : d.lbl_om_bh}</label>
+          <input type="number" inputmode="decimal" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.bh}" placeholder="${item.type === 'door' ? '0' : '800'}"
+            oninput="omItems.find(x=>x.id===${item.id}).bh=this.value; calcOpenMarks();">
+        </div>
+      </div>
+
+      <!-- Custom gaps toggle -->
+      <div style="margin-top:10px; display:flex; align-items:center; gap:8px;">
+        <label class="toggle-wrap">
+          <input type="checkbox" ${item.customGaps ? 'checked' : ''} onchange="omItems.find(x=>x.id===${item.id}).customGaps=this.checked; omRenderItems(); calcOpenMarks();">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+        <span style="font-size:0.8rem; color:var(--muted);">${d.lbl_om_custom_gaps}</span>
+      </div>
+
+      ${item.customGaps ? `
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${d.lbl_om_gap_bot}</label>
+          <input type="number" inputmode="decimal" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.gapBot}" placeholder="15"
+            oninput="omItems.find(x=>x.id===${item.id}).gapBot=parseFloat(this.value)||0; calcOpenMarks();">
+        </div>
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${d.lbl_om_gap_top}</label>
+          <input type="number" inputmode="decimal" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.gapTop}" placeholder="15"
+            oninput="omItems.find(x=>x.id===${item.id}).gapTop=parseFloat(this.value)||0; calcOpenMarks();">
+        </div>
+        <div class="field">
+          <label style="font-size:0.73rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em;">${d.lbl_om_gap_side}</label>
+          <input type="number" inputmode="decimal" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; font-family:inherit; font-size:16px; width:100%; min-height:44px; color:var(--text);" 
+            value="${item.gapSide}" placeholder="10"
+            oninput="omItems.find(x=>x.id===${item.id}).gapSide=parseFloat(this.value)||0; calcOpenMarks();">
+        </div>
+      </div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+function calcOpenMarks() {
+  const d = T[lang];
+  const floorMark     = parseFloat(document.getElementById('om_floor_mark').value);
+  const finishedFloor = parseFloat(document.getElementById('om_finished_floor').value);
+  const defaultGapBot  = parseFloat(document.getElementById('om_gap_bottom').value) || 15;
+  const defaultGapTop  = parseFloat(document.getElementById('om_gap_top').value)    || 15;
+  const defaultGapSide = parseFloat(document.getElementById('om_gap_side').value)   || 10;
+  const diffBox  = document.getElementById('om_floor_diff_box');
+  const diffVal  = document.getElementById('om_floor_diff_val');
+  const diffForm = document.getElementById('om_floor_diff_formula');
+  const resCard  = document.getElementById('om_results_card');
+
+  if (!isNaN(floorMark) && !isNaN(finishedFloor)) {
+    // floor is BELOW the mark — positive diff means floor is lower
+    const floorDiff = floorMark - finishedFloor; // e.g. 17000 - 15620 = 1380
+    diffBox.style.display = 'block';
+    diffVal.textContent = floorDiff;
+    diffForm.textContent = `(${floorMark} − ${finishedFloor} = ${floorDiff} mm)`;
+
+    // Build results table
+    const tbody = document.getElementById('om_result_tbody');
+    tbody.innerHTML = '';
+
+    let hasResults = false;
+    const vizData = [];
+
+    omItems.forEach(item => {
+      const W  = parseFloat(item.width)  || null;
+      const H  = parseFloat(item.height) || null;
+      const bh = parseFloat(item.bh);
+      const gapBot  = item.customGaps ? (parseFloat(item.gapBot)  || 0) : defaultGapBot;
+      const gapTop  = item.customGaps ? (parseFloat(item.gapTop)  || 0) : defaultGapTop;
+      const gapSide = item.customGaps ? (parseFloat(item.gapSide) || 0) : defaultGapSide;
+      const name = item.name || (item.type === 'window' ? d.om_type_window : d.om_type_door) + ' #' + item.id;
+
+      if (H === null || isNaN(bh)) return;
+      hasResults = true;
+
+      const botMark = -floorDiff + bh - gapBot;
+      const topMark = -floorDiff + bh + H + gapTop;
+
+      // Wall opening size = frame size + clearances on all sides
+      const openW = W !== null ? (W + 2 * gapSide) : null;
+      const openH = H + gapBot + gapTop;
+      const openingSizeStr = openW !== null ? `${openW} × ${openH}` : `— × ${openH}`;
+
+      const botColor = botMark < 0 ? 'var(--primary)' : 'var(--success)';
+      const topColor = topMark < 0 ? 'var(--primary)' : 'var(--success)';
+
+      const icon = item.type === 'window' ? '🪟' : '🚪';
+      const sizeStr = W ? `${W}×${H}` : `—×${H}`;
+
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid var(--border)';
+      tr.innerHTML = `
+        <td style="padding:9px 10px; font-weight:600; color:var(--text);">${icon} ${name}</td>
+        <td style="padding:9px 10px; font-family:'Consolas','Courier New',monospace; color:var(--muted);">${sizeStr}</td>
+        <td style="padding:9px 10px; text-align:center; font-family:'Consolas','Courier New',monospace; font-weight:700; color:var(--success);">${openingSizeStr}</td>
+        <td style="padding:9px 10px; text-align:center; font-family:'Consolas','Courier New',monospace; font-size:1.05rem; font-weight:700; color:${botColor};">${botMark > 0 ? '+' : ''}${botMark}</td>
+        <td style="padding:9px 10px; text-align:center; font-family:'Consolas','Courier New',monospace; font-size:1.05rem; font-weight:700; color:${topColor};">${topMark > 0 ? '+' : ''}${topMark}</td>
+        <td style="padding:9px 10px; font-family:'Consolas','Courier New',monospace; color:var(--muted);">${bh}</td>
+        <td style="padding:9px 10px; text-align:center; font-family:'Consolas','Courier New',monospace; color:var(--dim);">${gapSide}</td>
+        <td style="padding:9px 10px; text-align:center; font-family:'Consolas','Courier New',monospace; color:var(--dim);">${gapBot}</td>
+        <td style="padding:9px 10px; text-align:center; font-family:'Consolas','Courier New',monospace; color:var(--dim);">${gapTop}</td>
+      `;
+      tbody.appendChild(tr);
+      vizData.push({ name, icon, botMark, topMark, H, bh, gapBot, gapTop, gapSide, type: item.type });
+    });
+
+    resCard.style.display = hasResults ? 'block' : 'none';
+    if (hasResults) drawOmViz(floorDiff, vizData, T[lang]);
+  } else {
+    diffBox.style.display = 'none';
+    resCard.style.display = 'none';
+  }
+  saveState();
+}
+
+/* ════ Opening Marks Visualization ════ */
+function drawOmViz(floorDiff, vizData, d) {
+  const canvas = document.getElementById('om_canvas');
+  if (!canvas) return;
+  const wrap = canvas.parentElement;
+  const DPR = window.devicePixelRatio || 1;
+  const cssW = Math.max(wrap.clientWidth - 4, 320);
+
+  // ── Layout constants ──
+  const PAD_L = 110;  // left margin for labels
+  const PAD_R = 16;
+  const PAD_T = 56;   // top: space for ref mark label
+  const PAD_B = 40;
+  const WALL_X = PAD_L + 30;  // centre of wall column
+  const WALL_W = 20;           // thin wall
+  const ITEM_START_X = WALL_X + WALL_W / 2 + 20; // where items begin
+  const N = vizData.length;
+  const colW = Math.max(68, Math.min(100, (cssW - ITEM_START_X - PAD_R) / Math.max(N, 1)));
+  const BOX_W = Math.min(colW - 16, 52);  // thin item box
+
+  // ── Vertical range ──
+  let minMark = -floorDiff;
+  let maxMark = 0;
+  vizData.forEach(v => {
+    minMark = Math.min(minMark, v.botMark - 80);
+    maxMark = Math.max(maxMark, v.topMark + 80);
+  });
+  const range = maxMark - minMark || 1;
+
+  const cssH = Math.max(420, PAD_T + PAD_B + (range < 500 ? 300 : Math.round(range * 0.55)));
+  const drawH = cssH - PAD_T - PAD_B;
+
+  // HiDPI setup
+  canvas.style.width  = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  canvas.width  = Math.round(cssW * DPR);
+  canvas.height = Math.round(cssH * DPR);
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(DPR, DPR);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  function yOf(mark) {
+    return PAD_T + (maxMark - mark) / range * drawH;
+  }
+
+  // ── Background ──
+  ctx.fillStyle = '#f7f9fa';
+  ctx.fillRect(0, 0, cssW, cssH);
+
+  // ── Subtle grid lines ──
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([2, 4]);
+  for (let x = ITEM_START_X; x < cssW - PAD_R; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, PAD_T); ctx.lineTo(x, PAD_T + drawH); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // ── Wall column ──
+  const wallTop = PAD_T;
+  const wallBot = PAD_T + drawH;
+  // Hatching fill (concrete look)
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(WALL_X - WALL_W / 2, wallTop, WALL_W, drawH);
+  ctx.clip();
+  ctx.fillStyle = '#edf2f7';
+  ctx.fillRect(WALL_X - WALL_W / 2, wallTop, WALL_W, drawH);
+  ctx.strokeStyle = '#cbd5e0';
+  ctx.lineWidth = 0.6;
+  for (let y = wallTop - WALL_W; y < wallBot + WALL_W; y += 8) {
+    ctx.beginPath();
+    ctx.moveTo(WALL_X - WALL_W / 2, y);
+    ctx.lineTo(WALL_X + WALL_W / 2, y + WALL_W);
+    ctx.stroke();
+  }
+  ctx.restore();
+  ctx.strokeStyle = '#a0aec0';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(WALL_X - WALL_W / 2, wallTop, WALL_W, drawH);
+
+  // Wall label
+  ctx.save();
+  ctx.fillStyle = '#a0aec0';
+  ctx.font = '600 8px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.translate(WALL_X, PAD_T + drawH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(d.viz_wall, 0, 0);
+  ctx.restore();
+
+  // ── Reference mark line (0) ──
+  const yRef = yOf(0);
+  // Full-width subtle band
+  ctx.fillStyle = 'rgba(43,108,176,0.04)';
+  ctx.fillRect(0, yRef - 1, cssW, 2);
+
+  ctx.strokeStyle = '#2b6cb0';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([8, 4]);
+  ctx.beginPath();
+  ctx.moveTo(PAD_L - 8, yRef);
+  ctx.lineTo(cssW - PAD_R, yRef);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Triangle marker ▶ on wall right side
+  ctx.fillStyle = '#2b6cb0';
+  ctx.beginPath();
+  ctx.moveTo(WALL_X + WALL_W / 2, yRef);
+  ctx.lineTo(WALL_X + WALL_W / 2 + 10, yRef - 5);
+  ctx.lineTo(WALL_X + WALL_W / 2 + 10, yRef + 5);
+  ctx.closePath(); ctx.fill();
+
+  // Label block left
+  ctx.fillStyle = '#2b6cb0';
+  ctx.font = 'bold 10px "Consolas", monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('± 0', PAD_L - 12, yRef - 3);
+  ctx.font = '600 8px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#4a6fa5';
+  ctx.fillText(d.viz_ref_mark, PAD_L - 12, yRef + 9);
+
+  // ── Floor level line ──
+  const yFloor = yOf(-floorDiff);
+  ctx.fillStyle = 'rgba(56,161,105,0.06)';
+  ctx.fillRect(0, yFloor - 1, cssW, 2);
+
+  ctx.strokeStyle = '#38a169';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(PAD_L - 8, yFloor);
+  ctx.lineTo(cssW - PAD_R, yFloor);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Floor hatching band (floor slab)
+  ctx.fillStyle = 'rgba(56,161,105,0.08)';
+  ctx.fillRect(PAD_L - 8, yFloor, cssW - PAD_L - PAD_R + 8, Math.min(12, (PAD_T + drawH) - yFloor));
+
+  // Floor labels
+  ctx.fillStyle = '#276749';
+  ctx.font = 'bold 10px "Consolas", monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText(`−${floorDiff}`, PAD_L - 12, yFloor - 3);
+  ctx.font = '600 8px "Segoe UI", sans-serif';
+  ctx.fillStyle = '#276749';
+  ctx.fillText(d.viz_floor, PAD_L - 12, yFloor + 9);
+
+  // ── Dimension arrow: ref ↕ floor ──
+  const arrowX = 14;
+  ctx.strokeStyle = '#718096';
+  ctx.lineWidth = 1;
+  // Arrow line
+  ctx.beginPath(); ctx.moveTo(arrowX, yRef + 2); ctx.lineTo(arrowX, yFloor - 2); ctx.stroke();
+  // Arrowheads
+  [[yRef, 1], [yFloor, -1]].forEach(([y, dir]) => {
+    ctx.beginPath();
+    ctx.moveTo(arrowX, y + dir * 2);
+    ctx.lineTo(arrowX - 3, y + dir * 7);
+    ctx.lineTo(arrowX + 3, y + dir * 7);
+    ctx.closePath();
+    ctx.fillStyle = '#718096';
+    ctx.fill();
+  });
+  // Dim label rotated
+  ctx.save();
+  ctx.fillStyle = '#4a5568';
+  ctx.font = 'bold 8px "Consolas", monospace';
+  ctx.textAlign = 'center';
+  ctx.translate(arrowX + 10, (yRef + yFloor) / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(floorDiff + ' mm', 0, 0);
+  ctx.restore();
+
+  // ── Draw each opening ──
+  const PALETTE = [
+    { stroke: '#2b6cb0', fill: 'rgba(43,108,176,0.07)', label: '#1a4a8a' },
+    { stroke: '#c05621', fill: 'rgba(192,86,33,0.07)',  label: '#9c4221' },
+    { stroke: '#276749', fill: 'rgba(39,103,73,0.07)',  label: '#22543d' },
+    { stroke: '#553c9a', fill: 'rgba(85,60,154,0.07)',  label: '#44337a' },
+    { stroke: '#c53030', fill: 'rgba(197,48,48,0.07)',  label: '#9b2c2c' },
+    { stroke: '#975a16', fill: 'rgba(151,90,22,0.07)',  label: '#744210' },
+  ];
+
+  vizData.forEach((v, i) => {
+    const pal = PALETTE[i % PALETTE.length];
+    const xC = ITEM_START_X + i * colW + colW / 2;
+    const yBot = yOf(v.botMark);
+    const yTop = yOf(v.topMark);
+    const yBh  = yOf(v.botMark + v.bh); // Bh line inside opening
+
+    // ── Connector dashes to wall ──
+    ctx.strokeStyle = pal.stroke + '60';
+    ctx.lineWidth = 0.8;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(WALL_X + WALL_W / 2, yBot); ctx.lineTo(xC - BOX_W / 2, yBot); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(WALL_X + WALL_W / 2, yTop); ctx.lineTo(xC - BOX_W / 2, yTop); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Opening box (thin border) ──
+    ctx.fillStyle = pal.fill;
+    ctx.fillRect(xC - BOX_W / 2, yTop, BOX_W, yBot - yTop);
+    ctx.strokeStyle = pal.stroke;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(xC - BOX_W / 2, yTop, BOX_W, yBot - yTop);
+
+    // ── Bh line inside box ──
+    if (v.bh > 0 && yBh < yBot && yBh > yTop) {
+      ctx.strokeStyle = pal.stroke + 'aa';
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(xC - BOX_W / 2 + 2, yBh);
+      ctx.lineTo(xC + BOX_W / 2 - 2, yBh);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Bh label inside
+      ctx.fillStyle = pal.stroke + 'cc';
+      ctx.font = '600 7px "Segoe UI", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('Bh', xC - BOX_W / 2 + 3, yBh - 2);
+    }
+
+    // ── Icon in centre of box ──
+    const midY = (yTop + yBot) / 2;
+    ctx.font = '13px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(v.icon, xC, midY + 5);
+
+    // ── Name tag above box ──
+    const nameShort = v.name.length > 8 ? v.name.slice(0, 7) + '…' : v.name;
+    // pill background
+    const tagW = ctx.measureText(nameShort).width + 10;
+    ctx.fillStyle = pal.stroke;
+    roundRect(ctx, xC - tagW / 2, yTop - 22, tagW, 14, 4);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 8px "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(nameShort, xC, yTop - 12);
+
+    // ── Bottom mark tick on wall ──
+    ctx.strokeStyle = '#2b6cb0';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(WALL_X - WALL_W / 2 - 6, yBot);
+    ctx.lineTo(WALL_X - WALL_W / 2, yBot);
+    ctx.stroke();
+    // small left arrowhead
+    ctx.fillStyle = '#2b6cb0';
+    ctx.beginPath();
+    ctx.moveTo(WALL_X - WALL_W / 2 - 6, yBot);
+    ctx.lineTo(WALL_X - WALL_W / 2 - 2, yBot - 3);
+    ctx.lineTo(WALL_X - WALL_W / 2 - 2, yBot + 3);
+    ctx.closePath(); ctx.fill();
+
+    // ── Top mark tick on wall ──
+    ctx.strokeStyle = '#c05621';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(WALL_X - WALL_W / 2 - 6, yTop);
+    ctx.lineTo(WALL_X - WALL_W / 2, yTop);
+    ctx.stroke();
+    ctx.fillStyle = '#c05621';
+    ctx.beginPath();
+    ctx.moveTo(WALL_X - WALL_W / 2 - 6, yTop);
+    ctx.lineTo(WALL_X - WALL_W / 2 - 2, yTop - 3);
+    ctx.lineTo(WALL_X - WALL_W / 2 - 2, yTop + 3);
+    ctx.closePath(); ctx.fill();
+
+    // ── Mark value labels (right of box) ──
+    const lblX = xC + BOX_W / 2 + 4;
+    // Bottom
+    ctx.fillStyle = '#1a4a8a';
+    ctx.font = 'bold 9px "Consolas", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText((v.botMark > 0 ? '+' : '') + v.botMark, lblX, yBot + 3);
+    ctx.fillStyle = '#4a5568';
+    ctx.font = '600 7px "Segoe UI", sans-serif';
+    ctx.fillText(d.viz_bot, lblX, yBot + 12);
+    // Top
+    ctx.fillStyle = '#9c4221';
+    ctx.font = 'bold 9px "Consolas", monospace';
+    ctx.fillText((v.topMark > 0 ? '+' : '') + v.topMark, lblX, yTop - 4);
+    ctx.fillStyle = '#4a5568';
+    ctx.font = '600 7px "Segoe UI", sans-serif';
+    ctx.fillText(d.viz_top, lblX, yTop + 5);
+  });
+
+  // ── Legend (bottom) ──
+  const legY = PAD_T + drawH + 14;
+  const legItems = [
+    { color: '#2b6cb0', dash: true,  label: d.viz_leg_ref },
+    { color: '#38a169', dash: true,  label: d.viz_leg_floor },
+    { color: '#1a4a8a', dash: false, label: d.viz_leg_bot },
+    { color: '#9c4221', dash: false, label: d.viz_leg_top },
+  ];
+  let legX = PAD_L - 8;
+  ctx.font = '600 8px "Segoe UI", sans-serif';
+  legItems.forEach(li => {
+    const tw = ctx.measureText(li.label).width;
+    if (legX + tw + 28 > cssW - PAD_R) return; // skip if no space
+    // dash or dot
+    ctx.strokeStyle = li.color;
+    ctx.lineWidth = 1.5;
+    if (li.dash) ctx.setLineDash([4, 3]); else ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(legX, legY + 4); ctx.lineTo(legX + 16, legY + 4); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#4a5568';
+    ctx.textAlign = 'left';
+    ctx.fillText(li.label, legX + 20, legY + 8);
+    legX += tw + 36;
+  });
+}
+
+// Helper: rounded rect
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function omExportJSON() {
+  const state = {
+    exported: new Date().toISOString(),
+    floor_mark: document.getElementById('om_floor_mark').value,
+    finished_floor: document.getElementById('om_finished_floor').value,
+    gap_bottom: document.getElementById('om_gap_bottom').value,
+    gap_top: document.getElementById('om_gap_top').value,
+    gap_side: document.getElementById('om_gap_side').value,
+    items: omItems.map(i => ({...i})),
+  };
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const pn   = (document.getElementById('proj_name').value || 'project').replace(/\s+/g,'_');
+  a.href = url; a.download = `${pn}_openmarks.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function omImportJSON(evt) {
+  const file = evt.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const s = JSON.parse(e.target.result);
+      if (s.floor_mark    !== undefined) document.getElementById('om_floor_mark').value     = s.floor_mark;
+      if (s.finished_floor !== undefined) document.getElementById('om_finished_floor').value = s.finished_floor;
+      if (s.gap_bottom    !== undefined) document.getElementById('om_gap_bottom').value     = s.gap_bottom;
+      if (s.gap_top       !== undefined) document.getElementById('om_gap_top').value        = s.gap_top;
+      if (s.gap_side      !== undefined) document.getElementById('om_gap_side').value       = s.gap_side;
+      if (s.items) {
+        omItems  = s.items;
+        omIdSeq  = Math.max(...omItems.map(i => i.id), 0);
+        omRenderItems();
+      }
+      calcOpenMarks();
+    } catch(err) { alert('⚠ Invalid JSON file'); }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+function omResetAll() {
+  const msg = lang === 'lt' ? 'Ištrinti visus langus/duris ir laukus?' :
+              lang === 'no' ? 'Nullstille alle felt og åpninger?' :
+              lang === 'pl' ? 'Zresetować wszystkie pola i otwory?' :
+              'Reset all opening marks fields?';
+  if (!confirm(msg)) return;
+  omItems = []; omIdSeq = 0;
+  document.getElementById('om_items_container').innerHTML = '';
+  document.getElementById('om_floor_mark').value = '';
+  document.getElementById('om_finished_floor').value = '';
+  document.getElementById('om_gap_bottom').value = '15';
+  document.getElementById('om_gap_top').value = '15';
+  document.getElementById('om_gap_side').value = '10';
+  document.getElementById('om_floor_diff_box').style.display = 'none';
+  document.getElementById('om_results_card').style.display = 'none';
+  saveState();
+}
+
+/* ════════════════════════════════════════════
+   PERSISTENCE
+════════════════════════════════════════════ */
+const SK = 'pb_stender';
+
+function gatherState() {
+  const ids =['proj_name','proj_date','proj_notes','wall_length','stud_pitch','stud_thick','min_gap','left_adj_thick','left_outer_adj_thick','left_second_manual','right_adj_thick','h_total','om_floor_mark','om_finished_floor','om_gap_bottom','om_gap_top','om_gap_side'];
+  const state = { lang };
+  ids.forEach(id => { const el = document.getElementById(id); if (el) state[id] = el.value; });
+  state.left_type   = document.querySelector('input[name="left_type"]:checked')?.value;
+  state.right_type  = document.querySelector('input[name="right_type"]:checked')?.value;
+  state.opening_on  = document.getElementById('opening_enabled')?.checked || false;
+  state.openings    = openings.map(o => ({...o}));
+  state.bunnLayers  = bunnLayers.map(l => ({...l}));
+  state.toppLayers  = toppLayers.map(l => ({...l}));
+  state.omItems     = omItems.map(i => ({...i}));
+  state.omIdSeq     = omIdSeq;
+  return state;
+}
+
+function applyState(state) {
+  if (!state) return;
+  const ids =['proj_name','proj_date','proj_notes','wall_length','stud_pitch','stud_thick','min_gap','left_adj_thick','left_outer_adj_thick','left_second_manual','right_adj_thick','h_total','om_floor_mark','om_finished_floor','om_gap_bottom','om_gap_top','om_gap_side'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el && state[id] !== undefined) el.value = state[id]; });
+  if (state.openings)   {
+    openings = state.openings; openingIdSeq = openings.length;
+    if (state.opening_on) {
+      document.getElementById('opening_enabled').checked = true;
+      document.getElementById('opening_fields').style.display = 'block';
+      renderOpeningsList();
+    }
+  }
+  if (state.bunnLayers) { bunnLayers = state.bunnLayers; svillIdSeq = Math.max(svillIdSeq, bunnLayers.length + (state.toppLayers||[]).length); renderSvillList('bunn'); }
+  if (state.toppLayers) { toppLayers = state.toppLayers; renderSvillList('topp'); }
+  if (state.omItems) {
+    omItems = state.omItems;
+    omIdSeq = state.omIdSeq || omItems.length;
+    omRenderItems();
+    calcOpenMarks();
+  }
+  if (state.opening_on !== undefined) {
+    const cb = document.getElementById('opening_enabled');
+    if (cb) { cb.checked = state.opening_on; onOpeningToggle(); }
+  }
+  if (state.left_type) {
+    const r = document.querySelector(`input[name="left_type"][value="${state.left_type}"]`);
+    if (r) { r.checked = true; onLeftChange(); }
+  }
+  if (state.right_type) {
+    const r = document.querySelector(`input[name="right_type"][value="${state.right_type}"]`);
+    if (r) { r.checked = true; onRightChange(); }
+  }
+}
+
+function saveState() {
+  try { localStorage.setItem(SK, JSON.stringify(gatherState())); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SK));
+    if (s) { if (s.lang) lang = s.lang; applyState(s); }
+  } catch(e) {}
+}
+
+/* ─ auto-save on any input ─ */
+document.addEventListener('input', saveState);
+document.addEventListener('change', saveState);
+
+/* ════════════════════════════════════════════
+   RESET
+════════════════════════════════════════════ */
+function resetAll() {
+  const d = T[lang];
+  const msg = lang === 'lt' ? 'Iš naujo nustatyti visus laukus?' :
+              lang === 'no' ? 'Nullstille alle felt?' :
+              lang === 'pl' ? 'Zresetować wszystkie pola?' :
+              'Reset all fields?';
+  if (!confirm(msg)) return;['proj_name','proj_date','proj_notes','wall_length','stud_pitch','stud_thick','min_gap','left_adj_thick','left_outer_adj_thick','left_second_manual','right_adj_thick','h_total']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  const cb = document.getElementById('opening_enabled');
+  if (cb) { cb.checked = false; }
+  document.getElementById('opening_fields').style.display = 'none';
+  openings =[]; openingIdSeq = 0;
+  document.getElementById('openings-list').innerHTML = '';
+  bunnLayers = []; toppLayers =[]; svillIdSeq = 0;
+  document.getElementById('bunn-list').innerHTML = '';
+  document.getElementById('topp-list').innerHTML = '';
+  document.getElementById('height-result').style.display = 'none';
+  omItems = []; omIdSeq = 0;
+  document.getElementById('om_items_container').innerHTML = '';
+  document.getElementById('om_floor_mark').value = '';
+  document.getElementById('om_finished_floor').value = '';
+  document.getElementById('om_floor_diff_box').style.display = 'none';
+  document.getElementById('om_results_card').style.display = 'none';
+  document.getElementById('lt_outer').checked = true; onLeftChange();
+  document.getElementById('rt_free').checked  = true; onRightChange();
+  lastStuds =[]; optimised = false;
+  document.getElementById('result-empty').classList.remove('hidden');
+  document.getElementById('result-content').classList.add('hidden');
+  localStorage.removeItem(SK);
+}
+
+/* ════════════════════════════════════════════
+   EXPORT / IMPORT JSON
+════════════════════════════════════════════ */
+function exportJSON() {
+  const state = gatherState();
+  state.studs = lastStuds;
+  state.exported = new Date().toISOString();
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const pn   = (document.getElementById('proj_name').value || 'stender').replace(/\s+/g, '_');
+  a.href = url; a.download = `${pn}_stender.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importJSON(evt) {
+  const file = evt.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const state = JSON.parse(e.target.result);
+      if (state.lang) { lang = state.lang; }
+      applyState(state);
+      applyLang();
+      calcHeight();
+      if (state.studs && state.studs.length) {
+        lastStuds = state.studs;
+        renderResults(lastStuds);
+      }
+    } catch(err) {
+      alert('⚠ Invalid JSON file');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+loadState();
+applyLang();
+// Set today as default date if empty
+const dateEl = document.getElementById('proj_date');
+if (!dateEl.value) dateEl.value = new Date().toISOString().slice(0,10);
+// Set default numeric values if empty
+const defaults = { stud_pitch: 600, stud_thick: 48, min_gap: 100 };
+Object.entries(defaults).forEach(([id, val]) => {
+  const el = document.getElementById(id);
+  if (el && !el.value) el.value = val;
+});
+
+// Init default svill layers if none loaded from state
+if (bunnLayers.length === 0) { addSvill('bunn', 48); }
+if (toppLayers.length === 0) { addSvill('topp', 48); addSvill('topp', 48); }
+// Run height calc
+calcHeight();
+
+// Resize ruler on window resize
+window.addEventListener('resize', () => {
+  if (lastStuds.length) drawRuler(lastStuds, getInputs());
+  calcOpenMarks();
+});
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

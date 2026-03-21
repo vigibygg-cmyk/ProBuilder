@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA Diagnostika — ProBuilder</title>
+<style>
+:root {
+  --bg:#f7f9fa; --card:#fff; --text:#1a202c; --muted:#718096;
+  --border:#e2e8f0; --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;background:var(--bg);color:var(--text);padding:20px;max-width:700px;margin:0 auto;}
+h1{font-size:20px;margin-bottom:4px;}
+.sub{color:var(--muted);font-size:13px;margin-bottom:20px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;margin-bottom:12px;}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px;}
+.row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.row:last-child{border-bottom:none;padding-bottom:0;}
+.badge{flex-shrink:0;font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;margin-top:2px;min-width:60px;text-align:center;}
+.ok  {background:#EAF3DE;color:#27500A;}
+.err {background:#FCEBEB;color:#A32D2D;}
+.warn{background:#FAEEDA;color:#633806;}
+.info{background:#E6F1FB;color:#0C447C;}
+.pend{background:#f1efe8;color:#5f5e5a;}
+.label{font-weight:500;font-size:14px;line-height:1.4;}
+.detail{font-size:12px;color:var(--muted);margin-top:2px;word-break:break-all;font-family:monospace;}
+.detail.e{color:#A32D2D;}
+#btn{background:#2b6cb0;color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:20px;width:100%;}
+#btn:hover{background:#1a4a8a;}
+.summary{padding:14px 18px;border-radius:var(--r);font-weight:600;font-size:15px;margin-bottom:16px;display:none;}
+</style>
+</head>
+<body>
+<h1>🔍 PWA Diagnostika</h1>
+<p class="sub">Spustelk mygtuką — naršyklė patikrins viską ir pasakys kas neveikia</p>
+<button id="btn" onclick="run()">▶ Paleisti diagnostiką</button>
+<div id="summary" class="summary"></div>
+<div class="card"><div class="card-title">1. Naršyklės palaikymas</div><div id="r1"></div></div>
+<div class="card"><div class="card-title">2. HTTPS</div><div id="r2"></div></div>
+<div class="card"><div class="card-title">3. manifest.json</div><div id="r3"></div></div>
+<div class="card"><div class="card-title">4. Service Worker (sw.js)</div><div id="r4"></div></div>
+<div class="card"><div class="card-title">5. PNG ikonos</div><div id="r5"></div></div>
+<div class="card"><div class="card-title">6. PWA įdiegimo būsena</div><div id="r6"></div></div>
+
+<script>
+function makeRow(label, status, detail) {
+  const cls = status==='OK'?'ok':status==='Klaida'?'err':status==='Įspėjimas'?'warn':status==='Info'?'info':'pend';
+  const icon = status==='OK'?'✓ OK':status==='Klaida'?'✗ Klaida':status==='Įspėjimas'?'⚠ Warn':'ℹ Info';
+  return `<div class="row"><span class="badge ${cls}">${icon}</span><div><div class="label">${label}</div>${detail?`<div class="detail${cls==='err'?' e':''}">${detail}</div>`:''}</div></div>`;
+}
+function set(id, rows) { document.getElementById(id).innerHTML = rows.join(''); }
+function placeholder(id) { document.getElementById(id).innerHTML = makeRow('Tikrinama...','pend',''); }
+
+async function run() {
+  const btn = document.getElementById('btn');
+  btn.disabled = true; btn.textContent = '⏳ Tikrinama...';
+  ['r1','r2','r3','r4','r5','r6'].forEach(placeholder);
+  document.getElementById('summary').style.display='none';
+  let errors=0, warns=0;
+
+  // 1. Browser
+  const hasSW = 'serviceWorker' in navigator;
+  const mLink = document.querySelector('link[rel="manifest"]');
+  set('r1',[
+    makeRow('Service Worker API', hasSW?'OK':'Klaida', hasSW?'Palaikoma šioje naršyklėje':'Nepalaikoma — pakeisk naršyklę'),
+    makeRow('manifest link <head>', mLink?'OK':'Klaida', mLink?mLink.href:'Nerasta! Šiame HTML nėra <link rel="manifest">'),
+  ]);
+  if(!hasSW) errors++; if(!mLink) errors++;
+
+  // 2. HTTPS
+  const secure = location.protocol==='https:' || location.hostname==='localhost';
+  set('r2',[makeRow('Protokolas', secure?'OK':'Klaida', location.href)]);
+  if(!secure) errors++;
+
+  // 3. Manifest
+  if(mLink) {
+    try {
+      const res = await fetch(mLink.href);
+      if(!res.ok) throw new Error(`HTTP ${res.status} — failas nerastas arba nepasiekiamas`);
+      const m = await res.json();
+      const hasPng = (m.icons||[]).some(i=>i.src.endsWith('.png')||i.type==='image/png');
+      const hasScope = !!m.scope;
+      const startOk = m.start_url && m.start_url.includes('ProBuilder');
+      set('r3',[
+        makeRow('Fetch manifest.json', 'OK', mLink.href),
+        makeRow('name', m.name?'OK':'Klaida', m.name||'Nėra!'),
+        makeRow('start_url', startOk?'OK':'Įspėjimas', m.start_url||'Nėra! — gali nerodyti tinkamo puslapio'),
+        makeRow('scope', hasScope?'OK':'Įspėjimas', m.scope||'Nėra scope lauko'),
+        makeRow('Ikonos', (m.icons&&m.icons.length)?'OK':'Klaida', m.icons?`${m.icons.length} įrašų`:'Nėra ikonų!'),
+        makeRow('PNG ikonos', hasPng?'OK':'Klaida', hasPng?'PNG rastos — gerai':'NĖRA PNG! Chrome reikalauja PNG — SVG neveikia'),
+      ]);
+      if(!m.name||!m.icons?.length) errors++;
+      if(!hasPng) errors++;
+      if(!hasScope||!startOk) warns++;
+    } catch(e) {
+      set('r3',[makeRow('Fetch manifest.json','Klaida',e.message+' — patikrink ar failas įkeltas į GitHub repo')]);
+      errors++;
+    }
+  } else {
+    set('r3',[makeRow('manifest.json','Klaida','Nėra link šiame puslapyje')]); errors++;
+  }
+
+  // 4. Service Worker
+  if(hasSW) {
+    const reg = await navigator.serviceWorker.getRegistration().catch(()=>null);
+    if(reg) {
+      const st = reg.active?.state||reg.installing?'installing':reg.waiting?'waiting':'nežinoma';
+      const swUrl = reg.active?.scriptURL||reg.installing?.scriptURL||reg.waiting?.scriptURL||'?';
+      set('r4',[
+        makeRow('Registracija','OK',`scope: ${reg.scope}`),
+        makeRow('sw.js URL','OK',swUrl),
+        makeRow('Būsena',st==='activated'?'OK':'Įspėjimas',st),
+      ]);
+      if(st!=='activated') warns++;
+    } else {
+      // Try fetching sw.js manually
+      const paths = ['/ProBuilder/sw.js','/sw.js'];
+      const results = await Promise.all(paths.map(async p=>{
+        try { const r=await fetch(p,{method:'HEAD'}); return [p, r.ok, r.status]; }
+        catch(e) { return [p, false, 'network error']; }
+      }));
+      const found = results.find(r=>r[1]);
+      set('r4',[
+        makeRow('Registracija','Klaida','SW neregistruotas šiame puslapyje! Patikrink ar yra SW registracijos kodas prieš </body>'),
+        ...results.map(([p,ok,status])=>makeRow(`Failas: ${p}`,ok?'Įspėjimas':'Klaida',ok?`Failas egzistuoja (HTTP ${status}), bet neregistruotas`:`HTTP ${status} — failas nerastas GitHub repo`)),
+      ]);
+      errors++;
+    }
+  } else {
+    set('r4',[makeRow('Service Worker','Klaida','Naršyklė nepalaiko')]); errors++;
+  }
+
+  // 5. Icons
+  const iconPaths = [
+    ['/ProBuilder/img/icon-192.png','icon-192.png'],
+    ['/ProBuilder/img/icon-512.png','icon-512.png'],
+    ['/ProBuilder/img/icon-192.svg','icon-192.svg (SVG — nebūtina PNG)'],
+    ['/ProBuilder/BU_Logo.png','BU_Logo.png'],
+  ];
+  const iconRes = await Promise.all(iconPaths.map(async([url,label])=>{
+    try { const r=await fetch(url,{method:'HEAD'}); return makeRow(label,r.ok?'OK':'Klaida',r.ok?`✓ ${url}`:`404 — ${url} nerastas`); }
+    catch(e) { return makeRow(label,'Klaida',`Nepasiekiama: ${url}`); }
+  }));
+  set('r5',iconRes);
+
+  // 6. Install state
+  const standalone = matchMedia('(display-mode:standalone)').matches||navigator.standalone;
+  const dismissed = localStorage.getItem('pb_install_dismissed');
+  set('r6',[
+    makeRow('Atidarymo būdas',standalone?'OK':'Info',standalone?'Veikia kaip įdiegta PWA app!':'Atidarytas naršyklėje — normaliai'),
+    makeRow('Install banner',dismissed?'Įspėjimas':'OK',dismissed?`Banner atmestas — reikia ištrinti localStorage key: pb_install_dismissed\n→ DevTools > Application > Local Storage > ištrink`:'Banner nebuvo atmestas'),
+  ]);
+
+  // Summary
+  const s = document.getElementById('summary');
+  s.style.display='block';
+  if(errors===0&&warns===0){s.style.cssText='display:block;padding:14px 18px;border-radius:10px;font-weight:600;font-size:15px;margin-bottom:16px;background:#EAF3DE;color:#27500A;';s.textContent='✅ Viskas gerai! PWA turėtų veikti.';}
+  else if(errors>0){s.style.cssText='display:block;padding:14px 18px;border-radius:10px;font-weight:600;font-size:15px;margin-bottom:16px;background:#FCEBEB;color:#A32D2D;';s.textContent=`❌ Rasta ${errors} klaida(-ų)${warns?` ir ${warns} įspėjimas(-ų)`:''} — žr. detales žemiau.`;}
+  else{s.style.cssText='display:block;padding:14px 18px;border-radius:10px;font-weight:600;font-size:15px;margin-bottom:16px;background:#FAEEDA;color:#633806;';s.textContent=`⚠ Rasta ${warns} įspėjimas(-ų).`;}
+
+  btn.disabled=false; btn.textContent='🔄 Paleisti dar kartą';
+}
+</script>
+</body>
+</html>

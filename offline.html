@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingen internettforbindelse | ProBuilder</title>
+    <meta name="description" content="Du er for øyeblikket offline. ProBuilder fungerer best når du er tilkoblet, men mange verktøy er tilgjengelige offline hvis de er installert.">
+    <link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/offline.html">
+    <meta name="theme-color" content="#2b6cb0">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Ingen internettforbindelse | ProBuilder">
+    <meta property="og:description" content="Du er offline. Fortsett å bruke installerte verktøy.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/offline.html">
+    <meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ingen internettforbindelse | ProBuilder">
+    <meta name="twitter:description" content="Du er offline.">
+    <meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Offline - ProBuilder",
+      "description": "Offline-side for ProBuilder applikasjonen."
+    }
+    </script>
+    <style>
+        /* ProBuilder Design System */
+        :root {
+            --bg: #f7f9fa;
+            --card: #ffffff;
+            --text: #1a202c;
+            --muted: #718096;
+            --primary: #2b6cb0;
+            --primary-dark: #1a4a8a;
+            --accent: #dd6b20;
+            --border: #e2e8f0;
+            --radius: 10px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .offline-icon {
+            font-size: 80px;
+            line-height: 1;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .subtext {
+            color: var(--muted);
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        .tools-list {
+            text-align: left;
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .tools-list ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .tools-list a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .tools-list a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .instruction {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+
+        .btn-retry {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .btn-retry:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .contact-info {
+            font-size: 14px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .contact-info a {
+            color: var(--primary);
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="offline-container">
+        <div class="offline-icon">🔌</div>
+        <h1>Ingen internettforbindelse</h1>
+        <p class="subtext">Du er offline akkurat nå. Verktøyene som du har besøkt tidligere er fortsatt tilgjengelig:</p>
+
+        <div class="tools-list">
+            <ul>
+                <li><a href="stender.html">🪵 Stender kalkulator</a></li>
+                <li><a href="lekter.html">🏠 Lekter kalkulator</a></li>
+                <li><a href="areal.html">📐 Arealberegning</a></li>
+                <li><a href="materialer.html">📦 Materialkalkulator</a></li>
+                <li><a href="trapp.html">🪜 Trappekalkulator</a></li>
+                <li><a href="betong.html">🧱 Betongkalkulator</a></li>
+                <li><a href="murverk.html">🔲 Murverk kalkulator</a></li>
+                <li><a href="normcalc.html">📋 ProNorm kalkyle</a></li>
+            </ul>
+        </div>
+
+        <p class="instruction">For å bruke ProBuilder offline — gå til Verktøy-siden mens du har internett. Sidene lagres automatisk.</p>
+
+        <button class="btn-retry" onclick="window.location.reload()">↻ Prøv på nytt</button>
+
+        <div class="contact-info">
+            Trenger du hjelp? Ring <a href="tel:94844497">94844497</a>
+        </div>
+    </div>
+
+</body>
+</html>

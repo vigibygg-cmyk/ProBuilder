@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Trappekalkulator - ProBuilder</title>
+<meta name="description" content="Design og beregn din trapp med ProBuilder trappekalkulator. Få nøyaktige mål for opptrinn, inntrinn og vinkel med 3D-visning.">
+<link rel="canonical" href="https://vigibygg-cmyk.github.io/Calc/trapp.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2b6cb0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vigibygg-cmyk.github.io/Calc/trapp.html">
+<meta property="og:title" content="Trappekalkulator - ProBuilder">
+<meta property="og:description" content="Design og beregn din trapp med ProBuilder trappekalkulator. Få nøyaktige mål for opptrinn, inntrinn og vinkel med 3D-visning.">
+<meta property="og:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://vigibygg-cmyk.github.io/Calc/trapp.html">
+<meta name="twitter:title" content="Trappekalkulator - ProBuilder">
+<meta name="twitter:description" content="Design og beregn din trapp med ProBuilder trappekalkulator. Få nøyaktige mål for opptrinn, inntrinn og vinkel med 3D-visning.">
+<meta name="twitter:image" content="https://vigibygg-cmyk.github.io/Calc/img/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Trappekalkulator - ProBuilder",
+  "description": "Design og beregn din trapp med ProBuilder trappekalkulator. Få nøyaktige mål for opptrinn, inntrinn og vinkel med 3D-visning.",
+  "url": "https://vigibygg-cmyk.github.io/Calc/trapp.html",
+  "applicationCategory": "ConstructionTool",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "NOK"
+  }
+}
+</script>
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProBuilder">
+
+<style>
+:root {
+  --bg:           #f7f9fa;
+  --card:         #ffffff;
+  --surface2:     #f0f4f8;
+  --text:         #1a202c;
+  --muted:        #718096;
+  --dim:          #a0aec0;
+  --primary:      #2b6cb0;
+  --primary-dark: #1a4a8a;
+  --primary-glow: rgba(43,108,176,0.12);
+  --border-focus: #2b6cb0;
+  --accent:       #dd6b20;
+  --accent-dark:  #b7521a;
+  --success:      #276749;
+  --success-bg:   #f0fff4;
+  --warn:         #744210;
+  --warn-bg:      #fffbeb;
+  --danger:       #c53030;
+  --danger-bg:    #fff5f5;
+  --border:       #e2e8f0;
+  --radius:       10px;
+  --radius-sm:    7px;
+  --shadow:       0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.back-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: #e8f0fe;
+}
+.page-title { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; color: var(--text); }
+.page-title span { color: var(--primary); }
+
+.lang-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px;
+}
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ─── TABS ─── */
+.tab-nav {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 960px;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  min-height: 44px;
+}
+.tab-btn:hover {
+  color: var(--text);
+  border-color: #a0aec0;
+  background: var(--surface2);
+}
+.tab-btn.active {
+  background: #ebf8ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ─── MAIN ─── */
+main {
+  position: relative; z-index: 1;
+  max-width: 960px; margin: 0 auto;
+  padding: 16px 16px 60px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.tab-panel { display: flex; flex-direction: column; gap: 16px; }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+.card-title, .ct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center; gap: 7px;
+}
+.card-title::after, .ct::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── FORM ─── */
+.form-grid, .fg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+.field, .f { display: flex; flex-direction: column; gap: 5px; }
+label {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+input[type="number"], input[type="text"], select, textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%;
+  min-height: 44px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background: #ffffff;
+}
+input::placeholder { color: var(--dim); }
+.hint { font-size: 0.69rem; color: var(--dim); line-height: 1.4; }
+.sp2 { grid-column: span 2; }
+
+/* ─── RESULT BOXES ─── */
+.result-grid, .rg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.res-box, .rb {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+}
+.res-val, .rv {
+  font-family: 'Consolas', monospace;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.res-val.ok, .rv.ok { color: var(--success); }
+.res-val.inf, .rv.inf { color: var(--primary); }
+.res-val.wa, .rv.wa { color: var(--warn); }
+.res-val.ac, .rv.ac { color: var(--accent); }
+.res-lbl, .rl {
+  font-size: 0.67rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* ─── CHECKS BOX ─── */
+.checks-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.check-row:last-child { border-bottom: none; }
+.check-icon { font-size: 1.1rem; width: 22px; flex-shrink: 0; text-align: center; }
+.check-label { font-size: 0.82rem; color: var(--text); flex: 1; line-height: 1.4; font-weight: 500; }
+.check-sub { font-size: 0.7rem; color: var(--muted); display: block; margin-top: 2px; }
+.check-val { font-family: 'Consolas', monospace; font-size: 0.9rem; font-weight: 700; flex-shrink: 0; }
+.check-val.ok { color: var(--success); }
+.check-val.er { color: var(--danger); }
+
+/* ─── INFO BOXES ─── */
+.ib { padding: 11px 14px; border-radius: var(--radius-sm); font-size: 0.83rem; line-height: 1.6; margin-bottom: 10px; }
+.ib.bl { background: #ebf8ff; border: 1px solid #bee3f8; color: #2b6cb0; }
+.ib.gr { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.ib.ye { background: var(--warn-bg); border: 1px solid #fbd38d; color: var(--warn); }
+.ib.re { background: var(--danger-bg); border: 1px solid #feb2b2; color: var(--danger); }
+
+/* ─── TYPE SELECTOR ─── */
+.type-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.type-group { flex: 1; min-width: 160px; }
+.type-group > label { display: block; margin-bottom: 8px; }
+.tg { display: flex; gap: 8px; flex-wrap: wrap; }
+.sc {
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s;
+  min-width: 80px;
+  flex: 1;
+}
+.sc:hover { border-color: #a0aec0; background: #e2e8f0; }
+.sc.active {
+  border-color: var(--primary);
+  background: #ebf8ff;
+}
+.sc-icon { font-size: 1.5rem; margin-bottom: 4px; color: var(--muted); }
+.sc.active .sc-icon { color: var(--primary); }
+.scl { font-size: 0.75rem; font-weight: 600; color: var(--muted); line-height: 1.2; }
+.sc.active .scl { color: var(--primary); }
+
+/* ─── CANVAS ─── */
+.cw { overflow-x: auto; margin: 12px 0; }
+canvas { display: block; border-radius: 10px; background: var(--surface2); max-width: 100%; }
+
+/* ─── TABLE ─── */
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+thead th {
+  padding: 9px 12px;
+  background: var(--surface2);
+  border-bottom: 2px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  text-align: left;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:hover { background: #ebf8ff; }
+tbody td { padding: 9px 12px; vertical-align: middle; color: var(--text); }
+td.mn { font-family: 'Consolas', monospace; }
+.badge { display: inline-block; padding: 2px 7px; border-radius: 5px; font-size: 0.68rem; font-weight: 700; }
+.b-ok { background: var(--success-bg); border: 1px solid #9ae6b4; color: var(--success); }
+.b-wa { background: var(--warn-bg); border: 1px solid #fbd38d; color: var(--warn); }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; font-family: inherit;
+  font-size: 0.84rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; min-height: 44px; white-space: nowrap;
+}
+.btn-primary, .bp { background: var(--primary); color: #ffffff; box-shadow: 0 2px 8px rgba(43,108,176,0.25); }
+.btn-primary:hover, .bp:hover { background: var(--primary-dark); }
+.btn-outline, .bo { background: transparent; border-color: var(--border); color: var(--muted); }
+.btn-outline:hover, .bo:hover { color: var(--text); border-color: #a0aec0; background: var(--surface2); }
+.btn-danger-outline, .bd { background: transparent; border-color: rgba(197,48,48,0.3); color: var(--danger); }
+.btn-danger-outline:hover, .bd:hover { background: var(--danger-bg); border-color: var(--danger); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.sep { height: 1px; background: var(--border); margin: 14px 0; }
+
+/* ─── REFERENCE TABLE ─── */
+.ref-table { width: 100%; border-collapse: collapse; }
+.ref-table td { padding: 9px 12px; font-size: 0.83rem; border-bottom: 1px solid var(--border); }
+.ref-table td:first-child { color: var(--muted); font-weight: 500; }
+.ref-table td:last-child { font-family: 'Consolas', monospace; font-weight: 700; color: var(--success); text-align: right; }
+
+/* ─── FOOTER ─── */
+.main-footer {
+  margin-top: 40px; padding: 20px; border-top: 1px solid var(--border);
+  text-align: center; color: var(--dim); font-size: 0.8rem; background: var(--card);
+}
+
+/* ─── PRINT ─── */
+@media print {
+  header, .tab-nav, .no-print, .np { display: none !important; }
+  main { padding: 0; max-width: 100%; }
+  body { background: #fff; color: #111; font-size: 11pt; }
+  .card { background: #fff; border: 1px solid #ccc; box-shadow: none; break-inside: avoid; padding: 12pt; }
+  .tab-panel.hidden { display: flex !important; }
+  .ph { display: block !important; }
+  canvas { border: 1px solid #ccc; }
+  footer.main-footer { display: block !important; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #ccc; background: #fff; }
+}
+.ph { display: none; border-bottom: 2px solid #333; padding-bottom: 10pt; margin-bottom: 14pt; }
+.ph h1 { font-size: 16pt; font-weight: 700; }
+.ph .pm { font-size: 9pt; color: #555; margin-top: 4pt; }
+
+.hidden { display: none !important; }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  .btn-row .btn { width: 100%; justify-content: center; }
+  .fg { grid-template-columns: 1fr; }
+  .sp2 { grid-column: span 1; }
+  .rg { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="ph" id="ph"><h1 id="pht">ProBuilder — Staircase Designer</h1><div class="pm" id="phm"></div></div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-left">
+    <a href="index.html" class="back-btn">← <span data-i18n="back"></span></a>
+    <span class="page-title">🪜 <span data-i18n="page_title"></span></span>
+  </div>
+  <div class="header-right">
+    <div class="lang-group">
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── TABS ─── -->
+<div class="tab-nav np">
+  <button class="tab-btn active" data-tab="t1" onclick="switchTab('t1',this)">📐 <span data-i18n="tab_calc"></span></button>
+  <button class="tab-btn" data-tab="t2" onclick="switchTab('t2',this)">📋 <span data-i18n="tab_ref"></span></button>
+  <button class="tab-btn" data-tab="t3" onclick="switchTab('t3',this);init3D()">🧊 <span data-i18n="tab_3d"></span></button>
+</div>
+
+<main>
+
+<div id="t1" class="tab-panel">
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_project"></span></div>
+    <div class="fg">
+      <div class="f sp2"><label data-i18n="lbl_proj_name"></label><input type="text" id="pn" data-i18n-ph="ph_proj_name"></div>
+      <div class="f"><label data-i18n="lbl_date"></label><input type="date" id="pd"></div>
+      <div class="f sp2"><label data-i18n="lbl_notes"></label><textarea id="pno" rows="2" data-i18n-ph="ph_notes"></textarea></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_type"></span></div>
+    <div class="type-row">
+      <div class="type-group"><label data-i18n="lbl_use_type"></label><div class="tg" id="use-grid"></div></div>
+      <div class="type-group"><label data-i18n="lbl_shape_type"></label><div class="tg" id="shape-grid"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct"><span data-i18n="sec_dims"></span></div>
+    <div class="fg">
+      <div class="f"><label data-i18n="lbl_total_h"></label><input type="number" id="total-h" inputmode="decimal" placeholder="2700" oninput="calc()"><span class="hint" data-i18n="hint_total_h"></span></div>
+      <div class="f"><label data-i18n="lbl_floor_thick"></label><input type="number" id="floor-thick" inputmode="decimal" placeholder="260" oninput="calc()"><span class="hint" data-i18n="hint_floor_thick"></span></div>
+      <div class="f"><label data-i18n="lbl_stair_w"></label><input type="number" id="stair-w" inputmode="decimal" placeholder="900" oninput="calc()"><span class="hint" data-i18n="hint_stair_w"></span></div>
+      <div class="f"><label data-i18n="lbl_headroom"></label><input type="number" id="headroom" inputmode="decimal" placeholder="2100" oninput="calc()"><span class="hint" data-i18n="hint_headroom"></span></div>
+      <div class="f"><label data-i18n="lbl_custom_run"></label><input type="number" id="custom-run" inputmode="decimal" placeholder="" oninput="calc()"><span class="hint" data-i18n="hint_custom_run"></span></div>
+    </div>
+    <div id="lu-fields" class="hidden">
+      <div class="sep"></div>
+      <div class="fg" style="margin-top:4px;">
+        <div class="f"><label data-i18n="lbl_landing_w"></label><input type="number" id="landing-w" inputmode="decimal" placeholder="900" oninput="calc()"><span class="hint" data-i18n="hint_landing_w"></span></div>
+        <div class="f" id="f-gap" style="display:none;"><label data-i18n="lbl_gap"></label><input type="number" id="gap-w" inputmode="decimal" placeholder="100" oninput="calc()"><span class="hint" data-i18n="hint_gap"></span></div>
+      </div>
+    </div>
+    <div style="margin-top:14px;"><button class="btn bd" onclick="resetCalc()">↺ <span data-i18n="btn_reset"></span></button></div>
+  </div>
+
+  <div class="card" id="res-card" style="display:none;">
+    <div class="ct"><span data-i18n="sec_result"></span></div>
+    <div class="rg" id="res-grid"></div>
+    <div class="ct"><span data-i18n="sec_checks"></span></div>
+    <div class="checks-box" id="checks-wrap"></div>
+    <div id="res-info"></div>
+    <div class="ct"><span data-i18n="sec_diagram"></span></div>
+    <div class="cw"><canvas id="stair-canvas" style="width:100%;"></canvas></div>
+    <div id="plan-wrap" style="display:none;">
+      <div class="ct" style="margin-top:4px;"><span data-i18n="sec_plan"></span></div>
+      <div class="cw"><canvas id="plan-canvas" style="width:100%;"></canvas></div>
+      <div class="rg" id="layout-grid" style="margin-top:10px;"></div>
+    </div>
+    <div id="step-table-wrap" style="display:none;margin-top:4px;">
+      <div class="ct"><span data-i18n="sec_step_table"></span></div>
+      <div class="tw"><table><thead><tr><th data-i18n="th_step_n"></th><th data-i18n="th_step_h_cum"></th><th data-i18n="th_step_h_each"></th><th data-i18n="th_step_check"></th></tr></thead><tbody id="step-tbody"></tbody></table></div>
+    </div>
+    <div class="btn-row np" style="margin-top:16px;">
+      <button class="btn bp" onclick="window.print()">🖨 <span data-i18n="btn_print"></span></button>
+      <button class="btn bo" onclick="exportJSON()">📤 <span data-i18n="btn_export"></span></button>
+      <button class="btn bo" onclick="document.getElementById('imp').click()">📥 <span data-i18n="btn_import"></span></button>
+      <input type="file" id="imp" accept=".json" style="display:none" onchange="importJSON(event)">
+    </div>
+  </div>
+</div>
+
+<div id="t2" class="tab-panel hidden">
+  <div class="card"><div class="ct"><span data-i18n="ref_title_tek17"></span></div><div id="ref-tek17"></div></div>
+  <div class="card"><div class="ct"><span data-i18n="ref_title_formula"></span></div><div id="ref-formula"></div></div>
+  <div class="card"><div class="ct"><span data-i18n="ref_title_winder"></span></div><div id="ref-winder"></div><div class="cw" style="margin-top:10px;"><canvas id="winder-canvas" style="width:100%;max-width:500px;"></canvas></div></div>
+  <div class="card"><div class="ct"><span data-i18n="ref_title_manual"></span></div><div id="ref-manual"></div></div>
+</div>
+
+<!-- ══ 3D TAB ══ -->
+<div id="t3" class="tab-panel hidden">
+  <div class="card" style="padding:14px 16px;">
+    <div class="ct"><span data-i18n="tab_3d"></span></div>
+    <div id="three-no-data" class="ib ye" style="display:none;">⚠ <span data-i18n="three_no_data"></span></div>
+    <div id="three-controls" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;">
+      <button class="btn bo" id="btn-reset-cam" onclick="resetCamera()" style="font-size:0.78rem;min-height:34px;padding:6px 12px;">🎯 <span data-i18n="three_reset_cam"></span></button>
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);cursor:pointer;">
+        <input type="checkbox" id="show-loads" checked onchange="toggleLoads(this.checked)" style="width:auto;min-height:auto;">
+        <span data-i18n="three_show_loads"></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);cursor:pointer;">
+        <input type="checkbox" id="show-stringers" checked onchange="toggleStringers(this.checked)" style="width:auto;min-height:auto;">
+        <span data-i18n="three_show_stringers"></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);cursor:pointer;">
+        <input type="checkbox" id="show-rails" checked onchange="toggleRails(this.checked)" style="width:auto;min-height:auto;">
+        <span data-i18n="three_show_rails"></span>
+      </label>
+      <span id="three-info" style="margin-left:auto;font-size:0.72rem;color:var(--dim);"></span>
+    </div>
+    <div id="three-mount" style="width:100%;height:480px;border-radius:var(--radius-sm);overflow:hidden;background:#0d1117;position:relative;touch-action:none;">
+      <canvas id="three-canvas" style="display:block;width:100%;height:100%;"></canvas>
+      <div id="three-hint" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:0.72rem;color:rgba(255,255,255,0.35);pointer-events:none;white-space:nowrap;">🖱 <span data-i18n="three_hint"></span></div>
+    </div>
+    <div id="three-legend" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:0.73rem;color:var(--muted);">
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#4a90d9;"></span> <span data-i18n="legend_tread"></span></span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#2d5a8a;"></span> <span data-i18n="legend_riser"></span></span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#7a5230;"></span> <span data-i18n="legend_stringer"></span></span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#888;"></span> <span data-i18n="legend_rail"></span></span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#ff4444;"></span> <span data-i18n="legend_load"></span></span>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="main-footer">
+    © 2026 Vytautas Giedraitis tel. 94844497 — alle beregninger kun for informasjonsformål.
+</footer>
+
+<script>
+const T={
+en:{
+  back:'Back',page_title:'Staircase Calculator — TEK17',tab_calc:'Calculator',tab_ref:'Reference',tab_3d:'3D View',
+  three_no_data:'Run the calculator first to generate 3D model.',three_reset_cam:'Reset view',three_show_loads:'Show loads',three_show_stringers:'Stringers',three_show_rails:'Handrails',three_hint:'Drag to rotate · Scroll to zoom · Right-drag to pan',
+  legend_tread:'Tread',legend_riser:'Riser',legend_stringer:'Stringer',legend_rail:'Handrail',legend_load:'Load arrow',
+  sec_project:'Project',lbl_proj_name:'Project name',ph_proj_name:'e.g. House — Indoor stairs',lbl_date:'Date',lbl_notes:'Notes',ph_notes:'Address, client, notes…',
+  sec_type:'Stair type',lbl_use_type:'Location',lbl_shape_type:'Shape',use_indoor:'Indoor',use_outdoor:'Outdoor',shape_straight:'Straight',shape_l:'L-shape',shape_u:'U-shape',
+  sec_dims:'Dimensions',
+  lbl_total_h:'Total height (mm)',hint_total_h:'Finished floor to finished floor — include finish material thickness',
+  lbl_floor_thick:'Slab thickness (mm)',hint_floor_thick:'Structural slab + ceiling — used to calculate slab opening size',
+  lbl_stair_w:'Stair width (mm)',hint_stair_w:'Clear width between walls or handrails. Minimum 900 mm',
+  lbl_headroom:'Headroom (mm)',hint_headroom:'Vertical clearance from tread nosing to ceiling. Minimum 2000 mm',
+  lbl_landing_w:'Landing width (mm)',hint_landing_w:'Width of the landing platform — usually equals stair width',
+  lbl_gap:'Gap between flights (mm)',hint_gap:'Clear opening between the two parallel flights (U-shape only)',
+  btn_reset:'Clear inputs',
+  sec_result:'Results',sec_checks:'TEK17 compliance',sec_diagram:'Side elevation',sec_plan:'Floor plan',sec_step_table:'Step table',
+  res_risers:'Risers (n)',res_riser_h:'Riser h',res_tread_d:'Tread d',res_blondel:'Blondel',res_angle:'Angle α',
+  res_run:'Horiz. run',res_total_h:'Height H',res_stair_len:'Stair length L',res_opening:'Slab opening',
+  th_step_n:'Step',th_step_h_cum:'Height from floor',th_step_h_each:'Each riser',th_step_check:'Status',
+  layout_run_a:'Flight A run',layout_run_b:'Flight B run',layout_w:'Total width',layout_d:'Total depth',layout_box:'Stair shaft',
+  btn_print:'Print / PDF',btn_export:'Export JSON',btn_import:'Import JSON',
+  chk_riser_h:'Riser height (h)',chk_tread_d:'Tread depth (d)',chk_blondel:'Blondel formula',chk_width:'Stair width',chk_headroom:'Headroom',chk_inner_tread:'Winder inner tread',chk_angle:'Stair angle',
+  status_ok:'OK',status_warn:'Warning',
+  inner_tread_explain:'The narrowest part of a winding step, measured at the inner centre post of the turn. TEK17 requires ≥ 150 mm so a person walking close to the inner rail still has safe footing.',
+  warns:{
+    riser_indoor:v=>`Riser h = ${v} mm — exceeds max 180 mm (indoor)`,
+    riser_outdoor:v=>`Riser h = ${v} mm — exceeds max 160 mm (outdoor)`,
+    tread_indoor:v=>`Tread d = ${v} mm — below min 250 mm (indoor)`,
+    tread_outdoor:v=>`Tread d = ${v} mm — below min 280 mm (outdoor)`,
+    blondel:v=>`Blondel = ${v} mm — outside comfort range 600–640 mm`,
+    width:v=>`Stair width = ${v} mm — below minimum 900 mm`,
+    headroom:v=>`Headroom = ${v} mm — below minimum 2000 mm`,
+    inner_tread:v=>`Winder inner tread = ${v} mm — below minimum 150 mm`,
+    angle:v=>`Angle = ${v}° — outside optimal range 30°–36°`,
+  },
+  print_meta:(n,d)=>`Project: ${n}  |  Date: ${d}`,
+  ref_title_tek17:'TEK17 Requirements',ref_title_formula:'Blondel formula',ref_title_winder:'Winding steps & walking line',ref_title_manual:'Installation manual & safety',
+  ref_tek17_rows:[['Indoor — max riser (h)','180 mm'],['Outdoor — max riser (h)','160 mm'],['Indoor — min tread (d)','250 mm (rec. 260–280)'],['Outdoor — min tread (d)','280 mm (rec. 300+)'],['Min stair width','900 mm'],['Recommended width','1000–1200 mm'],['Min headroom','2000 mm (rec. 2100)'],['Winder inner tread','≥ 150 mm'],['Optimal angle','30°–36°']],
+  ref_formula_text:'2 × h (riser height) + d (tread depth) = 620 mm\nAcceptable range: 600–640 mm  |  Target: exactly 620 mm',
+  ref_winder_text:'For L and U stairs, steps in the turn zone are wider on the outer edge and narrow at the inner post.\n\nWalking line: 300 mm from inner handrail (width < 1100 mm) or 400 mm (width ≥ 1100 mm).\n\nTread depth at the walking line must equal the straight flight tread depth.\n\nThe narrowest point at the inner edge must be ≥ 150 mm per TEK17.',
+  lbl_custom_run:'Custom horiz. run (mm)',hint_custom_run:'Optional — leave blank to calculate from Blondel. Enter if space is fixed.',
+  run_override_note:'⚠ Run overridden — tread d calculated from given horizontal run, not Blondel formula.',
+  ref_manual:[
+    {title:'1. Handrails & Safety (Rekkverk)',body:'• Min handrail height indoors: 900 mm (measured vertically from tread nosing)\n• Landings / galleries > 10 m drop: recommend 1000–1200 mm\n• Child safety — 100 mm rule: all vertical gaps between balusters must be ≤ 100 mm\n• Gap between bottom rail and tread: also ≤ 100 mm\n• Glass handrails must be laminated safety glass (Sikkerhetsglass)'},
+    {title:'2. Anti-slip surfaces',body:'• First and last tread should be visually marked with a contrasting colour — required in public buildings, recommended in private\n• Outdoor stairs or lacquered indoor stairs: fit anti-slip strips (sklisikringskanter) on tread nosing\n• TEK17 requires stairs to be safe even when wet'},
+    {title:'3. Materials & noise',body:'• Wood joints: apply silicone or construction adhesive between tread and stringer (vange) at installation to prevent future creaking\n• Multi-family buildings: use rubber acoustic pads between stair structure and wall to reduce impact noise to neighbours'},
+    {title:'4. Outdoor stair specifics',body:'• Treads: slope 1–2 % forward so water drains and ice does not form\n• Stringers (vanger): bottom must rest on frost-free foundation (frostfri grunn) or screw piles (søylepunkt) — otherwise spring frost will lift the stair'},
+    {title:'5. Concrete stair formwork',body:'• Formwork base must match the exact stair rise angle (Stigning)\n• Subtract finish thickness from first riser — e.g. 20 mm stone tile means bottom concrete riser is 20 mm shorter\n• Use double reinforcement (upper + lower bars) connected to slab reinforcement'},
+    {title:'6. Tolerances (practical)',body:'• Max variation in riser height across whole flight: 3–5 mm\n• Each tread must be horizontal (0° lateral slope)'},
+    {title:'7. Glossary (Norwegian — English)',body:'Opptrinn → Riser height\nInntrinn → Tread depth (excl. nosing)\nVange → Stringer (side beam)\nRepos → Landing platform\nHåndløper → Handrail grip\nFri bredde → Clear width\nBarnasikring → Child safety (gap limit)\nStigning → Rise angle / pitch'},
+  ],
+},
+no:{
+  back:'Tilbake',page_title:'Trappekalkulator — TEK17',tab_calc:'Kalkulator',tab_ref:'Referanse',tab_3d:'3D Visning',
+  three_no_data:'Kjør kalkulatoren først for å generere 3D-modell.',three_reset_cam:'Tilbakestill',three_show_loads:'Vis laster',three_show_stringers:'Vanger',three_show_rails:'Gelender',three_hint:'Dra for å rotere · Scroll for å zoome · Høyreklikk-dra for å flytte',
+  legend_tread:'Inntrinn',legend_riser:'Opptrinn',legend_stringer:'Vange',legend_rail:'Gelender',legend_load:'Lastpil',
+  sec_project:'Prosjekt',lbl_proj_name:'Prosjektnavn',ph_proj_name:'f.eks. Enebolig — Innvendig trapp',lbl_date:'Dato',lbl_notes:'Notater',ph_notes:'Adresse, kunde…',
+  sec_type:'Trappetype',lbl_use_type:'Plassering',lbl_shape_type:'Form',use_indoor:'Innvendig',use_outdoor:'Utvendig',shape_straight:'Rett',shape_l:'L-form',shape_u:'U-form',
+  sec_dims:'Mål',
+  lbl_total_h:'Total høyde (mm)',hint_total_h:'Ferdig gulv til ferdig gulv — inkl. gulvbelegg',
+  lbl_floor_thick:'Etasjeskille (mm)',hint_floor_thick:'Betongdekke + undertak — for beregning av hull i dekket',
+  lbl_stair_w:'Trappbredde (mm)',hint_stair_w:'Klart mål mellom vegger/gelendre. Minimum 900 mm',
+  lbl_headroom:'Fri høyde (mm)',hint_headroom:'Vertikalt fra trinn til tak. Minimum 2000 mm',
+  lbl_landing_w:'Repos/svingbredde (mm)',hint_landing_w:'Bredde på repos — vanligvis = trappbredde',
+  lbl_gap:'Åpning mellom løp (mm)',hint_gap:'Klart mellomrom mellom de to trappeløpene (U-form)',
+  btn_reset:'Nullstill',
+  sec_result:'Resultat',sec_checks:'TEK17 sjekkliste',sec_diagram:'Sidesnitt',sec_plan:'Plantegning',sec_step_table:'Trinntabell',
+  res_risers:'Antall trinn (n)',res_riser_h:'Opptrinn h',res_tread_d:'Inntrinn d',res_blondel:'Blondel',res_angle:'Vinkel α',
+  res_run:'Horis. løp',res_total_h:'Høyde H',res_stair_len:'Trappalengde L',res_opening:'Hullstørrelse',
+  th_step_n:'Trinn',th_step_h_cum:'Høyde fra gulv',th_step_h_each:'Hvert opptrinn',th_step_check:'Status',
+  layout_run_a:'Løp A',layout_run_b:'Løp B',layout_w:'Total bredde',layout_d:'Total dybde',layout_box:'Trappesjakt',
+  btn_print:'Skriv ut/PDF',btn_export:'Eksporter JSON',btn_import:'Importer JSON',
+  chk_riser_h:'Opptrinn (h)',chk_tread_d:'Inntrinn (d)',chk_blondel:'Blondels formel',chk_width:'Trappbredde',chk_headroom:'Fri høyde',chk_inner_tread:'Smaleste svingtrinn',chk_angle:'Trappevinkel',
+  status_ok:'OK',status_warn:'Advarsel',
+  inner_tread_explain:'Den smaleste delen av et svingtrinn — målt ved det indre stolpen i svingen. TEK17 krever ≥ 150 mm.',
+  warns:{
+    riser_indoor:v=>`Opptrinn h = ${v} mm — overstiger maks 180 mm`,riser_outdoor:v=>`Opptrinn h = ${v} mm — overstiger maks 160 mm`,
+    tread_indoor:v=>`Inntrinn d = ${v} mm — under min 250 mm`,tread_outdoor:v=>`Inntrinn d = ${v} mm — under min 280 mm`,
+    blondel:v=>`Blondel = ${v} mm — utenfor 600–640 mm`,width:v=>`Trappbredde = ${v} mm — under min 900 mm`,
+    headroom:v=>`Fri høyde = ${v} mm — under min 2000 mm`,inner_tread:v=>`Smaleste svingtrinn = ${v} mm — under min 150 mm`,
+    angle:v=>`Vinkel = ${v}° — utenfor optimal 30°–36°`,
+  },
+  print_meta:(n,d)=>`Prosjekt: ${n}  |  Dato: ${d}`,
+  ref_title_tek17:'TEK17 — Krav',ref_title_formula:'Blondels formel',ref_title_winder:'Svingtrinn og ganglinje',ref_title_manual:'Monteringsveiledning og sikkerhet',
+  ref_tek17_rows:[['Innvendig — maks opptrinn (h)','180 mm'],['Utvendig — maks opptrinn (h)','160 mm'],['Innvendig — min inntrinn (d)','250 mm (anbef. 260–280)'],['Utvendig — min inntrinn (d)','280 mm (anbef. 300+)'],['Min trappbredde','900 mm'],['Anbefalt bredde','1000–1200 mm'],['Min fri høyde','2000 mm (anbef. 2100)'],['Smaleste svingtrinn','≥ 150 mm'],['Optimal vinkel','30°–36°']],
+  ref_formula_text:'2 × h (opptrinn) + d (inntrinn) = 620 mm\nLeistintervall: 600–640 mm  |  Mål: 620 mm',
+  ref_winder_text:'For L- og U-form er svingtrinnene bredere på yttersiden og smale ved den indre stolpen.\n\nGanglinje: 300 mm fra indre gelender (bredde < 1100 mm) eller 400 mm (≥ 1100 mm).\n\nInntrinn d på ganglinjen = inntrinn i rettløpet.\n\nSmaleste punkt ved indre kant: ≥ 150 mm (TEK17).',
+  lbl_custom_run:'Eget horisontalt løp (mm)',hint_custom_run:'Valgfritt — la stå tomt for automatisk beregning. Fyll inn hvis plassen er fastlagt.',
+  run_override_note:'⚠ Løp overstyrt — inntrinn d beregnet fra angitt horisontalt løp, ikke Blondels formel.',
+  ref_manual:[
+    {title:'1. Rekkverk og sikkerhet',body:'• Min rekkverkshøyde innvendig: 900 mm (målt vertikalt fra trappenesens overkant)\n• Repos/gallerier > 10 m fall: anbefalt 1000–1200 mm\n• Barnasikring — 100 mm-regelen: alle vertikale åpninger mellom balustre ≤ 100 mm\n• Åpning mellom underskinne og trinn: også ≤ 100 mm\n• Stikklisten på glassrekkverk: laminert sikkerhetsglass'},
+    {title:'2. Sklisikring',body:'• Første og siste trinn bør merkes med kontrastfarge — påkrevd i offentlige bygg, anbefalt privat\n• Utvendige trapper eller lakkerte innvendige: monter sklisikringskanter p\u00e5 trinnet forkant\n• TEK17 krever at trapper er trygge \u00e5 bruke selv i v\u00e5tt'},
+    {title:'3. Materialer og lyddemping',body:'• Treforbindelser: p\u00e5f\u00f8r silikon eller konstruksjonslim mellom trinn og vange ved montering for \u00e5 hindre knirking\n• Flerfamiliebygg: bruk gummiputer (akustiske terskler) mellom trappekonstruksjon og vegg for \u00e5 redusere trinnlyd'},
+    {title:'4. Utvendige trapper',body:'• Trinn: legg ~1\u20132 % fall fremover slik at vann renner av og is ikke dannes\n• Vanger: underkant m\u00e5 hvile p\u00e5 frostfri grunn eller s\u00f8ylepunkter \u2014 ellers l\u00f8ftes trappen av teleheving om v\u00e5ren'},
+    {title:'5. Betongtrapper og forskaling',body:'• Forskalingsbunn m\u00e5 f\u00f8lge n\u00f8yaktig trappevinkel (Stigning)\n• Trekk fra apdailatykkelse: 20 mm fliser \u2192 f\u00f8rste betongopptrinn 20 mm lavere\n• Bruk dobbel armering (over + under) forbundet med dekkets armering'},
+    {title:'6. Toleranser (praksis)',body:'• Maks variasjon i opptrinnh\u00f8yde i hele l\u00f8pet: 3\u20135 mm\n• Hvert trinn skal v\u00e6re horisontalt (0\u00b0 sidehelling)'},
+    {title:'7. Ordliste (Norsk \u2014 Norsk/Engelsk)',body:'Opptrinn \u2192 Trinnh\u00f8yde (riser)\nInntrinn \u2192 Trinndybde uten nesing (tread)\nVange \u2192 Sidebjelke / stringer\nRepos \u2192 Repos / landing\nH\u00e5ndl\u00f8per \u2192 H\u00e5ndtak p\u00e5 rekkverket\nFri bredde \u2192 Klart passasjem\u00e5l\nBarnasikring \u2192 Balkongvern (100 mm-regel)\nStigning \u2192 Trappevinkel / pitch'},
+  ],
+},
+pl:{
+  back:'Powrót',page_title:'Kalkulator schodów — TEK17',tab_calc:'Kalkulator',tab_ref:'Podręcznik',tab_3d:'Widok 3D',
+  three_no_data:'Najpierw uruchom kalkulator, aby wygenerować model 3D.',three_reset_cam:'Resetuj widok',three_show_loads:'Pokaż obciążenia',three_show_stringers:'Policzki',three_show_rails:'Balustrada',three_hint:'Przeciągnij aby obrócić · Scroll aby przybliżyć · Prawy przycisk aby przesunąć',
+  legend_tread:'Stopnica',legend_riser:'Podstopnica',legend_stringer:'Policzek',legend_rail:'Balustrada',legend_load:'Strzałka obciążenia',
+  sec_project:'Projekt',lbl_proj_name:'Nazwa projektu',ph_proj_name:'np. Dom — Schody wewnętrzne',lbl_date:'Data',lbl_notes:'Uwagi',ph_notes:'Adres, klient…',
+  sec_type:'Typ schodów',lbl_use_type:'Lokalizacja',lbl_shape_type:'Kształt',use_indoor:'Wewnętrzne',use_outdoor:'Zewnętrzne',shape_straight:'Proste',shape_l:'L-kształt',shape_u:'U-kształt',
+  sec_dims:'Wymiary',
+  lbl_total_h:'Całkowita wys. (mm)',hint_total_h:'Od gotowej podłogi do gotowej podłogi',
+  lbl_floor_thick:'Grubość stropu (mm)',hint_floor_thick:'Beton + sufit — do obliczenia otworu w stropie',
+  lbl_stair_w:'Szerokość (mm)',hint_stair_w:'W świetle. Minimum 900 mm',
+  lbl_headroom:'Prześwit (mm)',hint_headroom:'Pionowo od stopnicy do sufitu. Minimum 2000 mm',
+  lbl_landing_w:'Szer. podestu (mm)',hint_landing_w:'Szerokość podestu = szerokość schodów',
+  lbl_gap:'Przestrzeń między biegami (mm)',hint_gap:'Prześwit między biegami (U-kształt)',
+  btn_reset:'Wyczyść',
+  sec_result:'Wyniki',sec_checks:'Wymogi TEK17',sec_diagram:'Przekrój boczny',sec_plan:'Rzut poziomy',sec_step_table:'Tabela stopni',
+  res_risers:'Stopnie (n)',res_riser_h:'Wys. h',res_tread_d:'Głęb. d',res_blondel:'Blondel',res_angle:'Kąt α',
+  res_run:'Rzut poziomy',res_total_h:'Wysokość H',res_stair_len:'Dług. schodów L',res_opening:'Otwór w stropie',
+  th_step_n:'Stopień',th_step_h_cum:'Wys. od podłogi',th_step_h_each:'Każda stopnica',th_step_check:'Status',
+  layout_run_a:'Bieg A',layout_run_b:'Bieg B',layout_w:'Całk. szerokość',layout_d:'Całk. głębokość',layout_box:'Szyb schodowy',
+  btn_print:'Drukuj/PDF',btn_export:'Eksportuj JSON',btn_import:'Importuj JSON',
+  chk_riser_h:'Wys. stopnicy (h)',chk_tread_d:'Głębokość (d)',chk_blondel:'Wzór Blondela',chk_width:'Szerokość',chk_headroom:'Prześwit',chk_inner_tread:'Najwęższa stopnica',chk_angle:'Kąt schodów',
+  status_ok:'OK',status_warn:'Uwaga',
+  inner_tread_explain:'Najwęższy punkt stopnicy skośnej przy wewnętrznym słupku zakrętu. TEK17: ≥ 150 mm.',
+  warns:{
+    riser_indoor:v=>`Stopnica h = ${v} mm — maks 180 mm`,riser_outdoor:v=>`Stopnica h = ${v} mm — maks 160 mm`,
+    tread_indoor:v=>`Głębokość d = ${v} mm — min 250 mm`,tread_outdoor:v=>`Głębokość d = ${v} mm — min 280 mm`,
+    blondel:v=>`Blondel = ${v} mm — poza 600–640 mm`,width:v=>`Szerokość = ${v} mm — min 900 mm`,
+    headroom:v=>`Prześwit = ${v} mm — min 2000 mm`,inner_tread:v=>`Najwęższa stopnica = ${v} mm — min 150 mm`,
+    angle:v=>`Kąt = ${v}° — poza 30°–36°`,
+  },
+  print_meta:(n,d)=>`Projekt: ${n}  |  Data: ${d}`,
+  ref_title_tek17:'TEK17 — Wymagania',ref_title_formula:'Wzór Blondela',ref_title_winder:'Stopnice skośne i linia chodu',ref_title_manual:'Instrukcja montażu i bezpieczeństwo',
+  ref_tek17_rows:[['Wewn. — maks wys. (h)','180 mm'],['Zewn. — maks wys. (h)','160 mm'],['Wewn. — min głęb. (d)','250 mm (rec. 260–280)'],['Zewn. — min głęb. (d)','280 mm (rec. 300+)'],['Min szerokość','900 mm'],['Zalecana szerokość','1000–1200 mm'],['Min prześwit','2000 mm (rec. 2100)'],['Najwęższa stopnica skośna','≥ 150 mm'],['Optymalny kąt','30°–36°']],
+  ref_formula_text:'2 × h (stopnica) + d (głębokość) = 620 mm\nDopuszczalny zakres: 600–640 mm',
+  ref_winder_text:'Dla schodów L i U stopnice w zakręcie są szersze po zewnętrznej stronie i wąskie przy słupku wewnętrznym.\n\nLinia chodu: 300 mm od balustrady (szer. < 1100 mm) lub 400 mm (≥ 1100 mm).\n\nGłębokość d na linii chodu = głębokość biegu prostego.\n\nNajwęższy punkt ≥ 150 mm (TEK17).',
+  lbl_custom_run:'Własny rzut poziomy (mm)',hint_custom_run:'Opcjonalne — zostaw puste dla obliczeń Blondela. Wpisz gdy przestrzeń jest ograniczona.',
+  run_override_note:'⚠ Rzut nadpisany — głębokość d obliczona z podanego rzutu, nie ze wzoru Blondela.',
+  ref_manual:[
+    {title:'1. Balustrady i bezpieczeństwo',body:'\u2022 Min wysoko\u015b\u0107 balustrady wewn\u0105trz: 900 mm (pionowo od kraw\u0119dzi stopnicy)\n\u2022 Podestu/galerie > 10 m wysoko\u015bci: zalecane 1000\u20131200 mm\n\u2022 Zasada 100 mm: wszystkie pionowe szczeliny mi\u0119dzy tralkami \u2264 100 mm\n\u2022 Szczelina mi\u0119dzy doln\u0105 szyn\u0105 a stopnic\u0105: te\u017c \u2264 100 mm\n\u2022 Szklane balustrady: tylko szk\u0142o laminowane bezpieczne (Sikkerhetsglass)'},
+    {title:'2. Antypo\u015blizgowo\u015b\u0107',body:'\u2022 Pierwsza i ostatnia stopnica: oznacz kontrastowym kolorem (wymagane w budynkach publicznych)\n\u2022 Schody zewn\u0119trzne lub lakierowane: zamontuj listwy antypo\u015blizgowe na kraw\u0119dzi stopnicy\n\u2022 TEK17: schody musz\u0105 by\u0107 bezpieczne nawet przy wilgoci'},
+    {title:'3. Materia\u0142y i izolacja akustyczna',body:'\u2022 Drewno: smaruj silikon lub klej monta\u017cowy w po\u0142\u0105czeniach stopnicy i policzka (vange) przy monta\u017cu\n\u2022 Budownictwo wielorodzinne: stosuj gumowe podk\u0142adki akustyczne mi\u0119dzy konstrukcj\u0105 a \u015bcian\u0105'},
+    {title:'4. Schody zewn\u0119trzne',body:'\u2022 Stopnice: spadek ~1\u20132 % do przodu \u2014 woda sp\u0142ywa, l\u00f3d si\u0119 nie tworzy\n\u2022 Policzki (vanger): podstawa na fundamencie niezamarzaj\u0105cym lub s\u0142upach \u015brubowych'},
+    {title:'5. Szalunki schod\u00f3w betonowych',body:'\u2022 Dno szalunku = dok\u0142adny k\u0105t pochylenia schod\u00f3w\n\u2022 Odejmij grubo\u015b\u0107 wyko\u0144czenia: 20 mm p\u0142ytki \u2192 pierwszy stopie\u0144 betonu 20 mm ni\u017cej\n\u2022 Podw\u00f3jne zbrojenie po\u0142\u0105czone ze zbrojeniem stropu'},
+    {title:'6. Tolerancje monta\u017cowe',body:'\u2022 Max r\u00f3\u017cnica wysoko\u015bci stopnicy w ca\u0142ym biegu: 3\u20135 mm\n\u2022 Ka\u017cda stopnica pozioma (0\u00b0 przechy\u0142 boczny)'},
+    {title:'7. S\u0142owniczek (Norweski \u2014 Polski)',body:'Opptrinn \u2192 Wysoko\u015b\u0107 stopnicy\nInntrinn \u2192 G\u0142\u0119boko\u015b\u0107 stopnicy (bez nosing)\nVange \u2192 Policzek / stringer\nRepos \u2192 Podest\nH\u00e5ndl\u00f8per \u2192 Uchwyt por\u0119czy\nFri bredde \u2192 Szeroko\u015b\u0107 w \u015bwietle\nBarnasikring \u2192 Ochrona dzieci (regu\u0142a 100 mm)\nStigning \u2192 K\u0105t pochylenia schod\u00f3w'},
+  ],
+},
+lt:{
+  back:'Atgal',page_title:'Laiptų skaičiuoklė — TEK17',tab_calc:'Skaičiuoklė',tab_ref:'Žinynas',tab_3d:'3D Vaizdas',
+  three_no_data:'Pirmiausia paleiskite skaičiuoklę 3D modeliui sugeneruoti.',three_reset_cam:'Atstatyti vaizdą',three_show_loads:'Rodyti apkrovas',three_show_stringers:'Laiptasijos',three_show_rails:'Turėklai',three_hint:'Tempkite norėdami sukti · Slinkite norėdami priartinti · Dešinė pele — stumti',
+  legend_tread:'Pakopa',legend_riser:'Pakopos briaunas',legend_stringer:'Laiptasija',legend_rail:'Turėklas',legend_load:'Apkrovos rodyklė',
+  sec_project:'Projektas',lbl_proj_name:'Projekto pavadinimas',ph_proj_name:'pvz. Namas — Vidiniai laiptai',lbl_date:'Data',lbl_notes:'Pastabos',ph_notes:'Adresas, klientas…',
+  sec_type:'Laiptų tipas',lbl_use_type:'Vieta',lbl_shape_type:'Forma',use_indoor:'Vidiniai',use_outdoor:'Lauko',shape_straight:'Tiesūs',shape_l:'L-forma',shape_u:'U-forma',
+  sec_dims:'Matmenys',
+  lbl_total_h:'Bendras aukštis (mm)',hint_total_h:'Nuo baigtos grindų dangos iki baigtos grindų dangos',
+  lbl_floor_thick:'Perdangos storis (mm)',hint_floor_thick:'Betonas + lubos — angos perdangoje skaičiavimui',
+  lbl_stair_w:'Laiptų plotis (mm)',hint_stair_w:'Šviesus plotis tarp sienų/turėklų. Minimumas 900 mm',
+  lbl_headroom:'Laisvas aukštis (mm)',hint_headroom:'Vertikaliai nuo pakopos iki lubų. Minimumas 2000 mm',
+  lbl_landing_w:'Aikštelės plotis (mm)',hint_landing_w:'Aikštelės plotis = laiptų plotis',
+  lbl_gap:'Tarpas tarp maršų (mm)',hint_gap:'Laisvas atstumas tarp dviejų lygiagrečių maršų (U-forma)',
+  btn_reset:'Išvalyti',
+  sec_result:'Rezultatai',sec_checks:'TEK17 reikalavimai',sec_diagram:'Šoninis vaizdas',sec_plan:'Aukšto planas',sec_step_table:'Pakopų lentelė',
+  res_risers:'Pakopų skaičius (n)',res_riser_h:'Pakopos aukštis h',res_tread_d:'Pakopos gylis d',res_blondel:'Blondelis',res_angle:'Kampas α',
+  res_run:'Horizontali projekcija',res_total_h:'Aukštis H',res_stair_len:'Laiptų ilgis L',res_opening:'Anga perdangoje',
+  th_step_n:'Pakopa',th_step_h_cum:'Aukštis nuo grindų',th_step_h_each:'Kiekviena pakopa',th_step_check:'Statusas',
+  layout_run_a:'Maršas A',layout_run_b:'Maršas B',layout_w:'Bendras plotis',layout_d:'Bendras gylis',layout_box:'Laiptinės anga',
+  btn_print:'Spausdinti/PDF',btn_export:'Eksportuoti JSON',btn_import:'Importuoti JSON',
+  chk_riser_h:'Pakopos aukštis (h)',chk_tread_d:'Pakopos gylis (d)',chk_blondel:'Blondelio formulė',chk_width:'Laiptų plotis',chk_headroom:'Laisvas aukštis',chk_inner_tread:'Siauriausia posūkio pakopa',chk_angle:'Laiptų kampas',
+  status_ok:'Gerai',status_warn:'Įspėjimas',
+  inner_tread_explain:'Siauriausia posūkio pakopos dalis prie vidinio posūkio stulpo. TEK17 reikalauja ≥ 150 mm, kad žmogus einantis prie vidinio turėklo turėtų saugų atramą.',
+  warns:{
+    riser_indoor:v=>`Pakopos aukštis h = ${v} mm — viršija maks 180 mm`,riser_outdoor:v=>`Pakopos aukštis h = ${v} mm — viršija maks 160 mm`,
+    tread_indoor:v=>`Pakopos gylis d = ${v} mm — mažiau už min 250 mm`,tread_outdoor:v=>`Pakopos gylis d = ${v} mm — mažiau už min 280 mm`,
+    blondel:v=>`Blondel = ${v} mm — nepatenka į 600–640 mm`,width:v=>`Laiptų plotis = ${v} mm — mažiau už min 900 mm`,
+    headroom:v=>`Laisvas aukštis = ${v} mm — mažiau už min 2000 mm`,inner_tread:v=>`Siauriausia posūkio pakopa = ${v} mm — mažiau už min 150 mm`,
+    angle:v=>`Kampas = ${v}° — nepatenka į optimalų 30°–36°`,
+  },
+  print_meta:(n,d)=>`Projektas: ${n}  |  Data: ${d}`,
+  ref_title_tek17:'TEK17 — Reikalavimai',ref_title_formula:'Blondelio formulė',ref_title_winder:'Posūkio pakopos ir ėjimo linija',ref_title_manual:'Montavimo vadovas ir sauga',
+  ref_tek17_rows:[['Vidaus — maks pakopos aukštis (h)','180 mm'],['Lauko — maks pakopos aukštis (h)','160 mm'],['Vidaus — min gylis (d)','250 mm (rek. 260–280)'],['Lauko — min gylis (d)','280 mm (rek. 300+)'],['Min plotis','900 mm'],['Rekomenduojamas plotis','1000–1200 mm'],['Min laisvas aukštis','2000 mm (rek. 2100)'],['Siauriausia posūkio pakopa','≥ 150 mm'],['Optimalus kampas','30°–36°']],
+  ref_formula_text:'2 × h (pakopos aukštis) + d (gylis) = 620 mm\nLeistinas intervalas: 600–640 mm',
+  ref_winder_text:'L ir U formos laiptams posūkio pakopos platesnės išoriniame krašte ir siauresnės prie vidinio stulpo.\n\nĖjimo linija: 300 mm nuo vidinio turėklo (plotis < 1100 mm) arba 400 mm (≥ 1100 mm).\n\nPakopos gylis d ant ėjimo linijos = tiesiosios dalies pakopos gylis.\n\nSiauriausia dalis ≥ 150 mm (TEK17).',
+  lbl_custom_run:'Pasirinkta horizontali projekcija (mm)',hint_custom_run:'Neprivaloma — palikite tuščia automatiniam skaičiavimui. Įveskite jei vieta yra fiksuota.',
+  run_override_note:'⚠ Projekcija pakeista — pakopos gylis d skaičiuojamas iš nurodyto horizontalaus atstumo, ne Blondelio formulės.',
+  ref_manual:[
+    {title:'1. Turėklai ir sauga',body:'• Min turėklo aukštis viduje: 900 mm (vertikaliai nuo pakopos noselės viršaus)\n• Aikštelės/galerijos > 10 m kritimo aukščio: rekomenduojama 1000–1200 mm\n• Vaikų sauga — 100 mm taisyklė: visi vertikalūs tarpai tarp balustrų ≤ 100 mm\n• Tarpas tarp apatinės bėgelio juostos ir pakopos: taip pat ≤ 100 mm\n• Stiklinis turėklas: tik laminuotas saugus stiklas (Sikkerhetsglass)'},
+    {title:'2. Neslystantys paviršiai',body:'• Pirmoji ir paskutinė pakopa: pažymėkite kontrastinga spalva (privaloma viešuose pastatuose)\n• Lauko laiptai arba lakuoti vidiniai: priklijuokite neslystančias juostas ant pakopos krašto\n• TEK17 reikalauja, kad laiptai būtų saugūs net drėgnomis sąlygomis'},
+    {title:'3. Medžiagos ir triukšmas',body:'• Mediniai laiptai: tepkite silikoną arba statybinį klijų tarp pakopų ir laiptasijų montavimo metu — tai apsaugo nuo girgždėjimo\n• Daugiabučiai: naudokite guminius akustinius tarpiklius tarp laiptų konstrukcijos ir sienos'},
+    {title:'4. Lauko laiptų specifika',body:'• Pakopos: ~1–2 % nuolydis į priekį — vanduo nubėga, ledas nesusidaro\n• Laiptasijos: apačia turi remtis į neįšalantį pagrindą arba sraigtinius pamatus — kitaip pavasarį laiptus iškels'},
+    {title:'5. Betoninių laiptų klojiniai',body:'• Klojinio dugnas = tikslus laiptų kilimo kampas (Stigning)\n• Atimkite apdailos storį: 20 mm plytelės → pirmoji betono pakopa 20 mm žemesnė\n• Dviguba armatūra (viršutinė + apatinė), sujungta su perdangos armatūra'},
+    {title:'6. Montavimo tolerancijos',body:'• Maks pakopos aukščio skirtumas visame marše: 3–5 mm\n• Kiekviena pakopa horizontali (0° šoninis nuolydis)'},
+    {title:'7. Terminų žodynėlis (Norvegų — Lietuvių)',body:'Opptrinn → Pakopos aukštis\nInntrinn → Pakopos gylis (be noselės)\nVange → Laiptasija (šoninė sija)\nRepos → Laiptų aikštelė\nHåndløper → Turėklo rankena\nFri bredde → Laisvas praėjimo plotis\nBarnasikring → Apsauga vaikams (tarpų ribojimas)\nStigning → Laiptų kilimo kampas'},
+  ],
+},
+};
+
+let lang=localStorage.getItem('pb_lang')||'en';
+let useType='indoor', shapeType='straight';
+
+function setLang(l){lang=l;localStorage.setItem('pb_lang',l);applyLang();}
+function applyLang(){
+  const d=T[lang];
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(typeof d[k]==='string')el.textContent=d[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(d[k])el.placeholder=d[k];});
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  renderTypeGrids(); renderRef(); calc();
+}
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.remove('hidden'); btn.classList.add('active');
+}
+
+function renderTypeGrids(){
+  const d=T[lang];
+  const ug=document.getElementById('use-grid');ug.innerHTML='';
+  [{id:'indoor',icon:'🏠'},{id:'outdoor',icon:'🌿'}].forEach(u=>{
+    const el=document.createElement('div');el.className='sc'+(u.id===useType?' active':'');
+    el.innerHTML=`<div class="sc-icon">${u.icon}</div><div class="scl">${d['use_'+u.id]}</div>`;
+    el.onclick=()=>{useType=u.id;renderTypeGrids();calc();saveState();};ug.appendChild(el);
+  });
+  const sg=document.getElementById('shape-grid');sg.innerHTML='';
+  [{id:'straight',svg:'<polyline points="6,36 6,18 36,18" stroke-width="3" fill="none"/>'},
+   {id:'l',svg:'<polyline points="6,36 22,36 22,18 40,18" stroke-width="3" fill="none"/>'},
+   {id:'u',svg:'<polyline points="6,36 6,18 20,18 20,36 34,36 34,18" stroke-width="3" fill="none"/>'}
+  ].forEach(s=>{
+    const el=document.createElement('div');el.className='sc'+(s.id===shapeType?' active':'');
+    const col=s.id===shapeType?'var(--primary)':'var(--muted)';
+    el.innerHTML=`<svg width="46" height="42" viewBox="0 0 46 42" style="color:${col}" stroke="currentColor">${s.svg}</svg><div class="scl">${d['shape_'+s.id]}</div>`;
+    el.onclick=()=>{shapeType=s.id;renderTypeGrids();updateLUFields();calc();saveState();};sg.appendChild(el);
+  });
+}
+function updateLUFields(){
+  const lu=document.getElementById('lu-fields');const fg=document.getElementById('f-gap');
+  if(shapeType==='straight'){lu.classList.add('hidden');}
+  else{lu.classList.remove('hidden');fg.style.display=shapeType==='u'?'':'none';}
+}
+
+function calc(){
+  const d=T[lang];
+  const totalH=parseFloat(document.getElementById('total-h').value);
+  const floorThick=parseFloat(document.getElementById('floor-thick').value)||0;
+  const stairW=parseFloat(document.getElementById('stair-w').value)||900;
+  const headroom=parseFloat(document.getElementById('headroom').value)||2100;
+  const gapW=parseFloat(document.getElementById('gap-w').value)||100;
+  const customRunInput=parseFloat(document.getElementById('custom-run').value);
+  const card=document.getElementById('res-card');
+  if(isNaN(totalH)||totalH<500){card.style.display='none';return;}
+  card.style.display='block';
+
+  const isOutdoor=useType==='outdoor';
+  const maxH=isOutdoor?160:180, minD=isOutdoor?280:250;
+  const targetRiser=isOutdoor?155:175;
+
+  let n=Math.ceil(totalH/targetRiser);
+  if(totalH/n>maxH) n=Math.ceil(totalH/maxH);
+  const h=totalH/n;
+
+  let dv, runOverridden=false;
+  if(!isNaN(customRunInput)&&customRunInput>0){
+    dv=customRunInput/(n-1);
+    runOverridden=true;
+  } else {
+    dv=620-2*h;
+  }
+  const blondel=2*h+dv;
+  const angle=Math.atan2(h,dv)*180/Math.PI;
+  const horizRun=(n-1)*dv;
+  const stairLen=Math.sqrt(horizRun*horizRun+totalH*totalH);
+  const opening=floorThick>0?dv*(headroom+floorThick)/h:null;
+
+  const gangOff=stairW<1100?300:400;
+  const innerTread=shapeType==='straight'?null:Math.round(dv*50/gangOff);
+
+  const checks=[
+    {key:'riser_h',  label:d.chk_riser_h,    v:h,        unit:'mm', ok:h<=maxH,              wk:isOutdoor?'riser_outdoor':'riser_indoor', fmt:v=>v.toFixed(1)},
+    {key:'tread_d',  label:d.chk_tread_d,    v:dv,       unit:'mm', ok:dv>=minD,             wk:isOutdoor?'tread_outdoor':'tread_indoor', fmt:v=>Math.round(v)},
+    {key:'blondel',  label:d.chk_blondel,    v:blondel,  unit:'mm', ok:blondel>=600&&blondel<=640, wk:'blondel', fmt:v=>v.toFixed(0)},
+    {key:'width',    label:d.chk_width,      v:stairW,   unit:'mm', ok:stairW>=900,          wk:'width',   fmt:v=>Math.round(v)},
+    {key:'headroom', label:d.chk_headroom,   v:headroom, unit:'mm', ok:headroom>=2000,       wk:'headroom',fmt:v=>Math.round(v)},
+    {key:'angle',    label:d.chk_angle,      v:angle,    unit:'°',  ok:angle>=30&&angle<=36, wk:'angle',   fmt:v=>v.toFixed(1)},
+  ];
+  if(innerTread!==null) checks.push({key:'inner_tread',label:d.chk_inner_tread,v:innerTread,unit:'mm',ok:innerTread>=150,wk:'inner_tread',fmt:v=>v,sub:d.inner_tread_explain});
+
+  document.getElementById('res-grid').innerHTML=`
+    <div class="rb"><div class="rv inf">${n}</div><div class="rl">${d.res_risers}</div></div>
+    <div class="rb"><div class="rv ${h<=maxH?'ok':'wa'}">${h.toFixed(1)}</div><div class="rl">${d.res_riser_h} (mm)</div></div>
+    <div class="rb"><div class="rv ${dv>=minD?'ok':'wa'}">${Math.round(dv)}</div><div class="rl">${d.res_tread_d} (mm)</div></div>
+    <div class="rb"><div class="rv ${blondel>=600&&blondel<=640?'ok':'wa'}">${blondel.toFixed(0)}</div><div class="rl">${d.res_blondel} (mm)</div></div>
+    <div class="rb"><div class="rv ${angle>=30&&angle<=36?'ok':'wa'}">${angle.toFixed(1)}°</div><div class="rl">${d.res_angle}</div></div>
+    <div class="rb"><div class="rv ac">${Math.round(horizRun)}</div><div class="rl">${d.res_run} (mm)</div></div>
+    <div class="rb"><div class="rv">${Math.round(totalH)}</div><div class="rl">${d.res_total_h} (mm)</div></div>
+    <div class="rb"><div class="rv ac">${Math.round(stairLen)}</div><div class="rl">${d.res_stair_len} (mm)</div></div>
+    ${opening?`<div class="rb"><div class="rv ac">${Math.round(opening)}</div><div class="rl">${d.res_opening} (mm)</div></div>`:''}`;
+
+  document.getElementById('checks-wrap').innerHTML=checks.map(c=>{
+    const ok=c.ok;
+    return `<div class="check-row">
+      <span class="check-icon" style="color:${ok?'var(--success)':'var(--danger)'}">${ok?'✓':'✗'}</span>
+      <span class="check-label">${c.label}${c.sub?`<span class="check-sub">${c.sub}</span>`:''}</span>
+      <span class="check-val ${ok?'ok':'er'}">${c.fmt(c.v)} ${c.unit}</span>
+    </div>`;
+  }).join('');
+
+  const warns=checks.filter(c=>!c.ok);
+  let info='';
+  if(!warns.length) info=`<div class="ib gr">✓ All TEK17 checks passed</div>`;
+  else warns.forEach(c=>{info+=`<div class="ib re">✗ ${d.warns[c.wk](c.fmt(c.v))}</div>`;});
+  info+=`<div class="ib bl" style="font-family:'Consolas',monospace;">2 × ${h.toFixed(1)} + ${Math.round(dv)} = ${blondel.toFixed(0)} mm &nbsp;|&nbsp; α = ${angle.toFixed(1)}°</div>`;
+  if(runOverridden) info+=`<div class="ib ye">${d.run_override_note}</div>`;
+  document.getElementById('res-info').innerHTML=info;
+
+  const stw=document.getElementById('step-table-wrap');stw.style.display='block';
+  const tb=document.getElementById('step-tbody');tb.innerHTML='';
+  for(let i=1;i<=n;i++){
+    const ch=Math.round(h*i);const ok=ch<=Math.round(totalH)+2;
+    tb.innerHTML+=`<tr><td class="mn" style="color:var(--primary);font-weight:700;">${i}</td><td class="mn">${ch}</td><td class="mn" style="color:var(--muted);">${Math.round(h)}</td><td><span class="badge ${ok?'b-ok':'b-wa'}">${ok?d.status_ok:d.status_warn}</span></td></tr>`;
+  }
+
+  const pw=document.getElementById('plan-wrap');const lg=document.getElementById('layout-grid');
+  if(shapeType==='straight'){pw.style.display='none';}
+  else{
+    pw.style.display='block';
+    const half=Math.floor((n-1)/2),rest=(n-1)-half;
+    if(shapeType==='l'){
+      const rA=half*dv,rB=rest*dv,wA=rA+stairW,wB=rB+stairW;
+      lg.innerHTML=`<div class="rb"><div class="rv inf">${Math.round(rA)}</div><div class="rl">${d.layout_run_a}</div></div><div class="rb"><div class="rv inf">${Math.round(rB)}</div><div class="rl">${d.layout_run_b}</div></div><div class="rb"><div class="rv">${Math.round(wA)}</div><div class="rl">${d.layout_w}</div></div><div class="rb"><div class="rv">${Math.round(wB)}</div><div class="rl">${d.layout_d}</div></div>`;
+    } else {
+      const fr=half*dv,tw=2*stairW+gapW,td=fr+stairW;
+      lg.innerHTML=`<div class="rb"><div class="rv inf">${Math.round(fr)}</div><div class="rl">${d.layout_run_a}</div></div><div class="rb"><div class="rv">${Math.round(tw)}</div><div class="rl">${d.layout_w}</div></div><div class="rb"><div class="rv">${Math.round(td)}</div><div class="rl">${d.layout_d}</div></div>`;
+    }
+    drawPlan(n,h,dv,stairW,gapW,shapeType,d);
+  }
+  drawElevation(n,h,dv,angle,horizRun,stairLen,totalH,stairW,headroom,d);
+  saveState();
+}
+
+// ===================== DRAWING FUNCTIONS =====================
+function drawElevation(n,h,dv,angle,horizRun,stairLen,totalH,stairW,headroom,d){
+  const cv=document.getElementById('stair-canvas');
+  const CW=Math.max(cv.parentElement.offsetWidth||480,320);
+  const visN=Math.min(n,14);
+  const PL=80,PR=52,PT=44,PB=72;
+  // Scale to fit visN steps
+  const availW=CW-PL-PR, availH=Math.max(CW*0.52,200);
+  const scW=availW/(visN*dv), scH=availH/totalH;
+  const sc=Math.min(scW,scH,0.25)*0.92;
+  const drH=Math.round(visN*h*sc);
+  const CH=drH+PT+PB+20;
+  cv.width=CW; cv.height=CH;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);
+
+  const ox=PL, oy=PT+drH; // bottom-left of stair
+
+  // ---- Ground & upper floor ----
+  ctx.strokeStyle='rgba(43,108,176,0.3)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ox-30,oy);ctx.lineTo(CW-PR+10,oy);ctx.stroke();
+  const topY=oy-Math.round(totalH*sc);
+  ctx.strokeStyle='rgba(43,108,176,0.18)';ctx.lineWidth=1;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ox-10,topY);ctx.lineTo(CW-PR+10,topY);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ---- Draw each step ----
+  for(let i=0;i<visN;i++){
+    const sx=ox+i*dv*sc, sy=oy-i*h*sc;
+    const pw=dv*sc, ph=h*sc;
+    // Alternating subtle fill
+    ctx.fillStyle=i%2===0?'rgba(43,108,176,0.10)':'rgba(43,108,176,0.06)';
+    ctx.fillRect(sx,sy-ph,pw,ph);
+    // Tread top line
+    ctx.strokeStyle='#2b6cb0';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(sx,sy-ph);ctx.lineTo(sx+pw,sy-ph);ctx.stroke();
+    // Riser right line
+    ctx.strokeStyle='rgba(43,108,176,0.5)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(sx+pw,sy-ph);ctx.lineTo(sx+pw,sy);ctx.stroke();
+    // Left wall for step 0
+    if(i===0){ctx.strokeStyle='rgba(43,108,176,0.5)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx,sy-ph);ctx.stroke();}
+    // Step number
+    if(visN<=12){
+      ctx.fillStyle='rgba(113,128,150,0.75)';ctx.font='bold 8px Consolas,monospace';ctx.textAlign='center';
+      ctx.fillText(i+1,sx+pw/2,sy-ph/2+3);
+    }
+  }
+  // Nosing line (hypotenuse)
+  ctx.strokeStyle='rgba(221,107,32,0.5)';ctx.lineWidth=2;ctx.setLineDash([7,5]);
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+visN*dv*sc,oy-visN*h*sc);ctx.stroke();ctx.setLineDash([]);
+
+  // ---- Dimension arrows ----
+  const DM='bold 10px Consolas,monospace';
+
+  // h — riser height, left arrow
+  arrow(ctx,ox-16,oy,ox-16,oy-h*sc,'#2b6cb0');
+  ctx.font=DM;ctx.fillStyle='#2b6cb0';ctx.textAlign='right';
+  ctx.fillText('h='+h.toFixed(0),(ox-20),(oy+oy-h*sc)/2+4);
+
+  // d — tread depth, bottom arrow
+  const dy1=oy+18;
+  arrow(ctx,ox,dy1,ox+dv*sc,dy1,'#276749');
+  ctx.font=DM;ctx.fillStyle='#276749';ctx.textAlign='center';
+  ctx.fillText('d='+Math.round(dv),ox+dv*sc/2,dy1+14);
+
+  // Total run — further bottom
+  const dy2=oy+36;
+  arrow(ctx,ox,dy2,ox+visN*dv*sc,dy2,'#718096');
+  ctx.font=DM;ctx.fillStyle='#718096';ctx.textAlign='center';
+  ctx.fillText('Run='+Math.round(horizRun)+'mm',ox+visN*dv*sc/2,dy2+14);
+
+  // H — total height, right side
+  const rx=ox+visN*dv*sc+18;
+  arrow(ctx,rx,oy,rx,oy-visN*h*sc,'#553c9a');
+  ctx.save();ctx.translate(rx+4,(oy*2-visN*h*sc)/2);ctx.rotate(-Math.PI/2);
+  ctx.font=DM;ctx.fillStyle='#553c9a';ctx.textAlign='center';
+  ctx.fillText('H='+Math.round(totalH)+'mm',0,0);ctx.restore();
+
+  // L — stair length along nosing
+  const mx=ox+visN*dv*sc/2, my=oy-visN*h*sc/2;
+  const rot=-Math.atan2(visN*h*sc,visN*dv*sc);
+  ctx.save();ctx.translate(mx,my);ctx.rotate(rot);
+  ctx.font=DM;ctx.fillStyle='rgba(221,107,32,0.9)';ctx.textAlign='center';
+  ctx.fillText('L='+Math.round(stairLen)+'mm',0,-9);ctx.restore();
+
+  // Angle arc
+  const arcR=36;
+  ctx.strokeStyle='rgba(221,107,32,0.75)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(ox,oy,arcR,-Math.atan2(visN*h*sc,visN*dv*sc),0);ctx.stroke();
+  ctx.font='bold 11px Segoe UI,sans-serif';ctx.fillStyle='rgba(221,107,32,1)';ctx.textAlign='left';
+  ctx.fillText(angle.toFixed(1)+'°',ox+arcR+5,oy-14);
+
+  // Headroom arrow on last visible step
+  const lastX=ox+(visN-1)*dv*sc, lastY=oy-(visN-1)*h*sc-h*sc;
+  const hrPx=Math.min(headroom*sc*0.55,90);
+  ctx.strokeStyle='rgba(39,103,73,0.6)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(lastX+dv*sc*0.4,lastY);ctx.lineTo(lastX+dv*sc*0.4,lastY-hrPx);ctx.stroke();ctx.setLineDash([]);
+  ctx.font='9px Consolas,monospace';ctx.fillStyle='rgba(39,103,73,0.85)';ctx.textAlign='left';
+  ctx.fillText('↕'+Math.round(headroom)+'mm',lastX+dv*sc*0.4+4,lastY-hrPx/2+3);
+
+  // Legend bar
+  ctx.font='500 9px Segoe UI,sans-serif';ctx.textAlign='left';
+  const ly=CH-10;
+  ctx.fillStyle='#2b6cb0';ctx.fillText('h=riser',8,ly);
+  ctx.fillStyle='#276749';ctx.fillText('d=tread',58,ly);
+  ctx.fillStyle='#553c9a';ctx.fillText('H=height',112,ly);
+  ctx.fillStyle='rgba(221,107,32,.9)';ctx.fillText('L=stair length',172,ly);
+  ctx.fillStyle='rgba(39,103,73,.8)';ctx.fillText('↕headroom',272,ly);
+  if(visN<n){ctx.fillStyle='#718096';ctx.textAlign='right';ctx.fillText(`(${visN} of ${n} shown)`,CW-6,ly);}
+}
+
+function arrow(ctx,x1,y1,x2,y2,col){
+  const AR=5,ang=Math.atan2(y2-y1,x2-x1);
+  ctx.strokeStyle=col;ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  [0,Math.PI].forEach((off,i)=>{
+    const ax=i===0?x2:x1,ay=i===0?y2:y1,a=i===0?ang:ang+Math.PI;
+    ctx.fillStyle=col;ctx.beginPath();
+    ctx.moveTo(ax,ay);ctx.lineTo(ax-AR*Math.cos(a-0.4),ay-AR*Math.sin(a-0.4));ctx.lineTo(ax-AR*Math.cos(a+0.4),ay-AR*Math.sin(a+0.4));
+    ctx.closePath();ctx.fill();
+  });
+}
+
+// ===================== PLAN CANVAS =====================
+function drawPlan(n,h,dv,stairW,gapW,shape,d){
+  const cv=document.getElementById('plan-canvas');
+  const CW=Math.max(cv.parentElement.offsetWidth||480,320);
+  const CH=Math.round(CW*0.55);
+  cv.width=CW;cv.height=CH;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);
+  const half=Math.floor((n-1)/2),rest=(n-1)-half;
+
+  if(shape==='l'){
+    const rA=half*dv,rB=rest*dv,wA=rA+stairW,wB=rB+stairW;
+    const sc=Math.min((CW-80)/wA,(CH-60)/wB,0.18);
+    const ox=44,oy=CH-36;
+    const swP=stairW*sc,rAp=rA*sc,rBp=rB*sc;
+
+    // Flight A (horizontal)
+    ctx.fillStyle='rgba(43,108,176,0.10)';ctx.fillRect(ox,oy-swP,rAp,swP);
+    ctx.strokeStyle='#2b6cb0';ctx.lineWidth=2;ctx.strokeRect(ox,oy-swP,rAp,swP);
+    for(let i=1;i<half;i++){ctx.strokeStyle='rgba(43,108,176,0.25)';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(ox+i*dv*sc,oy-swP);ctx.lineTo(ox+i*dv*sc,oy);ctx.stroke();}
+    for(let i=0;i<half;i++){ctx.fillStyle='rgba(43,108,176,0.6)';ctx.font='bold 8px Consolas,monospace';ctx.textAlign='center';ctx.fillText(i+1,ox+(i+0.5)*dv*sc,oy-swP/2+3);}
+    ctx.fillStyle='rgba(43,108,176,0.5)';ctx.font='10px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('→',ox+rAp/2,oy-swP-8);
+
+    // Landing
+    ctx.fillStyle='rgba(39,103,73,0.14)';ctx.fillRect(ox+rAp,oy-swP,swP,swP);
+    ctx.strokeStyle='#276749';ctx.lineWidth=2;ctx.strokeRect(ox+rAp,oy-swP,swP,swP);
+    ctx.fillStyle='rgba(39,103,73,0.8)';ctx.font='bold 15px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('↱',ox+rAp+swP/2,oy-swP/2+6);
+
+    // Flight B (vertical)
+    const bx=ox+rAp,by=oy-swP;
+    ctx.fillStyle='rgba(85,60,154,0.10)';ctx.fillRect(bx,by-rBp,swP,rBp);
+    ctx.strokeStyle='#553c9a';ctx.lineWidth=2;ctx.strokeRect(bx,by-rBp,swP,rBp);
+    for(let i=1;i<rest;i++){ctx.strokeStyle='rgba(85,60,154,0.25)';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(bx,by-i*dv*sc);ctx.lineTo(bx+swP,by-i*dv*sc);ctx.stroke();}
+    for(let i=0;i<rest;i++){ctx.fillStyle='rgba(85,60,154,0.6)';ctx.font='bold 8px Consolas,monospace';ctx.textAlign='center';ctx.fillText(half+1+i,bx+swP/2,by-(i+0.5)*dv*sc+3);}
+    ctx.fillStyle='rgba(85,60,154,0.5)';ctx.font='10px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('↑',bx+swP+8,by-rBp/2);
+
+    // Walking line
+    const gl=(stairW<1100?300:400)*sc;
+    ctx.strokeStyle='rgba(221,107,32,0.65)';ctx.lineWidth=2;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(ox,oy-gl);ctx.lineTo(ox+rAp,oy-gl);ctx.arc(ox+rAp,oy-swP,swP-gl,Math.PI/2,0,true);ctx.stroke();ctx.setLineDash([]);
+
+    // Dimension labels
+    ctx.font='bold 10px Consolas,monospace';ctx.fillStyle='#718096';ctx.textAlign='center';
+    ctx.fillText(Math.round(rA)+'mm',ox+rAp/2,oy+14);
+    ctx.save();ctx.translate(bx+swP+18,by-rBp/2);ctx.rotate(Math.PI/2);ctx.fillText(Math.round(rB)+'mm',0,0);ctx.restore();
+    ctx.fillStyle='#2b6cb0';
+    ctx.fillText('W='+Math.round(wA)+'mm',ox+rAp/2+swP/2,CH-4);
+    ctx.save();ctx.translate(8,oy-wB*sc/2);ctx.rotate(-Math.PI/2);ctx.fillText('D='+Math.round(wB)+'mm',0,0);ctx.restore();
+
+  } else { // U
+    const fr=half*dv,tw=2*stairW+gapW,td=fr+stairW;
+    const sc=Math.min((CW-80)/tw,(CH-60)/td,0.18);
+    const ox=44,oy=CH-36;
+    const swP=stairW*sc,frP=fr*sc,gpP=gapW*sc;
+
+    // Flight 1 top
+    ctx.fillStyle='rgba(43,108,176,0.10)';ctx.fillRect(ox,oy-td*sc,frP,swP);
+    ctx.strokeStyle='#2b6cb0';ctx.lineWidth=2;ctx.strokeRect(ox,oy-td*sc,frP,swP);
+    for(let i=1;i<half;i++){ctx.strokeStyle='rgba(43,108,176,0.25)';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(ox+i*dv*sc,oy-td*sc);ctx.lineTo(ox+i*dv*sc,oy-td*sc+swP);ctx.stroke();}
+    ctx.fillStyle='rgba(43,108,176,0.55)';ctx.font='11px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('→',ox+frP/2,oy-td*sc+swP/2+4);
+
+    // Turn
+    ctx.fillStyle='rgba(39,103,73,0.14)';ctx.fillRect(ox+frP,oy-td*sc,swP,swP);
+    ctx.strokeStyle='#276749';ctx.lineWidth=2;ctx.strokeRect(ox+frP,oy-td*sc,swP,swP);
+    ctx.fillStyle='rgba(39,103,73,0.85)';ctx.font='bold 15px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('↺',ox+frP+swP/2,oy-td*sc+swP/2+5);
+
+    // Gap
+    if(gpP>2){ctx.fillStyle='rgba(113,128,150,0.05)';ctx.fillRect(ox,oy-td*sc+swP,frP,gpP);ctx.strokeStyle='rgba(113,128,150,0.15)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.strokeRect(ox,oy-td*sc+swP,frP,gpP);ctx.setLineDash([]);ctx.fillStyle='rgba(113,128,150,0.45)';ctx.font='8px Consolas,monospace';ctx.textAlign='center';ctx.fillText('gap='+Math.round(gapW)+'mm',ox+frP/2,oy-td*sc+swP+gpP/2+3);}
+
+    // Flight 2 bottom
+    ctx.fillStyle='rgba(85,60,154,0.10)';ctx.fillRect(ox,oy-swP,frP,swP);
+    ctx.strokeStyle='#553c9a';ctx.lineWidth=2;ctx.strokeRect(ox,oy-swP,frP,swP);
+    for(let i=1;i<half;i++){ctx.strokeStyle='rgba(85,60,154,0.25)';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(ox+i*dv*sc,oy-swP);ctx.lineTo(ox+i*dv*sc,oy);ctx.stroke();}
+    ctx.fillStyle='rgba(85,60,154,0.55)';ctx.font='11px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('←',ox+frP/2,oy-swP/2+4);
+
+    // Bottom landing
+    ctx.fillStyle='rgba(39,103,73,0.14)';ctx.fillRect(ox+frP,oy-swP,swP,swP);
+    ctx.strokeStyle='#276749';ctx.lineWidth=2;ctx.strokeRect(ox+frP,oy-swP,swP,swP);
+    ctx.fillStyle='rgba(39,103,73,0.85)';ctx.font='bold 14px Segoe UI,sans-serif';ctx.textAlign='center';ctx.fillText('▲',ox+frP+swP/2,oy-swP/2+5);
+
+    // Walking lines
+    const gl=(stairW<1100?300:400)*sc;
+    ctx.strokeStyle='rgba(221,107,32,0.6)';ctx.lineWidth=1.8;ctx.setLineDash([5,4]);
+    ctx.beginPath();ctx.moveTo(ox,oy-td*sc+gl);ctx.lineTo(ox+frP,oy-td*sc+gl);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ox,oy-gl);ctx.lineTo(ox+frP,oy-gl);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Dimensions
+    ctx.font='bold 10px Consolas,monospace';ctx.fillStyle='#718096';ctx.textAlign='center';
+    ctx.fillText(Math.round(fr)+'mm',ox+frP/2,oy+14);
+    ctx.fillStyle='#2b6cb0';ctx.fillText('W='+Math.round(tw)+'mm',ox+(frP+swP)/2,CH-4);
+    ctx.save();ctx.translate(8,oy-td*sc/2);ctx.rotate(-Math.PI/2);ctx.fillText('D='+Math.round(td)+'mm',0,0);ctx.restore();
+  }
+
+  // Legend
+  ctx.font='500 9px Segoe UI,sans-serif';ctx.textAlign='left';ctx.setLineDash([]);
+  ctx.fillStyle='rgba(221,107,32,.7)';ctx.fillText('- - walking line',8,14);
+  ctx.fillStyle='#2b6cb0';ctx.fillText('  flight 1',108,14);
+  ctx.fillStyle='#553c9a';ctx.fillText('  flight 2',162,14);
+  ctx.fillStyle='#276749';ctx.fillText('  landing/turn',216,14);
+}
+
+function renderRef(){
+  const d=T[lang];
+  document.getElementById('ref-tek17').innerHTML='<table class="ref-table">'+d.ref_tek17_rows.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')+'</table>';
+  document.getElementById('ref-formula').innerHTML=`<div class="ib bl" style="white-space:pre-line;font-family:'Consolas',monospace;">${d.ref_formula_text}</div>`;
+  document.getElementById('ref-winder').innerHTML=`<div class="ib ye" style="white-space:pre-line;font-size:.83rem;line-height:1.75;">${d.ref_winder_text}</div>`;
+  document.getElementById('ref-manual').innerHTML=d.ref_manual.map(sec=>`<div style="margin-bottom:12px;"><div style="font-weight:700;color:var(--primary);margin-bottom:4px;">${sec.title}</div><div style="font-size:0.82rem;white-space:pre-line;">${sec.body}</div></div>`).join('');
+  drawWinderDiagram();
+}
+
+function drawWinderDiagram(){
+  const cv=document.getElementById('winder-canvas');
+  if(!cv)return;
+  const CW=Math.min(cv.parentElement.offsetWidth||480,500);
+  cv.width=CW;cv.height=230;cv.style.width='100%';
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,CW,230);
+  const sc=0.115;
+  const sw=900*sc,run=3*260*sc;
+  const ox=48,oy=195;
+
+  // Flight A
+  ctx.fillStyle='rgba(43,108,176,0.10)';ctx.fillRect(ox,oy-sw,run,sw);
+  ctx.strokeStyle='#2b6cb0';ctx.lineWidth=2;ctx.strokeRect(ox,oy-sw,run,sw);
+  for(let i=1;i<=3;i++){ctx.strokeStyle='rgba(43,108,176,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ox+(i-1)*260*sc+260*sc/2-1,oy-sw);ctx.lineTo(ox+(i-1)*260*sc+260*sc/2-1,oy);ctx.stroke();}
+
+  // Winder zone
+  const tx=ox+run;
+  ctx.fillStyle='rgba(221,107,32,0.10)';ctx.fillRect(tx,oy-sw,sw,sw);
+  ctx.strokeStyle='rgba(221,107,32,0.5)';ctx.lineWidth=2;ctx.strokeRect(tx,oy-sw,sw,sw);
+
+  // Radial winder steps
+  const icx=tx,icy=oy;
+  [20,40,60,80].forEach(a=>{
+    const r=a*Math.PI/180;
+    ctx.strokeStyle='rgba(221,107,32,0.4)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(icx,icy);ctx.lineTo(icx+sw*Math.cos(r),icy-sw*Math.sin(r));ctx.stroke();
+  });
+
+  // Inner post
+  ctx.fillStyle='#c53030';ctx.beginPath();ctx.arc(icx,icy,6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#c53030';ctx.font='bold 9px Segoe UI,sans-serif';ctx.textAlign='left';
+  ctx.fillText('inner post',icx+9,icy+4);
+
+  // Min 150mm indicator
+  const minPx=150*sc;
+  ctx.strokeStyle='rgba(197,48,48,0.7)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(icx,icy);ctx.lineTo(icx+minPx,icy-minPx*0.5);ctx.stroke();
+  ctx.fillStyle='#c53030';ctx.font='bold 9px Consolas,monospace';ctx.textAlign='left';
+  ctx.fillText('min 150mm',icx+minPx+4,icy-minPx*0.5-2);
+
+  // Walking line
+  const gl=300*sc;
+  ctx.strokeStyle='rgba(221,107,32,0.8)';ctx.lineWidth=2;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(ox,oy-gl);ctx.lineTo(tx,oy-gl);ctx.arc(icx,icy,gl,-Math.PI/2,0,false);ctx.stroke();ctx.setLineDash([]);
+
+  // Walking line label
+  ctx.fillStyle='rgba(221,107,32,0.9)';ctx.font='bold 9px Consolas,monospace';ctx.textAlign='center';
+  ctx.fillText('walking line (300mm from inner)',ox+run/2,oy-gl-8);
+
+  // d label along walking line
+  ctx.fillStyle='rgba(39,103,73,0.9)';ctx.font='bold 9px Consolas,monospace';ctx.textAlign='center';
+  ctx.fillText('← d = 260mm (same as straight) →',ox+run/2,oy-gl+12);
+
+  // Labels legend
+  ctx.font='500 9px Segoe UI,sans-serif';ctx.textAlign='left';
+  ctx.fillStyle='rgba(221,107,32,0.8)';ctx.fillText('--- walking line',6,14);
+  ctx.fillStyle='rgba(221,107,32,0.6)';ctx.fillText('  winder zone',110,14);
+  ctx.fillStyle='#c53030';ctx.fillText('  ● inner post (≥150mm)',196,14);
+}
+
+const SK='pb_trapp';
+function gatherState(){return{lang,useType,shapeType,th:document.getElementById('total-h').value,ft:document.getElementById('floor-thick').value,sw:document.getElementById('stair-w').value,hr:document.getElementById('headroom').value,lw:document.getElementById('landing-w').value,gw:document.getElementById('gap-w').value,cr:document.getElementById('custom-run').value};}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify(gatherState()));}catch(e){}}
+function loadState(){try{const s=JSON.parse(localStorage.getItem(SK));if(s){if(s.lang)lang=s.lang;useType=s.useType||'indoor';shapeType=s.shapeType||'straight';['total-h','floor-thick','stair-w','headroom','landing-w','gap-w','custom-run'].forEach(id=>{const k={th:'total-h',ft:'floor-thick',sw:'stair-w',hr:'headroom',lw:'landing-w',gw:'gap-w',cr:'custom-run'}[id.replace('-','')];if(s[k])document.getElementById(id).value=s[k];});}}catch(e){}}
+function resetCalc(){['total-h','floor-thick','stair-w','headroom','landing-w','gap-w','custom-run'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('res-card').style.display='none';saveState();}
+function exportJSON(){const blob=new Blob([JSON.stringify(gatherState(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='stair_calc.json';a.click();}
+function importJSON(evt){const f=evt.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const s=JSON.parse(e.target.result);applyLang();calc();}catch{alert('Invalid JSON');}};r.readAsText(f);}
+
+loadState();updateLUFields();applyLang();
+const dte=document.getElementById('pd');if(!dte.value)dte.value=new Date().toISOString().slice(0,10);
+window.addEventListener('resize',()=>{if(document.getElementById('total-h').value)calc(); if(_3dInit)on3DResize();});
+</script>
+
+<!-- ══ THREE.JS 3D ══ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── 3D state ── */
+let _3dInit=false, _3dScene, _3dCamera, _3dRenderer, _3dAnim;
+let _3dStepGroup, _3dStringerGroup, _3dRailGroup, _3dLoadGroup;
+let _mouse={down:false,right:false,x:0,y:0,px:0,py:0};
+let _3dParams=null;
+
+/* ── public toggles ── */
+function toggleLoads(v){if(_3dLoadGroup)_3dLoadGroup.visible=v;}
+function toggleStringers(v){if(_3dStringerGroup)_3dStringerGroup.visible=v;}
+function toggleRails(v){if(_3dRailGroup)_3dRailGroup.visible=v;}
+
+/* ── color helper: load gradient green→yellow→red ── */
+function loadColor(t){
+  // t 0..1  green=low load, red=high load
+  const r=Math.round(Math.min(255, t*2*255));
+  const g=Math.round(Math.min(255,(1-t)*2*255));
+  return new THREE.Color(r/255,g/255,0.05);
+}
+
+/* ─────────────────────────────────────────────
+   build3D  – shape-aware: straight / L / U
+───────────────────────────────────────────── */
+function build3D(params){
+  _3dParams=params;
+  const {n, h, dv, stairW, totalH, shape, gapW} = params;
+  const sc   = 0.001;                       // mm → m
+  const H    = h*sc, D=dv*sc, W=stairW*sc;
+  const TT   = 0.04;                        // tread thickness
+  const RT   = 0.02;                        // riser thickness
+  const ST   = 0.06;                        // stringer thickness
+  const RAIL = 0.9;                         // handrail height (TEK17)
+  const postR= 0.02, railR=0.018;
+
+  /* ── clear scene objects ── */
+  [_3dStepGroup,_3dStringerGroup,_3dRailGroup,_3dLoadGroup].forEach(g=>{
+    if(g) _3dScene.remove(g);
+  });
+  // also remove old floor/grid by tag
+  const toRemove=[];
+  _3dScene.traverse(o=>{if(o.userData.sceneFloor)toRemove.push(o);});
+  toRemove.forEach(o=>_3dScene.remove(o));
+
+  _3dStepGroup     = new THREE.Group();
+  _3dStringerGroup = new THREE.Group();
+  _3dRailGroup     = new THREE.Group();
+  _3dLoadGroup     = new THREE.Group();
+
+  const matRiser   = new THREE.MeshPhongMaterial({color:0x2d5a8a, shininess:40});
+  const matString  = new THREE.MeshPhongMaterial({color:0x7a5230, shininess:30});
+  const matPost    = new THREE.MeshPhongMaterial({color:0x999999, shininess:80});
+  const matRail    = new THREE.MeshPhongMaterial({color:0xcccccc, shininess:120});
+
+  /* ── helpers ── */
+
+  // Add one tread + riser + load-arrow at world position (px, py, pz)
+  // dir: +X axis direction of tread depth (THREE.Vector3), perp: +Z axis (width)
+  function addStep(i, totalSteps, px, py, pz, dirX, dirZ){
+    const t      = i/(totalSteps-1||1);
+    const loadT  = 1 - Math.abs(t-0.5)*2;         // peaks at middle
+    const col    = loadColor(loadT);
+
+    // tread: box aligned so depth→dirX, height→Y, width→dirZ
+    const tGeo = new THREE.BoxGeometry(D, TT, W);
+    const tMat = new THREE.MeshPhongMaterial({color:col, shininess:60});
+    const tMesh= new THREE.Mesh(tGeo, tMat);
+    tMesh.castShadow=true; tMesh.receiveShadow=true;
+
+    // orient tread
+    const euler = new THREE.Euler(0, Math.atan2(dirX.z, dirX.x), 0);
+    tMesh.rotation.copy(euler);
+    tMesh.position.set(
+      px + dirX.x*(D/2) + dirZ.x*0,
+      py + TT/2,
+      pz + dirX.z*(D/2) + dirZ.z*0
+    );
+    _3dStepGroup.add(tMesh);
+
+    // riser (vertical face)
+    if(i < totalSteps-1){
+      const rGeo  = new THREE.BoxGeometry(RT, H, W);
+      const rMesh = new THREE.Mesh(rGeo, matRiser);
+      rMesh.rotation.copy(euler);
+      rMesh.position.set(
+        px + dirX.x*D - dirX.x*(RT/2),
+        py + TT/2 + H/2,
+        pz + dirX.z*D - dirX.z*(RT/2)
+      );
+      rMesh.castShadow=true;
+      _3dStepGroup.add(rMesh);
+    }
+
+    // load arrow (always pointing down, in world Y)
+    const cx = px + dirX.x*(D/2);
+    const cz = pz + dirX.z*(D/2);
+    const arrowBase = py + TT + 0.12;
+    const arrowLen  = 0.07 + loadT*0.13;
+
+    const shaftGeo = new THREE.CylinderGeometry(0.007,0.007,arrowLen,8);
+    const shaft    = new THREE.Mesh(shaftGeo, new THREE.MeshPhongMaterial({color:col}));
+    shaft.position.set(cx, arrowBase+arrowLen/2, cz);
+    _3dLoadGroup.add(shaft);
+
+    const coneGeo = new THREE.ConeGeometry(0.02,0.04,8);
+    const cone    = new THREE.Mesh(coneGeo, new THREE.MeshPhongMaterial({color:col}));
+    cone.rotation.z = Math.PI;
+    cone.position.set(cx, arrowBase-0.005, cz);
+    _3dLoadGroup.add(cone);
+
+    const forceKN = ((1.5+loadT*1.5)*stairW/1000).toFixed(1);
+    const spr = makeTextSprite(`${forceKN} kN/m²`, col);
+    spr.position.set(cx+0.05, arrowBase+arrowLen+0.06, cz);
+    spr.scale.set(0.32,0.16,1);
+    _3dLoadGroup.add(spr);
+  }
+
+  // Stringer along an inclined run (start→end in XZ, rising in Y)
+  function addStringer(x0,y0,z0, x1,y1,z1, zOff){
+    const dx=x1-x0, dy=y1-y0, dz=z1-z0;
+    const len=Math.sqrt(dx*dx+dy*dy+dz*dz);
+    const mid=new THREE.Vector3((x0+x1)/2+0, (y0+y1)/2, (z0+z1)/2);
+
+    const axis=new THREE.Vector3(dx/len, dy/len, dz/len);
+    const up  =new THREE.Vector3(0,1,0);
+    const quat=new THREE.Quaternion().setFromUnitVectors(up, axis);
+
+    const sGeo  = new THREE.BoxGeometry(ST*0.6, len, ST);
+    const sMesh = new THREE.Mesh(sGeo, matString);
+    sMesh.applyQuaternion(quat);
+    // shift outward by zOff in the perpendicular-to-incline direction
+    const perp = new THREE.Vector3(-dz/len, 0, dx/len).normalize();
+    sMesh.position.set(mid.x+perp.x*zOff, mid.y, mid.z+perp.z*zOff);
+    sMesh.castShadow=true;
+    _3dStringerGroup.add(sMesh);
+  }
+
+  // Handrail posts + tube along a list of 3D points
+  function addRail(pts){
+    // posts every ~2 steps
+    const step=Math.max(1,Math.round(pts.length/Math.ceil(pts.length/3)));
+    for(let i=0;i<pts.length;i+=step){
+      const p=pts[i];
+      const postGeo=new THREE.CylinderGeometry(postR,postR,RAIL,8);
+      const post=new THREE.Mesh(postGeo,matPost);
+      post.position.set(p.x, p.y+RAIL/2, p.z);
+      _3dRailGroup.add(post);
+    }
+    // tube
+    const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(p.x, p.y+RAIL, p.z)));
+    const tube =new THREE.TubeGeometry(curve, pts.length*3, railR, 8, false);
+    _3dRailGroup.add(new THREE.Mesh(tube, matRail));
+  }
+
+  /* ═══════════════════════════
+     STRAIGHT  (tiesūs)
+  ═══════════════════════════ */
+  if(shape==='straight'){
+    const dirX=new THREE.Vector3(1,0,0);
+    const dirZ=new THREE.Vector3(0,0,1);
+
+    for(let i=0;i<n;i++){
+      addStep(i, n, i*D, i*H, 0, dirX, dirZ);
+    }
+
+    const totalRun=n*D;
+    const Hm=totalH*sc;
+    // stringers both sides
+    addStringer(0,0,-W/2-ST/2, totalRun,Hm,-W/2-ST/2, 0);
+    addStringer(0,0, W/2+ST/2, totalRun,Hm, W/2+ST/2, 0);
+
+    // rail points both sides
+    const ptsL=[],ptsR=[];
+    for(let i=0;i<=n;i++){
+      ptsL.push({x:i*D, y:i*H+TT, z:-W/2-0.05});
+      ptsR.push({x:i*D, y:i*H+TT, z: W/2+0.05});
+    }
+    addRail(ptsL); addRail(ptsR);
+
+    // camera
+    const cx=totalRun/2, cy=Hm/2;
+    setCam(cx, cy, 0, Math.max(totalRun,Hm)*2.2);
+
+  /* ═══════════════════════════
+     L-SHAPE
+  ═══════════════════════════ */
+  } else if(shape==='l'){
+    const half =Math.floor((n-1)/2);
+    const rest =(n-1)-half;
+
+    // Flight A: steps 0..half along +X
+    for(let i=0;i<=half;i++){
+      addStep(i, n, i*D, i*H, 0, new THREE.Vector3(1,0,0), new THREE.Vector3(0,0,1));
+    }
+    // Landing at corner: a flat platform
+    const lx=half*D, ly=(half)*H+TT, lz=0;
+    const landGeo=new THREE.BoxGeometry(W,TT,W);
+    const landMat=new THREE.MeshPhongMaterial({color:loadColor(0.5),shininess:50});
+    const landMesh=new THREE.Mesh(landGeo,landMat);
+    landMesh.position.set(lx+W/2, ly, lz);
+    landMesh.castShadow=true; landMesh.receiveShadow=true;
+    _3dStepGroup.add(landMesh);
+
+    // Flight B: steps half+1..n along -Z (turns 90°)
+    for(let i=0;i<rest;i++){
+      const stepIdx=half+1+i;
+      addStep(stepIdx, n,
+        lx+W,                 // fixed X = end of landing
+        (half+1+i)*H,         // rising Y
+        -(i+1)*D,             // receding Z
+        new THREE.Vector3(0,0,-1),  // depth goes into -Z
+        new THREE.Vector3(1,0,0)    // width along +X
+      );
+    }
+
+    // Stringers
+    const runA=half*D, runB=rest*D;
+    const Hm=totalH*sc;
+    // Flight A
+    addStringer(0,0,-W/2-ST/2, runA,(half)*H,-W/2-ST/2, 0);
+    addStringer(0,0, W/2+ST/2, runA,(half)*H, W/2+ST/2, 0);
+    // Flight B (rotated 90°)
+    const bx0=lx+W+ST/2, by0=(half+1)*H, bz0=0;
+    const bx1=lx+W+ST/2, by1=Hm, bz1=-runB;
+    addStringer(bx0,by0,  W/2+ST/2, bx1,by1,  W/2+ST/2, 0);
+    addStringer(bx0,by0, -W/2-ST/2, bx1,by1, -W/2-ST/2, 0);
+
+    // Rails
+    const ptsAL=[], ptsAR=[];
+    for(let i=0;i<=half;i++){
+      ptsAL.push({x:i*D, y:i*H+TT, z:-W/2-0.05});
+      ptsAR.push({x:i*D, y:i*H+TT, z: W/2+0.05});
+    }
+    addRail(ptsAL); addRail(ptsAR);
+
+    const ptsBL=[], ptsBR=[];
+    for(let i=0;i<=rest;i++){
+      ptsBL.push({x:lx+W-0.05,    y:(half+i)*H+TT, z:-i*D});
+      ptsBR.push({x:lx+W+W+0.05,  y:(half+i)*H+TT, z:-i*D});
+    }
+    addRail(ptsBL); addRail(ptsBR);
+
+    const cx=(runA+W)/2, cy=Hm/2, cz=-runB/2;
+    setCam(cx, cy, cz, Math.max(runA+W, runB, Hm)*2.4);
+
+  /* ═══════════════════════════
+     U-SHAPE
+  ═══════════════════════════ */
+  } else { // u
+    const half =Math.floor((n-1)/2);
+    const rest =(n-1)-half;
+    const gp   =(gapW||100)*sc;
+    const totalW=2*W+gp;
+
+    // Flight 1: steps 0..half along +X, at z = +W/2+gp/2 (far lane)
+    const z1=W/2+gp/2;
+    for(let i=0;i<=half;i++){
+      addStep(i, n, i*D, i*H, z1, new THREE.Vector3(1,0,0), new THREE.Vector3(0,0,1));
+    }
+
+    // Landing: connects the two flights at the far end
+    const lx=(half)*D, ly=(half)*H+TT;
+    const landGeo2=new THREE.BoxGeometry(W,TT,totalW);
+    const landMat2=new THREE.MeshPhongMaterial({color:loadColor(0.45),shininess:50});
+    const landMesh2=new THREE.Mesh(landGeo2,landMat2);
+    landMesh2.position.set(lx+W/2, ly, 0);
+    landMesh2.castShadow=true; landMesh2.receiveShadow=true;
+    _3dStepGroup.add(landMesh2);
+
+    // Flight 2: steps half+1..n along -X (goes back), at z = -(W/2+gp/2) (near lane)
+    const z2=-(W/2+gp/2);
+    for(let i=0;i<rest;i++){
+      const stepIdx=half+1+i;
+      const px=lx+W - (i+1)*D;   // runs back in -X from landing
+      addStep(stepIdx, n, px, (half+1+i)*H, z2, new THREE.Vector3(-1,0,0), new THREE.Vector3(0,0,1));
+    }
+
+    // Stringers
+    const runA=half*D, Hm=totalH*sc, runB=rest*D;
+    addStringer(0,0, z1-W/2-ST/2, runA,(half)*H, z1-W/2-ST/2, 0);
+    addStringer(0,0, z1+W/2+ST/2, runA,(half)*H, z1+W/2+ST/2, 0);
+    addStringer(lx+W,ly, z2-W/2-ST/2, lx+W-runB,Hm, z2-W/2-ST/2, 0);
+    addStringer(lx+W,ly, z2+W/2+ST/2, lx+W-runB,Hm, z2+W/2+ST/2, 0);
+
+    // Rails – outer sides of each flight
+    const pts1out=[], pts1in=[], pts2out=[], pts2in=[];
+    for(let i=0;i<=half;i++){
+      pts1out.push({x:i*D, y:i*H+TT, z: z1+W/2+0.05});
+      pts1in .push({x:i*D, y:i*H+TT, z: z1-W/2-0.05});
+    }
+    for(let i=0;i<=rest;i++){
+      pts2out.push({x:lx+W-i*D, y:(half+i)*H+TT, z: z2-W/2-0.05});
+      pts2in .push({x:lx+W-i*D, y:(half+i)*H+TT, z: z2+W/2+0.05});
+    }
+    addRail(pts1out); addRail(pts1in);
+    addRail(pts2out); addRail(pts2in);
+
+    const cx=(lx+W/2)/2, cy=Hm/2, cz=0;
+    setCam(cx, cy, cz, Math.max(runA+W, totalW, Hm)*2.6);
+  }
+
+  /* ── floor + grid ── */
+  const bbox=new THREE.Box3();
+  _3dStepGroup.traverse(o=>{if(o.isMesh)bbox.expandByObject(o);});
+  const size=new THREE.Vector3(); bbox.getSize(size);
+  const center=new THREE.Vector3(); bbox.getCenter(center);
+
+  const floorGeo=new THREE.PlaneGeometry(size.x+1.5, size.z+1.5);
+  const floorMat=new THREE.MeshPhongMaterial({color:0x1a2a1a,transparent:true,opacity:0.55,side:THREE.DoubleSide});
+  const floor=new THREE.Mesh(floorGeo,floorMat);
+  floor.rotation.x=-Math.PI/2;
+  floor.position.set(center.x,-0.01,center.z);
+  floor.receiveShadow=true;
+  floor.userData.sceneFloor=true;
+  _3dScene.add(floor);
+
+  const gridSize=Math.max(size.x,size.z)*1.6;
+  const grid=new THREE.GridHelper(gridSize,Math.round(gridSize/0.3),0x334433,0x1e3020);
+  grid.position.set(center.x,-0.015,center.z);
+  grid.userData.sceneFloor=true;
+  _3dScene.add(grid);
+
+  _3dScene.add(_3dStepGroup);
+  _3dScene.add(_3dStringerGroup);
+  _3dScene.add(_3dRailGroup);
+  _3dScene.add(_3dLoadGroup);
+
+  document.getElementById('three-info').textContent=
+    `${shape.toUpperCase()}  n=${n}  h=${h.toFixed(1)}mm  d=${Math.round(dv)}mm`;
+
+  toggleLoads(document.getElementById('show-loads').checked);
+  toggleStringers(document.getElementById('show-stringers').checked);
+  toggleRails(document.getElementById('show-rails').checked);
+}
+
+/* ── set camera helper ── */
+function setCam(cx,cy,cz,radius){
+  _3dCamera._target=new THREE.Vector3(cx,cy,cz);
+  _3dCamera._radius=radius;
+  _3dCamera._phi=1.05;
+  _3dCamera._theta=0.75;
+  updateCamPos();
+}
+
+/* ── Canvas text sprite ── */
+function makeTextSprite(text, color){
+  const c=document.createElement('canvas');c.width=256;c.height=128;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,256,128);
+  ctx.fillStyle=`rgb(${Math.round(color.r*255)},${Math.round(color.g*255)},20)`;
+  ctx.font='bold 36px Consolas,monospace';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(text,128,64);
+  const tex=new THREE.CanvasTexture(c);
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false});
+  return new THREE.Sprite(mat);
+}
+
+/* ── init renderer ── */
+function init3D(){
+  const noData=document.getElementById('three-no-data');
+  const totalHEl=document.getElementById('total-h');
+  if(!totalHEl||!totalHEl.value){noData.style.display='block';return;}
+  noData.style.display='none';
+
+  const mount=document.getElementById('three-mount');
+  const W=mount.clientWidth, H=mount.clientHeight;
+
+  if(!_3dInit){
+    _3dScene=new THREE.Scene();
+    _3dScene.background=new THREE.Color(0x0d1117);
+    _3dScene.fog=new THREE.Fog(0x0d1117,8,30);
+
+    _3dCamera=new THREE.PerspectiveCamera(45,W/H,0.01,100);
+    _3dCamera._target=new THREE.Vector3(0,0,0);
+    _3dCamera._radius=4; _3dCamera._phi=1.1; _3dCamera._theta=0.8;
+
+    _3dRenderer=new THREE.WebGLRenderer({canvas:document.getElementById('three-canvas'),antialias:true});
+    _3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    _3dRenderer.setSize(W,H);
+    _3dRenderer.shadowMap.enabled=true;
+
+    // Lights
+    const amb=new THREE.AmbientLight(0xffffff,0.55);_3dScene.add(amb);
+    const dir=new THREE.DirectionalLight(0xffffff,0.9);
+    dir.position.set(3,6,4);dir.castShadow=true;
+    dir.shadow.mapSize.width=1024;dir.shadow.mapSize.height=1024;
+    _3dScene.add(dir);
+    const fill=new THREE.DirectionalLight(0x6688cc,0.35);fill.position.set(-4,2,-3);_3dScene.add(fill);
+
+    // Mouse orbit
+    const cv=document.getElementById('three-canvas');
+    cv.addEventListener('mousedown',e=>{_mouse.down=true;_mouse.right=(e.button===2);_mouse.x=e.clientX;_mouse.y=e.clientY;});
+    cv.addEventListener('contextmenu',e=>e.preventDefault());
+    window.addEventListener('mouseup',()=>_mouse.down=false);
+    window.addEventListener('mousemove',e=>{
+      if(!_mouse.down)return;
+      const dx=e.clientX-_mouse.x, dy=e.clientY-_mouse.y;
+      _mouse.x=e.clientX;_mouse.y=e.clientY;
+      if(_mouse.right){
+        // Pan
+        const s=_3dCamera._radius*0.0015;
+        const right=new THREE.Vector3();right.crossVectors(_3dCamera.getWorldDirection(new THREE.Vector3()),new THREE.Vector3(0,1,0)).normalize();
+        _3dCamera._target.addScaledVector(right,-dx*s);
+        _3dCamera._target.y+=dy*s;
+      }else{
+        // Orbit
+        _3dCamera._theta-=dx*0.008;
+        _3dCamera._phi=Math.max(0.1,Math.min(Math.PI-0.1,_3dCamera._phi+dy*0.008));
+      }
+      updateCamPos();
+    });
+    cv.addEventListener('wheel',e=>{
+      e.preventDefault();
+      _3dCamera._radius=Math.max(0.3,Math.min(20,_3dCamera._radius+e.deltaY*0.005));
+      updateCamPos();
+    },{passive:false});
+
+    // Touch support
+    let _touches=[];
+    cv.addEventListener('touchstart',e=>{e.preventDefault();_touches=[...e.touches];},{passive:false});
+    cv.addEventListener('touchmove',e=>{
+      e.preventDefault();
+      if(e.touches.length===1&&_touches.length===1){
+        const dx=e.touches[0].clientX-_touches[0].clientX;
+        const dy=e.touches[0].clientY-_touches[0].clientY;
+        _3dCamera._theta-=dx*0.008;
+        _3dCamera._phi=Math.max(0.1,Math.min(Math.PI-0.1,_3dCamera._phi+dy*0.008));
+        updateCamPos();
+      }else if(e.touches.length===2&&_touches.length===2){
+        const d0=Math.hypot(_touches[0].clientX-_touches[1].clientX,_touches[0].clientY-_touches[1].clientY);
+        const d1=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+        _3dCamera._radius=Math.max(0.3,Math.min(20,_3dCamera._radius*(d0/d1)));
+        updateCamPos();
+      }
+      _touches=[...e.touches];
+    },{passive:false});
+
+    // Animate loop
+    function animate(){_3dAnim=requestAnimationFrame(animate);if(_3dRenderer)_3dRenderer.render(_3dScene,_3dCamera);}
+    animate();
+    _3dInit=true;
+  }
+
+  // Build from current calc state
+  const totalH   = parseFloat(document.getElementById('total-h').value)||2700;
+  const stairW   = parseFloat(document.getElementById('stair-w').value)||900;
+  const gapW     = parseFloat(document.getElementById('gap-w').value)||100;
+  const isOutdoor= useType==='outdoor';
+  const maxH     = isOutdoor?160:180;
+  const targetRiser=isOutdoor?155:175;
+  let nSteps=Math.ceil(totalH/targetRiser);
+  if(totalH/nSteps>maxH)nSteps=Math.ceil(totalH/maxH);
+  const hStep=totalH/nSteps;
+  const customRun=parseFloat(document.getElementById('custom-run').value);
+  const dv=(!isNaN(customRun)&&customRun>0)?customRun/(nSteps-1):620-2*hStep;
+
+  build3D({n:nSteps, h:hStep, dv, stairW, totalH, shape:shapeType, gapW});
+}
+
+function updateCamPos(){
+  const t=_3dCamera._target, r=_3dCamera._radius, phi=_3dCamera._phi, theta=_3dCamera._theta;
+  _3dCamera.position.set(
+    t.x+r*Math.sin(phi)*Math.cos(theta),
+    t.y+r*Math.cos(phi),
+    t.z+r*Math.sin(phi)*Math.sin(theta)
+  );
+  _3dCamera.lookAt(t);
+}
+
+function resetCamera(){
+  if(!_3dParams)return;
+  const {n,dv,totalH,stairW,gapW,shape}=_3dParams;
+  const sc=0.001;
+  const D=dv*sc, W=stairW*sc, Hm=totalH*sc;
+  const half=Math.floor((n-1)/2);
+  if(shape==='straight'){
+    setCam(n*D/2, Hm/2, 0, Math.max(n*D,Hm)*2.2);
+  } else if(shape==='l'){
+    const runA=half*D, runB=(n-1-half)*D;
+    setCam((runA+W)/2, Hm/2, -runB/2, Math.max(runA+W,runB,Hm)*2.4);
+  } else {
+    const gp=(gapW||100)*sc, tw=2*W+gp;
+    setCam(n*D/2, Hm/2, 0, Math.max(n*D,tw,Hm)*2.6);
+  }
+}
+
+function on3DResize(){
+  if(!_3dInit)return;
+  const mount=document.getElementById('three-mount');
+  const W=mount.clientWidth, H=mount.clientHeight;
+  _3dCamera.aspect=W/H; _3dCamera.updateProjectionMatrix();
+  _3dRenderer.setSize(W,H);
+}
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>
