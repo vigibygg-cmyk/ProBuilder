@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bygg Tidsplan — Massivtre / Limtre</title>
+<style>
+:root {
+  --bg:#f4f6f9;--card:#fff;--text:#1a202c;--muted:#718096;
+  --primary:#2b6cb0;--accent:#c05621;--success:#276749;
+  --danger:#c53030;--border:#e2e8f0;--header:#1a365d;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;min-height:100vh;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--header) 0%,#2c5282 100%);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.3);}
+.hd-left{display:flex;align-items:center;gap:10px;}
+.hd-icon{font-size:22px;}
+.hd-title{font-size:1rem;font-weight:800;line-height:1.2;}
+.hd-sub{font-size:.72rem;opacity:.75;}
+.hd-right{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.hbtn{padding:5px 11px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:.78rem;font-weight:700;white-space:nowrap;transition:background .15s;}
+.hbtn:hover{background:rgba(255,255,255,.25);}
+.hbtn.danger{border-color:rgba(255,100,100,.5);background:rgba(200,50,50,.25);}
+.hbtn.success{border-color:rgba(100,255,150,.4);background:rgba(30,150,80,.3);}
+
+/* TABS */
+.tabs{display:flex;overflow-x:auto;white-space:nowrap;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:52px;z-index:100;padding:0 12px;}
+.tb{padding:9px 15px;border:none;background:none;cursor:pointer;font-size:.82rem;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.tb.active{color:var(--primary);border-bottom-color:var(--primary);}
+.tb:hover:not(.active){color:var(--text);}
+
+main{max-width:1280px;margin:0 auto;padding:14px;}
+.panel{display:none;}.panel.active{display:block;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.ch-left{display:flex;align-items:center;gap:6px;}
+
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:3px;}
+.fg label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:15px;color:var(--text);background:#fff;width:100%;transition:border-color .15s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(43,108,176,.12);}
+.fg .hint{font-size:.68rem;color:var(--muted);font-style:italic;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+
+/* BUTTONS */
+.btn{padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-size:.82rem;font-weight:700;min-height:36px;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.btn-p{background:var(--primary);color:#fff;}.btn-p:hover{background:#1a4a8a;}
+.btn-a{background:var(--accent);color:#fff;}.btn-a:hover{background:#9c4221;}
+.btn-s{background:#38a169;color:#fff;}.btn-s:hover{background:#276749;}
+.btn-d{background:#e53e3e;color:#fff;}.btn-d:hover{background:#c53030;}
+.btn-g{background:#e2e8f0;color:var(--text);}.btn-g:hover{background:#cbd5e0;}
+.btn-full{width:100%;}
+.btn-sm{padding:5px 10px;font-size:.75rem;min-height:28px;}
+.btn-xs{padding:3px 7px;font-size:.7rem;min-height:24px;}
+
+/* RESULT BOXES */
+.rb{border-radius:8px;padding:10px 14px;margin-bottom:8px;border-left:4px solid;}
+.rb-info{background:#ebf8ff;border-color:var(--primary);color:#1a365d;}
+.rb-ok{background:#f0fff4;border-color:#38a169;color:#1c4532;}
+.rb-warn{background:#fffaf0;border-color:var(--accent);color:#7b341e;}
+.rb-danger{background:#fff5f5;border-color:#e53e3e;color:#742a2a;}
+.rb .rv{font-size:1.5rem;font-weight:900;}
+.rb .rs{font-size:.75rem;margin-top:2px;opacity:.85;}
+
+/* STATS */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:12px;}
+.sbox{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;}
+.sbox .sv{font-size:1.35rem;font-weight:900;color:var(--primary);}
+.sbox .sl{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:2px;}
+
+/* TABLES */
+.tw{overflow-x:auto;border-radius:8px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+thead tr{background:#f0f4f8;}
+thead th{padding:7px 10px;text-align:left;font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;white-space:nowrap;}
+tbody tr{border-top:1px solid var(--border);}
+tbody tr:hover{background:#f7fbff;}
+td{padding:7px 10px;vertical-align:middle;}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:700;}
+.b-blue{background:#bee3f8;color:#1a365d;}
+.b-green{background:#c6f6d5;color:#1c4532;}
+.b-orange{background:#feebc8;color:#7b341e;}
+.b-red{background:#fed7d7;color:#742a2a;}
+.b-gray{background:#e2e8f0;color:#2d3748;}
+
+/* INLINE EDIT */
+.editable{cursor:pointer;border-bottom:1px dashed var(--border);padding:1px 2px;}
+.editable:hover{background:#ebf8ff;border-bottom-color:var(--primary);}
+input.inline-edit{border:none;border-bottom:2px solid var(--primary);background:transparent;font-size:inherit;font-weight:inherit;color:inherit;padding:1px 2px;outline:none;width:100%;}
+
+/* TASK ROWS */
+.task-row{background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;}
+.task-header{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;transition:background .1s;}
+.task-header:hover{background:#f7fbff;}
+.task-icon{font-size:1.2rem;flex-shrink:0;}
+.task-name{flex:1;font-weight:700;font-size:.92rem;}
+.task-meta{font-size:.72rem;color:var(--muted);}
+.task-result{font-size:1.1rem;font-weight:900;color:var(--accent);white-space:nowrap;}
+.task-body{border-top:1px solid var(--border);padding:12px;background:#fafbfc;display:none;}
+.task-body.open{display:block;}
+
+/* WORKER CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.chip{display:inline-flex;align-items:center;gap:5px;background:#ebf8ff;border:1px solid #bee3f8;border-radius:16px;padding:5px 10px;font-size:.82rem;font-weight:600;color:#1a365d;}
+.chip-rm{background:none;border:none;cursor:pointer;color:#718096;font-size:.95rem;line-height:1;padding:0;}
+.chip-rm:hover{color:#c53030;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:12px;padding:20px;width:min(520px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal h3{font-size:1rem;font-weight:800;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.modal-footer{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+
+/* PROGRESS */
+.prog-wrap{background:var(--border);border-radius:4px;height:10px;margin:6px 0;overflow:hidden;}
+.prog{height:100%;border-radius:4px;background:var(--primary);transition:width .4s;}
+.prog.warn{background:var(--accent);}
+.prog.over{background:#e53e3e;}
+
+/* SEPARATOR */
+hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.sec-title{font-size:.85rem;font-weight:800;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+
+/* MOBILE */
+@media(max-width:768px){.g2,.g3,.g4{grid-template-columns:1fr 1fr;}.hd-title{font-size:.88rem;}}
+@media(max-width:480px){.g2,.g3,.g4{grid-template-columns:1fr;}.hd-right{gap:4px;}.hbtn{font-size:.72rem;padding:4px 8px;}}
+@media print{header,.tabs,.btn,.hbtn,.no-print{display:none!important;}body{background:#fff;}.card{box-shadow:none;border:1px solid #ccc;}.task-body{display:block!important;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-left">
+    <span class="hd-icon">🪵</span>
+    <div>
+      <div class="hd-title" id="h-proj-name" ondblclick="editProjectName()">Rolland skole 218301</div>
+      <div class="hd-sub">Massivtre / Limtre — Tidsplanlegging</div>
+    </div>
+  </div>
+  <div class="hd-right">
+    <select class="hbtn" id="lang-sel" onchange="setLang(this.value)" style="padding:5px 8px;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;font-size:.78rem;font-weight:700;">
+      <option value="no" style="background:#1a365d;">🇳🇴 Norsk</option>
+      <option value="en" style="background:#1a365d;">🇬🇧 English</option>
+      <option value="lt" style="background:#1a365d;">🇱🇹 Lietuvių</option>
+    </select>
+    <button class="hbtn success" onclick="exportData()">⬆️ <span data-t="export">Eksport</span></button>
+    <button class="hbtn" onclick="document.getElementById('import-file').click()">⬇️ <span data-t="import">Import</span></button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="hbtn" onclick="window.print()">🖨️</button>
+    <button class="hbtn danger" onclick="confirmReset()">↺ <span data-t="reset">Reset</span></button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tb active" onclick="showTab('day',this)">📅 <span data-t="tab_day">Dagplan</span></button>
+  <button class="tb" onclick="showTab('workers',this)">👷 <span data-t="tab_workers">Arbeidslag</span></button>
+  <button class="tb" onclick="showTab('tasks',this)">🔧 <span data-t="tab_tasks">Oppgavetyper</span></button>
+  <button class="tb" onclick="showTab('resources',this)">🏗️ <span data-t="tab_res">Ressurser</span></button>
+  <button class="tb" onclick="showTab('project',this)">📊 <span data-t="tab_proj">Prosjekt</span></button>
+</nav>
+
+<main>
+
+<!-- ===== DAY PLAN ===== -->
+<div class="panel active" id="panel-day">
+
+  <div class="card">
+    <div class="ch">
+      <div class="ch-left">📅 <span data-t="today_plan">Dagplan</span></div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input type="date" id="day-date" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.82rem;">
+        <button class="btn btn-a btn-sm" onclick="openAddDayTask()">+ <span data-t="add_task">Oppgave</span></button>
+      </div>
+    </div>
+
+    <div id="day-tasks-list"></div>
+    <div id="day-empty" style="color:var(--muted);font-size:.85rem;padding:10px 0;text-align:center;display:none;" data-t="no_tasks_today">Ingen oppgaver lagt til i dag. Klikk + Oppgave.</div>
+  </div>
+
+  <div class="card" id="day-summary-card" style="display:none;">
+    <div class="ch"><div class="ch-left">📊 <span data-t="summary">Oppsummering</span></div></div>
+    <div class="sgrid" id="day-stats"></div>
+    <div id="day-cap-bar"></div>
+    <hr>
+    <div id="day-details-table"></div>
+  </div>
+
+</div>
+
+<!-- ===== WORKERS ===== -->
+<div class="panel" id="panel-workers">
+  <div class="card">
+    <div class="ch">
+      <div class="ch-left">👷 <span data-t="workers_title">Arbeidslag</span></div>
+      <button class="btn btn-p btn-sm" onclick="openAddWorker()">+ <span data-t="add_worker">Legg til</span></button>
+    </div>
+    <div class="tw">
+    <table>
+      <thead><tr>
+        <th data-t="th_name">Navn</th>
+        <th data-t="th_role">Rolle</th>
+        <th data-t="th_hrs">Timer/dag</th>
+        <th data-t="th_eff">Effektivitet %</th>
+        <th data-t="th_note">Merknad</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="workers-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="ch-left">🏗️ <span data-t="resources_title">Løfte/transport ressurser</span></div>
+    <button class="btn btn-p btn-sm" onclick="openAddResource()">+ <span data-t="add_res">Legg til</span></button></div>
+    <div class="tw">
+    <table>
+      <thead><tr>
+        <th data-t="th_res_name">Ressurs</th>
+        <th data-t="th_res_type">Type</th>
+        <th data-t="th_res_avail">Tilgjengelighet</th>
+        <th data-t="th_res_note">Merknad</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="resources-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TASK TYPES (NORMER) ===== -->
+<div class="panel" id="panel-tasks">
+  <div class="card">
+    <div class="ch">
+      <div class="ch-left">🔧 <span data-t="task_types_title">Oppgavetyper & Normer</span></div>
+      <button class="btn btn-a btn-sm" onclick="openAddTaskType()">+ <span data-t="new_task_type">Ny type</span></button>
+    </div>
+    <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px;" data-t="task_types_desc">Klikk på en rad for å redigere. Alle normer er lagret lokalt.</p>
+    <div class="tw">
+    <table>
+      <thead><tr>
+        <th data-t="th_icon">Ikon</th>
+        <th data-t="th_task_name">Oppgave</th>
+        <th data-t="th_unit">Enhet</th>
+        <th data-t="th_min_unit">Min/enhet</th>
+        <th data-t="th_crane_factor">Kran faktor</th>
+        <th data-t="th_pcs_day">Stk/dag (2m)</th>
+        <th data-t="th_category">Kategori</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="task-types-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESOURCES ===== -->
+<div class="panel" id="panel-resources">
+  <div class="card">
+    <div class="ch"><div class="ch-left">🔩 <span data-t="fasteners_title">Festemidler & Materialer</span></div>
+    <button class="btn btn-a btn-sm" onclick="openAddFastener()">+ <span data-t="add_fastener">Nytt element</span></button></div>
+    <div class="tw">
+    <table>
+      <thead><tr>
+        <th data-t="th_f_name">Navn</th>
+        <th data-t="th_f_dim">Dimensjon</th>
+        <th data-t="th_f_min">Min/stk</th>
+        <th data-t="th_f_perhr">Stk/time</th>
+        <th data-t="th_f_cat">Kategori</th>
+        <th data-t="th_f_note">Merknad</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="fasteners-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECT ===== -->
+<div class="panel" id="panel-project">
+  <div class="card">
+    <div class="ch"><div class="ch-left">🏗️ <span data-t="proj_info">Prosjektinfo</span></div></div>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="fg"><label data-t="proj_name_lbl">Prosjektnavn</label><input id="proj-name" oninput="updateProjName()"></div>
+      <div class="fg"><label data-t="proj_nr">Prosjektnummer</label><input id="proj-nr"></div>
+    </div>
+    <div class="g2">
+      <div class="fg"><label data-t="proj_loc">Sted</label><input id="proj-loc"></div>
+      <div class="fg"><label data-t="proj_resp">Ansvarlig</label><input id="proj-resp"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="ch-left">📈 <span data-t="proj_progress">Fremdrift</span></div>
+    <button class="btn btn-p btn-sm" onclick="openAddProgress()">+ <span data-t="add_phase">Fase</span></button></div>
+    <div id="progress-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div class="ch-left">📝 <span data-t="proj_notes">Notater</span></div></div>
+    <div class="fg"><textarea id="proj-notes" rows="5" placeholder="Fritekst notater..."></textarea></div>
+  </div>
+</div>
+
+</main>
+
+<!-- ============ MODALS ============ -->
+
+<!-- ADD/EDIT DAY TASK -->
+<div class="modal-bg" id="modal-day-task">
+<div class="modal">
+  <h3 id="dt-modal-title">➕ Legg til dagoppgave</h3>
+  <input type="hidden" id="dt-edit-idx">
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Oppgavetype</label>
+      <select id="dt-type"></select></div>
+    <div class="fg"><label>Antall (stk/enheter)</label>
+      <input type="number" id="dt-qty" value="10" min="1" inputmode="decimal"></div>
+  </div>
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Arbeidere på oppgaven</label>
+      <select id="dt-workers-sel"></select></div>
+    <div class="fg"><label>Ressurs (kran/bil etc.)</label>
+      <select id="dt-resource-sel"></select></div>
+  </div>
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Tillegg tid % (f.eks. transport, rigg)</label>
+      <input type="number" id="dt-extra" value="0" min="0" max="200" inputmode="decimal">
+      <span class="hint">0 = ingen tillegg</span></div>
+    <div class="fg"><label>Notat</label>
+      <input type="text" id="dt-note" placeholder="Valgfritt..."></div>
+  </div>
+  <div id="dt-preview" class="rb rb-info" style="display:none;"></div>
+  <div class="modal-footer">
+    <button class="btn btn-a btn-full" onclick="saveDayTask()">💾 Lagre</button>
+    <button class="btn btn-g" onclick="closeModal('modal-day-task')">Avbryt</button>
+  </div>
+</div>
+</div>
+
+<!-- ADD/EDIT WORKER -->
+<div class="modal-bg" id="modal-worker">
+<div class="modal">
+  <h3 id="w-modal-title">👷 Legg til arbeider</h3>
+  <input type="hidden" id="w-edit-idx">
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Navn</label><input id="w-name" placeholder="Tomas..."></div>
+    <div class="fg"><label>Rolle</label>
+      <select id="w-role">
+        <option>Snekker</option><option>Tømmermann</option><option>Montør</option>
+        <option>Kranfører</option><option>Bas</option><option>Lærling</option><option>Annet</option>
+      </select></div>
+  </div>
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Timer per dag</label><input type="number" id="w-hrs" value="8" min="1" max="12" inputmode="decimal"></div>
+    <div class="fg"><label>Effektivitet % (100=normal)</label><input type="number" id="w-eff" value="100" min="50" max="130" inputmode="decimal"></div>
+  </div>
+  <div class="fg" style="margin-bottom:10px;"><label>Merknad</label><input id="w-note" placeholder="Valgfritt..."></div>
+  <div class="modal-footer">
+    <button class="btn btn-p btn-full" onclick="saveWorker()">💾 Lagre</button>
+    <button class="btn btn-g" onclick="closeModal('modal-worker')">Avbryt</button>
+  </div>
+</div>
+</div>
+
+<!-- ADD/EDIT RESOURCE -->
+<div class="modal-bg" id="modal-resource">
+<div class="modal">
+  <h3 id="res-modal-title">🏗️ Legg til ressurs</h3>
+  <input type="hidden" id="res-edit-idx">
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Navn</label><input id="res-name" placeholder="Stasjonskran, Mobilkran, Truck..."></div>
+    <div class="fg"><label>Type</label>
+      <select id="res-type">
+        <option value="stasjonskran">🏗️ Stasjonskran</option>
+        <option value="mobilkran">🚛 Mobilkran / Bil med kran</option>
+        <option value="truck">🚚 Lastebil / Levering</option>
+        <option value="stillaser">🪜 Stillas / Understøtning</option>
+        <option value="annet">⚙️ Annet</option>
+      </select></div>
+  </div>
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Tilgjengelighet</label>
+      <select id="res-avail">
+        <option value="alltid">✅ Alltid tilgjengelig</option>
+        <option value="delvis">⚠️ Delvis tilgjengelig</option>
+        <option value="begrenset">❌ Begrenset</option>
+      </select></div>
+    <div class="fg"><label>Kran-faktor (1=ingen effekt, 0.5=halv tid)</label>
+      <input type="number" id="res-factor" value="0.65" min="0.1" max="1.5" step="0.05" inputmode="decimal">
+      <span class="hint">Biltransport: 0.9, stasjonskran: 0.6, ingen kran: 1.0</span></div>
+  </div>
+  <div class="fg" style="margin-bottom:10px;"><label>Merknad</label><input id="res-note"></div>
+  <div class="modal-footer">
+    <button class="btn btn-p btn-full" onclick="saveResource()">💾 Lagre</button>
+    <button class="btn btn-g" onclick="closeModal('modal-resource')">Avbryt</button>
+  </div>
+</div>
+</div>
+
+<!-- ADD/EDIT TASK TYPE -->
+<div class="modal-bg" id="modal-task-type">
+<div class="modal">
+  <h3 id="tt-modal-title">🔧 Oppgavetype</h3>
+  <input type="hidden" id="tt-edit-idx">
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Ikon (emoji)</label><input id="tt-icon" value="🔧" maxlength="4"></div>
+    <div class="fg"><label>Navn (norsk)</label><input id="tt-name-no" placeholder="Søyle montering..."></div>
+  </div>
+  <div class="fg" style="margin-bottom:10px;"><label>Navn (litauisk)</label><input id="tt-name-lt" placeholder="Kolonos montavimas..."></div>
+  <div class="g3" style="margin-bottom:10px;">
+    <div class="fg"><label>Enhet</label>
+      <select id="tt-unit">
+        <option value="stk">stk / vnt</option><option value="m">m (løpemeter)</option>
+        <option value="m2">m²</option><option value="punkt">punkt</option>
+        <option value="time">time</option>
+      </select></div>
+    <div class="fg"><label>Min/enhet (2 mann)</label>
+      <input type="number" id="tt-min" value="35" min="0.5" step="0.5" inputmode="decimal"></div>
+    <div class="fg"><label>Kran standard faktor</label>
+      <input type="number" id="tt-crane" value="0.65" min="0.1" max="1.5" step="0.05" inputmode="decimal">
+      <span class="hint">1.0=ingen effekt, 0.5=dobbelt raskere</span></div>
+  </div>
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Kategori</label>
+      <select id="tt-cat">
+        <option value="montering">🏗️ Montering</option>
+        <option value="skruing">🔩 Skruing/Festing</option>
+        <option value="maling">📐 Maling/Oppmåling</option>
+        <option value="transport">🚛 Transport/Rigging</option>
+        <option value="stillas">🪜 Stillas/Støtter</option>
+        <option value="ankering">⚓ Ankring/Innfesting</option>
+        <option value="annet">⚙️ Annet</option>
+      </select></div>
+    <div class="fg"><label>Standardnotat</label><input id="tt-note" placeholder="Valgfritt..."></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-a btn-full" onclick="saveTaskType()">💾 Lagre</button>
+    <button class="btn btn-g" onclick="closeModal('modal-task-type')">Avbryt</button>
+  </div>
+</div>
+</div>
+
+<!-- ADD/EDIT FASTENER -->
+<div class="modal-bg" id="modal-fastener">
+<div class="modal">
+  <h3 id="f-modal-title">🔩 Festemiddel / Material</h3>
+  <input type="hidden" id="f-edit-idx">
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Navn</label><input id="f-name" placeholder="VGZ 9x240..."></div>
+    <div class="fg"><label>Dimensjon</label><input id="f-dim" placeholder="9x240mm..."></div>
+  </div>
+  <div class="g3" style="margin-bottom:10px;">
+    <div class="fg"><label>Min/stk (1 mann)</label>
+      <input type="number" id="f-min" value="2.5" min="0.1" step="0.1" inputmode="decimal"></div>
+    <div class="fg"><label>Kategori</label>
+      <select id="f-cat">
+        <option value="vgz">VGZ Skruer</option><option value="spd">SPD Skruer</option>
+        <option value="lbs">LBS Spikerplater</option><option value="bolt">Bolter/Ankere</option>
+        <option value="plate">Stålplater/Knaster</option><option value="annet">Annet</option>
+      </select></div>
+    <div class="fg"><label>Merknad</label><input id="f-note" placeholder="45° skruing..."></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-a btn-full" onclick="saveFastener()">💾 Lagre</button>
+    <button class="btn btn-g" onclick="closeModal('modal-fastener')">Avbryt</button>
+  </div>
+</div>
+</div>
+
+<!-- ADD PROGRESS PHASE -->
+<div class="modal-bg" id="modal-progress">
+<div class="modal">
+  <h3>📈 Fremdriftsfase</h3>
+  <input type="hidden" id="ph-edit-idx">
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Fasenavn</label><input id="ph-name" placeholder="Søyler plan 1..."></div>
+    <div class="fg"><label>Total mengde</label><input type="number" id="ph-total" value="50" inputmode="decimal"></div>
+  </div>
+  <div class="g2" style="margin-bottom:10px;">
+    <div class="fg"><label>Ferdig mengde</label><input type="number" id="ph-done" value="0" inputmode="decimal"></div>
+    <div class="fg"><label>Enhet</label><input id="ph-unit" value="stk"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-p btn-full" onclick="saveProgress()">💾 Lagre</button>
+    <button class="btn btn-g" onclick="closeModal('modal-progress')">Avbryt</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const SK = 'bygg_tidsplan_v3';
+
+const DEFAULT_WORKERS = [
+  { name:'Eirik',    role:'Bas',       hrs:8, eff:100, note:'' },
+  { name:'Thomas',   role:'Snekker',   hrs:8, eff:100, note:'' },
+  { name:'Tadas',    role:'Montør',    hrs:8, eff:100, note:'' },
+  { name:'Vytautas', role:'Snekker',   hrs:8, eff:100, note:'' },
+  { name:'Markhus',  role:'Tømmermann',hrs:8, eff:100, note:'' },
+];
+
+const DEFAULT_RESOURCES = [
+  { name:'Stasjonskran', type:'stasjonskran', avail:'alltid', factor:0.60, note:'Alltid på byggeplass' },
+  { name:'Mobilkran / Bil med kran', type:'mobilkran', avail:'delvis', factor:0.70, note:'Bestilles ved behov' },
+  { name:'Lastebil levering', type:'truck', avail:'begrenset', factor:0.90, note:'Materialleveranse' },
+];
+
+const DEFAULT_TASK_TYPES = [
+  { icon:'🏗️', name_no:'Søyle montering (kran)', name_lt:'Kolonos montavimas (kranas)', unit:'stk', min_unit:35, crane_factor:0.60, cat:'montering', note:'280x270, 280x315 mm' },
+  { icon:'🏗️', name_no:'Søyle montering (uten kran)', name_lt:'Kolonos montavimas (be krano)', unit:'stk', min_unit:60, crane_factor:1.0, cat:'montering', note:'' },
+  { icon:'🌲', name_no:'Limtrebjelke HD (kran)', name_lt:'Klijuota sija HD (kranas)', unit:'stk', min_unit:40, crane_factor:0.60, cat:'montering', note:'165x855, 165x900 mm' },
+  { icon:'🪵', name_no:'Randbjelke (kran)', name_lt:'Kraštinė sija (kranas)', unit:'stk', min_unit:30, crane_factor:0.65, cat:'montering', note:'' },
+  { icon:'🧱', name_no:'Massivtre vegg element', name_lt:'Masyviosios med. siena', unit:'stk', min_unit:55, crane_factor:0.55, cat:'montering', note:'' },
+  { icon:'🔩', name_no:'VGZ skruing søyle/knast', name_lt:'VGZ sraigtai kolonai', unit:'stk', min_unit:3.0, crane_factor:1.0, cat:'skruing', note:'9x240–9x360 mm' },
+  { icon:'🔩', name_no:'VGZ skruing bjelker', name_lt:'VGZ sraigtai sijoms', unit:'stk', min_unit:2.5, crane_factor:1.0, cat:'skruing', note:'' },
+  { icon:'🔩', name_no:'SPD skruing fagverk', name_lt:'SPD sraigtai santvarai', unit:'stk', min_unit:1.8, crane_factor:1.0, cat:'skruing', note:'7.5x155–7.5x235' },
+  { icon:'📐', name_no:'Oppmåling / kontroll', name_lt:'Matavimas / kontrolė', unit:'punkt', min_unit:8, crane_factor:1.0, cat:'maling', note:'' },
+  { icon:'🪵', name_no:'Ribord tak', name_lt:'Stogo lentjuostės', unit:'stk', min_unit:5, crane_factor:0.8, cat:'montering', note:'' },
+  { icon:'🪜', name_no:'Midlertidig støtte / ben', name_lt:'Laikinos atramos / kojos', unit:'stk', min_unit:15, crane_factor:1.0, cat:'stillas', note:'Monteringsavstivers' },
+  { icon:'⚓', name_no:'Ankring / innfesting fundament', name_lt:'Inkaravimas / tvirtinimas', unit:'stk', min_unit:25, crane_factor:1.0, cat:'ankering', note:'HD-beslag, søylefot' },
+  { icon:'🚛', name_no:'Materialmottak / rigging', name_lt:'Medžiagų priėmimas', unit:'time', min_unit:60, crane_factor:0.80, cat:'transport', note:'Lossing, sortering' },
+  { icon:'⚙️', name_no:'Annet / generelt', name_lt:'Kita / bendrasis', unit:'stk', min_unit:30, crane_factor:1.0, cat:'annet', note:'' },
+];
+
+const DEFAULT_FASTENERS = [
+  { name:'VGZ 9x240', dim:'9x240 mm', min:2.5, cat:'vgz', note:'Søyle/knast, forsenkende' },
+  { name:'VGZ 9x320', dim:'9x320 mm', min:3.0, cat:'vgz', note:'Knast HD-bjelke, 8 stk' },
+  { name:'VGZ 9x360', dim:'9x360 mm', min:3.5, cat:'vgz', note:'45° skruing, tung' },
+  { name:'SPD 7.5x155', dim:'7.5x155 mm', min:1.5, cat:'spd', note:'Fagverk lett' },
+  { name:'SPD 7.5x195', dim:'7.5x195 mm', min:1.8, cat:'spd', note:'Fagverk medium' },
+  { name:'SPD 7.5x235', dim:'7.5x235 mm', min:2.0, cat:'spd', note:'Fagverk tung, skråstag' },
+  { name:'LBS 5x60', dim:'5x60 mm', min:0.8, cat:'lbs', note:'Spikerplate, ribord' },
+  { name:'HSP 8x80 plate', dim:'8x80 mm', min:1.0, cat:'plate', note:'Stålplate innfesting' },
+  { name:'LBV 2x240x1200', dim:'2x240x1200 mm', min:8.0, cat:'plate', note:'Spikerplate fagverk akse C' },
+];
+
+let S = {
+  lang:'no',
+  proj_name:'Rolland skole 218301',
+  proj_nr:'218301', proj_loc:'Bergen', proj_resp:'',
+  proj_notes:'',
+  workers: JSON.parse(JSON.stringify(DEFAULT_WORKERS)),
+  resources: JSON.parse(JSON.stringify(DEFAULT_RESOURCES)),
+  task_types: JSON.parse(JSON.stringify(DEFAULT_TASK_TYPES)),
+  fasteners: JSON.parse(JSON.stringify(DEFAULT_FASTENERS)),
+  day_date: new Date().toISOString().split('T')[0],
+  day_tasks: [],
+  progress_phases: [],
+};
+
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SK));
+    if(d) S=d;
+  }catch(e){}
+}
+function save(){
+  try{ localStorage.setItem(SK,JSON.stringify(S)); }catch(e){}
+}
+
+// ============================================================
+// LANG
+// ============================================================
+const T={
+  no:{
+    export:'Eksport',import:'Import',reset:'Reset',
+    tab_day:'Dagplan',tab_workers:'Arbeidslag',tab_tasks:'Oppgavetyper',
+    tab_res:'Ressurser',tab_proj:'Prosjekt',
+    today_plan:'Dagplan',add_task:'+ Oppgave',summary:'Oppsummering',
+    no_tasks_today:'Ingen oppgaver. Klikk + Oppgave.',
+    workers_title:'Arbeidslag',add_worker:'Legg til',
+    th_name:'Navn',th_role:'Rolle',th_hrs:'Timer/dag',th_eff:'Eff.%',th_note:'Merknad',
+    resources_title:'Løfte/transport ressurser',add_res:'Legg til',
+    th_res_name:'Ressurs',th_res_type:'Type',th_res_avail:'Tilgj.',th_res_note:'Merknad',
+    task_types_title:'Oppgavetyper & Normer',new_task_type:'Ny type',
+    task_types_desc:'Klikk på rad for å redigere.',
+    th_icon:'',th_task_name:'Oppgave',th_unit:'Enhet',th_min_unit:'Min/enhet',
+    th_crane_factor:'Kran f.',th_pcs_day:'Stk/dag',th_category:'Kategori',
+    fasteners_title:'Festemidler & Materialer',add_fastener:'Nytt element',
+    th_f_name:'Navn',th_f_dim:'Dimensjon',th_f_min:'Min/stk',th_f_perhr:'Stk/t',
+    th_f_cat:'Kat.',th_f_note:'Merknad',
+    proj_info:'Prosjektinfo',proj_name_lbl:'Prosjektnavn',proj_nr:'Nr',
+    proj_loc:'Sted',proj_resp:'Ansvarlig',
+    proj_progress:'Fremdrift',add_phase:'+ Fase',
+    proj_notes:'Notater',
+    stat_workers:'Arbeidere',stat_total_hrs:'Total t.',stat_tasks:'Oppgaver',
+    stat_pcs:'Totalt stk',capacity_lbl:'Kapasitet',
+  },
+  en:{
+    export:'Export',import:'Import',reset:'Reset',
+    tab_day:'Day Plan',tab_workers:'Work Team',tab_tasks:'Task Types',
+    tab_res:'Resources',tab_proj:'Project',
+    today_plan:'Day Plan',add_task:'+ Task',summary:'Summary',
+    no_tasks_today:'No tasks. Click + Task.',
+    workers_title:'Work Team',add_worker:'Add',
+    th_name:'Name',th_role:'Role',th_hrs:'Hours/day',th_eff:'Eff.%',th_note:'Note',
+    resources_title:'Lifting/transport resources',add_res:'Add',
+    th_res_name:'Resource',th_res_type:'Type',th_res_avail:'Avail.',th_res_note:'Note',
+    task_types_title:'Task Types & Norms',new_task_type:'New type',
+    task_types_desc:'Click a row to edit.',
+    th_icon:'',th_task_name:'Task',th_unit:'Unit',th_min_unit:'Min/unit',
+    th_crane_factor:'Crane f.',th_pcs_day:'Pcs/day',th_category:'Category',
+    fasteners_title:'Fasteners & Materials',add_fastener:'New item',
+    th_f_name:'Name',th_f_dim:'Dimension',th_f_min:'Min/pc',th_f_perhr:'Pcs/hr',
+    th_f_cat:'Cat.',th_f_note:'Note',
+    proj_info:'Project Info',proj_name_lbl:'Project name',proj_nr:'Nr',
+    proj_loc:'Location',proj_resp:'Responsible',
+    proj_progress:'Progress',add_phase:'+ Phase',
+    proj_notes:'Notes',
+    stat_workers:'Workers',stat_total_hrs:'Total hrs',stat_tasks:'Tasks',
+    stat_pcs:'Total pcs',capacity_lbl:'Capacity',
+  },
+  lt:{
+    export:'Eksportas',import:'Importas',reset:'Atstatyti',
+    tab_day:'Dienos planas',tab_workers:'Komanda',tab_tasks:'Užduočių tipai',
+    tab_res:'Ištekliai',tab_proj:'Projektas',
+    today_plan:'Dienos planas',add_task:'+ Užduotis',summary:'Suvestinė',
+    no_tasks_today:'Nėra užduočių. Spauskite + Užduotis.',
+    workers_title:'Darbo komanda',add_worker:'Pridėti',
+    th_name:'Vardas',th_role:'Rolė',th_hrs:'Valandos/dieną',th_eff:'Efekt.%',th_note:'Pastaba',
+    resources_title:'Kėlimo/transporto ištekliai',add_res:'Pridėti',
+    th_res_name:'Išteklius',th_res_type:'Tipas',th_res_avail:'Prieig.',th_res_note:'Pastaba',
+    task_types_title:'Užduočių tipai & Normos',new_task_type:'Naujas tipas',
+    task_types_desc:'Spauskite eilutę redaguoti.',
+    th_icon:'',th_task_name:'Užduotis',th_unit:'Vienetas',th_min_unit:'Min/vnt',
+    th_crane_factor:'Krano f.',th_pcs_day:'Vnt/d.',th_category:'Kategorija',
+    fasteners_title:'Tvirtinimo elementai',add_fastener:'Naujas elementas',
+    th_f_name:'Pavadinimas',th_f_dim:'Matmenys',th_f_min:'Min/vnt',th_f_perhr:'Vnt/val.',
+    th_f_cat:'Kat.',th_f_note:'Pastaba',
+    proj_info:'Projekto info',proj_name_lbl:'Projekto pavadinimas',proj_nr:'Nr',
+    proj_loc:'Vieta',proj_resp:'Atsakingas',
+    proj_progress:'Eiga',add_phase:'+ Fazė',
+    proj_notes:'Pastabos',
+    stat_workers:'Darbuotojai',stat_total_hrs:'Iš viso val.',stat_tasks:'Užduotys',
+    stat_pcs:'Iš viso vnt.',capacity_lbl:'Pajėgumas',
+  }
+};
+
+function t(k){ return T[S.lang][k]||k; }
+
+function setLang(lang){
+  S.lang=lang;
+  const sel=document.getElementById('lang-sel');
+  if(sel) sel.value=lang;
+  applyLang(); renderAll(); save();
+}
+function applyLang(){
+  const sel=document.getElementById('lang-sel');
+  if(sel) sel.value=S.lang;
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const k=el.getAttribute('data-t');
+    if(T[S.lang]&&T[S.lang][k]) el.textContent=T[S.lang][k];
+  });
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function showTab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ============================================================
+// WORKERS
+// ============================================================
+function renderWorkers(){
+  const tb=document.getElementById('workers-tbody');
+  if(!tb)return;
+  tb.innerHTML=S.workers.map((w,i)=>`
+    <tr>
+      <td><strong>${w.name}</strong></td>
+      <td><span class="badge b-blue">${w.role}</span></td>
+      <td>${w.hrs}t</td>
+      <td>${w.eff}%</td>
+      <td style="color:var(--muted);font-size:.78rem;">${w.note||'—'}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-g btn-xs" onclick="editWorker(${i})">✏️</button>
+        <button class="btn btn-d btn-xs" onclick="deleteItem('workers',${i})">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+function openAddWorker(){ document.getElementById('w-edit-idx').value='';document.getElementById('w-modal-title').textContent='👷 Legg til arbeider';document.getElementById('w-name').value='';document.getElementById('w-hrs').value=8;document.getElementById('w-eff').value=100;document.getElementById('w-note').value='';openModal('modal-worker'); }
+function editWorker(i){ const w=S.workers[i];document.getElementById('w-edit-idx').value=i;document.getElementById('w-modal-title').textContent='✏️ Rediger arbeider';document.getElementById('w-name').value=w.name;document.getElementById('w-role').value=w.role;document.getElementById('w-hrs').value=w.hrs;document.getElementById('w-eff').value=w.eff;document.getElementById('w-note').value=w.note||'';openModal('modal-worker'); }
+function saveWorker(){
+  const idx=document.getElementById('w-edit-idx').value;
+  const w={name:document.getElementById('w-name').value||'Arbeider',role:document.getElementById('w-role').value,hrs:parseFloat(document.getElementById('w-hrs').value)||8,eff:parseFloat(document.getElementById('w-eff').value)||100,note:document.getElementById('w-note').value};
+  if(idx==='') S.workers.push(w); else S.workers[parseInt(idx)]=w;
+  save();renderWorkers();recalcDay();closeModal('modal-worker');
+}
+
+// ============================================================
+// RESOURCES
+// ============================================================
+const RES_TYPE_LABELS={stasjonskran:'🏗️ Stasjonskran',mobilkran:'🚛 Mobilkran',truck:'🚚 Lastebil',stillaser:'🪜 Stillas',annet:'⚙️ Annet'};
+const RES_AVAIL_LABELS={alltid:'✅ Alltid',delvis:'⚠️ Delvis',begrenset:'❌ Begrenset'};
+const RES_AVAIL_BADGES={alltid:'b-green',delvis:'b-orange',begrenset:'b-red'};
+
+function renderResources(){
+  const tb=document.getElementById('resources-tbody');
+  if(!tb)return;
+  tb.innerHTML=S.resources.map((r,i)=>`
+    <tr>
+      <td><strong>${r.name}</strong></td>
+      <td>${RES_TYPE_LABELS[r.type]||r.type}</td>
+      <td><span class="badge ${RES_AVAIL_BADGES[r.avail]||'b-gray'}">${RES_AVAIL_LABELS[r.avail]||r.avail}</span></td>
+      <td style="color:var(--muted);font-size:.78rem;">${r.note||'—'}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-g btn-xs" onclick="editResource(${i})">✏️</button>
+        <button class="btn btn-d btn-xs" onclick="deleteItem('resources',${i})">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+function openAddResource(){ document.getElementById('res-edit-idx').value='';document.getElementById('res-modal-title').textContent='🏗️ Legg til ressurs';document.getElementById('res-name').value='';document.getElementById('res-factor').value=0.65;document.getElementById('res-note').value='';openModal('modal-resource'); }
+function editResource(i){ const r=S.resources[i];document.getElementById('res-edit-idx').value=i;document.getElementById('res-modal-title').textContent='✏️ Rediger ressurs';document.getElementById('res-name').value=r.name;document.getElementById('res-type').value=r.type;document.getElementById('res-avail').value=r.avail;document.getElementById('res-factor').value=r.factor;document.getElementById('res-note').value=r.note||'';openModal('modal-resource'); }
+function saveResource(){
+  const idx=document.getElementById('res-edit-idx').value;
+  const r={name:document.getElementById('res-name').value||'Ressurs',type:document.getElementById('res-type').value,avail:document.getElementById('res-avail').value,factor:parseFloat(document.getElementById('res-factor').value)||0.65,note:document.getElementById('res-note').value};
+  if(idx==='') S.resources.push(r); else S.resources[parseInt(idx)]=r;
+  save();renderResources();closeModal('modal-resource');
+}
+
+// ============================================================
+// TASK TYPES
+// ============================================================
+const CAT_LABELS={montering:'🏗️ Montering',skruing:'🔩 Skruing',maling:'📐 Maling',transport:'🚛 Transport',stillas:'🪜 Stillas',ankering:'⚓ Ankring',annet:'⚙️ Annet'};
+
+function getTaskName(tt){ return S.lang==='lt'?(tt.name_lt||tt.name_no):tt.name_no; }
+
+function renderTaskTypes(){
+  const tb=document.getElementById('task-types-tbody');
+  if(!tb)return;
+  tb.innerHTML=S.task_types.map((tt,i)=>{
+    const pcsDay=Math.round((8*60*2)/(tt.min_unit*tt.crane_factor)/2);
+    return `<tr style="cursor:pointer;" onclick="editTaskType(${i})">
+      <td style="font-size:1.2rem;">${tt.icon}</td>
+      <td><strong>${getTaskName(tt)}</strong></td>
+      <td><span class="badge b-gray">${tt.unit}</span></td>
+      <td>${tt.min_unit} min</td>
+      <td>${tt.crane_factor}</td>
+      <td><span class="badge b-blue">~${pcsDay}/dag</span></td>
+      <td style="font-size:.78rem;color:var(--muted);">${CAT_LABELS[tt.cat]||tt.cat}</td>
+      <td style="white-space:nowrap;" onclick="event.stopPropagation()">
+        <button class="btn btn-g btn-xs" onclick="editTaskType(${i})">✏️</button>
+        <button class="btn btn-d btn-xs" onclick="deleteItem('task_types',${i})">🗑</button>
+      </td>
+    </tr>`;}).join('');
+}
+function openAddTaskType(){ document.getElementById('tt-edit-idx').value='';document.getElementById('tt-modal-title').textContent='🔧 Ny oppgavetype';document.getElementById('tt-icon').value='⚙️';document.getElementById('tt-name-no').value='';document.getElementById('tt-name-lt').value='';document.getElementById('tt-min').value=30;document.getElementById('tt-crane').value=1.0;document.getElementById('tt-note').value='';openModal('modal-task-type'); }
+function editTaskType(i){ const tt=S.task_types[i];document.getElementById('tt-edit-idx').value=i;document.getElementById('tt-modal-title').textContent='✏️ Rediger oppgavetype';document.getElementById('tt-icon').value=tt.icon;document.getElementById('tt-name-no').value=tt.name_no;document.getElementById('tt-name-lt').value=tt.name_lt||'';document.getElementById('tt-unit').value=tt.unit;document.getElementById('tt-min').value=tt.min_unit;document.getElementById('tt-crane').value=tt.crane_factor;document.getElementById('tt-cat').value=tt.cat;document.getElementById('tt-note').value=tt.note||'';openModal('modal-task-type'); }
+function saveTaskType(){
+  const idx=document.getElementById('tt-edit-idx').value;
+  const tt={icon:document.getElementById('tt-icon').value||'⚙️',name_no:document.getElementById('tt-name-no').value||'Oppgave',name_lt:document.getElementById('tt-name-lt').value,unit:document.getElementById('tt-unit').value,min_unit:parseFloat(document.getElementById('tt-min').value)||30,crane_factor:parseFloat(document.getElementById('tt-crane').value)||1.0,cat:document.getElementById('tt-cat').value,note:document.getElementById('tt-note').value};
+  if(idx==='') S.task_types.push(tt); else S.task_types[parseInt(idx)]=tt;
+  save();renderTaskTypes();closeModal('modal-task-type');
+}
+
+// ============================================================
+// FASTENERS
+// ============================================================
+const FCAT_LABELS={vgz:'VGZ',spd:'SPD',lbs:'LBS',bolt:'Bolt',plate:'Plate',annet:'Annet'};
+const FCAT_BADGES={vgz:'b-orange',spd:'b-blue',lbs:'b-green',bolt:'b-gray',plate:'b-gray',annet:'b-gray'};
+
+function renderFasteners(){
+  const tb=document.getElementById('fasteners-tbody');
+  if(!tb)return;
+  tb.innerHTML=S.fasteners.map((f,i)=>`
+    <tr>
+      <td><strong>${f.name}</strong></td>
+      <td style="color:var(--muted);font-size:.78rem;">${f.dim||'—'}</td>
+      <td>${f.min} min</td>
+      <td><span class="badge b-orange">${Math.round(60/f.min)}/t</span></td>
+      <td><span class="badge ${FCAT_BADGES[f.cat]||'b-gray'}">${FCAT_LABELS[f.cat]||f.cat}</span></td>
+      <td style="color:var(--muted);font-size:.78rem;">${f.note||'—'}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-g btn-xs" onclick="editFastener(${i})">✏️</button>
+        <button class="btn btn-d btn-xs" onclick="deleteItem('fasteners',${i})">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+function openAddFastener(){ document.getElementById('f-edit-idx').value='';document.getElementById('f-modal-title').textContent='🔩 Nytt festemiddel';document.getElementById('f-name').value='';document.getElementById('f-dim').value='';document.getElementById('f-min').value=2.5;document.getElementById('f-note').value='';openModal('modal-fastener'); }
+function editFastener(i){ const f=S.fasteners[i];document.getElementById('f-edit-idx').value=i;document.getElementById('f-modal-title').textContent='✏️ Rediger festemiddel';document.getElementById('f-name').value=f.name;document.getElementById('f-dim').value=f.dim||'';document.getElementById('f-min').value=f.min;document.getElementById('f-cat').value=f.cat;document.getElementById('f-note').value=f.note||'';openModal('modal-fastener'); }
+function saveFastener(){
+  const idx=document.getElementById('f-edit-idx').value;
+  const f={name:document.getElementById('f-name').value||'Festemiddel',dim:document.getElementById('f-dim').value,min:parseFloat(document.getElementById('f-min').value)||2.5,cat:document.getElementById('f-cat').value,note:document.getElementById('f-note').value};
+  if(idx==='') S.fasteners.push(f); else S.fasteners[parseInt(idx)]=f;
+  save();renderFasteners();closeModal('modal-fastener');
+}
+
+// ============================================================
+// DELETE GENERIC
+// ============================================================
+function deleteItem(arr,i){
+  if(!confirm('Slett dette elementet?'))return;
+  S[arr].splice(i,1);
+  save();renderAll();
+}
+
+// ============================================================
+// DAY TASKS
+// ============================================================
+function populateDayTaskSelects(){
+  const tsel=document.getElementById('dt-type');
+  tsel.innerHTML=S.task_types.map((tt,i)=>`<option value="${i}">${tt.icon} ${getTaskName(tt)}</option>`).join('');
+
+  const wsel=document.getElementById('dt-workers-sel');
+  wsel.innerHTML=`<option value="all">Alle (${S.workers.length} mann)</option>`+
+    S.workers.map((w,i)=>`<option value="${i}">1 mann: ${w.name}</option>`).join('')+
+    [2,3,4].filter(n=>n<=S.workers.length).map(n=>`<option value="n${n}">${n} mann</option>`).join('');
+
+  const rsel=document.getElementById('dt-resource-sel');
+  rsel.innerHTML=`<option value="">— ingen spesifisert —</option>`+
+    S.resources.map((r,i)=>`<option value="${i}">${r.name} (f:${r.factor})</option>`).join('');
+}
+
+function getWorkerCountFromSel(val){
+  if(val==='all') return S.workers.length||1;
+  if(val.startsWith('n')) return parseInt(val.slice(1));
+  return 1;
+}
+
+function getResourceFactor(val){
+  if(!val) return 1.0;
+  const r=S.resources[parseInt(val)];
+  return r?r.factor:1.0;
+}
+
+function calcTaskHours(typeIdx,qty,workerCount,resFactor,extraPct){
+  const tt=S.task_types[typeIdx];
+  if(!tt)return{hrs:0,minPerUnit:0,pcsPerDay:0};
+  const minPerUnit=tt.min_unit * resFactor;
+  const totalMins=(qty * minPerUnit)/workerCount;
+  const hrs=totalMins/60*(1+(extraPct||0)/100);
+  const pcsPerDay=Math.floor((8*60*workerCount)/minPerUnit);
+  return{hrs,minPerUnit,pcsPerDay};
+}
+
+function openAddDayTask(editIdx){
+  populateDayTaskSelects();
+  const isEdit=editIdx!=null;
+  document.getElementById('dt-modal-title').textContent=isEdit?'✏️ Rediger oppgave':'➕ Legg til dagoppgave';
+  document.getElementById('dt-edit-idx').value=isEdit?editIdx:'';
+  if(isEdit){
+    const dt=S.day_tasks[editIdx];
+    document.getElementById('dt-type').value=dt.type_idx;
+    document.getElementById('dt-qty').value=dt.qty;
+    document.getElementById('dt-workers-sel').value=dt.workers_sel;
+    document.getElementById('dt-resource-sel').value=dt.resource_sel||'';
+    document.getElementById('dt-extra').value=dt.extra_pct||0;
+    document.getElementById('dt-note').value=dt.note||'';
+  } else {
+    document.getElementById('dt-qty').value=10;
+    document.getElementById('dt-extra').value=0;
+    document.getElementById('dt-note').value='';
+  }
+  document.getElementById('dt-preview').style.display='none';
+  document.getElementById('dt-type').addEventListener('change',previewDayTask,{once:false});
+  document.getElementById('dt-qty').addEventListener('input',previewDayTask);
+  document.getElementById('dt-workers-sel').addEventListener('change',previewDayTask);
+  document.getElementById('dt-resource-sel').addEventListener('change',previewDayTask);
+  document.getElementById('dt-extra').addEventListener('input',previewDayTask);
+  openModal('modal-day-task');
+  setTimeout(previewDayTask,50);
+}
+
+function previewDayTask(){
+  const typeIdx=parseInt(document.getElementById('dt-type').value);
+  const qty=parseInt(document.getElementById('dt-qty').value)||1;
+  const workerSel=document.getElementById('dt-workers-sel').value;
+  const resSel=document.getElementById('dt-resource-sel').value;
+  const extraPct=parseFloat(document.getElementById('dt-extra').value)||0;
+  const wc=getWorkerCountFromSel(workerSel);
+  const rf=getResourceFactor(resSel);
+  const c=calcTaskHours(typeIdx,qty,wc,rf,extraPct);
+  const tt=S.task_types[typeIdx];
+  const prev=document.getElementById('dt-preview');
+  prev.style.display='block';
+  prev.className='rb rb-info';
+  prev.innerHTML=`<strong>${tt?tt.icon:''} ${tt?getTaskName(tt):'?'}</strong><br>
+    ⏱️ <strong>${c.hrs.toFixed(1)}t</strong> for ${qty} ${tt?tt.unit:'stk'} · ${wc} mann · faktor ${rf}<br>
+    📊 Kapasitet: ~${c.pcsPerDay} ${tt?tt.unit:'stk'}/dag med ${wc} mann`;
+}
+
+function saveDayTask(){
+  const idx=document.getElementById('dt-edit-idx').value;
+  const dt={
+    type_idx:parseInt(document.getElementById('dt-type').value),
+    qty:parseInt(document.getElementById('dt-qty').value)||1,
+    workers_sel:document.getElementById('dt-workers-sel').value,
+    resource_sel:document.getElementById('dt-resource-sel').value||'',
+    extra_pct:parseFloat(document.getElementById('dt-extra').value)||0,
+    note:document.getElementById('dt-note').value,
+  };
+  if(idx==='') S.day_tasks.push(dt); else S.day_tasks[parseInt(idx)]=dt;
+  save();renderDayTasks();recalcDay();closeModal('modal-day-task');
+}
+
+function deleteDayTask(i){ S.day_tasks.splice(i,1); save();renderDayTasks();recalcDay(); }
+
+function renderDayTasks(){
+  const list=document.getElementById('day-tasks-list');
+  const empty=document.getElementById('day-empty');
+  if(!S.day_tasks.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.innerHTML=S.day_tasks.map((dt,i)=>{
+    const tt=S.task_types[dt.type_idx];
+    if(!tt) return '';
+    const wc=getWorkerCountFromSel(dt.workers_sel);
+    const rf=getResourceFactor(dt.resource_sel);
+    const c=calcTaskHours(dt.type_idx,dt.qty,wc,rf,dt.extra_pct||0);
+    const res=dt.resource_sel?S.resources[parseInt(dt.resource_sel)]:null;
+    return `<div class="task-row">
+      <div class="task-header" onclick="toggleTaskBody(this)">
+        <span class="task-icon">${tt.icon}</span>
+        <div style="flex:1;">
+          <div class="task-name">${getTaskName(tt)}</div>
+          <div class="task-meta">${dt.qty} ${tt.unit} · ${wc} mann${res?' · '+res.name:''}</div>
+        </div>
+        <div class="task-result">${c.hrs.toFixed(1)}t</div>
+        <span style="margin-left:6px;color:var(--muted);font-size:.8rem;">▼</span>
+      </div>
+      <div class="task-body">
+        <div class="g3" style="margin-bottom:10px;font-size:.82rem;">
+          <div><strong>${dt.qty}</strong> ${tt.unit}</div>
+          <div><strong>${wc}</strong> mann</div>
+          <div><strong>${Math.round(tt.min_unit*rf*10)/10}</strong> min/enhet</div>
+          <div>Kap: <strong>~${Math.round((8*60*wc)/(tt.min_unit*rf))}</strong>/dag</div>
+          <div>Tillegg: <strong>${dt.extra_pct||0}%</strong></div>
+          <div style="color:var(--muted);">${dt.note||'—'}</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-g btn-sm" onclick="openAddDayTask(${i})">✏️ Rediger</button>
+          <button class="btn btn-d btn-sm" onclick="deleteDayTask(${i})">🗑 Slett</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTaskBody(header){
+  const body=header.nextElementSibling;
+  body.classList.toggle('open');
+  const arrow=header.querySelector('span:last-child');
+  if(arrow) arrow.textContent=body.classList.contains('open')?'▲':'▼';
+}
+
+function recalcDay(){
+  const card=document.getElementById('day-summary-card');
+  if(!S.day_tasks.length||!S.workers.length){ card.style.display='none'; return; }
+  card.style.display='block';
+
+  const totalWorkerHrs=S.workers.reduce((s,w)=>s+w.hrs*(w.eff/100),0);
+  let totalTaskHrs=0, totalPcs=0;
+  const rows=[];
+
+  S.day_tasks.forEach(dt=>{
+    const tt=S.task_types[dt.type_idx];
+    if(!tt)return;
+    const wc=getWorkerCountFromSel(dt.workers_sel);
+    const rf=getResourceFactor(dt.resource_sel);
+    const c=calcTaskHours(dt.type_idx,dt.qty,wc,rf,dt.extra_pct||0);
+    totalTaskHrs+=c.hrs*wc;
+    totalPcs+=dt.qty;
+    rows.push({tt,dt,c,wc,rf});
+  });
+
+  document.getElementById('day-stats').innerHTML=`
+    <div class="sbox"><div class="sv">${S.workers.length}</div><div class="sl">${t('stat_workers')}</div></div>
+    <div class="sbox"><div class="sv">${totalWorkerHrs.toFixed(1)}t</div><div class="sl">${t('stat_total_hrs')}</div></div>
+    <div class="sbox"><div class="sv">${S.day_tasks.length}</div><div class="sl">${t('stat_tasks')}</div></div>
+    <div class="sbox"><div class="sv">${totalPcs}</div><div class="sl">${t('stat_pcs')}</div></div>`;
+
+  const pct=totalWorkerHrs>0?Math.min((totalTaskHrs/totalWorkerHrs)*100,150):0;
+  const barCls=pct>110?'over':pct>90?'warn':'';
+  const boxCls=pct>110?'rb-warn':pct>90?'rb-ok':'rb-info';
+  const msg=pct>110?'⚠️ Overlastet! Prioriter oppgaver.':pct>90?'✅ Full dag — bra planlegging!':pct>60?'👍 God kapasitetsutnyttelse':'📉 Lav belastning — legg til flere oppgaver';
+
+  document.getElementById('day-cap-bar').innerHTML=`
+    <div class="rb ${boxCls}">
+      <div style="font-size:.72rem;font-weight:800;text-transform:uppercase;margin-bottom:4px;">${t('capacity_lbl')}</div>
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <span class="rv">${Math.round(pct)}%</span>
+        <span class="rs">${totalTaskHrs.toFixed(1)} / ${totalWorkerHrs.toFixed(1)} timer brukt</span>
+      </div>
+    </div>
+    <div class="prog-wrap"><div class="prog ${barCls}" style="width:${Math.min(pct,100)}%"></div></div>
+    <div style="margin-top:6px;font-size:.83rem;font-weight:700;">${msg}</div>`;
+
+  document.getElementById('day-details-table').innerHTML=`
+    <div class="tw"><table>
+    <thead><tr><th>Oppgave</th><th>Stk</th><th>Mann</th><th>Min/stk</th><th>Timer</th><th>Kapasitet/dag</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr>
+      <td>${r.tt.icon} ${getTaskName(r.tt)}</td>
+      <td>${r.dt.qty} ${r.tt.unit}</td>
+      <td>${r.wc}</td>
+      <td>${Math.round(r.tt.min_unit*r.rf*10)/10}</td>
+      <td><strong>${r.c.hrs.toFixed(1)}t</strong></td>
+      <td><span class="badge b-blue">~${Math.round((8*60*r.wc)/(r.tt.min_unit*r.rf))} ${r.tt.unit}/dag</span></td>
+    </tr>`).join('')}</tbody>
+    </table></div>`;
+}
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function renderProgress(){
+  const el=document.getElementById('progress-list');
+  if(!el)return;
+  if(!S.progress_phases.length){ el.innerHTML='<div style="color:var(--muted);font-size:.85rem;padding:8px;">Ingen faser lagt til ennå.</div>'; return; }
+  el.innerHTML=S.progress_phases.map((p,i)=>{
+    const pct=p.total>0?Math.round((p.done/p.total)*100):0;
+    const barCls=pct>=100?'':pct>60?'warn':'';
+    return `<div style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <strong>${p.name}</strong>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:.82rem;color:var(--muted);">${p.done}/${p.total} ${p.unit}</span>
+          <span class="badge ${pct>=100?'b-green':pct>60?'b-orange':'b-red'}">${pct}%</span>
+          <button class="btn btn-g btn-xs" onclick="editProgress(${i})">✏️</button>
+          <button class="btn btn-d btn-xs" onclick="deleteItem('progress_phases',${i})">🗑</button>
+        </div>
+      </div>
+      <div class="prog-wrap"><div class="prog ${barCls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+function openAddProgress(){ document.getElementById('ph-edit-idx').value='';document.getElementById('ph-name').value='';document.getElementById('ph-total').value=50;document.getElementById('ph-done').value=0;document.getElementById('ph-unit').value='stk';openModal('modal-progress'); }
+function editProgress(i){ const p=S.progress_phases[i];document.getElementById('ph-edit-idx').value=i;document.getElementById('ph-name').value=p.name;document.getElementById('ph-total').value=p.total;document.getElementById('ph-done').value=p.done;document.getElementById('ph-unit').value=p.unit;openModal('modal-progress'); }
+function saveProgress(){
+  const idx=document.getElementById('ph-edit-idx').value;
+  const p={name:document.getElementById('ph-name').value||'Fase',total:parseInt(document.getElementById('ph-total').value)||0,done:parseInt(document.getElementById('ph-done').value)||0,unit:document.getElementById('ph-unit').value||'stk'};
+  if(idx==='') S.progress_phases.push(p); else S.progress_phases[parseInt(idx)]=p;
+  save();renderProgress();closeModal('modal-progress');
+}
+
+// ============================================================
+// PROJECT
+// ============================================================
+function renderProject(){
+  const pn=document.getElementById('proj-name');const pnr=document.getElementById('proj-nr');
+  const pl=document.getElementById('proj-loc');const pr=document.getElementById('proj-resp');
+  const pnt=document.getElementById('proj-notes');
+  if(pn) pn.value=S.proj_name||'';
+  if(pnr) pnr.value=S.proj_nr||'';
+  if(pl) pl.value=S.proj_loc||'';
+  if(pr) pr.value=S.proj_resp||'';
+  if(pnt) pnt.value=S.proj_notes||'';
+  renderProgress();
+}
+function updateProjName(){ S.proj_name=document.getElementById('proj-name').value; document.getElementById('h-proj-name').textContent=S.proj_name; save(); }
+function editProjectName(){ const el=document.getElementById('h-proj-name'); const cur=el.textContent; const inp=document.createElement('input'); inp.value=cur; inp.className='inline-edit'; inp.style.fontSize='1rem'; inp.style.fontWeight='800'; el.textContent=''; el.appendChild(inp); inp.focus(); inp.select(); inp.onblur=()=>{ S.proj_name=inp.value||cur; el.textContent=S.proj_name; save(); }; inp.onkeydown=e=>{ if(e.key==='Enter') inp.blur(); }; }
+
+// ============================================================
+// EXPORT / IMPORT / RESET
+// ============================================================
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='bygg-tidsplan-'+(S.proj_nr||'data')+'-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+function importData(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{ try{ S=JSON.parse(ev.target.result); save(); renderAll(); alert('Data importert!'); }catch(err){ alert('Feil: '+err.message); } };
+  reader.readAsText(file); e.target.value='';
+}
+function confirmReset(){
+  if(!confirm('Nullstill ALT? Dette sletter alle data!'))return;
+  localStorage.removeItem(SK);
+  location.reload();
+}
+
+// ============================================================
+// RENDER ALL
+// ============================================================
+function renderAll(){
+  renderWorkers(); renderResources(); renderTaskTypes(); renderFasteners();
+  renderDayTasks(); recalcDay(); renderProject();
+  applyLang();
+  const dd=document.getElementById('day-date');
+  if(dd){ dd.value=S.day_date||new Date().toISOString().split('T')[0]; dd.onchange=()=>{ S.day_date=dd.value; save(); }; }
+  // auto-save project fields
+  ['proj-name','proj-nr','proj-loc','proj-resp','proj-notes'].forEach(id=>{
+    const el=document.getElementById(id); if(!el)return;
+    const key=id.replace(/-/g,'_');
+    el.oninput=()=>{ S[key]=el.value; if(id==='proj-name') document.getElementById('h-proj-name').textContent=el.value; save(); };
+  });
+}
+
+load();
+renderAll();
+</script>
+<footer style="text-align:center;padding:18px 16px 24px;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:8px;background:var(--card);">
+  Sukurta / Laget av &nbsp;<strong style="color:var(--text);">Vytautas Giedraitis</strong> &nbsp;·&nbsp; Bygg Tidsplan v3 &nbsp;·&nbsp; Massivtre / Limtre
+</footer>
+
+</body>
+</html>
