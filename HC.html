@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ProBuilder By Vytautas Giedraitis tel.94844497</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f1117">
+<style>
+:root {
+  --bg:#0f1117;--bg2:#161b27;--card:#1c2233;--card2:#222840;--surface:#252d42;
+  --text:#e8edf5;--muted:#8892aa;--dim:#556070;
+  --primary:#3d8ef0;--primary-d:#2567cc;--primary-glow:rgba(61,142,240,0.18);
+  --accent:#f0873d;--accent-d:#c96020;
+  --green:#3dbe7a;--green-bg:rgba(61,190,122,0.10);
+  --red:#e05c5c;--red-bg:rgba(224,92,92,0.10);
+  --yellow:#f0c03d;--yellow-bg:rgba(240,192,61,0.10);
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(61,142,240,0.08),transparent),linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:auto,40px 40px,40px 40px;background-attachment:fixed;color:var(--text);min-height:100vh;font-size:15px;}
+header{position:sticky;top:0;z-index:100;background:rgba(15,17,23,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.proj-chip{background:linear-gradient(135deg,#3d8ef0,#7b3df0);border-radius:6px;padding:4px 10px;font-size:0.72rem;font-weight:800;letter-spacing:0.08em;color:#fff;}
+.header-title{font-size:1rem;font-weight:700;letter-spacing:-0.02em;color:var(--text);}
+.header-title span{color:var(--primary);}
+.back-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:7px;color:var(--muted);font-size:0.78rem;font-weight:600;text-decoration:none;transition:all 0.18s;}
+.back-btn:hover{color:var(--primary);border-color:var(--primary);}
+.lang-group { display: flex; gap: 4px; background: var(--surface); padding: 4px; border-radius: 6px; border: 1px solid var(--border); }
+.lang-btn { background: transparent; border: none; color: var(--muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+.lang-btn.active { background: var(--card2); color: var(--primary); }
+.tab-nav{display:flex;gap:6px;padding:14px 16px 0;max-width:960px;margin:0 auto;overflow-x:auto;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:9px 16px;background:var(--card);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:0.83rem;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.18s;min-height:40px;}
+.tab-btn:hover{color:var(--text);border-color:var(--border2);}
+.tab-btn.active{background:var(--primary-glow);border-color:var(--primary);color:var(--primary);}
+.tab-panel{display:none;}.tab-panel.active{display:flex;flex-direction:column;gap:14px;}
+main{max-width:960px;margin:0 auto;padding:14px 16px 80px;display:flex;flex-direction:column;gap:14px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;}
+.card-title{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.spec-banner{background:linear-gradient(135deg,rgba(61,142,240,0.12),rgba(123,61,240,0.08));border:1px solid rgba(61,142,240,0.25);border-radius:var(--radius);padding:14px 18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.spec-item{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:0.8rem;font-weight:600;}
+.spec-item .lbl{color:var(--muted);font-size:0.68rem;font-weight:700;text-transform:uppercase;}
+.spec-item .val{color:var(--primary);font-family:'Consolas','Courier New',monospace;font-size:0.95rem;font-weight:700;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:inherit;font-size:16px;outline:none;transition:border-color 0.18s,box-shadow 0.18s;width:100%;min-height:44px;}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow);background:var(--card2);}
+input::placeholder{color:var(--dim);}
+.field-hint{font-size:0.67rem;color:var(--dim);line-height:1.4;}
+.radio-row{display:flex;gap:6px;flex-wrap:wrap;}
+.radio-opt{position:relative;}
+.radio-opt input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
+.radio-opt label{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted);transition:all 0.18s;min-height:40px;}
+.radio-opt input:checked+label{background:var(--primary-glow);border-color:var(--primary);color:var(--primary);}
+.toggle-wrap{position:relative;display:inline-block;cursor:pointer;}
+.toggle-wrap input{position:absolute;opacity:0;width:0;height:0;}
+.toggle-track{display:block;width:42px;height:24px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;transition:all 0.2s;position:relative;}
+.toggle-wrap input:checked+.toggle-track{background:var(--primary);border-color:var(--primary);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);transition:all 0.2s;}
+.toggle-wrap input:checked+.toggle-track .toggle-thumb{left:20px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--radius-sm);border:1px solid transparent;font-family:inherit;font-size:0.84rem;font-weight:600;cursor:pointer;transition:all 0.18s;min-height:44px;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-d));color:#fff;border-color:var(--primary);box-shadow:0 4px 12px rgba(61,142,240,0.3);}
+.btn-primary:hover{filter:brightness(1.1);}
+.btn-outline{background:transparent;color:var(--muted);border-color:var(--border2);}
+.btn-outline:hover{color:var(--text);background:var(--surface);}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:rgba(224,92,92,0.3);}
+.btn-danger:hover{background:rgba(224,92,92,0.2);}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:16px;}
+.res-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:center;}
+.res-box .val{font-family:'Consolas','Courier New',monospace;font-size:1.7rem;font-weight:700;line-height:1;color:var(--primary);}
+.res-box .val.ok{color:var(--green);}.res-box .val.bad{color:var(--red);}
+.res-box .lbl{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-top:4px;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+thead th{padding:9px 10px;background:var(--surface);border-bottom:2px solid var(--border2);font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);text-align:center;white-space:nowrap;}
+thead th:first-child{text-align:left;}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
+tbody tr:hover{background:rgba(255,255,255,0.03);}
+tbody td{padding:8px 10px;text-align:center;font-family:'Consolas','Courier New',monospace;font-size:0.83rem;}
+tbody td:first-child{text-align:left;font-family:inherit;}
+.badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:0.7rem;font-weight:700;}
+.badge-ok{background:var(--green-bg);color:var(--green);}
+.badge-warn{background:var(--yellow-bg);color:var(--yellow);}
+.badge-bad{background:var(--red-bg);color:var(--red);}
+.badge-king{background:rgba(123,61,240,0.15);color:#9b6cf0;}
+.row-in-op td{opacity:0.35;font-style:italic;}
+.row-king td:first-child{color:#9b6cf0;font-weight:700;}
+.row-corner td:first-child{color:var(--primary);font-weight:700;}
+.canvas-wrap{overflow-x:auto;margin-top:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;}
+canvas{display:block;border-radius:7px;}
+.svill-layers{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.svill-row{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 12px;}
+.svill-color{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
+.svill-color.bunn{background:linear-gradient(135deg,#3dbe7a,#2a8a55);}
+.svill-color.topp{background:linear-gradient(135deg,#3d8ef0,#2567cc);}
+.warn-box{display:none;align-items:flex-start;gap:10px;padding:12px 16px;background:var(--yellow-bg);border:1px solid rgba(240,192,61,0.3);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--yellow);margin-bottom:12px;}
+.warn-box.visible{display:flex;}
+.open-item{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;}
+.formula-strip{font-family:'Consolas','Courier New',monospace;font-size:0.8rem;color:var(--muted);background:var(--surface);border-radius:7px;padding:10px 14px;white-space:pre-wrap;line-height:1.8;margin-top:10px;}
+.big-num{font-family:'Consolas','Courier New',monospace;font-size:3rem;font-weight:700;line-height:1;color:var(--green);}
+.big-num.bad{color:var(--red);}
+.unit-label{font-size:0.9rem;color:var(--muted);margin-left:6px;}
+.sarama-box{background:linear-gradient(135deg,rgba(240,135,61,0.08),rgba(240,192,61,0.06));border:1px solid rgba(240,135,61,0.2);border-radius:var(--radius-sm);padding:14px;}
+.hidden{display:none !important;}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr 1fr;}}
+@media print {
+  @page { margin: 15mm; size: auto; }
+  body { background: #fff !important; color: #000 !important; overflow: visible !important; font-size: 11pt; }
+  header, .tab-nav, .no-print, .form-grid, .modal, .btn, .card-title[data-i18n="sec_params"], .card-title[data-i18n="sec_op"], .card-title[data-i18n="sec_adj"], .card-title[data-i18n="sec_om_ref"], .card-title[data-i18n="sec_proj"] { display: none !important; }
+  
+  .print-only { display: block !important; }
+  
+  body > div { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  
+  .card { box-shadow: none !important; border: none !important; background: transparent !important; padding: 0 !important; margin-bottom: 20px !important; page-break-inside: avoid; }
+  
+  .tab-panel { display: none !important; margin-bottom: 30mm; flex-direction: column; }
+  
+  body[data-pr-layout="1"] #tab-layout,
+  body[data-pr-height="1"] #tab-height,
+  body[data-pr-sarama="1"] #tab-sarama,
+  body[data-pr-om="1"] #tab-openmarks {
+    display: flex !important;
+  }
+  
+  table { width: 100% !important; table-layout: auto !important; border-collapse: collapse; }
+  th, td { padding: 8px !important; font-size: 11pt !important; border: 1px solid #000 !important; }
+  
+  canvas { max-width: 100% !important; height: auto !important; page-break-inside: avoid; display: block; margin: 10px auto; }
+  
+  .result-grid, .res-grid { display: flex !important; flex-wrap: wrap !important; gap: 10px !important; }
+  .res-box { flex: 1 1 auto !important; min-width: 120px; border: 1px solid #000 !important; padding: 10px !important; background: #f9f9f9 !important; }
+  
+  .svill-block { width: 100% !important; }
+  .card-title { font-size: 16pt !important; margin-bottom: 15px !important; color: #000 !important; border-bottom: 2px solid #000 !important; padding-bottom: 5px !important; }
+  
+  /* Project info banner on print */
+  #print_header { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000; }
+  #print_header h1 { font-size: 18pt; margin: 0 0 5px 0; }
+  #print_header p { font-size: 12pt; margin: 0; color: #333; }
+}
+
+.print-only { display: none; }
+
+</style>
+</head>
+<body>
+<div id="print_header" class="print-only"></div>
+<header>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a class="back-btn" href="index.html">← ProBuilder</a>
+    <div class="proj-chip">HUS-C</div>
+    <div class="header-title" data-i18n="header_title">Sienu karkasas <span>2x8</span></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <div class="lang-group">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+    </div>
+    <button class="btn btn-outline no-print" style="font-size:0.78rem;padding:6px 12px;min-height:36px;" onclick="openPrintModal()">&#128424;</button>
+  </div>
+</header>
+<div style="max-width:960px;margin:14px auto 0;padding:0 16px;">
+  <div class="spec-banner">
+    <div class="spec-item"><span class="lbl" data-i18n="spec_stud">Stenderis</span><span class="val">2x8 / 48x198mm</span></div>
+    <div class="spec-item"><span class="lbl" data-i18n="spec_bunn">Bottom svill</span><span class="val">1x 48mm</span></div>
+    <div class="spec-item"><span class="lbl" data-i18n="spec_topp">Top svill</span><span class="val">2x 48mm</span></div>
+    <div class="spec-item"><span class="lbl" data-i18n="spec_sarama">Sarama</span><span class="val">2x198 kant + 1x48 flat</span></div>
+    <div class="spec-item"><span class="lbl" data-i18n="spec_found">Pamato svill</span><span class="val">1x 48mm</span></div>
+  </div>
+</div>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('tab-layout',this)" data-i18n="tab_layout">&#128208; Stenderiu isdestymas</button>
+  <button class="tab-btn" onclick="switchTab('tab-height',this)" data-i18n="tab_height">&#128207; Stenderio aukstis</button>
+  <button class="tab-btn" onclick="switchTab('tab-sarama',this)" data-i18n="tab_sarama">&#129395; Saramos skaiciavimas</button>
+  <button class="tab-btn" onclick="switchTab('tab-openmarks',this)" data-i18n="tab_openmarks">&#129695; Langu/duru zymos</button>
+</div>
+<main>
+<!-- TAB LAYOUT -->
+<div id="tab-layout" class="tab-panel active">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_proj">&#128203; Projekto informacija</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_proj_name">Sienos pavadinimas</label><input type="text" id="proj_name"></div>
+      <div class="field"><label data-i18n="lbl_date">Data</label><input type="date" id="proj_date"></div>
+      <div class="field" style="grid-column:span 2"><label data-i18n="lbl_notes">Pastabos</label><textarea id="proj_notes" style="min-height:50px;resize:vertical;"></textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="sec_params">&#129396; Sienos parametrai</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_wlen">Sienos ilgis (mm)</label><input type="number" id="wall_length" min="100" max="99999" step="1" value="6000"></div>
+      <div class="field"><label data-i18n="lbl_pitch">Stenderiu zingsnis OC (mm)</label><input type="number" id="stud_pitch" min="100" max="1200" step="1" value="600"></div>
+      <div class="field"><label data-i18n="lbl_thick">Stenderio storis (mm)</label><input type="number" id="stud_thick" min="20" max="300" step="1" value="48"></div>
+      <div class="field"><label data-i18n="lbl_mingap">Min. tarpas (mm)</label><input type="number" id="min_gap" min="0" max="600" step="1" value="100"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <div>
+        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;" data-i18n="lbl_left">Kairysis galas</div>
+        <div class="radio-row">
+          <div class="radio-opt"><input type="radio" name="left_type" id="lt_outer" value="outer" checked onchange="onEndChange()"><label for="lt_outer" data-i18n="opt_out">&#128306; Isorinis</label></div>
+          <div class="radio-opt"><input type="radio" name="left_type" id="lt_inner" value="inner" onchange="onEndChange()"><label for="lt_inner" data-i18n="opt_in">&#128307; Vidinis</label></div>
+          <div class="radio-opt"><input type="radio" name="left_type" id="lt_free" value="free" onchange="onEndChange()"><label for="lt_free" data-i18n="opt_free">&#8596; Laisvas</label></div>
+        </div>
+        <div id="left_adj_wrap" style="display:none;margin-top:8px;"><div class="field"><label data-i18n="lbl_adj">Gretimos sienos storis (mm)</label><input type="number" id="left_adj_thick" min="0" value="198"></div></div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;" data-i18n="lbl_right">Desiniysis galas</div>
+        <div class="radio-row">
+          <div class="radio-opt"><input type="radio" name="right_type" id="rt_outer" value="outer" onchange="onEndChange()"><label for="rt_outer" data-i18n="opt_out">&#128306; Isorinis</label></div>
+          <div class="radio-opt"><input type="radio" name="right_type" id="rt_inner" value="inner" onchange="onEndChange()"><label for="rt_inner" data-i18n="opt_in">&#128307; Vidinis</label></div>
+          <div class="radio-opt"><input type="radio" name="right_type" id="rt_free" value="free" checked onchange="onEndChange()"><label for="rt_free" data-i18n="opt_free">&#8596; Laisvas</label></div>
+        </div>
+        <div id="right_adj_wrap" style="display:none;margin-top:8px;"><div class="field"><label data-i18n="lbl_adj">Gretimos sienos storis (mm)</label><input type="number" id="right_adj_thick" min="0" value="198"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="sec_op">&#128682; Langai ir durys</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <label class="toggle-wrap"><input type="checkbox" id="openings_enabled" onchange="onOpeningsToggle()"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+      <span style="font-size:0.85rem;color:var(--muted);" data-i18n="lbl_add_op">Prideti langus / duris</span>
+    </div>
+    <div id="openings_wrap" style="display:none;">
+      <div id="openings_list"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="addOpening('window')" data-i18n="btn_win">&#129695; + Langas</button>
+        <button class="btn btn-outline" onclick="addOpening('door')" data-i18n="btn_door">&#128682; + Durys</button>
+      </div>
+    </div>
+  </div>
+  <div class="card no-print">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" style="flex:1;" onclick="calculate()" data-i18n="btn_calc">&#9889; Skaiciuoti</button>
+      <button class="btn btn-danger" onclick="resetAll()" data-i18n="btn_reset">&#8635; Valyti</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="exportJSON()" data-i18n="btn_export">&#128190; Eksportuoti JSON</button>
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="document.getElementById('import_file').click()" data-i18n="btn_import">&#128194; Importuoti JSON</button>
+      <input type="file" id="import_file" style="display:none;" accept=".json" onchange="importJSON(event)">
+    </div>
+  </div>
+  <div class="card" id="results_card" style="display:none;">
+    <div class="card-title" data-i18n="sec_res">&#128202; Rezultatai</div>
+    <div id="result_grid" class="result-grid"></div>
+    <div id="warn_box" class="warn-box">&#9888;&#65039; <span id="warn_text"></span></div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;" data-i18n="sec_adj">Tikslus koregavimas</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="field"><label data-i18n="lbl_fgap">Pirmasis tarpas</label><input type="number" id="first_gap_input" oninput="applyGapAdjust()"><span class="field-hint" id="first_gap_hint"></span></div>
+        <div class="field"><label data-i18n="lbl_lgap">Paskutinis tarpas</label><input type="number" id="last_gap_input" oninput="applyGapAdjust()"><span class="field-hint" id="last_gap_hint"></span></div>
+      </div>
+      <button class="btn btn-outline" style="font-size:0.78rem;margin-top:8px;" onclick="resetGapAdjust()" data-i18n="btn_reset_gap">&#8635; Atstatyti</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;" class="no-print">
+      <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--muted);" data-i18n="lbl_mark">Zymejimas:</span>
+      <div class="radio-row" style="gap:6px;">
+        <div class="radio-opt"><input type="radio" name="mark_side" id="ms_left" value="left" checked onchange="redrawRuler()"><label for="ms_left" data-i18n="opt_mark_l">&#8592; Kairys</label></div>
+        <div class="radio-opt"><input type="radio" name="mark_side" id="ms_right" value="right" onchange="redrawRuler()"><label for="ms_right" data-i18n="opt_mark_r">Desinys &#8594;</label></div>
+        <div class="radio-opt"><input type="radio" name="mark_side" id="ms_center" value="center" onchange="redrawRuler()"><label for="ms_center" data-i18n="opt_mark_c">&#8853; Centras</label></div>
+      </div>
+    </div>
+    <div class="canvas-wrap"><canvas id="ruler_canvas" height="140"></canvas></div>
+    <div class="tbl-wrap" style="margin-top:14px;">
+      <table id="stud_table">
+        <thead><tr><th style="text-align:left;">#</th><th data-i18n="th_l">Kairysis</th><th data-i18n="th_c">Centras</th><th data-i18n="th_r">Desinysis</th><th data-i18n="th_gap">Tarpas po</th><th data-i18n="th_type">Tipas</th></tr></thead>
+        <tbody id="stud_tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- TAB HEIGHT -->
+<div id="tab-height" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_h">&#128207; Stenderio aukstis</div>
+    <div style="background:rgba(61,142,240,0.08);border:1px solid rgba(61,142,240,0.2);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.82rem;color:var(--muted);line-height:1.7;">
+      <strong style="color:var(--primary);">Hus-C:</strong><br>
+      <span data-i18n="h_info">1x 48mm pamato svill, 1x 48mm bunnsvill, 2x 48mm topsvill.</span>
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="font-size:0.73rem;font-weight:700;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;" data-i18n="lbl_htot">Bendras aukstis H (mm)</label>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="number" id="h_total" oninput="calcHeight()">
+        <span style="font-size:0.85rem;color:var(--muted);">mm</span>
+      </div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:6px;" data-i18n="lbl_bunn">Bunnsvill</div>
+      <div class="svill-layers" id="bunn_list"></div>
+      <button class="btn btn-outline" style="font-size:0.75rem;padding:5px 12px;" onclick="addSvill('bunn',48)" data-i18n="btn_add_bunn">+ Bunnsvill</button>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--primary);text-transform:uppercase;margin-bottom:6px;" data-i18n="lbl_topp">Topsvill</div>
+      <div class="svill-layers" id="topp_list"></div>
+      <button class="btn btn-outline" style="font-size:0.75rem;padding:5px 12px;" onclick="addSvill('topp',48)" data-i18n="btn_add_topp">+ Topsvill</button>
+    </div>
+    <div id="height_result" style="display:none;padding:18px;background:var(--green-bg);border:1px solid rgba(61,190,122,0.3);border-radius:var(--radius-sm);">
+      <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:8px;" data-i18n="lbl_cut">Pjovimo ilgis</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <span id="height_val" class="big-num">&#8212;</span>
+        <span class="unit-label">mm</span>
+      </div>
+      <div id="height_formula" class="formula-strip" style="margin-top:10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB SARAMA -->
+<div id="tab-sarama" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_sarama">&#129395; Saramos skaiciavimas</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_sar_name">Pavadinimas</label><input type="text" id="sar_name" placeholder="..." oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_sar_type">Tipas</label>
+        <select id="sar_type" onchange="calcSarama()">
+          <option value="window" data-i18n="opt_win">Langas</option>
+          <option value="door" data-i18n="opt_door">Durys</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="lbl_sar_place">Sąramos pozicija</label>
+        <select id="sar_placement" onchange="calcSarama()">
+          <option value="win_top" data-i18n="opt_win_top">Virš lango/durų</option>
+          <option value="top_sill" data-i18n="opt_top_sill">Prie top svill</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="lbl_sar_h">Stenderio aukštis (mm)</label><input type="number" id="sar_stud_h" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_prod_w">Gaminio plotis (mm)</label><input type="number" id="sar_opening_w" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_prod_h">Gaminio aukštis (mm)</label><input type="number" id="sar_win_h" oninput="calcSarama()"></div>
+      <div class="field" id="fld_sar_bh"><label data-i18n="lbl_prod_bh">Gaminio Bh (mm)</label><input type="number" id="sar_bh" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_gap_side">Tarpas šonuose (mm)</label><input type="number" id="sar_gap_side" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_gap_top">Tarpas viršuje (mm)</label><input type="number" id="sar_gap_top" oninput="calcSarama()"></div>
+      <div class="field" id="fld_sar_gap_bot"><label data-i18n="lbl_gap_bot">Tarpas apačioje (mm)</label><input type="number" id="sar_gap_bot" oninput="calcSarama()"></div>
+    </div>
+    <div id="sarama_result" style="display:none;margin-top:16px;">
+      <div class="result-grid" id="sarama_grid"></div>
+      <div class="sarama-box">
+        <div id="sarama_cut_list_title" style="font-size:0.85rem;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:10px;" data-i18n="lbl_cut_list">Pjovimo sąrašas</div>
+        <div id="sarama_cut_list" style="font-size:0.83rem;line-height:2;color:var(--muted);font-family:'Consolas','Courier New',monospace;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="sarama_canvas" height="220" style="width:100%;display:block;border-radius:8px;background:var(--card2);"></canvas>
+  </div>
+</div>
+
+<!-- TAB OPENMARKS -->
+<div id="tab-openmarks" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_om_ref">&#127959; Atskaitine zyma</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_om_fm">Zyma (mm)</label><input type="number" id="om_floor_mark" oninput="calcOpenMarks()"></div>
+      <div class="field"><label data-i18n="lbl_om_ff">Grindys (mm)</label><input type="number" id="om_finished_floor" oninput="calcOpenMarks()"></div>
+      <div class="field"><label data-i18n="lbl_om_gb">Laisvumas apa (mm)</label><input type="number" id="om_gap_bot" oninput="calcOpenMarks()"></div>
+      <div class="field"><label data-i18n="lbl_om_gt">Laisvumas vir (mm)</label><input type="number" id="om_gap_top" oninput="calcOpenMarks()"></div>
+      <div class="field"><label data-i18n="lbl_om_gs">Laisvumas son (mm)</label><input type="number" id="om_gap_side" oninput="calcOpenMarks()"></div>
+    </div>
+    <div id="om_floor_diff_box" style="display:none;margin-top:12px;padding:10px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);">
+      <span id="om_floor_diff_val" style="font-family:'Consolas',monospace;font-size:1.3rem;font-weight:700;color:var(--primary);"></span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-i18n="sec_op">&#129695; Langai ir durys</div>
+    <div id="om_items_container"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+      <button class="btn btn-outline" style="flex:1;" onclick="omAddItem('window')" data-i18n="btn_win">+ Langas</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="omAddItem('door')" data-i18n="btn_door">+ Durys</button>
+    </div>
+  </div>
+  <div class="card" id="om_results_card" style="display:none;">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="text-align:left;" data-i18n="th_name">Pavadinimas</th><th data-i18n="th_size">PxA (mm)</th><th data-i18n="th_wall">Anga</th><th data-i18n="th_bh">Bh</th><th style="color:var(--green);" data-i18n="th_bot">▼ Apatine zyma</th><th style="color:var(--accent);" data-i18n="th_top">▲ Virsutine zyma</th></tr></thead>
+        <tbody id="om_tbody"></tbody>
+      </table>
+    </div>
+    <div class="canvas-wrap" style="margin-top:14px;"><canvas id="om_canvas" height="260"></canvas></div>
+  </div>
+</div>
+</main>
+<script>
+// ==================== LANGUAGES ====================
+const T = {
+  lt: {
+    header_title: "Sienų karkasas <span>2x8</span>",
+    spec_stud: "Stenderis", spec_bunn: "Bottom svill", spec_topp: "Top svill", spec_sarama: "Sąrama", spec_found: "Pamato svill",
+    tab_layout: "Stenderių išdėstymas", tab_height: "Stenderio aukštis", tab_sarama: "Angos skaičiavimas", tab_openmarks: "Langų/durų žymos",
+    sec_proj: "Projekto informacija", lbl_proj_name: "Sienos pavadinimas", lbl_date: "Data", lbl_notes: "Pastabos",
+    sec_params: "Sienos parametrai", lbl_wlen: "Sienos ilgis (mm)", lbl_pitch: "Stenderių žingsnis OC (mm)", lbl_thick: "Stenderio storis (mm)", lbl_mingap: "Min. tarpas (mm)",
+    lbl_left: "Kairysis galas", lbl_right: "Dešinysis galas", opt_out: "Išorinis", opt_in: "Vidinis", opt_free: "Laisvas", lbl_adj: "Gretimos sienos storis",
+    sec_op: "Langai ir durys", lbl_add_op: "Pridėti langus / duris", btn_win: "+ Langas", btn_door: "+ Durys",
+    btn_calc: "Skaičiuoti", btn_reset: "Valyti", sec_res: "Rezultatai", sec_adj: "Tikslus koregavimas",
+    lbl_fgap: "Pirmasis tarpas", lbl_lgap: "Paskutinis tarpas", btn_reset_gap: "Atstatyti", lbl_mark: "Žymėjimas:", opt_mark_l: "Kairys", opt_mark_r: "Dešinys", opt_mark_c: "Centras",
+    th_l: "Kairysis", th_c: "Centras", th_r: "Dešinysis", th_gap: "Tarpas po", th_type: "Tipas",
+    sec_h: "Stenderio aukštis", h_info: "1x 48mm pamato svill, 1x 48mm bunnsvill, 2x 48mm topsvill.", lbl_htot: "Bendras aukštis H (mm)",
+    lbl_bunn: "Bunnsvill", btn_add_bunn: "+ Bunnsvill", lbl_topp: "Topsvill", btn_add_topp: "+ Topsvill", lbl_cut: "Pjovimo ilgis",
+    sec_sarama: "Angos skaičiavimas", lbl_sar_w: "Angos plotis (mm)", lbl_sar_h: "Stenderio aukštis (mm)", lbl_sar_bh: "Palangės aukštis Bh. (mm)", lbl_sar_win: "Lango aukštis (mm)", lbl_cut_list: "Pjovimo sąrašas",
+    sec_om_ref: "Atskaitinė žyma", lbl_om_fm: "Žyma (mm)", lbl_om_ff: "Grindys (mm)", lbl_om_gb: "Laisvumas apa (mm)", lbl_om_gt: "Laisvumas vir (mm)", lbl_om_gs: "Laisvumas šon (mm)",
+    th_name: "Pavadinimas", th_size: "PxA (mm)", th_wall: "Anga", th_bh: "Bh", th_bot: "Apatinė žyma", th_top: "Viršutinė žyma",
+    type_corner_out: "Kampas (Išorinis)", type_corner_in: "Kampas (Vidinis)", type_stud_start: "Stenderis (Pradžia)", type_stud_end: "Stenderis (Pabaiga)", type_stud: "Stenderis", type_stud_adj: "Stenderis (Reguliuotas)",
+    type_king_l: "King k.", type_king_r: "King d.", type_trim_l: "Trim k.", type_trim_r: "Trim d.",
+    btn_export: "Eksportuoti JSON", btn_import: "Importuoti JSON",
+    msg_warn_gap: "Mažas tarpas ({0}mm) po stenderio #{1}", lbl_studs_cnt: "Stenderių vnt.", lbl_total_parts: "Viso detalių",
+    lbl_layer: "Sluoksnis", msg_sarama_kant: "Sąrama ant kanto", msg_sarama_sill: "Sąramos gulsčias svill",
+    msg_cripple: "Virš sąramos lieka", msg_win_sill: "Lango apatinis svill", msg_bot_cripple: "Apatinis stenderiukas", msg_mark_above: "Žyma VIRŠ grindų", msg_mark_below: "Žyma ŽEMIAU grindų",
+    msg_abs_mark: "Abs. žyma", pcs: "vnt", lbl_prod_w: "Gaminio plotis (mm)", lbl_prod_h: "Gaminio aukštis (mm)", lbl_prod_bh: "Gaminio Bh (mm)", lbl_gap_side: "Tarpas šonuose (mm)", lbl_gap_top: "Tarpas viršuje (mm)", lbl_gap_bot: "Tarpas apačioje (mm)", lbl_ro_w: "Rėmo plotis", lbl_ro_h: "Rėmo aukštis", lbl_sar_type: "Tipas", opt_win: "Langas", opt_door: "Durys", lbl_sar_place: "Sąramos pozicija", opt_win_top: "Virš lango/durų", opt_top_sill: "Prie top svill", msg_win_top_sill: "Lango viršutinis svill", msg_top_cripple_under: "Tarpiniai stend. po sąrama", msg_top_cripple_above: "Tarpiniai stend. virš sąramos", msg_king: "King stenderiai", msg_trim: "Trim stenderiai", lbl_print_title: "Ką spausdinti?", btn_cancel: "Atšaukti", btn_print: "Spausdinti", lbl_op_pos: "Pozicija (X)", lbl_op_w: "Plotis W (mm)", lbl_sar_name: "Pavadinimas", lbl_op_h: "Aukštis H (mm)"
+  },
+  en: {
+    header_title: "Wall Framing <span>2x8</span>",
+    spec_stud: "Stud", spec_bunn: "Bottom sill", spec_topp: "Top sill", spec_sarama: "Header", spec_found: "Foundation sill",
+    tab_layout: "Stud Layout", tab_height: "Stud Height", tab_sarama: "Opening Calc", tab_openmarks: "Opening Marks",
+    sec_proj: "Project Info", lbl_proj_name: "Wall Name", lbl_date: "Date", lbl_notes: "Notes",
+    sec_params: "Wall Parameters", lbl_wlen: "Wall Length (mm)", lbl_pitch: "Stud Pitch OC (mm)", lbl_thick: "Stud Thickness (mm)", lbl_mingap: "Min. Gap (mm)",
+    lbl_left: "Left End", lbl_right: "Right End", opt_out: "Outer", opt_in: "Inner", opt_free: "Free", lbl_adj: "Adj. Wall Thickness",
+    sec_op: "Openings (Win/Door)", lbl_add_op: "Add Windows/Doors", btn_win: "+ Window", btn_door: "+ Door",
+    btn_calc: "Calculate", btn_reset: "Reset", sec_res: "Results", sec_adj: "Precise Adjustment",
+    lbl_fgap: "First Gap", lbl_lgap: "Last Gap", btn_reset_gap: "Reset", lbl_mark: "Marking Line:", opt_mark_l: "Left", opt_mark_r: "Right", opt_mark_c: "Center",
+    th_l: "Left Edge", th_c: "Center", th_r: "Right Edge", th_gap: "Gap After", th_type: "Type",
+    sec_h: "Stud Height", h_info: "1x 48mm foundation sill, 1x 48mm bottom sill, 2x 48mm top sills.", lbl_htot: "Total Height H (mm)",
+    lbl_bunn: "Bottom Sill", btn_add_bunn: "+ Bottom Sill", lbl_topp: "Top Sill", btn_add_topp: "+ Top Sill", lbl_cut: "Cutting Length",
+    sec_sarama: "Opening Calculation", lbl_sar_w: "Opening Width (mm)", lbl_sar_h: "Stud Height (mm)", lbl_sar_bh: "Sill Height Bh. (mm)", lbl_sar_win: "Window Height (mm)", lbl_cut_list: "Cut List",
+    sec_om_ref: "Reference Mark", lbl_om_fm: "Floor Mark (mm)", lbl_om_ff: "Finished Floor (mm)", lbl_om_gb: "Gap Bottom (mm)", lbl_om_gt: "Gap Top (mm)", lbl_om_gs: "Gap Side (mm)",
+    th_name: "Name", th_size: "WxH (mm)", th_wall: "Wall Opening", th_bh: "Bh", th_bot: "Bottom Mark", th_top: "Top Mark",
+    type_corner_out: "Corner (Outer)", type_corner_in: "Corner (Inner)", type_stud_start: "Stud (Start)", type_stud_end: "Stud (End)", type_stud: "Stud", type_stud_adj: "Stud (Adjusted)",
+    type_king_l: "King L", type_king_r: "King R", type_trim_l: "Trim L", type_trim_r: "Trim R",
+    btn_export: "Export JSON", btn_import: "Import JSON",
+    msg_warn_gap: "Small gap ({0}mm) after stud #{1}", lbl_studs_cnt: "Studs count", lbl_total_parts: "Total parts",
+    lbl_layer: "Layer", msg_sarama_kant: "Header on edge", msg_sarama_sill: "Header top sill",
+    msg_cripple: "Cripple top remains", msg_win_sill: "Window bottom sill", msg_bot_cripple: "Bottom cripple", msg_mark_above: "Mark ABOVE floor", msg_mark_below: "Mark BELOW floor",
+    msg_abs_mark: "Abs. mark", pcs: "pcs", lbl_prod_w: "Product Width (mm)", lbl_prod_h: "Product Height (mm)", lbl_prod_bh: "Product Bh (mm)", lbl_gap_side: "Side gaps (mm)", lbl_gap_top: "Top gap (mm)", lbl_gap_bot: "Bottom gap (mm)", lbl_ro_w: "Rough Opening W", lbl_ro_h: "Rough Opening H", lbl_sar_type: "Type", opt_win: "Window", opt_door: "Door", lbl_sar_place: "Header Placement", opt_win_top: "At Window/Door Top", opt_top_sill: "At Top Sill", msg_win_top_sill: "Window/door top sill", msg_top_cripple_under: "Cripples under header", msg_top_cripple_above: "Cripples above header", msg_king: "King studs", msg_trim: "Trim studs", lbl_print_title: "What to print?", btn_cancel: "Cancel", btn_print: "Print", lbl_op_pos: "Position (X)", lbl_op_w: "Width W (mm)", lbl_sar_name: "Name", lbl_op_h: "Height H (mm)"
+  },
+  no: {
+    header_title: "Veggramme <span>2x8</span>",
+    spec_stud: "Stender", spec_bunn: "Bunnsvill", spec_topp: "Topsvill", spec_sarama: "Bærebjelke", spec_found: "Grunnsvill",
+    tab_layout: "Stenderoppsett", tab_height: "Stenderhøyde", tab_sarama: "Åpningsberegning", tab_openmarks: "Åpningsmerker",
+    sec_proj: "Prosjektinfo", lbl_proj_name: "Veggnavn", lbl_date: "Dato", lbl_notes: "Notater",
+    sec_params: "Veggparametere", lbl_wlen: "Vegglengde (mm)", lbl_pitch: "Stenderavstand (mm)", lbl_thick: "Stendertykkelse (mm)", lbl_mingap: "Min. avstand (mm)",
+    lbl_left: "Venstre Ende", lbl_right: "Høyre Ende", opt_out: "Ytre", opt_in: "Indre", opt_free: "Fri", lbl_adj: "Tilstøtende tykkelse",
+    sec_op: "Vindu/Dør", lbl_add_op: "Legg til vinduer/dører", btn_win: "+ Vindu", btn_door: "+ Dør",
+    btn_calc: "Beregn", btn_reset: "Nullstill", sec_res: "Resultater", sec_adj: "Nøyaktig Justering",
+    lbl_fgap: "Første gap", lbl_lgap: "Siste gap", btn_reset_gap: "Nullstill", lbl_mark: "Markeringslinje:", opt_mark_l: "Venstre", opt_mark_r: "Høyre", opt_mark_c: "Senter",
+    th_l: "Venstre kant", th_c: "Senter", th_r: "Høyre kant", th_gap: "Gap etter", th_type: "Type",
+    sec_h: "Stenderhøyde", h_info: "1x 48mm grunnsvill, 1x 48mm bunnsvill, 2x 48mm topsvill.", lbl_htot: "Totalhøyde H (mm)",
+    lbl_bunn: "Bunnsvill", btn_add_bunn: "+ Bunnsvill", lbl_topp: "Topsvill", btn_add_topp: "+ Topsvill", lbl_cut: "Kappelengde",
+    sec_sarama: "Åpningsberegning", lbl_sar_w: "Åpningsbredde (mm)", lbl_sar_h: "Stenderhøyde (mm)", lbl_sar_bh: "Brystning Bh. (mm)", lbl_sar_win: "Vindushøyde (mm)", lbl_cut_list: "Kappeliste",
+    sec_om_ref: "Referansemerke", lbl_om_fm: "Høydemerke (mm)", lbl_om_ff: "Ferdig gulv (mm)", lbl_om_gb: "Klaring bunn (mm)", lbl_om_gt: "Klaring topp (mm)", lbl_om_gs: "Klaring side (mm)",
+    th_name: "Navn", th_size: "BxH (mm)", th_wall: "Åpning", th_bh: "Bh", th_bot: "Bunn-merke", th_top: "Topp-merke",
+    type_corner_out: "Hjørne (Ytre)", type_corner_in: "Hjørne (Indre)", type_stud_start: "Stender (Start)", type_stud_end: "Stender (Slutt)", type_stud: "Stender", type_stud_adj: "Stender (Justert)",
+    type_king_l: "King V", type_king_r: "King H", type_trim_l: "Trim V", type_trim_r: "Trim H",
+    btn_export: "Eksporter JSON", btn_import: "Importer JSON",
+    msg_warn_gap: "Lite gap ({0}mm) etter stender #{1}", lbl_studs_cnt: "Antall stendere", lbl_total_parts: "Totalt deler",
+    lbl_layer: "Lag", msg_sarama_kant: "Bærebjelke på høykant", msg_sarama_sill: "Bærebjelke toppsvill",
+    msg_cripple: "Over bærebjelke gjenstår", msg_win_sill: "Vindu bunnsvill", msg_bot_cripple: "Bunnkrippel", msg_mark_above: "Merke OVER gulv", msg_mark_below: "Merke UNDER gulv",
+    msg_abs_mark: "Abs. merke", pcs: "stk", lbl_prod_w: "Produktbredde (mm)", lbl_prod_h: "Produkthøyde (mm)", lbl_prod_bh: "Produkt Bh (mm)", lbl_gap_side: "Sideklaring (mm)", lbl_gap_top: "Toppklaring (mm)", lbl_gap_bot: "Bunnklaring (mm)", lbl_ro_w: "Utsparingsbredde", lbl_ro_h: "Utsparingshøyde", lbl_sar_type: "Type", opt_win: "Vindu", opt_door: "Dør", lbl_sar_place: "Bærebjelke plassering", opt_win_top: "Ved vindu/dør topp", opt_top_sill: "Ved toppsvill", msg_win_top_sill: "Vindu/dør toppsvill", msg_top_cripple_under: "Kripler under bærebjelke", msg_top_cripple_above: "Kripler over bærebjelke", msg_king: "King-stendere", msg_trim: "Trim-stendere", lbl_print_title: "Hva skal skrives ut?", btn_cancel: "Avbryt", btn_print: "Skriv ut", lbl_op_pos: "Posisjon (X)", lbl_op_w: "Bredde W (mm)", lbl_sar_name: "Navn", lbl_op_h: "Høyde H (mm)"
+  },
+  pl: {
+    header_title: "Szkielet Ściany <span>2x8</span>",
+    spec_stud: "Słupek", spec_bunn: "Oczep dolny", spec_topp: "Oczep górny", spec_sarama: "Nadproże", spec_found: "Oczep fundam.",
+    tab_layout: "Układ słupków", tab_height: "Wysokość słupka", tab_sarama: "Oblicz. otworu", tab_openmarks: "Znaki otworów",
+    sec_proj: "Informacje o projekcie", lbl_proj_name: "Nazwa ściany", lbl_date: "Data", lbl_notes: "Uwagi",
+    sec_params: "Parametry ściany", lbl_wlen: "Długość ściany (mm)", lbl_pitch: "Rozstaw słupków OC (mm)", lbl_thick: "Grubość słupka (mm)", lbl_mingap: "Min. szczelina (mm)",
+    lbl_left: "Lewy koniec", lbl_right: "Prawy koniec", opt_out: "Zewnętrzny", opt_in: "Wewnętrzny", opt_free: "Wolny", lbl_adj: "Grubość ściany przyległej",
+    sec_op: "Otwory (okna/drzwi)", lbl_add_op: "Dodaj okna / drzwi", btn_win: "+ Okno", btn_door: "+ Drzwi",
+    btn_calc: "Oblicz", btn_reset: "Resetuj", sec_res: "Wyniki", sec_adj: "Precyzyjna regulacja",
+    lbl_fgap: "Pierwsza szczelina", lbl_lgap: "Ostatnia szczelina", btn_reset_gap: "Zresetuj", lbl_mark: "Linia znacznikowa:", opt_mark_l: "Lewa", opt_mark_r: "Prawa", opt_mark_c: "Środek",
+    th_l: "Lewa krawędź", th_c: "Środek", th_r: "Prawa krawędź", th_gap: "Szczelina po", th_type: "Typ",
+    sec_h: "Wysokość słupka", h_info: "1x 48mm oczep fundamentowy, 1x 48mm oczep dolny, 2x 48mm oczep górny.", lbl_htot: "Wysokość całkowita H (mm)",
+    lbl_bunn: "Oczep dolny", btn_add_bunn: "+ Oczep dolny", lbl_topp: "Oczep górny", btn_add_topp: "+ Oczep górny", lbl_cut: "Długość cięcia",
+    sec_sarama: "Obliczanie otworu", lbl_sar_w: "Szerokość otworu (mm)", lbl_sar_h: "Wysokość słupka (mm)", lbl_sar_bh: "Wys. parapetu Bh. (mm)", lbl_sar_win: "Wys. okna (mm)", lbl_cut_list: "Lista cięć",
+    sec_om_ref: "Znak referencyjny", lbl_om_fm: "Znak na podłodze (mm)", lbl_om_ff: "Gotowa podłoga (mm)", lbl_om_gb: "Luz dolny (mm)", lbl_om_gt: "Luz górny (mm)", lbl_om_gs: "Luz boczny (mm)",
+    th_name: "Nazwa", th_size: "SxW (mm)", th_wall: "Otwór w ścianie", th_bh: "Bh", th_bot: "Znak dolny", th_top: "Znak górny",
+    type_corner_out: "Narożnik (Zewn.)", type_corner_in: "Narożnik (Wewn.)", type_stud_start: "Słupek (Start)", type_stud_end: "Słupek (Koniec)", type_stud: "Słupek", type_stud_adj: "Słupek (Dostosowany)",
+    type_king_l: "King L", type_king_r: "King P", type_trim_l: "Trim L", type_trim_r: "Trim P",
+    btn_export: "Eksportuj JSON", btn_import: "Importuj JSON",
+    msg_warn_gap: "Mała szczelina ({0}mm) po słupku #{1}", lbl_studs_cnt: "Ilość słupków", lbl_total_parts: "Łącznie części",
+    lbl_layer: "Warstwa", msg_sarama_kant: "Nadproże na kancie", msg_sarama_sill: "Nadproże płaskie",
+    msg_cripple: "Pozostaje nad nadprożem", msg_win_sill: "Oczep podokienny", msg_bot_cripple: "Dolny słupek", msg_mark_above: "Znak POWYŻEJ podłogi", msg_mark_below: "Znak PONIŻEJ podłogi",
+    msg_abs_mark: "Znak abs.", pcs: "szt", lbl_prod_w: "Szer. produktu (mm)", lbl_prod_h: "Wys. produktu (mm)", lbl_prod_bh: "Bh produktu (mm)", lbl_gap_side: "Luz boczny (mm)", lbl_gap_top: "Luz górny (mm)", lbl_gap_bot: "Luz dolny (mm)", lbl_ro_w: "Szer. otworu", lbl_ro_h: "Wys. otworu", lbl_sar_type: "Typ", opt_win: "Okno", opt_door: "Drzwi", lbl_sar_place: "Pozycja nadproża", opt_win_top: "Nad oknem/drzwiami", opt_top_sill: "Przy górnym oczepie", msg_win_top_sill: "Górny oczep okna/drzwi", msg_top_cripple_under: "Słupki pod nadprożem", msg_top_cripple_above: "Słupki nad nadprożem", msg_king: "Słupki King", msg_trim: "Słupki Trim", lbl_print_title: "Co wydrukować?", btn_cancel: "Anuluj", btn_print: "Drukuj", lbl_op_pos: "Pozycja (X)", lbl_op_w: "Szer. W (mm)", lbl_sar_name: "Nazwa", lbl_op_h: "Wys. H (mm)"
+  }
+};
+let currentLang = localStorage.getItem('husc_lang') || 'no';
+function setLang(l){
+  currentLang = l;
+  localStorage.setItem('husc_lang', l);
+  applyLang();
+  if(document.getElementById('wall_length').value) calculate();
+}
+function applyLang(){
+  const d = T[currentLang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    if(d[el.dataset.i18n]) el.innerHTML = d[el.dataset.i18n];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === currentLang);
+  });
+}
+
+// ==================== STATE MANAGEMENT ====================
+let currentState = {
+  proj_name:"",proj_date:"",proj_notes:"",
+  wall_length:6000,stud_pitch:600,stud_thick:48,min_gap:100,
+  left_type:"outer",left_adj_thick:198,right_type:"free",right_adj_thick:198,
+  openings_enabled:false,openings:[],mark_side:"left",
+  h_total:2748,bunn_layers:[48],topp_layers:[48,48],
+  sar_name:"",sar_type:"window",sar_placement:"win_top",sar_opening_w:1200,sar_stud_h:2454,sar_bh:800,sar_win_h:1200,sar_gap_side:10,sar_gap_top:15,sar_gap_bot:15,
+  om_floor_mark:17000,om_finished_floor:15620,om_gap_bot:15,om_gap_top:15,om_gap_side:10,om_items:[]
+};
+const STORAGE_KEY = 'probuilder_husc_state';
+function exportJSON(){
+  saveState();
+  let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentState, null, 2));
+  let dlAnchorElem = document.createElement('a');
+  dlAnchorElem.setAttribute("href", dataStr);
+  let fileName = currentState.proj_name ? currentState.proj_name : "Hus-C_siena";
+  dlAnchorElem.setAttribute("download", fileName + "_eksportas.json");
+  document.body.appendChild(dlAnchorElem);
+  dlAnchorElem.click();
+  dlAnchorElem.remove();
+}
+
+function importJSON(e){
+  let file = e.target.files[0];
+  if(!file) return;
+  let reader = new FileReader();
+  reader.onload = function(evt){
+    try {
+      let parsed = JSON.parse(evt.target.result);
+      currentState = {...currentState, ...parsed};
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+      alert('Duomenys sėkmingai importuoti / Data imported successfully');
+      location.reload();
+    } catch(err) {
+      alert('Klaida skaitant failą / Error reading file');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function saveState(){
+  currentState.proj_name = document.getElementById('proj_name').value;
+  currentState.proj_date = document.getElementById('proj_date').value;
+  currentState.proj_notes = document.getElementById('proj_notes').value;
+  currentState.wall_length = parseInt(document.getElementById('wall_length').value)||0;
+  currentState.stud_pitch = parseInt(document.getElementById('stud_pitch').value)||600;
+  currentState.stud_thick = parseInt(document.getElementById('stud_thick').value)||48;
+  currentState.min_gap = parseInt(document.getElementById('min_gap').value)||100;
+  currentState.left_type = document.querySelector('input[name="left_type"]:checked').value;
+  currentState.left_adj_thick = parseInt(document.getElementById('left_adj_thick').value)||0;
+  currentState.right_type = document.querySelector('input[name="right_type"]:checked').value;
+  currentState.right_adj_thick = parseInt(document.getElementById('right_adj_thick').value)||0;
+  currentState.openings_enabled = document.getElementById('openings_enabled').checked;
+  currentState.mark_side = document.querySelector('input[name="mark_side"]:checked').value;
+  currentState.h_total = parseInt(document.getElementById('h_total').value)||0;
+  currentState.sar_name = document.getElementById('sar_name').value || '';
+  currentState.sar_type = document.getElementById('sar_type').value || 'window';
+  currentState.sar_placement = document.getElementById('sar_placement').value || 'win_top';
+  currentState.sar_opening_w = parseInt(document.getElementById('sar_opening_w').value)||0;
+  currentState.sar_stud_h = parseInt(document.getElementById('sar_stud_h').value)||0;
+  currentState.sar_bh = parseInt(document.getElementById('sar_bh').value)||0;
+  currentState.sar_win_h = parseInt(document.getElementById('sar_win_h').value)||0;
+  currentState.sar_gap_side = parseInt(document.getElementById('sar_gap_side').value)||0;
+  currentState.sar_gap_top = parseInt(document.getElementById('sar_gap_top').value)||0;
+  currentState.sar_gap_bot = parseInt(document.getElementById('sar_gap_bot').value)||0;
+  currentState.om_floor_mark = parseInt(document.getElementById('om_floor_mark').value)||0;
+  currentState.om_finished_floor = parseInt(document.getElementById('om_finished_floor').value)||0;
+  currentState.om_gap_bot = parseInt(document.getElementById('om_gap_bot').value)||0;
+  currentState.om_gap_top = parseInt(document.getElementById('om_gap_top').value)||0;
+  currentState.om_gap_side = parseInt(document.getElementById('om_gap_side').value)||0;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+}
+
+function loadState(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      currentState = {...currentState, ...parsed};
+    }
+  }catch(e){}
+  
+  document.getElementById('proj_name').value = currentState.proj_name||"";
+  document.getElementById('proj_date').value = currentState.proj_date||"";
+  document.getElementById('proj_notes').value = currentState.proj_notes||"";
+  document.getElementById('wall_length').value = currentState.wall_length||6000;
+  document.getElementById('stud_pitch').value = currentState.stud_pitch||600;
+  document.getElementById('stud_thick').value = currentState.stud_thick||48;
+  document.getElementById('min_gap').value = currentState.min_gap||100;
+  document.querySelector(`input[name="left_type"][value="${currentState.left_type}"]`).checked=true;
+  document.getElementById('left_adj_thick').value = currentState.left_adj_thick||198;
+  document.querySelector(`input[name="right_type"][value="${currentState.right_type}"]`).checked=true;
+  document.getElementById('right_adj_thick').value = currentState.right_adj_thick||198;
+  document.getElementById('openings_enabled').checked = currentState.openings_enabled;
+  document.querySelector(`input[name="mark_side"][value="${currentState.mark_side||'left'}"]`).checked=true;
+  document.getElementById('h_total').value = currentState.h_total||2748;
+  document.getElementById('sar_opening_w').value = currentState.sar_opening_w||1200;
+  document.getElementById('sar_stud_h').value = currentState.sar_stud_h||2454;
+  document.getElementById('sar_bh').value = currentState.sar_bh||800;
+  document.getElementById('sar_win_h').value = currentState.sar_win_h||1200;
+  document.getElementById('om_floor_mark').value = currentState.om_floor_mark||17000;
+  document.getElementById('om_finished_floor').value = currentState.om_finished_floor||15620;
+  document.getElementById('om_gap_bot').value = currentState.om_gap_bot||15;
+  document.getElementById('om_gap_top').value = currentState.om_gap_top||15;
+  document.getElementById('om_gap_side').value = currentState.om_gap_side||10;
+  
+  onEndChange();
+  onOpeningsToggle();
+  renderOpenings();
+  renderSvill();
+  renderOmItems();
+  
+  if(currentState.proj_name || currentState.wall_length){
+    calculate(); calcHeight(); calcSarama(); calcOpenMarks();
+  }
+}
+
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='tab-layout') redrawRuler();
+  if(id==='tab-sarama') calcSarama();
+  if(id==='tab-openmarks') calcOpenMarks();
+}
+
+function onEndChange(){
+  const l = document.querySelector('input[name="left_type"]:checked').value;
+  const r = document.querySelector('input[name="right_type"]:checked').value;
+  document.getElementById('left_adj_wrap').style.display = l!=='free'?'block':'none';
+  document.getElementById('right_adj_wrap').style.display = r!=='free'?'block':'none';
+}
+
+function onOpeningsToggle(){
+  document.getElementById('openings_wrap').style.display = document.getElementById('openings_enabled').checked?'block':'none';
+}
+
+let lastResult = [];
+let manualFirstGap = null;
+let manualLastGap = null;
+
+function applyGapAdjust(){
+  const fv = parseInt(document.getElementById('first_gap_input').value);
+  const lv = parseInt(document.getElementById('last_gap_input').value);
+  manualFirstGap = !isNaN(fv) && fv>=0 ? fv : null;
+  manualLastGap = !isNaN(lv) && lv>=0 ? lv : null;
+  calculate();
+}
+function resetGapAdjust(){
+  manualFirstGap = null; manualLastGap = null;
+  document.getElementById('first_gap_input').value = "";
+  document.getElementById('last_gap_input').value = "";
+  calculate();
+}
+
+function calculate(){
+  saveState();
+  const d = T[currentLang];
+  const W = currentState.wall_length, P = currentState.stud_pitch, TH = currentState.stud_thick, MIN_GAP = currentState.min_gap;
+  if(W<100) return;
+  
+  let leftStart = 0;
+  if(currentState.left_type==='inner') leftStart = currentState.left_adj_thick;
+  
+  let rightEnd = W;
+  if(currentState.right_type==='inner') rightEnd = W - currentState.right_adj_thick;
+  
+  let firstGap = leftStart;
+  if(manualFirstGap !== null) firstGap = leftStart + manualFirstGap;
+  
+  let studs = [];
+  if(currentState.left_type==='outer'){
+    studs.push({id:"L_OUT", lx:0, cx:TH/2, rx:TH, type:d.type_corner_out});
+  } else if(currentState.left_type==='inner'){
+    studs.push({id:"L_IN", lx:0, cx:currentState.left_adj_thick/2, rx:currentState.left_adj_thick, type:d.type_corner_in});
+    studs.push({id:"L_STUD", lx:currentState.left_adj_thick, cx:currentState.left_adj_thick+TH/2, rx:currentState.left_adj_thick+TH, type:d.type_stud});
+  } else {
+    studs.push({id:"L_START", lx:0, cx:TH/2, rx:TH, type:d.type_stud_start});
+  }
+  
+  let currCx = (manualFirstGap!==null) ? (studs[studs.length-1].rx + manualFirstGap + TH/2) : P;
+  
+  let maxPos = W;
+  if(currentState.right_type==='inner') maxPos = W - currentState.right_adj_thick - TH;
+  else maxPos = W - TH;
+  if(manualLastGap !== null) maxPos = W - (currentState.right_type==='inner'?currentState.right_adj_thick:0) - TH - manualLastGap;
+
+  let safeLimit = 1000;
+  while(currCx <= maxPos + TH/2 && safeLimit-->0){
+    let lx = currCx - TH/2;
+    let overlap = false;
+    for(let s of studs) if(Math.abs(s.cx - currCx) < TH) overlap = true;
+    if(!overlap && lx > studs[studs.length-1].rx){
+      studs.push({id:`S_${Math.round(currCx)}`, lx:lx, cx:currCx, rx:lx+TH, type:d.type_stud});
+    }
+    currCx += P;
+  }
+  
+  let rightEndStuds = [];
+  let rBase = (currentState.right_type==='inner') ? (W - currentState.right_adj_thick) : W;
+  let lastStud = studs[studs.length-1];
+  
+  if(manualLastGap !== null){
+    let finalLx = rBase - TH - manualLastGap;
+    if(finalLx > lastStud.rx){
+      rightEndStuds.push({id:"R_ADJ", lx:finalLx, cx:finalLx+TH/2, rx:finalLx+TH, type:d.type_stud_adj});
+    }
+  }
+
+  if(currentState.right_type==='outer'){
+    rightEndStuds.push({id:"R_OUT", lx:W-TH, cx:W-TH/2, rx:W, type:d.type_corner_out});
+  } else if(currentState.right_type==='inner'){
+    rightEndStuds.push({id:"R_STUD", lx:rBase-TH, cx:rBase-TH/2, rx:rBase, type:d.type_stud});
+    rightEndStuds.push({id:"R_IN", lx:rBase, cx:rBase+currentState.right_adj_thick/2, rx:W, type:d.type_corner_in});
+  } else {
+    rightEndStuds.push({id:"R_END", lx:W-TH, cx:W-TH/2, rx:W, type:d.type_stud_end});
+  }
+  
+  if(rightEndStuds.length > 0){
+    let rfirst = rightEndStuds[0];
+    if(rfirst.lx - lastStud.rx < MIN_GAP && rfirst.lx >= lastStud.rx) studs.pop();
+    else if(lastStud.rx > rfirst.lx) studs.pop();
+    studs = studs.concat(rightEndStuds);
+  }
+
+  if(currentState.openings_enabled && currentState.openings.length>0) {
+    studs = applyOpenings(studs, TH, MIN_GAP, W);
+  }
+  
+  studs.sort((a,b)=>a.lx - b.lx);
+  
+  if(studs.length>1){
+    document.getElementById('first_gap_hint').innerText = (studs[1].lx - studs[0].rx).toFixed(1)+" mm";
+    let l_idx = studs.length-1;
+    while(l_idx>0 && (studs[l_idx].type.includes('Vidinis')||studs[l_idx].type.includes('Inner')||studs[l_idx].type.includes('Indre')||studs[l_idx].type.includes('Pabaiga')||studs[l_idx].type.includes('End')||studs[l_idx].type.includes('Isorinis')||studs[l_idx].type.includes('Outer')||studs[l_idx].type.includes('Ytre'))) l_idx--;
+    if(l_idx>=0 && studs.length-1 > l_idx) {
+      document.getElementById('last_gap_hint').innerText = (studs[studs.length-1].lx - studs[l_idx].rx).toFixed(1)+" mm";
+    }
+  }
+  
+  lastResult = studs;
+  renderLayoutResults();
+}
+function applyOpenings(arr, T_th, MIN_GAP, W){
+  const d = T[currentLang];
+  let out = [...arr];
+  let toRemove = [];
+  let toAdd = [];
+  
+  currentState.openings.forEach((op, idx) => {
+    const start = op.pos;
+    const end = op.pos + op.width;
+    if(start<0 || end>W) return;
+    
+    let trimL_rx = start; let trimL_lx = start - T_th;
+    let kingL_rx = start - T_th; let kingL_lx = start - 2 * T_th;
+    let trimR_lx = end; let trimR_rx = end + T_th;
+    let kingR_lx = end + T_th; let kingR_rx = end + 2 * T_th;
+    
+    out.forEach(s => {
+      if(s.type.includes("Kampas") || s.type.includes("Pradzia") || s.type.includes("Pabaiga") || s.type.includes("Corner") || s.type.includes("Hjørne") || s.type.includes("Start") || s.type.includes("End")) return;
+      if(s.type.includes("King") || s.type.includes("Trim")) return;
+      if(s.rx > kingL_lx - MIN_GAP && s.lx < kingR_rx + MIN_GAP) toRemove.push(s.id);
+    });
+    
+    toAdd.push({id:`K_L_${idx}`, lx:kingL_lx, cx:kingL_lx+T_th/2, rx:kingL_rx, type:`${d.type_king_l} (${idx+1})`});
+    toAdd.push({id:`T_L_${idx}`, lx:trimL_lx, cx:trimL_lx+T_th/2, rx:trimL_rx, type:`${d.type_trim_l} (${idx+1})`});
+    toAdd.push({id:`T_R_${idx}`, lx:trimR_lx, cx:trimR_lx+T_th/2, rx:trimR_rx, type:`${d.type_trim_r} (${idx+1})`});
+    toAdd.push({id:`K_R_${idx}`, lx:kingR_lx, cx:kingR_lx+T_th/2, rx:kingR_rx, type:`${d.type_king_r} (${idx+1})`});
+  });
+  
+  out = out.filter(s => !toRemove.includes(s.id));
+  out = out.concat(toAdd);
+  return out;
+}
+
+function renderLayoutResults(){
+  const d = T[currentLang];
+  document.getElementById('results_card').style.display = 'block';
+  const grid = document.getElementById('result_grid');
+  const tbody = document.getElementById('stud_tbody');
+  grid.innerHTML = ""; tbody.innerHTML = "";
+  
+  let totalStuds = 0; let warns = [];
+  lastResult.forEach((s, i) => {
+    let gapAfter = (i < lastResult.length-1) ? (lastResult[i+1].lx - s.rx) : 0;
+    if(i < lastResult.length-1 && gapAfter < currentState.min_gap && gapAfter > 0.1){
+      warns.push(d.msg_warn_gap.replace("{0}", gapAfter.toFixed(1)).replace("{1}", i+1));
+    }
+    
+    let isKing = s.type.includes('King') || s.type.includes('Trim');
+    let isCorner = s.type.includes('Kampas') || s.type.includes('Corner') || s.type.includes('Hjørne');
+    
+    if(!isCorner && !s.type.includes('Vidinis') && !s.type.includes('Inner') && !s.type.includes('Indre')) totalStuds++; 
+    
+    let tr = document.createElement('tr');
+    if(isKing) tr.className = 'row-king';
+    if(isCorner) tr.className = 'row-corner';
+    
+    let c1 = `<td>${i+1}</td>`;
+    let c2 = `<td>${s.lx.toFixed(1)}</td>`;
+    let c3 = `<td>${s.cx.toFixed(1)}</td>`;
+    let c4 = `<td>${s.rx.toFixed(1)}</td>`;
+    let c5 = `<td>${(i<lastResult.length-1)?gapAfter.toFixed(1):'-'}</td>`;
+    let c6 = `<td>${s.type}</td>`;
+    tr.innerHTML = c1+c2+c3+c4+c5+c6;
+    tbody.appendChild(tr);
+  });
+  
+  grid.innerHTML += `<div class="res-box"><div class="val">${totalStuds}</div><div class="lbl">${d.lbl_studs_cnt}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${lastResult.length}</div><div class="lbl">${d.lbl_total_parts}</div></div>`;
+  
+  const wb = document.getElementById('warn_box');
+  if(warns.length>0){ wb.classList.add('visible'); document.getElementById('warn_text').innerHTML = warns.join('<br>'); }
+  else { wb.classList.remove('visible'); }
+  redrawRuler();
+}
+
+function redrawRuler(){
+  const cvs = document.getElementById('ruler_canvas');
+  if(!cvs || lastResult.length===0) return;
+  const ctx = cvs.getContext('2d');
+  const W = cvs.parentElement.clientWidth - 10;
+  cvs.width = W;
+  ctx.clearRect(0,0,W,cvs.height);
+  const wallW = currentState.wall_length;
+  if(wallW<=0) return;
+  
+  const scale = (W - 40) / wallW;
+  const pad = 20;
+  
+  ctx.beginPath(); ctx.moveTo(pad, 70); ctx.lineTo(pad + wallW*scale, 70);
+  ctx.lineWidth = 4; ctx.strokeStyle = '#3d8ef0'; ctx.stroke();
+  
+  ctx.font = '10px "Segoe UI"'; ctx.fillStyle = '#8892aa'; ctx.textAlign = 'center';
+  
+  lastResult.forEach((s,i) => {
+    let px = pad + s.lx * scale;
+    let pw = (s.rx - s.lx) * scale;
+    if(pw<1) pw=1;
+    
+    if(s.type.includes('King') || s.type.includes('Trim')){
+      ctx.fillStyle = 'rgba(123,61,240,0.5)';
+      ctx.fillRect(px, 30, pw, 80);
+    } else if(s.type.includes('Kampas') || s.type.includes('Corner') || s.type.includes('Hjørne')){
+      ctx.fillStyle = 'rgba(240,135,61,0.5)';
+      ctx.fillRect(px, 30, pw, 80);
+    } else {
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillRect(px, 30, pw, 80);
+    }
+    
+    let mx = 0, mval = 0;
+    if(currentState.mark_side==='left'){ mx = px; mval = s.lx; }
+    else if(currentState.mark_side==='right'){ mx = px + pw; mval = s.rx; }
+    else { mx = px + pw/2; mval = s.cx; }
+    
+    ctx.beginPath(); ctx.moveTo(mx, 20); ctx.lineTo(mx, 120);
+    ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    if(s.type.includes('King')) ctx.strokeStyle = 'rgba(123,61,240,0.8)';
+    ctx.stroke();
+    
+    ctx.fillStyle = '#e8edf5';
+    if(i%2===0) ctx.fillText(Math.round(mval), mx, 15);
+    else ctx.fillText(Math.round(mval), mx, 132);
+  });
+}
+
+function renderOpenings(){
+  const list = document.getElementById('openings_list');
+  list.innerHTML = "";
+  currentState.openings.forEach((op, i) => {
+    let div = document.createElement('div');
+    div.className = 'open-item';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:var(--text);text-transform:uppercase;display:flex;align-items:center;">${op.type==='window'?'&#129695;':'&#128682;'} 
+          <input type="text" value="${op.name||''}" placeholder="..." onchange="updOpening(${i},'name',this.value)" style="background:transparent;border:none;border-bottom:1px solid #555;color:inherit;font:inherit;outline:none;padding:2px 4px;width:120px;margin-left:8px;">
+        </div>
+        <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;min-height:0;" onclick="delOpening(${i})">&#10006;</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="field"><label data-i18n="lbl_op_pos">Pozicija (X)</label><input type="number" value="${op.pos}" oninput="updOpening(${i},'pos',this.value)"></div>
+        <div class="field"><label data-i18n="lbl_op_w">Plotis W (mm)</label><input type="number" value="${op.width}" oninput="updOpening(${i},'width',this.value)"></div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  applyLang();
+}
+function addOpening(type){ currentState.openings.push({type:type, pos:1000, width:1200}); renderOpenings(); calculate(); }
+function delOpening(idx){ currentState.openings.splice(idx, 1); renderOpenings(); calculate(); }
+function updOpening(idx, key, val){ currentState.openings[idx][key] = parseInt(val)||0; calculate(); }
+
+function renderSvill(){
+  ['bunn','topp'].forEach(t => {
+    const list = document.getElementById(t+'_list');
+    list.innerHTML = "";
+    currentState[t+'_layers'].forEach((val, i) => {
+      list.innerHTML += `
+        <div class="svill-row">
+          <div class="svill-color ${t}"></div>
+          <div style="flex:1;font-size:0.8rem;font-weight:600;">Nr${i+1}: ${val} mm</div>
+          <button class="btn btn-outline" style="padding:4px 8px;min-height:0;font-size:0.7rem;color:var(--red);border-color:transparent;" onclick="delSvill('${t}',${i})">&#10006;</button>
+        </div>
+      `;
+    });
+  });
+}
+function addSvill(type, th){ currentState[type+'_layers'].push(th); saveState(); renderSvill(); calcHeight(); }
+function delSvill(type, idx){ currentState[type+'_layers'].splice(idx,1); saveState(); renderSvill(); calcHeight(); }
+
+function calcHeight(){
+  saveState();
+  const H = currentState.h_total;
+  if(H<100) return;
+  let b_sum = currentState.bunn_layers.reduce((a,b)=>a+b, 0);
+  let t_sum = currentState.topp_layers.reduce((a,b)=>a+b, 0);
+  let stud_h = H - b_sum - t_sum;
+  
+  document.getElementById('height_result').style.display = 'block';
+  document.getElementById('height_val').innerText = stud_h;
+  if(stud_h<0) document.getElementById('height_val').classList.add('bad');
+  else document.getElementById('height_val').classList.remove('bad');
+  
+  document.getElementById('height_formula').innerText = `H = ${H} - ${b_sum} - ${t_sum} = ${stud_h} mm`;
+  document.getElementById('sar_stud_h').value = stud_h;
+  calcSarama();
+}
+
+function calcSarama(){
+  saveState();
+  const d = T[currentLang];
+  const type = currentState.sar_type;
+  const placement = currentState.sar_placement;
+  const H_stud = currentState.sar_stud_h;
+  
+  const prod_w = currentState.sar_opening_w;
+  const prod_h = currentState.sar_win_h;
+  const prod_bh = currentState.sar_bh;
+  
+  const gap_side = currentState.sar_gap_side;
+  const gap_top = currentState.sar_gap_top;
+  const gap_bot = currentState.sar_gap_bot;
+  
+  const fldBh = document.getElementById('fld_sar_bh');
+  const fldGapBot = document.getElementById('fld_sar_gap_bot');
+  if(fldBh && fldGapBot) {
+    if(type === 'door') {
+      fldBh.style.display = 'none';
+      fldGapBot.style.display = 'none';
+    } else {
+      fldBh.style.display = 'block';
+      fldGapBot.style.display = 'block';
+    }
+  }
+
+  if(prod_w<10 || H_stud<10) return;
+  
+  // Calculate structural rough opening
+  const w = prod_w + (gap_side * 2);
+  let wh, Bh;
+  
+  if (type === 'door') {
+    wh = prod_h + gap_top;
+    Bh = 0;
+  } else {
+    wh = prod_h + gap_top + gap_bot;
+    Bh = prod_bh - gap_bot;
+  }
+
+  const grid = document.getElementById('sarama_grid');
+  grid.innerHTML = "";
+  document.getElementById('sarama_result').style.display = 'block';
+  
+  const sarama_len = w + 2*48; 
+  const sarama_h_kant = 198;
+  const sarama_h_flat = 48; 
+  const sarama_h_total = sarama_h_kant + sarama_h_flat; 
+  
+  let trim_h = 0;
+  let cripple_top_h = 0;
+  let cripple_under_h = 0;
+  
+  if (placement === 'win_top') {
+    trim_h = Bh + wh; 
+    cripple_top_h = H_stud - (trim_h + sarama_h_total);
+    cripple_under_h = 0;
+  } else {
+    trim_h = H_stud - sarama_h_total;
+    cripple_top_h = 0;
+    cripple_under_h = trim_h - (Bh + wh) - 48; 
+  }
+  
+  grid.innerHTML += `<div class="res-box"><div class="val">${w}</div><div class="lbl">${d.lbl_ro_w}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${wh}</div><div class="lbl">${d.lbl_ro_h}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${H_stud}</div><div class="lbl">${d.msg_king}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${trim_h}</div><div class="lbl">${d.msg_trim}</div></div>`;
+  
+  let cutList = `2${d.pcs} x 48x198, L=<strong>${sarama_len}</strong> mm (${d.msg_sarama_kant})<br>` +
+                `1${d.pcs} x 48x198, L=<strong>${sarama_len}</strong> mm (${d.msg_sarama_sill})<br>` +
+                `2${d.pcs} x 48x198, L=<strong>${H_stud}</strong> mm (${d.msg_king})<br>` +
+                `2${d.pcs} x 48x198, L=<strong>${trim_h}</strong> mm (${d.msg_trim})`;
+                
+  if(cripple_top_h > 0) cutList += `<br>L=<strong>${cripple_top_h}</strong> mm (${d.msg_top_cripple_above})`;
+  
+  if(placement === 'top_sill' && cripple_under_h > 0) {
+    cutList += `<br><br>1${d.pcs} x 48x198, L=<strong>${w}</strong> mm (${d.msg_win_top_sill})`;
+    cutList += `<br>L=<strong>${cripple_under_h}</strong> mm (${d.msg_top_cripple_under})`;
+  }
+  
+  if(type === 'window' && Bh > 48) {
+    cutList += `<br><br>1${d.pcs} x 48x198, L=<strong>${w}</strong> mm (${d.msg_win_sill})`;
+    cutList += `<br>L=<strong>${Bh - 48}</strong> mm (${d.msg_bot_cripple})`;
+  }
+  
+  const cl = document.getElementById('sarama_cut_list');
+  cl.innerHTML = cutList;
+  
+  const clTitle = document.getElementById('sarama_cut_list_title');
+  if(currentState.sar_name) {
+    clTitle.innerText = d.lbl_cut_list + " - " + currentState.sar_name;
+  } else {
+    clTitle.innerText = d.lbl_cut_list;
+  }
+  
+  drawSarama(w, H_stud, trim_h, sarama_h_kant, sarama_h_flat, cripple_top_h, Bh, type, placement, wh, cripple_under_h);
+}
+
+function drawSarama(w, H_stud, trim_h, hk, hf, cripple, bh, type, placement, wh, cripple_under_h){
+  const cvs = document.getElementById('sarama_canvas');
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width = cvs.parentElement.clientWidth - 32;
+  const H = cvs.height = 300;
+  ctx.clearRect(0,0,W,H);
+  
+  const T_th = 15; 
+  const scale = (H - 40) / H_stud;
+  const drawW = w * scale;
+  const sx = W/2 - drawW/2;
+  
+  // Kings
+  ctx.fillStyle = 'rgba(123,61,240,0.5)';
+  ctx.fillRect(sx - 2*T_th, 20, T_th, H_stud*scale); 
+  ctx.fillRect(sx + drawW + T_th, 20, T_th, H_stud*scale); 
+  
+  // Trims
+  ctx.fillStyle = 'rgba(61,142,240,0.5)';
+  ctx.fillRect(sx - T_th, 20 + H_stud*scale - trim_h*scale, T_th, trim_h*scale); 
+  ctx.fillRect(sx + drawW, 20 + H_stud*scale - trim_h*scale, T_th, trim_h*scale); 
+  
+  // Header
+  let sy_flat, sy_kant;
+  if(placement === 'win_top') {
+    sy_flat = 20 + H_stud*scale - trim_h*scale - hf*scale;
+  } else {
+    sy_flat = 20 + hk*scale; // Just under top sill (assumes header is immediately at the top)
+  }
+  
+  ctx.fillStyle = 'rgba(240,192,61,0.6)';
+  sy_kant = sy_flat - hk*scale;
+  ctx.fillRect(sx - T_th, sy_kant, drawW + 2*T_th, hk*scale);
+  
+  ctx.fillStyle = 'rgba(240,140,61,0.8)';
+  ctx.fillRect(sx - T_th, sy_flat, drawW + 2*T_th, hf*scale);
+  
+  // Cripple above header (win_top only)
+  if(placement === 'win_top' && cripple > 0){
+    ctx.fillStyle = 'rgba(100,200,100,0.5)';
+    ctx.fillRect(sx + drawW/2 - 7.5, 20 + H_stud*scale - trim_h*scale - hk*scale - hf*scale - cripple*scale, 15, cripple*scale);
+  }
+  
+  // Top sill and cripple under header (top_sill only)
+  if(placement === 'top_sill' && cripple_under_h > 0) {
+    const topSillY = 20 + H_stud*scale - bh*scale - wh*scale - 48*scale;
+    // Top Window Sill
+    ctx.fillStyle = 'rgba(240,140,61,0.8)';
+    ctx.fillRect(sx, topSillY, drawW, 48*scale);
+    
+    // Cripples below header to top sill
+    ctx.fillStyle = 'rgba(100,200,100,0.5)';
+    ctx.fillRect(sx + drawW/2 - 7.5, topSillY - cripple_under_h*scale, 15, cripple_under_h*scale);
+  }
+  
+  // Bottom sill and cripples (Window only)
+  if(type === 'window' && bh > 48) {
+    const bottomY = 20 + H_stud*scale;
+    const sillY = bottomY - bh*scale;
+    
+    // Bottom Sill
+    ctx.fillStyle = 'rgba(240,140,61,0.8)';
+    ctx.fillRect(sx, sillY, drawW, 48*scale);
+    
+    // Bottom cripples
+    const cripple_h = (bh - 48)*scale;
+    ctx.fillStyle = 'rgba(100,200,100,0.5)';
+    ctx.fillRect(sx + drawW/2 - 7.5, sillY + 48*scale, 15, cripple_h);
+  }
+  
+  ctx.fillStyle = '#fff'; ctx.font = '10px "Segoe UI"'; ctx.textAlign = 'center';
+  ctx.fillText('King', sx - 1.5*T_th, 15);
+  ctx.fillText('Trim', sx - 0.5*T_th, 20 + H_stud*scale - 5);
+}
+function renderOmItems(){
+  const c = document.getElementById('om_items_container');
+  c.innerHTML = "";
+  currentState.om_items.forEach((it, i) => {
+    let div = document.createElement('div');
+    div.className = 'open-item';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:var(--text);text-transform:uppercase;display:flex;align-items:center;">${it.type==='window'?'&#129695;':'&#128682;'}
+          <input type="text" value="${it.name||''}" placeholder="..." onchange="updOmItem(${i},'name',this.value)" style="background:transparent;border:none;border-bottom:1px solid #555;color:inherit;font:inherit;outline:none;padding:2px 4px;width:120px;margin-left:8px;">
+        </div>
+        <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;min-height:0;" onclick="delOmItem(${i})">&#10006;</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="field"><label data-i18n="lbl_op_w">Plotis W (mm)</label><input type="number" value="${it.w}" oninput="updOmItem(${i},'w',this.value)"></div>
+        <div class="field"><label data-i18n="lbl_op_h">Aukštis H (mm)</label><input type="number" value="${it.h}" oninput="updOmItem(${i},'h',this.value)"></div>
+        <div class="field"><label data-i18n="lbl_prod_bh">Bh (mm)</label><input type="number" value="${it.bh}" oninput="updOmItem(${i},'bh',this.value)"></div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+function omAddItem(type){ currentState.om_items.push({ name: type==='window'?'L-1':'D-1', type: type, w: 1200, h: 1200, bh: type==='window'?800:0 }); renderOmItems(); calcOpenMarks(); }
+function delOmItem(idx){ currentState.om_items.splice(idx,1); renderOmItems(); calcOpenMarks(); }
+function updOmItem(idx, k, val){ currentState.om_items[idx][k] = k==='name'?val:parseInt(val)||0; calcOpenMarks(); }
+function omResetAll(){ currentState.om_items = []; renderOmItems(); calcOpenMarks(); }
+
+function calcOpenMarks(){
+  saveState();
+  const fm = currentState.om_floor_mark;
+  const ff = currentState.om_finished_floor;
+  const gBot = currentState.om_gap_bot;
+  const gTop = currentState.om_gap_top;
+  const gSide = currentState.om_gap_side;
+  
+  const d = fm - ff;
+  if(!isNaN(d) && fm>0 && ff>0){
+    document.getElementById('om_floor_diff_box').style.display = 'block';
+    if(d > 0) document.getElementById('om_floor_diff_val').innerText = `${d} mm (${T[currentLang].msg_mark_above})`;
+    else document.getElementById('om_floor_diff_val').innerText = `${Math.abs(d)} mm (${T[currentLang].msg_mark_below})`;
+  } else { document.getElementById('om_floor_diff_box').style.display = 'none'; }
+
+  const tbody = document.getElementById('om_tbody');
+  tbody.innerHTML = "";
+  
+  if(currentState.om_items.length===0){ document.getElementById('om_results_card').style.display = 'none'; return; }
+  document.getElementById('om_results_card').style.display = 'block';
+  
+  const cvs = document.getElementById('om_canvas');
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width = cvs.parentElement.clientWidth - 10;
+  const H = cvs.height = 300;
+  ctx.clearRect(0,0,W,H);
+  
+  ctx.beginPath(); ctx.moveTo(30, 200); ctx.lineTo(W-30, 200);
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#fff'; ctx.font = '12px "Segoe UI"'; ctx.textAlign = 'left'; ctx.fillText(T[currentLang].msg_abs_mark + ': ' + fm, 35, 195);
+  
+  const scaleY = 0.05; 
+  let cx = 60;
+  
+  currentState.om_items.forEach(it => {
+    let wallW = it.w + gSide*2;
+    let wallH = it.h + gBot + gTop;
+    let bot_from_ff = it.bh; 
+    let abs_bot = ff + bot_from_ff - gBot;
+    let abs_top = abs_bot + wallH;
+    
+    let mark_down = fm - abs_bot;
+    let mark_up = abs_top - fm;
+    
+    let tr = document.createElement('tr');
+    tr.innerHTML = `<td style="font-family:inherit;font-weight:600;color:var(--text);">${it.name}</td><td>${it.w}x${it.h}</td><td>${wallW}x${wallH}</td><td>${it.bh}</td><td style="color:var(--green);font-weight:700;">${mark_down.toFixed(1)}</td><td style="color:var(--accent);font-weight:700;">${mark_up.toFixed(1)}</td>`;
+    tbody.appendChild(tr);
+    
+    let drawW = 40;
+    let py_bot = 200 + mark_down * scaleY; 
+    let py_top = 200 - mark_up * scaleY; 
+    
+    ctx.fillStyle = 'rgba(61,142,240,0.3)'; ctx.fillRect(cx, py_top, drawW, py_bot - py_top);
+    ctx.strokeStyle = '#3d8ef0'; ctx.strokeRect(cx, py_top, drawW, py_bot - py_top);
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = '10px "Consolas"'; ctx.fillText(it.name, cx+drawW/2, py_top - 5);
+    cx += drawW + 40;
+  });
+}
+
+function resetAll(){
+  if(!confirm('Ar tikrai norite isvalyti visus duomenis?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  applyLang();
+  window.addEventListener('resize', () => { redrawRuler(); calcSarama(); calcOpenMarks(); });
+});
+</script>
+
+<!-- PRINT MODAL -->
+<div id="print_modal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:9999;">
+  <div class="card" style="width:320px;padding:20px;display:flex;flex-direction:column;gap:16px;">
+    <div style="font-size:1.1rem;font-weight:700;color:var(--text);" data-i18n="lbl_print_title">Pasirinkite ką spausdinti:</div>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_layout" checked> <span data-i18n="tab_layout">Stenderių išdėstymas</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_height" checked> <span data-i18n="tab_height">Stenderio aukštis</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_sarama" checked> <span data-i18n="tab_sarama">Angos skaičiavimas</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_om" checked> <span data-i18n="tab_openmarks">Langų/durų žymos</span></label>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closePrintModal()" data-i18n="btn_cancel">Atšaukti</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="doPrint()" data-i18n="btn_print">Spausdinti</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPrintModal() {
+  document.getElementById('print_modal').style.display = 'flex';
+}
+function closePrintModal() {
+  document.getElementById('print_modal').style.display = 'none';
+}
+function doPrint() {
+  const pLayout = document.getElementById('cb_pr_layout').checked;
+  const pHeight = document.getElementById('cb_pr_height').checked;
+  const pSarama = document.getElementById('cb_pr_sarama').checked;
+  const pOm = document.getElementById('cb_pr_om').checked;
+  
+  document.body.dataset.prLayout = pLayout ? "1" : "0";
+  document.body.dataset.prHeight = pHeight ? "1" : "0";
+  document.body.dataset.prSarama = pSarama ? "1" : "0";
+  document.body.dataset.prOm = pOm ? "1" : "0";
+  
+  const ph = document.getElementById('print_header');
+  const d = T[currentLang];
+  ph.innerHTML = `
+    <h1>${currentState.proj_name || d.lbl_proj_name}</h1>
+    <p><strong>${d.lbl_date}:</strong> ${currentState.proj_date || '-'} | <strong>${d.lbl_notes}:</strong> ${currentState.proj_notes || '-'}</p>
+  `;
+  
+  closePrintModal();
+  setTimeout(() => window.print(), 100);
+}
+</script>
+<script src="js/pwa.js"></script>
+</body>
+</html>
+
+
+
+
+
+
