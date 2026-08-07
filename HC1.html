@@ -1,0 +1,2460 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ProBuilder - Steinsvikåsen Bygg C | Calc by Vytautas Giedraitis</title>
+<style>
+:root {
+  --bg:#0f1117;--bg2:#161b27;--card:#1c2233;--card2:#222840;--surface:#252d42;
+  --text:#e8edf5;--muted:#8892aa;--dim:#556070;
+  --primary:#3d8ef0;--primary-d:#2567cc;--primary-glow:rgba(61,142,240,0.18);
+  --accent:#f0873d;--accent-d:#c96020;
+  --green:#3dbe7a;--green-bg:rgba(61,190,122,0.10);
+  --red:#e05c5c;--red-bg:rgba(224,92,92,0.10);
+  --yellow:#f0c03d;--yellow-bg:rgba(240,192,61,0.10);
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(61,142,240,0.08),transparent),linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:auto,40px 40px,40px 40px;background-attachment:fixed;color:var(--text);min-height:100vh;font-size:15px;-webkit-text-size-adjust:100%;}
+header{position:sticky;top:0;z-index:100;background:rgba(15,17,23,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.proj-chip{background:linear-gradient(135deg,#3d8ef0,#7b3df0);border-radius:6px;padding:4px 10px;font-size:0.72rem;font-weight:800;letter-spacing:0.08em;color:#fff;flex-shrink:0;}
+.header-title{font-size:0.95rem;font-weight:700;letter-spacing:-0.02em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.header-title span{color:var(--primary);}
+.back-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:7px;color:var(--muted);font-size:0.78rem;font-weight:600;text-decoration:none;transition:all 0.18s;flex-shrink:0;}
+.back-btn:hover{color:var(--primary);border-color:var(--primary);}
+.lang-group { display: flex; gap: 3px; background: var(--surface); padding: 3px; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; }
+.lang-btn { background: transparent; border: none; color: var(--muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; padding: 3px 7px; border-radius: 4px; transition: all 0.15s; }
+.lang-btn.active { background: var(--card2); color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.tab-nav{display:flex;gap:6px;padding:14px 16px 0;max-width:1040px;margin:0 auto;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:9px 16px;background:var(--card);border:1px solid var(--border);border-radius:9px;color:var(--muted);font-size:0.83rem;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all 0.18s;min-height:42px;}
+.tab-btn:hover{color:var(--text);border-color:var(--border2);}
+.tab-btn.active{background:var(--primary-glow);border-color:var(--primary);color:var(--primary);}
+.tab-panel{display:none;}.tab-panel.active{display:flex;flex-direction:column;gap:14px;}
+main{max-width:1040px;margin:0 auto;padding:14px 16px 80px;display:flex;flex-direction:column;gap:14px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;}
+.card-title{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:inherit;font-size:15px;outline:none;transition:border-color 0.18s,box-shadow 0.18s;width:100%;min-height:44px;}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow);background:var(--card2);}
+input::placeholder{color:var(--dim);}
+.field-hint{font-size:0.67rem;color:var(--dim);line-height:1.4;}
+.radio-row{display:flex;gap:6px;flex-wrap:wrap;}
+.radio-opt{position:relative;}
+.radio-opt input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
+.radio-opt label{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted);transition:all 0.18s;min-height:40px;}
+.radio-opt input:checked+label{background:var(--primary-glow);border-color:var(--primary);color:var(--primary);}
+.toggle-wrap{position:relative;display:inline-block;cursor:pointer;}
+.toggle-wrap input{position:absolute;opacity:0;width:0;height:0;}
+.toggle-track{display:block;width:42px;height:24px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;transition:all 0.2s;position:relative;}
+.toggle-wrap input:checked+.toggle-track{background:var(--primary);border-color:var(--primary);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);transition:all 0.2s;}
+.toggle-wrap input:checked+.toggle-track .toggle-thumb{left:20px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 18px;border-radius:var(--radius-sm);border:1px solid transparent;font-family:inherit;font-size:0.84rem;font-weight:600;cursor:pointer;transition:all 0.18s;min-height:44px;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-d));color:#fff;border-color:var(--primary);box-shadow:0 4px 12px rgba(61,142,240,0.3);}
+.btn-primary:hover{filter:brightness(1.1);}
+.btn-outline{background:transparent;color:var(--muted);border-color:var(--border2);}
+.btn-outline:hover{color:var(--text);background:var(--surface);}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:rgba(224,92,92,0.3);}
+.btn-danger:hover{background:rgba(224,92,92,0.2);}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px;}
+.res-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:center;}
+.res-box .val{font-family:'Consolas','Courier New',monospace;font-size:1.7rem;font-weight:700;line-height:1;color:var(--primary);}
+.res-box .val.ok{color:var(--green);}.res-box .val.bad{color:var(--red);}
+.res-box .lbl{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-top:4px;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+thead th{padding:9px 10px;background:var(--surface);border-bottom:2px solid var(--border2);font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);text-align:center;white-space:nowrap;}
+thead th:first-child{text-align:left;}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
+tbody tr:hover{background:rgba(255,255,255,0.03);}
+tbody td{padding:8px 10px;text-align:center;font-family:'Consolas','Courier New',monospace;font-size:0.83rem;}
+tbody td:first-child{text-align:left;font-family:inherit;}
+.badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:700;}
+.badge-ok{background:var(--green-bg);color:var(--green);}
+.badge-warn{background:var(--yellow-bg);color:var(--yellow);}
+.badge-bad{background:var(--red-bg);color:var(--red);}
+.row-king td:first-child{color:#9b6cf0;font-weight:700;}
+.row-corner td:first-child{color:var(--primary);font-weight:700;}
+.canvas-wrap{overflow-x:auto;margin-top:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px;}
+canvas{display:block;border-radius:7px;max-width:100%;}
+.svill-layers{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.svill-row{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:6px 12px;}
+.svill-color{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
+.svill-color.bunn{background:linear-gradient(135deg,#3dbe7a,#2a8a55);}
+.svill-color.topp{background:linear-gradient(135deg,#3d8ef0,#2567cc);}
+.warn-box{display:none;align-items:flex-start;gap:10px;padding:12px 16px;background:var(--yellow-bg);border:1px solid rgba(240,192,61,0.3);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--yellow);margin-bottom:12px;}
+.warn-box.visible{display:flex;}
+.open-item{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;}
+.formula-strip{font-family:'Consolas','Courier New',monospace;font-size:0.8rem;color:var(--muted);background:var(--surface);border-radius:7px;padding:10px 14px;white-space:pre-wrap;line-height:1.8;margin-top:10px;}
+.big-num{font-family:'Consolas','Courier New',monospace;font-size:3rem;font-weight:700;line-height:1;color:var(--green);}
+.big-num.bad{color:var(--red);}
+.unit-label{font-size:0.9rem;color:var(--muted);margin-left:6px;}
+.sarama-box{background:linear-gradient(135deg,rgba(240,135,61,0.08),rgba(240,192,61,0.06));border:1px solid rgba(240,135,61,0.2);border-radius:var(--radius-sm);padding:14px;}
+.wall-info-box{background:rgba(61,142,240,0.06);border:1px solid rgba(61,142,240,0.2);border-radius:var(--radius-sm);padding:12px 16px;font-size:0.82rem;line-height:1.6;color:var(--text);margin-top:10px;}
+.chip-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:700;background:rgba(255,255,255,0.08);color:var(--primary);margin-right:4px;margin-bottom:4px;}
+.struct-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;}
+.struct-title{font-size:0.88rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+.struct-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;}
+.svg-diagram{width:100%;height:auto;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;}
+.hidden{display:none !important;}
+
+/* RESPONSIVE MEDIA QUERIES FOR MOBILE, TABLET & PC */
+@media(max-width: 768px) {
+  header { padding: 0 12px; height: 54px; }
+  .header-title { font-size: 0.85rem; }
+  .proj-chip { font-size: 0.65rem; padding: 3px 6px; }
+  main { padding: 10px 12px 60px; gap: 12px; }
+  .card { padding: 14px 16px; }
+  .struct-body { grid-template-columns: 1fr !important; }
+  .form-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .tab-btn { padding: 8px 12px; font-size: 0.78rem; min-height: 38px; }
+}
+
+@media(max-width: 480px) {
+  header { height: 50px; padding: 0 8px; }
+  .header-title { font-size: 0.78rem; }
+  .back-btn { padding: 4px 8px; font-size: 0.72rem; }
+  .form-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .btn { font-size: 0.78rem; padding: 8px 10px; min-height: 40px; }
+  .res-box .val { font-size: 1.3rem; }
+  input[type="text"],input[type="number"],input[type="date"],select,textarea { font-size: 14px; padding: 8px 10px; min-height: 40px; }
+}
+
+@media print {
+  @page { margin: 15mm; size: auto; }
+  body { background: #fff !important; color: #000 !important; overflow: visible !important; font-size: 11pt; }
+  header, .tab-nav, .no-print, .form-grid, .modal, .btn, .card-title[data-i18n="sec_params"], .card-title[data-i18n="sec_op"], .card-title[data-i18n="sec_adj"], .card-title[data-i18n="sec_om_ref"], .card-title[data-i18n="sec_proj"] { display: none !important; }
+  .print-only { display: block !important; }
+  body > div { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  .card { box-shadow: none !important; border: none !important; background: transparent !important; padding: 0 !important; margin-bottom: 20px !important; page-break-inside: avoid; }
+  .tab-panel { display: none !important; margin-bottom: 30mm; flex-direction: column; }
+  body[data-pr-layout="1"] #tab-layout,
+  body[data-pr-height="1"] #tab-height,
+  body[data-pr-sarama="1"] #tab-sarama,
+  body[data-pr-om="1"] #tab-openmarks,
+  body[data-pr-struct="1"] #tab-struct {
+    display: flex !important;
+  }
+  table { width: 100% !important; table-layout: auto !important; border-collapse: collapse; }
+  th, td { padding: 8px !important; font-size: 11pt !important; border: 1px solid #000 !important; }
+  canvas { max-width: 100% !important; height: auto !important; page-break-inside: avoid; display: block; margin: 10px auto; }
+  .result-grid, .res-grid { display: flex !important; flex-wrap: wrap !important; gap: 10px !important; }
+  .res-box { flex: 1 1 auto !important; min-width: 120px; border: 1px solid #000 !important; padding: 10px !important; background: #f9f9f9 !important; }
+  .card-title { font-size: 16pt !important; margin-bottom: 15px !important; color: #000 !important; border-bottom: 2px solid #000 !important; padding-bottom: 5px !important; }
+  #print_header { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000; }
+  #print_header h1 { font-size: 18pt; margin: 0 0 5px 0; }
+  #print_header p { font-size: 12pt; margin: 0; color: #333; }
+}
+.print-only { display: none; }
+</style>
+</head>
+<body>
+<div id="print_header" class="print-only"></div>
+<header>
+  <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+    <a class="back-btn" href="../Final version/index.html">← ProBuilder</a>
+    <div class="proj-chip">HUS-C</div>
+    <div class="header-title" data-i18n="header_title">Steinsvikåsen Bygg C - Calc by Vytautas Giedraitis</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+    <div class="lang-group">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="lt" onclick="setLang('lt')">LT</button>
+      <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+    </div>
+    <button class="btn btn-outline no-print" style="font-size:0.78rem;padding:6px 12px;min-height:36px;" onclick="openPrintModal()">&#128424;</button>
+  </div>
+</header>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('tab-layout',this)" data-i18n="tab_layout">📐 Stenderių išdėstymas</button>
+  <button class="tab-btn" onclick="switchTab('tab-height',this)" data-i18n="tab_height">📏 Stenderio aukštis</button>
+  <button class="tab-btn" onclick="switchTab('tab-sarama',this)" data-i18n="tab_sarama">🥳 Sąramos skaičiavimas</button>
+  <button class="tab-btn" onclick="switchTab('tab-openmarks',this)" data-i18n="tab_openmarks">🪟 Langų/durų žymos</button>
+  <button class="tab-btn" onclick="switchTab('tab-struct',this)" data-i18n="tab_struct">🏗 Konstrukcijos & Vizualizacijos</button>
+</div>
+
+<main>
+<!-- TAB LAYOUT -->
+<div id="tab-layout" class="tab-panel active">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_proj">📋 Projekto informacija (Hus-C)</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_proj_name">Sienos pavadinimas</label><input type="text" id="proj_name" data-i18n-ph="ph_proj_name" placeholder="Pvz.: YV01 - Fasadas C-1"></div>
+      <div class="field"><label data-i18n="lbl_date">Data</label><input type="date" id="proj_date"></div>
+      <div class="field"><label data-i18n="lbl_wall_preset">Hus-C Veggtype (Šablonas)</label>
+        <select id="wall_preset_select" onchange="onWallPresetChange()">
+          <option value="custom">-- Pasirinkti sienos tipą (Veggskjema 80-0C-005) --</option>
+          <optgroup label="Yttervegger (Išorinės sienos)">
+            <option value="YV01">YV01 - Yttervegg (Tjærebrun 0175, 48x198)</option>
+            <option value="YV02">YV02 - Yttervegg (Vika 546, 48x198)</option>
+            <option value="YV03">YV03 - Yttervegg EI60 (Tjærebrun 0175, 48x198)</option>
+            <option value="YV04">YV04 - Yttervegg (Vika 546, 48x198)</option>
+            <option value="YV05">YV05 - Parapet EI60 (Vika 546, 48x73)</option>
+            <option value="YV06">YV06 - Parapet (Vika 546, 48x73)</option>
+            <option value="YV07">YV07 - Yttervegg EI30 (Tjærebrun 0175, 48x198)</option>
+            <option value="YV08">YV08 - Yttervegg (Tjærebrun 0175, 48x198)</option>
+            <option value="YV09">YV09 - Yttervegg EI60 (Tjærebrun 0175, 48x198)</option>
+            <option value="YV10">YV10 - Yttervegg EI60 (Vika 546, 48x198)</option>
+            <option value="YV11">YV11 - Yttervegg EI60 (Vika 546, 48x198)</option>
+            <option value="YV12">YV12 - Parapet EI30 (Tjærebrun 0175, 48x73)</option>
+            <option value="YV13">YV13 - Utvendig skillevegg (48x198)</option>
+            <option value="YV14">YV14 - Yttervegg Kledning (48x198)</option>
+            <option value="YV15">YV15 - Påfôring betongvegg (48x198)</option>
+            <option value="YV16">YV16 - Utvendig påfôring betong (48x148)</option>
+            <option value="YV17">YV17 - Utvendig skillevegg (48x198)</option>
+            <option value="YV18">YV18 - Yttervegg bod (48x198)</option>
+            <option value="YV19">YV19 - Parapet (48x73)</option>
+            <option value="YV20">YV20 - Steni plate vegg (48x198)</option>
+            <option value="YV21">YV21 - Yttervegg m/120mm isolasjon (48x198)</option>
+            <option value="YV22">YV22 - Dobbeltstender (48x198 + 48x100)</option>
+          </optgroup>
+          <optgroup label="Innevegger (Vidinės sienos)">
+            <option value="IV01">IV01 - Innervegg (48x98)</option>
+            <option value="IV02">IV02 - Påfôringsvegg (48mm)</option>
+            <option value="IV03">IV03 - Innervegg 2x gips (48x70)</option>
+            <option value="IV04">IV04 - Lydskillevegg EI30 (2x 48x98 + 20mm luft)</option>
+            <option value="IV05">IV05 - Skillevegg trapperom EI60 (48x148)</option>
+            <option value="IV06">IV06 - Skillevegg trapperom EI60 (48x148)</option>
+            <option value="IV07">IV07 - Innervegg (48x148)</option>
+            <option value="IV08">IV08 - Skillevegg bolig/bod (48x148)</option>
+            <option value="IV20">IV20 - Badvegg flis (48x98)</option>
+            <option value="IV21">IV21 - Påfôring bad flis (48mm)</option>
+            <option value="IV23">IV23 - Vegg for føringer flis (48x198)</option>
+            <option value="IV30">IV30 - Sjaktvegg 2x gips (48x98)</option>
+            <option value="IV31">IV31 - Påfôring føringer (48x98)</option>
+            <option value="IV40">IV40 - Påfôring føringer (48x48)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field" style="grid-column:span 2"><label data-i18n="lbl_notes">Pastabos / Detalės</label><textarea id="proj_notes" data-i18n-ph="ph_proj_notes" style="min-height:44px;resize:vertical;" placeholder="Pastabos apie brėžinius 80-0C-005..."></textarea></div>
+    </div>
+    <div id="wall_layer_info" class="wall-info-box" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" data-i18n="sec_params">📐 Sienos parametrai (Laisvai koreguojami)</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_wlen">Sienos ilgis (mm)</label><input type="number" id="wall_length" min="100" max="99999" step="1" value="6000" oninput="calculate()"></div>
+      <div class="field"><label data-i18n="lbl_pitch">Stenderių žingsnis OC (mm)</label><input type="number" id="stud_pitch" min="100" max="1200" step="1" value="600" oninput="calculate()"></div>
+      <div class="field"><label data-i18n="lbl_thick">Stenderio storis (mm)</label><input type="number" id="stud_thick" min="20" max="300" step="1" value="48" oninput="calculate()"></div>
+      <div class="field"><label data-i18n="lbl_mingap">Min. tarpas (mm)</label><input type="number" id="min_gap" min="0" max="600" step="1" value="100" oninput="calculate()"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <div>
+        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;" data-i18n="lbl_left">Kairysis galas</div>
+        <div class="radio-row">
+          <div class="radio-opt"><input type="radio" name="left_type" id="lt_outer" value="outer" checked onchange="onEndChange()"><label for="lt_outer" data-i18n="opt_out">🔳 Išorinis</label></div>
+          <div class="radio-opt"><input type="radio" name="left_type" id="lt_inner" value="inner" onchange="onEndChange()"><label for="lt_inner" data-i18n="opt_in">🔲 Vidinis</label></div>
+          <div class="radio-opt"><input type="radio" name="left_type" id="lt_free" value="free" onchange="onEndChange()"><label for="lt_free" data-i18n="opt_free">↔ Laisvas</label></div>
+        </div>
+        <div id="left_adj_wrap" style="display:none;margin-top:8px;"><div class="field"><label data-i18n="lbl_adj">Gretimos sienos storis (mm)</label><input type="number" id="left_adj_thick" min="0" value="198" oninput="calculate()"></div></div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;" data-i18n="lbl_right">Dešinysis galas</div>
+        <div class="radio-row">
+          <div class="radio-opt"><input type="radio" name="right_type" id="rt_outer" value="outer" onchange="onEndChange()"><label for="rt_outer" data-i18n="opt_out">🔳 Išorinis</label></div>
+          <div class="radio-opt"><input type="radio" name="right_type" id="rt_inner" value="inner" onchange="onEndChange()"><label for="rt_inner" data-i18n="opt_in">🔲 Vidinis</label></div>
+          <div class="radio-opt"><input type="radio" name="right_type" id="rt_free" value="free" checked onchange="onEndChange()"><label for="rt_free" data-i18n="opt_free">↔ Laisvas</label></div>
+        </div>
+        <div id="right_adj_wrap" style="display:none;margin-top:8px;"><div class="field"><label data-i18n="lbl_adj">Gretimos sienos storis (mm)</label><input type="number" id="right_adj_thick" min="0" value="198" oninput="calculate()"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" data-i18n="sec_op">🚪 Langai ir durys (Koreguojama)</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <label class="toggle-wrap"><input type="checkbox" id="openings_enabled" onchange="onOpeningsToggle()"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+      <span style="font-size:0.85rem;color:var(--muted);" data-i18n="lbl_add_op">Pridėti langus / duris</span>
+    </div>
+    <div id="openings_wrap" style="display:none;">
+      <div style="margin-bottom:12px;background:var(--surface);padding:10px;border-radius:8px;border:1px solid var(--border2);display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:0.72rem;color:var(--primary);" data-i18n="lbl_quick_add_catalog">Greitas Hus-C gaminio parinkimas:</label>
+        <select id="quick_op_catalog" style="flex:1;min-width:200px;" onchange="quickAddOpeningFromCatalog(this.value)">
+          <option value="">-- Pasirinkti iš Hus-C brėžinių --</option>
+          <optgroup label="Vinduer (80-0C-001)">
+            <option value="V01">V01: 790 x 2190 mm (EI60)</option>
+            <option value="V02">V02: 1090 x 2190 mm (Fast)</option>
+            <option value="V03">V03: 1590 x 2190 mm (2 felt)</option>
+            <option value="V04">V04: 1590 x 2190 mm (2 felt)</option>
+            <option value="V05">V05: 1590 x 2190 mm (2 felt)</option>
+            <option value="V06">V06: 1190 x 2190 mm (EI60)</option>
+            <option value="V07">V07: 1890 x 2190 mm (Bh 150)</option>
+            <option value="V08">V08: 790 x 2190 mm (Fast)</option>
+            <option value="V09">V09: 1190 x 2190 mm</option>
+            <option value="V10">V10: 690 x 2190 mm</option>
+            <option value="V11">V11: 2090 x 2190 mm (Bh 150)</option>
+            <option value="V12">V12: 790 x 1490 mm (Bh 690)</option>
+            <option value="V13">V13: 1990 x 2190 mm</option>
+            <option value="V14">V14: 790 x 2190 mm (Bh 150)</option>
+          </optgroup>
+          <optgroup label="Balkongdører (80-0C-001)">
+            <option value="BD01">BD01: 990 x 2090 mm (Glassfelt)</option>
+            <option value="BD02">BD02: 990 x 2090 mm (Glassfelt)</option>
+            <option value="BD03">BD03: 2090 x 2090 mm (Skyvedør)</option>
+            <option value="BD04">BD04: 990 x 2090 mm (EI30)</option>
+          </optgroup>
+          <optgroup label="Ytterdører (80-0C-002)">
+            <option value="YD01">YD01: 1090 x 2190 mm</option>
+            <option value="YD02">YD02: 1090 x 2190 mm</option>
+            <option value="YD03">YD03: 990 x 2190 mm</option>
+            <option value="YD04">YD04: 990 x 2190 mm</option>
+            <option value="YD05">YD05: 990 x 2090 mm (Glass)</option>
+            <option value="YD06">YD06: 990 x 2190 mm (Stål EI60)</option>
+          </optgroup>
+          <optgroup label="Innvendige dører (80-0C-003)">
+            <option value="D01">D01: 890 x 2090 mm</option>
+            <option value="D02">D02: 890 x 2090 mm (Terskel)</option>
+            <option value="D03">D03: 890 x 2090 mm</option>
+            <option value="D04">D04: 890 x 2090 mm (Terskel)</option>
+            <option value="D05">D05: 890 x 2090 mm (Skyvedør Vossakarmen)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div id="openings_list"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="addOpening('window')" data-i18n="btn_win">🪟 + Langas</button>
+        <button class="btn btn-outline" onclick="addOpening('door')" data-i18n="btn_door">🚪 + Durys</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS CARD (TAB 1) -->
+  <div class="card no-print">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" style="flex:1;" onclick="calculate()" data-i18n="btn_calc">⚡ Skaičiuoti</button>
+      <button class="btn btn-danger" onclick="resetAll()" data-i18n="btn_reset">↺ Valyti</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="exportJSON()" data-i18n="btn_export">💾 Eksportuoti JSON</button>
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="document.getElementById('import_file').click()" data-i18n="btn_import">📂 Importuoti JSON</button>
+      <input type="file" id="import_file" style="display:none;" accept=".json" onchange="importJSON(event)">
+    </div>
+  </div>
+
+  <div class="card" id="results_card" style="display:none;">
+    <div class="card-title" data-i18n="sec_res">📊 Rezultatai</div>
+    <div id="result_grid" class="result-grid"></div>
+    <div id="warn_box" class="warn-box">⚠️ <span id="warn_text"></span></div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;" data-i18n="sec_adj">Tikslus tarpų koregavimas</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="field"><label data-i18n="lbl_fgap">Pirmasis tarpas</label><input type="number" id="first_gap_input" oninput="applyGapAdjust()"><span class="field-hint" id="first_gap_hint"></span></div>
+        <div class="field"><label data-i18n="lbl_lgap">Paskutinis tarpas</label><input type="number" id="last_gap_input" oninput="applyGapAdjust()"><span class="field-hint" id="last_gap_hint"></span></div>
+      </div>
+      <button class="btn btn-outline" style="font-size:0.78rem;margin-top:8px;" onclick="resetGapAdjust()" data-i18n="btn_reset_gap">↺ Atstatyti</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;" class="no-print">
+      <span style="font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--muted);" data-i18n="lbl_mark">Žymėjimas:</span>
+      <div class="radio-row" style="gap:6px;">
+        <div class="radio-opt"><input type="radio" name="mark_side" id="ms_left" value="left" checked onchange="redrawRuler()"><label for="ms_left" data-i18n="opt_mark_l">← Kairys</label></div>
+        <div class="radio-opt"><input type="radio" name="mark_side" id="ms_right" value="right" onchange="redrawRuler()"><label for="ms_right" data-i18n="opt_mark_r">Dešinys →</label></div>
+        <div class="radio-opt"><input type="radio" name="mark_side" id="ms_center" value="center" onchange="redrawRuler()"><label for="ms_center" data-i18n="opt_mark_c">⊕ Centras</label></div>
+      </div>
+    </div>
+    <div class="canvas-wrap"><canvas id="ruler_canvas" height="140"></canvas></div>
+    <div class="tbl-wrap" style="margin-top:14px;">
+      <table id="stud_table">
+        <thead><tr><th style="text-align:left;">#</th><th data-i18n="th_l">Kairysis</th><th data-i18n="th_c">Centras</th><th data-i18n="th_r">Dešinysis</th><th data-i18n="th_gap">Tarpas po</th><th data-i18n="th_type">Tipas</th></tr></thead>
+        <tbody id="stud_tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB HEIGHT -->
+<div id="tab-height" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_h">📏 Stenderio aukštis (Hus-C)</div>
+    <div style="background:rgba(61,142,240,0.08);border:1px solid rgba(61,142,240,0.2);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.82rem;color:var(--muted);line-height:1.7;">
+      <strong style="color:var(--primary);">Hus-C Standartas:</strong><br>
+      <span data-i18n="h_info">2x 48mm bunnsvill, 1x 48mm topsvill (kiekvieną storį galite koreguoti žemiau).</span>
+    </div>
+    
+    <div class="form-grid" style="margin-bottom:16px;">
+      <div class="field"><label data-i18n="lbl_floor_preset">Aukšto lygis (Hus-C Snitt)</label>
+        <select id="floor_preset_select" onchange="onFloorPresetChange()">
+          <option value="custom">-- Pasirinkti aukšto lygį --</option>
+          <option value="plan01">Plan 01 (+35400) - H=2700mm</option>
+          <option value="plan02">Plan 02 (+38400) - H=2700mm</option>
+          <option value="plan03">Plan 03 (+41400) - H=2700mm</option>
+          <option value="plan04">Plan 04 (+44700) - H=3000mm</option>
+          <option value="plan05">Tak / Plan 05 (+47950) - H=2950mm</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="lbl_htot">Bendras aukštis H (mm)</label>
+        <input type="number" id="h_total" oninput="calcHeight()" value="2748">
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:6px;" data-i18n="lbl_bunn">Bunnsvill (Apatinė svill - numatyta 2x 48mm)</div>
+      <div class="svill-layers" id="bunn_list"></div>
+      <button class="btn btn-outline" style="font-size:0.75rem;padding:5px 12px;" onclick="addSvill('bunn',48)" data-i18n="btn_add_bunn">+ Pridėti Bunnsvill sluoksnį</button>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--primary);text-transform:uppercase;margin-bottom:6px;" data-i18n="lbl_topp">Topsvill (Viršutinė svill - numatyta 1x 48mm)</div>
+      <div class="svill-layers" id="topp_list"></div>
+      <button class="btn btn-outline" style="font-size:0.75rem;padding:5px 12px;" onclick="addSvill('topp',48)" data-i18n="btn_add_topp">+ Pridėti Topsvill sluoksnį</button>
+    </div>
+    <div id="height_result" style="display:none;padding:18px;background:var(--green-bg);border:1px solid rgba(61,190,122,0.3);border-radius:var(--radius-sm);">
+      <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:8px;" data-i18n="lbl_cut">Pjovimo ilgis (Stender h)</div>
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <span id="height_val" class="big-num">&#8212;</span>
+        <span class="unit-label">mm</span>
+      </div>
+      <div id="height_formula" class="formula-strip" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS CARD (TAB 2) -->
+  <div class="card no-print">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" style="flex:1;" onclick="calcHeight()" data-i18n="btn_calc">⚡ Skaičiuoti</button>
+      <button class="btn btn-danger" onclick="resetAll()" data-i18n="btn_reset">↺ Valyti</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="exportJSON()" data-i18n="btn_export">💾 Eksportuoti JSON</button>
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="document.getElementById('import_file').click()" data-i18n="btn_import">📂 Importuoti JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB SARAMA -->
+<div id="tab-sarama" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_sarama">🥳 Sąramos skaičiavimas (Hus-C Detail)</div>
+    
+    <div style="margin-bottom:14px;background:var(--surface);padding:10px 14px;border-radius:8px;border:1px solid var(--border2);display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <label style="font-size:0.72rem;color:var(--accent);" data-i18n="lbl_select_prod_cat">Pasirinkti iš Hus-C žiniaraščio:</label>
+      <select id="sar_catalog_select" style="flex:1;min-width:220px;" onchange="applySaramaFromCatalog(this.value)">
+        <option value="">-- Įvesti rankiniu būdu arba pasirinkti gaminį --</option>
+        <optgroup label="Vinduer (80-0C-001)">
+          <option value="V01">V01: 790 x 2190 mm (EI60, Bh 0)</option>
+          <option value="V02">V02: 1090 x 2190 mm (Bh 0/150)</option>
+          <option value="V03">V03: 1590 x 2190 mm (Bh 0)</option>
+          <option value="V04">V04: 1590 x 2190 mm (Bh 0)</option>
+          <option value="V05">V05: 1590 x 2190 mm (Bh 0)</option>
+          <option value="V06">V06: 1190 x 2190 mm (EI60, Bh 0)</option>
+          <option value="V07">V07: 1890 x 2190 mm (Bh 150)</option>
+          <option value="V08">V08: 790 x 2190 mm (Bh 0/150)</option>
+          <option value="V09">V09: 1190 x 2190 mm (Bh 0/150)</option>
+          <option value="V10">V10: 690 x 2190 mm (Bh 0/150)</option>
+          <option value="V11">V11: 2090 x 2190 mm (Bh 150)</option>
+          <option value="V12">V12: 790 x 1490 mm (Bh 690)</option>
+          <option value="V13">V13: 1990 x 2190 mm (Bh 0)</option>
+          <option value="V14">V14: 790 x 2190 mm (Bh 150)</option>
+        </optgroup>
+        <optgroup label="Balkongdører (80-0C-001)">
+          <option value="BD01">BD01: 990 x 2090 mm (Glass felt)</option>
+          <option value="BD02">BD02: 990 x 2090 mm (Glass felt)</option>
+          <option value="BD03">BD03: 2090 x 2090 mm (Skyvedør)</option>
+          <option value="BD04">BD04: 990 x 2090 mm (EI30)</option>
+        </optgroup>
+        <optgroup label="Ytterdører (80-0C-002)">
+          <option value="YD01">YD01: 1090 x 2190 mm</option>
+          <option value="YD02">YD02: 1090 x 2190 mm</option>
+          <option value="YD03">YD03: 990 x 2190 mm</option>
+          <option value="YD04">YD04: 990 x 2190 mm</option>
+          <option value="YD05">YD05: 990 x 2090 mm (Glass)</option>
+          <option value="YD06">YD06: 990 x 2190 mm (Stål EI60)</option>
+        </optgroup>
+        <optgroup label="Innvendige dører (80-0C-003)">
+          <option value="D01">D01: 890 x 2090 mm</option>
+          <option value="D02">D02: 890 x 2090 mm (Terskel)</option>
+          <option value="D03">D03: 890 x 2090 mm</option>
+          <option value="D04">D04: 890 x 2090 mm (Terskel)</option>
+          <option value="D05">D05: 890 x 2090 mm (Skyvedør Vossakarmen)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_sar_name">Pavadinimas / Kodas</label><input type="text" id="sar_name" data-i18n-ph="ph_sar_name" placeholder="Pvz.: V02" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_sar_type">Tipas</label>
+        <select id="sar_type" onchange="calcSarama()">
+          <option value="window" data-i18n="opt_win">Langas</option>
+          <option value="door" data-i18n="opt_door">Durys</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="lbl_sar_place">Sąramos pozicija</label>
+        <select id="sar_placement" onchange="calcSarama()">
+          <option value="top_sill" data-i18n="opt_top_sill" selected>Prie top svill</option>
+          <option value="win_top" data-i18n="opt_win_top">Virš lango/durų</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="lbl_sar_h">Stenderio aukštis (mm)</label><input type="number" id="sar_stud_h" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_prod_w">Gaminio plotis (mm)</label><input type="number" id="sar_opening_w" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_prod_h">Gaminio aukštis (mm)</label><input type="number" id="sar_win_h" oninput="calcSarama()"></div>
+      <div class="field" id="fld_sar_bh"><label data-i18n="lbl_prod_bh">Gaminio Bh (mm)</label><input type="number" id="sar_bh" oninput="calcSarama()"></div>
+      <div class="field"><label data-i18n="lbl_gap_side">Tarpas šonuose (mm)</label><input type="number" id="sar_gap_side" oninput="calcSarama()" value="10"></div>
+      <div class="field"><label data-i18n="lbl_gap_top">Tarpas viršuje (mm)</label><input type="number" id="sar_gap_top" oninput="calcSarama()" value="15"></div>
+      <div class="field" id="fld_sar_gap_bot"><label data-i18n="lbl_gap_bot">Tarpas apačioje (mm)</label><input type="number" id="sar_gap_bot" oninput="calcSarama()" value="15"></div>
+    </div>
+
+    <div style="margin-top:12px;padding:10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);">
+      <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">Sąramos sijos matmenų koregavimas (Laisvas įvedimas):</div>
+      <div class="form-grid">
+        <div class="field"><label>Sąramos aukštis H (mm)</label><input type="number" id="sar_kant_h" value="198" oninput="calcSarama()"></div>
+        <div class="field"><label>Gulsčios svill storis (mm)</label><input type="number" id="sar_flat_h" value="48" oninput="calcSarama()"></div>
+        <div class="field"><label>King/Trim stenderio storis (mm)</label><input type="number" id="sar_stud_thick" value="48" oninput="calcSarama()"></div>
+      </div>
+    </div>
+    
+    <div id="sarama_result" style="display:none;margin-top:16px;">
+      <div class="result-grid" id="sarama_grid"></div>
+      <div class="sarama-box">
+        <div id="sarama_cut_list_title" style="font-size:0.85rem;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:10px;" data-i18n="lbl_cut_list">Pjovimo sąrašas</div>
+        <div id="sarama_cut_list" style="font-size:0.83rem;line-height:2;color:var(--muted);font-family:'Consolas','Courier New',monospace;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <canvas id="sarama_canvas" height="220" style="width:100%;display:block;border-radius:8px;background:var(--card2);"></canvas>
+  </div>
+
+  <!-- ACTION BUTTONS CARD (TAB 3) -->
+  <div class="card no-print">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" style="flex:1;" onclick="calcSarama()" data-i18n="btn_calc">⚡ Skaičiuoti</button>
+      <button class="btn btn-danger" onclick="resetAll()" data-i18n="btn_reset">↺ Valyti</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="exportJSON()" data-i18n="btn_export">💾 Eksportuoti JSON</button>
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="document.getElementById('import_file').click()" data-i18n="btn_import">📂 Importuoti JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB OPENMARKS -->
+<div id="tab-openmarks" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_om_ref">🏗 Atskaitinė žyma (Hus-C Kote)</div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="lbl_om_fm">Žyma / Kote (mm)</label><input type="number" id="om_floor_mark" oninput="calcOpenMarks()" value="3900"></div>
+      <div class="field"><label data-i18n="lbl_om_ff">Grindys / OK Gulv (mm)</label><input type="number" id="om_finished_floor" oninput="calcOpenMarks()" value="4000"></div>
+      <div class="field"><label data-i18n="lbl_om_gb">Laisvumas apačioje (mm)</label><input type="number" id="om_gap_bot" oninput="calcOpenMarks()" value="15"></div>
+      <div class="field"><label data-i18n="lbl_om_gt">Laisvumas viršuje (mm)</label><input type="number" id="om_gap_top" oninput="calcOpenMarks()" value="15"></div>
+      <div class="field"><label data-i18n="lbl_om_gs">Laisvumas šonuose (mm)</label><input type="number" id="om_gap_side" oninput="calcOpenMarks()" value="10"></div>
+    </div>
+    <div id="om_floor_diff_box" style="display:none;margin-top:12px;padding:10px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);">
+      <span id="om_floor_diff_val" style="font-family:'Consolas',monospace;font-size:1.3rem;font-weight:700;color:var(--primary);"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" data-i18n="sec_op">🚪 Langai ir durys</div>
+    
+    <div style="margin-bottom:12px;background:var(--surface);padding:10px 14px;border-radius:8px;border:1px solid var(--border2);display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <label style="font-size:0.72rem;color:var(--green);" data-i18n="lbl_add_om_catalog">Pridėti iš Hus-C žiniaraščio:</label>
+      <select id="om_catalog_select" style="flex:1;min-width:220px;" onchange="omAddFromCatalog(this.value)">
+        <option value="">-- Pasirinkti Hus-C gaminį žymėjimui --</option>
+        <optgroup label="Vinduer (80-0C-001)">
+          <option value="V01">V01 (790x2190 Bh0)</option>
+          <option value="V02">V02 (1090x2190 Bh0)</option>
+          <option value="V03">V03 (1590x2190 Bh0)</option>
+          <option value="V04">V04 (1590x2190 Bh0)</option>
+          <option value="V05">V05 (1590x2190 Bh0)</option>
+          <option value="V06">V06 (1190x2190 Bh0)</option>
+          <option value="V07">V07 (1890x2190 Bh150)</option>
+          <option value="V08">V08 (790x2190 Bh0)</option>
+          <option value="V09">V09 (1190x2190 Bh0)</option>
+          <option value="V10">V10 (690x2190 Bh0)</option>
+          <option value="V11">V11 (2090x2190 Bh150)</option>
+          <option value="V12">V12 (790x1490 Bh690)</option>
+          <option value="V13">V13 (1990x2190 Bh0)</option>
+          <option value="V14">V14 (790x2190 Bh150)</option>
+        </optgroup>
+        <optgroup label="Balkongdører (80-0C-001)">
+          <option value="BD01">BD01 (990x2090 Bh0)</option>
+          <option value="BD02">BD02 (990x2090 Bh0)</option>
+          <option value="BD03">BD03 (2090x2090 Skyvedør)</option>
+          <option value="BD04">BD04 (990x2090 EI30)</option>
+        </optgroup>
+        <optgroup label="Ytterdører (80-0C-002)">
+          <option value="YD01">YD01 (1090x2190)</option>
+          <option value="YD02">YD02 (1090x2190)</option>
+          <option value="YD03">YD03 (990x2190)</option>
+          <option value="YD04">YD04 (990x2190)</option>
+          <option value="YD05">YD05 (990x2090 Glass)</option>
+          <option value="YD06">YD06 (990x2190 Stål EI60)</option>
+        </optgroup>
+        <optgroup label="Innvendige dører (80-0C-003)">
+          <option value="D01">D01 (890x2090)</option>
+          <option value="D02">D02 (890x2090 Terskel)</option>
+          <option value="D03">D03 (890x2090)</option>
+          <option value="D04">D04 (890x2090 Terskel)</option>
+          <option value="D05">D05 (890x2090 Skyvedør)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div id="om_items_container"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+      <button class="btn btn-outline" style="flex:1;" onclick="omAddItem('window')" data-i18n="btn_win">🪟 + Langas</button>
+      <button class="btn btn-outline" style="flex:1;" onclick="omAddItem('door')" data-i18n="btn_door">🚪 + Durys</button>
+    </div>
+  </div>
+
+  <div class="card" id="om_results_card" style="display:none;">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="text-align:left;" data-i18n="th_name">Pavadinimas</th><th data-i18n="th_size">PxA (mm)</th><th data-i18n="th_wall">Anga</th><th data-i18n="th_bh">Bh</th><th style="color:var(--green);" data-i18n="th_bot">▼ Apatinė žyma</th><th style="color:var(--accent);" data-i18n="th_top">▲ Viršutinė žyma</th></tr></thead>
+        <tbody id="om_tbody"></tbody>
+      </table>
+    </div>
+    <div class="canvas-wrap" style="margin-top:14px;"><canvas id="om_canvas" height="260"></canvas></div>
+  </div>
+
+  <!-- ACTION BUTTONS CARD (TAB 4) -->
+  <div class="card no-print">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" style="flex:1;" onclick="calcOpenMarks()" data-i18n="btn_calc">⚡ Skaičiuoti</button>
+      <button class="btn btn-danger" onclick="resetAll()" data-i18n="btn_reset">↺ Valyti</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="exportJSON()" data-i18n="btn_export">💾 Eksportuoti JSON</button>
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="document.getElementById('import_file').click()" data-i18n="btn_import">📂 Importuoti JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB STRUCT & VISUALIZATIONS -->
+<div id="tab-struct" class="tab-panel">
+  <div class="card">
+    <div class="card-title" data-i18n="sec_struct">🏗 Konstrukcijos, Brėžiniai & Vizualizacijos (Derome / Mitek Pamir)</div>
+    <div style="font-size:0.83rem;color:var(--muted);line-height:1.7;margin-bottom:16px;" data-i18n="struct_intro">
+      Atsakingos Hus-C (Steinsvikåsen Bygg C) mazgų, perdangų, sijų bei takstolų konstrukcinės detalės pagal Mitek Pamir ir Derome Takstolteknikk AS brėžinius:
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px;">
+
+      <!-- STRUCT CARD 1: Masonite I-bjelker -->
+      <div class="struct-card">
+        <div class="struct-title" data-i18n="struct_t1">🦴 1. Bjelkelag 1 & 2 - Masonite I-Bjelker & Perdangos Mazgas</div>
+        <div class="struct-body">
+          <div style="font-size:0.81rem;line-height:1.7;color:var(--text);">
+            <p style="margin-bottom:8px;"><strong data-i18n="struct_t1_calc">Apskaičiavimas pagal Masonite lenteles:</strong></p>
+            <ul style="padding-left:18px;color:var(--muted);">
+              <li data-i18n="struct_t1_li1">Egenvekt: 0.5 kN/m² („Lett bjelkelag“) su sponplater plokšte.</li>
+              <li data-i18n="struct_t1_li2">Įgilinta vonios zona su 50mm betono išlyginamuoju sluoksniu (påstøp).</li>
+              <li data-i18n="struct_t1_li3">Masonite I-bjelker sujungiamos virš plieninių sijų pagal detalę B09-300/305.</li>
+              <li data-i18n="struct_t1_li4">Stiprinimas (Kubbing/Klossing): Kolonų atramos taškai užpildomi mediniais klossais per visą I-bjelke aukštį.</li>
+            </ul>
+          </div>
+          <svg class="svg-diagram" viewBox="0 0 400 200">
+            <!-- Floor decking -->
+            <rect x="20" y="20" width="360" height="14" fill="#f0c03d" rx="2"/>
+            <text x="200" y="31" font-size="9" fill="#000" font-weight="bold" text-anchor="middle">22mm Sponplate / OSB Decking</text>
+            
+            <!-- I-Joist 1 -->
+            <g transform="translate(50, 34)">
+              <rect x="0" y="0" width="45" height="12" fill="#3dbe7a" rx="1"/>
+              <rect x="18" y="12" width="9" height="90" fill="#8892aa"/>
+              <rect x="0" y="102" width="45" height="12" fill="#3dbe7a" rx="1"/>
+              <text x="22" y="58" font-size="8" fill="#fff" font-weight="bold" text-anchor="middle" transform="rotate(-90 22 58)">Masonite OSB Web</text>
+              <text x="22" y="-3" font-size="8" fill="#3dbe7a" text-anchor="middle">Bj 45x220/300</text>
+            </g>
+            
+            <!-- Sound insulation batts -->
+            <rect x="105" y="48" width="85" height="85" fill="rgba(240,192,61,0.2)" stroke="rgba(240,192,61,0.4)" stroke-dasharray="3,3" rx="4"/>
+            <text x="147" y="93" font-size="9" fill="#f0c03d" text-anchor="middle">Lydisolering</text>
+
+            <!-- I-Joist 2 -->
+            <g transform="translate(195, 34)">
+              <rect x="0" y="0" width="45" height="12" fill="#3dbe7a" rx="1"/>
+              <rect x="18" y="12" width="9" height="90" fill="#8892aa"/>
+              <rect x="0" y="102" width="45" height="12" fill="#3dbe7a" rx="1"/>
+              <text x="22" y="-3" font-size="8" fill="#3dbe7a" text-anchor="middle">c/c 600mm</text>
+            </g>
+
+            <!-- Sound insulation batts 2 -->
+            <rect x="250" y="48" width="85" height="85" fill="rgba(240,192,61,0.2)" stroke="rgba(240,192,61,0.4)" stroke-dasharray="3,3" rx="4"/>
+            <text x="292" y="93" font-size="9" fill="#f0c03d" text-anchor="middle">Lydisolering</text>
+
+            <!-- I-Joist 3 -->
+            <g transform="translate(340, 34)">
+              <rect x="0" y="0" width="45" height="12" fill="#3dbe7a" rx="1"/>
+              <rect x="18" y="12" width="9" height="90" fill="#8892aa"/>
+              <rect x="0" y="102" width="45" height="12" fill="#3dbe7a" rx="1"/>
+            </g>
+
+            <!-- Ceiling battens & Gips -->
+            <rect x="20" y="152" width="360" height="10" fill="#f0873d" rx="1"/>
+            <text x="200" y="160" font-size="8" fill="#fff" text-anchor="middle">48x48mm Nedlektet Bærelag c/c 400</text>
+            <rect x="20" y="164" width="360" height="10" fill="#e8edf5" rx="1"/>
+            <text x="200" y="172" font-size="8" fill="#000" font-weight="bold" text-anchor="middle">12.5mm Gipshimling (EI30 / EI60)</text>
+
+            <!-- Pitch dimension -->
+            <line x1="72" y1="185" x2="217" y2="185" stroke="#3d8ef0" stroke-width="1.5"/>
+            <text x="145" y="195" font-size="9" fill="#3d8ef0" text-anchor="middle">600 mm</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- STRUCT CARD 2: Steel Beams & Glulam Columns -->
+      <div class="struct-card">
+        <div class="struct-title" data-i18n="struct_t2">🛠 2. Plieninės sijos (KB), Limtre (Bt) & Kolonos - Mazgų Detalizacija</div>
+        <div class="struct-body">
+          <div style="font-size:0.81rem;line-height:1.7;color:var(--text);">
+            <p style="margin-bottom:8px;"><strong data-i18n="struct_t2_desc">Plieninės sijos ir atraminės kolonos:</strong></p>
+            <ul style="padding-left:18px;color:var(--muted);">
+              <li data-i18n="struct_t2_li1">Plieno profiliniai dragere: KB203, KB218, KB221 (Mitek skaičiavimai).</li>
+              <li data-i18n="struct_t2_li2">Limtre sijos ir kolonos: Bt1 - Bt8 per visas ašis C-2 iki C-13.</li>
+              <li data-i18n="struct_t2_li3">Inkaravimas (Oppløft & Vindsug): Visos kolonos ir dragere įtvirtintos su plieninėmis juostomis / ankeriais.</li>
+            </ul>
+          </div>
+          <svg class="svg-diagram" viewBox="0 0 400 200">
+            <!-- Steel Beam I-profile -->
+            <g transform="translate(150, 20)">
+              <rect x="0" y="0" width="100" height="14" fill="#3d8ef0" rx="1"/>
+              <rect x="43" y="14" width="14" height="70" fill="#3d8ef0"/>
+              <rect x="0" y="84" width="100" height="14" fill="#3d8ef0" rx="1"/>
+              <text x="50" y="52" font-size="9" fill="#fff" font-weight="bold" text-anchor="middle">KB203 / KB218</text>
+            </g>
+
+            <!-- Steel Top Plate -->
+            <rect x="140" y="118" width="120" height="8" fill="#8892aa" rx="1"/>
+
+            <!-- Glulam Column Below -->
+            <g transform="translate(160, 126)">
+              <rect x="0" y="0" width="80" height="60" fill="#f0873d" rx="2"/>
+              <line x1="20" y1="0" x2="20" y2="60" stroke="rgba(0,0,0,0.2)"/>
+              <line x1="40" y1="0" x2="40" y2="60" stroke="rgba(0,0,0,0.2)"/>
+              <line x1="60" y1="0" x2="60" y2="60" stroke="rgba(0,0,0,0.2)"/>
+              <text x="40" y="35" font-size="10" fill="#fff" font-weight="bold" text-anchor="middle">Limtre Søyle Bt</text>
+            </g>
+
+            <!-- Masonite I-Joist resting on flange -->
+            <g transform="translate(20, 34)">
+              <rect x="0" y="0" width="130" height="12" fill="#3dbe7a"/>
+              <rect x="0" y="12" width="130" height="60" fill="rgba(61,190,122,0.15)" stroke="#3dbe7a" stroke-dasharray="3,3"/>
+              <rect x="0" y="72" width="130" height="12" fill="#3dbe7a"/>
+              <text x="65" y="45" font-size="9" fill="#3dbe7a" text-anchor="middle">Masonite I-bjelke</text>
+            </g>
+
+            <!-- Anchor strap -->
+            <path d="M 145 105 L 145 180 M 255 105 L 255 180" stroke="#f0c03d" stroke-width="2.5" stroke-dasharray="4,4"/>
+            <text x="310" y="150" font-size="9" fill="#f0c03d">Ankerbånd 40x2.0</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- STRUCT CARD 3: Roof Trusses -->
+      <div class="struct-card">
+        <div class="struct-title" data-i18n="struct_t3">🏠 3. Mitek Pamir Takstoler (Sp1 - Sp9, T1 - T2)</div>
+        <div class="struct-body">
+          <div style="font-size:0.81rem;line-height:1.7;color:var(--text);">
+            <p style="margin-bottom:8px;"><strong data-i18n="struct_t3_desc">Stogo santvarų konstrukcija (Takplan):</strong></p>
+            <ul style="padding-left:18px;color:var(--muted);">
+              <li data-i18n="struct_t3_li1">Gamintojas: Derome Takstolteknikk AS (Pamir 2026.1b).</li>
+              <li data-i18n="struct_t3_li2">Gaminio mediena: 45mm / 48mm C24/C30 virke.</li>
+              <li data-i18n="struct_t3_li3">Atskiri santvarų tipai: Sp1-1..Sp9-3, T1-4..T2-6, g236.</li>
+              <li data-i18n="struct_t3_li4">Įstrižas standinimas (Avstivning) pagal NS-EN 1995 su 25x100mm lentomis ir spikplater plokštelėmis.</li>
+            </ul>
+          </div>
+          <svg class="svg-diagram" viewBox="0 0 400 200">
+            <!-- Roof Truss Chords -->
+            <polygon points="30,150 200,30 370,150" fill="none" stroke="#f0873d" stroke-width="4"/>
+            <line x1="30" y1="150" x2="370" y2="150" stroke="#f0873d" stroke-width="4"/>
+
+            <!-- Web Diagonals -->
+            <line x1="115" y1="150" x2="200" y2="30" stroke="#f0873d" stroke-width="2.5"/>
+            <line x1="285" y1="150" x2="200" y2="30" stroke="#f0873d" stroke-width="2.5"/>
+            <line x1="115" y1="150" x2="200" y2="90" stroke="#f0873d" stroke-width="2"/>
+            <line x1="285" y1="150" x2="200" y2="90" stroke="#f0873d" stroke-width="2"/>
+
+            <!-- Wall Top Plates below bearings -->
+            <rect x="15" y="154" width="30" height="12" fill="#3d8ef0" rx="1"/>
+            <rect x="15" y="168" width="30" height="12" fill="#3d8ef0" rx="1"/>
+            <rect x="355" y="154" width="30" height="12" fill="#3d8ef0" rx="1"/>
+            <rect x="355" y="168" width="30" height="12" fill="#3d8ef0" rx="1"/>
+
+            <!-- Mitek Gang-Nail Plates -->
+            <rect x="190" y="22" width="20" height="16" fill="#3dbe7a" rx="2"/>
+            <rect x="23" y="142" width="16" height="16" fill="#3dbe7a" rx="2"/>
+            <rect x="361" y="142" width="16" height="16" fill="#3dbe7a" rx="2"/>
+
+            <!-- Labels -->
+            <text x="200" y="15" font-size="9" fill="#3dbe7a" font-weight="bold" text-anchor="middle">Mitek Spikplate Node</text>
+            <text x="200" y="140" font-size="9" fill="#fff" text-anchor="middle">Undergurt C24 45x198</text>
+            <text x="110" y="75" font-size="8" fill="#f0873d" transform="rotate(-35 110 75)">Overgurt C24</text>
+            <text x="200" y="190" font-size="9" fill="#8892aa" text-anchor="middle">Derome Takstol Sp (c/c 600mm, C24 virke)</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- STRUCT CARD 4: Joist Hangers & Hardware -->
+      <div class="struct-card">
+        <div class="struct-title" data-i18n="struct_t4">🔩 4. Bjelkesko & Apkaustų Specifikacijos (Hardware Schedule)</div>
+        <div class="struct-body">
+          <div style="font-size:0.81rem;line-height:1.7;color:var(--text);">
+            <p style="margin-bottom:8px;"><strong data-i18n="struct_t4_desc">Kabinimo apkaustai iš brėžinių žiniaraščio:</strong></p>
+            <ul style="padding-left:18px;color:var(--muted);">
+              <li data-i18n="struct_t4_li1">48x166: Naudojama I-bjelker tvirtinimui prie medinių sijų.</li>
+              <li data-i18n="struct_t4_li2">48x226: Naudojama aukštesnio skerspjūvio I-bjelker.</li>
+              <li data-i18n="struct_t4_li3">100x170: Naudojama dviguboms/storoms sijoms.</li>
+              <li data-i18n="struct_t4_li4">45x137: Naudojama takstol santvarų kabinimui.</li>
+              <li data-i18n="struct_t4_li5">Tvirtinama su 4.0x40 mm kamštiniais ankeriniais vinimis / sraigtais.</li>
+            </ul>
+          </div>
+          <svg class="svg-diagram" viewBox="0 0 400 200">
+            <!-- Joist Hanger Body -->
+            <path d="M 120 40 L 120 150 L 280 150 L 280 40" fill="none" stroke="#3d8ef0" stroke-width="4" rx="4"/>
+            <path d="M 120 55 L 80 55 L 80 100 L 120 100" fill="none" stroke="#3d8ef0" stroke-width="3.5"/>
+            <path d="M 280 55 L 320 55 L 320 100 L 280 100" fill="none" stroke="#3d8ef0" stroke-width="3.5"/>
+
+            <!-- Fastener Holes -->
+            <circle cx="100" cy="70" r="3.5" fill="#f0c03d"/>
+            <circle cx="100" cy="85" r="3.5" fill="#f0c03d"/>
+            <circle cx="300" cy="70" r="3.5" fill="#f0c03d"/>
+            <circle cx="300" cy="85" r="3.5" fill="#f0c03d"/>
+            <circle cx="150" cy="140" r="3.5" fill="#f0c03d"/>
+            <circle cx="250" cy="140" r="3.5" fill="#f0c03d"/>
+
+            <!-- Seated Joist inside -->
+            <rect x="130" y="20" width="140" height="126" fill="rgba(61,190,122,0.2)" stroke="#3dbe7a" stroke-width="2" stroke-dasharray="4,4" rx="2"/>
+            <text x="200" y="80" font-size="11" fill="#3dbe7a" font-weight="bold" text-anchor="middle">Masonite / Takstol</text>
+            <text x="200" y="98" font-size="9" fill="#3dbe7a" text-anchor="middle">48mm x 198/220/300mm</text>
+
+            <!-- Nail callout -->
+            <text x="60" y="40" font-size="9" fill="#f0c03d">Ankernagler 4.0x40</text>
+            <line x1="95" y1="45" x2="100" y2="65" stroke="#f0c03d" stroke-width="1.5"/>
+
+            <text x="200" y="180" font-size="10" fill="#8892aa" text-anchor="middle">Bjelkesko (48x166 / 48x226 / 100x170 / 45x137)</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- STRUCT CARD 5: Wall Layer Build-up Visualizer -->
+      <div class="struct-card">
+        <div class="struct-title" data-i18n="struct_t5">🧱 5. Wall Section Layers Visualizer (YV01 - YV22 / IV01 - IV40)</div>
+        <div style="font-size:0.81rem;line-height:1.7;color:var(--muted);" data-i18n="struct_t5_desc">
+          Pasirinkus bet kurį sienos tipą iš **Stenderių išdėstymo** kortelės, atitinkamai matysite pilną sluoksnių specifikaciją. Standartinė Hus-C fasado sienos (YV01) skerspjūvio schema:
+        </div>
+        <svg class="svg-diagram" viewBox="0 0 800 160">
+          <!-- Layer 1: Cladding -->
+          <rect x="10" y="20" width="40" height="120" fill="#8b5a2b" rx="2"/>
+          <text x="30" y="80" font-size="9" fill="#fff" font-weight="bold" text-anchor="middle" transform="rotate(-90 30 80)">19mm Kledning</text>
+
+          <!-- Layer 2: Sløyfe -->
+          <rect x="55" y="20" width="30" height="120" fill="#c29b38" rx="2"/>
+          <text x="70" y="80" font-size="8" fill="#000" font-weight="bold" text-anchor="middle" transform="rotate(-90 70 80)">36mm Sløyfe</text>
+
+          <!-- Layer 3: Utlekting -->
+          <rect x="90" y="20" width="25" height="120" fill="#d4af37" rx="2"/>
+          <text x="102" y="80" font-size="8" fill="#000" font-weight="bold" text-anchor="middle" transform="rotate(-90 102 80)">23mm Utlekting</text>
+
+          <!-- Layer 4: Vindsperre -->
+          <rect x="120" y="20" width="15" height="120" fill="#3d8ef0" rx="1"/>
+          <text x="127" y="80" font-size="8" fill="#fff" font-weight="bold" text-anchor="middle" transform="rotate(-90 127 80)">9mm GU Vindsperre</text>
+
+          <!-- Layer 5: Main Stud 198mm -->
+          <rect x="140" y="20" width="360" height="120" fill="rgba(61,190,122,0.25)" stroke="#3dbe7a" stroke-width="2" rx="4"/>
+          <!-- Studs in insulation -->
+          <rect x="140" y="20" width="30" height="120" fill="#3dbe7a"/>
+          <rect x="470" y="20" width="30" height="120" fill="#3dbe7a"/>
+          <text x="320" y="80" font-size="12" fill="#3dbe7a" font-weight="bold" text-anchor="middle">198mm Isolasjon & Stender (48x198)</text>
+
+          <!-- Layer 6: Dampsperre -->
+          <rect x="505" y="20" width="10" height="120" fill="#f0c03d" rx="1"/>
+          <text x="510" y="80" font-size="8" fill="#000" font-weight="bold" text-anchor="middle" transform="rotate(-90 510 80)">Dampsperre Folie</text>
+
+          <!-- Layer 7: Påfôring 48mm -->
+          <rect x="520" y="20" width="160" height="120" fill="rgba(240,135,61,0.25)" stroke="#f0873d" stroke-width="2" rx="4"/>
+          <rect x="520" y="20" width="20" height="120" fill="#f0873d"/>
+          <text x="600" y="80" font-size="10" fill="#f0873d" font-weight="bold" text-anchor="middle">48mm Påfôring</text>
+
+          <!-- Layer 8: Gips 12.5mm -->
+          <rect x="685" y="20" width="25" height="120" fill="#e8edf5" rx="2"/>
+          <text x="697" y="80" font-size="9" fill="#000" font-weight="bold" text-anchor="middle" transform="rotate(-90 697 80)">12.5mm Gips</text>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS CARD (TAB 5) -->
+  <div class="card no-print">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-danger" style="flex:1;" onclick="resetAll()" data-i18n="btn_reset">↺ Valyti</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="exportJSON()" data-i18n="btn_export">💾 Eksportuoti JSON</button>
+      <button class="btn btn-outline" style="flex:1;font-size:0.75rem;min-height:36px;" onclick="document.getElementById('import_file').click()" data-i18n="btn_import">📂 Importuoti JSON</button>
+    </div>
+  </div>
+</div>
+</main>
+
+<script>
+// ==================== MULTI-LANGUAGE TRANSLATION DICTIONARY ====================
+const T = {
+  lt: {
+    header_title: "Steinsvikåsen Bygg C - Calc by Vytautas Giedraitis",
+    tab_layout: "📐 Stenderių išdėstymas",
+    tab_height: "📏 Stenderio aukštis",
+    tab_sarama: "🥳 Sąramos skaičiavimas",
+    tab_openmarks: "🪟 Langų/durų žymos",
+    tab_struct: "🏗 Konstrukcijos & Vizualizacijos",
+    sec_proj: "📋 Projekto informacija (Hus-C)",
+    sec_params: "📐 Sienos parametrai (Laisvai koreguojami)",
+    sec_op: "🚪 Langai ir durys (Koreguojama)",
+    sec_res: "📊 Rezultatai",
+    sec_adj: "🎯 Tikslus tarpų koregavimas",
+    sec_h: "📏 Stenderio aukštis (Hus-C)",
+    sec_sarama: "🥳 Sąramos skaičiavimas (Hus-C Detail)",
+    sec_om_ref: "🏗 Atskaitinė žyma (Hus-C Kote)",
+    sec_struct: "🏗 Konstrukcijos, Brėžiniai & Vizualizacijos (Derome / Mitek Pamir)",
+    lbl_proj_name: "Sienos pavadinimas",
+    lbl_date: "Data",
+    lbl_wall_preset: "Hus-C Veggtype (Šablonas)",
+    lbl_notes: "Pastabos / Detalės",
+    lbl_wlen: "Sienos ilgis (mm)",
+    lbl_pitch: "Stenderių žingsnis OC (mm)",
+    lbl_thick: "Stenderio storis (mm)",
+    lbl_mingap: "Min. tarpas (mm)",
+    lbl_left: "Kairysis galas",
+    lbl_right: "Dešinysis galas",
+    lbl_adj: "Gretimos sienos storis (mm)",
+    lbl_add_op: "Pridėti langus / duris",
+    lbl_quick_add_catalog: "Greitas Hus-C gaminio parinkimas:",
+    lbl_mark: "Žymėjimas:",
+    lbl_floor_preset: "Aukšto lygis (Hus-C Snitt)",
+    lbl_htot: "Bendras aukštis H (mm)",
+    lbl_bunn: "Bunnsvill (Apatinė svill - numatyta 2x 48mm)",
+    lbl_topp: "Topsvill (Viršutinė svill - numatyta 1x 48mm)",
+    lbl_cut: "Pjovimo ilgis (Stender h)",
+    lbl_select_prod_cat: "Pasirinkti iš Hus-C žiniaraščio:",
+    lbl_sar_name: "Pavadinimas / Kodas",
+    lbl_sar_type: "Tipas",
+    lbl_sar_place: "Sąramos pozicija",
+    lbl_sar_h: "Stenderio aukštis (mm)",
+    lbl_prod_w: "Gaminio plotis (mm)",
+    lbl_prod_h: "Gaminio aukštis (mm)",
+    lbl_prod_bh: "Gaminio Bh (mm)",
+    lbl_gap_side: "Tarpas šonuose (mm)",
+    lbl_gap_top: "Tarpas viršuje (mm)",
+    lbl_gap_bot: "Tarpas apačioje (mm)",
+    lbl_cut_list: "Pjovimo sąrašas",
+    lbl_add_om_catalog: "Pridėti iš Hus-C žiniaraščio:",
+    lbl_om_fm: "Žyma / Kote (mm)",
+    lbl_om_ff: "Grindys / OK Gulv (mm)",
+    lbl_om_gb: "Laisvumas apačioje (mm)",
+    lbl_om_gt: "Laisvumas viršuje (mm)",
+    lbl_om_gs: "Laisvumas šonuose (mm)",
+    lbl_print_title: "Pasirinkite ką spausdinti:",
+    h_info: "2x 48mm bunnsvill, 1x 48mm topsvill (kiekvieną storį galite koreguoti žemiau).",
+    opt_out: "🔳 Išorinis",
+    opt_in: "🔲 Vidinis",
+    opt_free: "↔ Laisvas",
+    opt_mark_l: "← Kairys",
+    opt_mark_r: "Dešinys →",
+    opt_mark_c: "⊕ Centras",
+    opt_win: "Langas",
+    opt_door: "Durys",
+    opt_win_top: "Virš lango/durų",
+    opt_top_sill: "Prie top svill",
+    btn_win: "🪟 + Langas",
+    btn_door: "🚪 + Durys",
+    btn_calc: "⚡ Skaičiuoti",
+    btn_reset: "↺ Valyti",
+    btn_export: "💾 Eksportuoti JSON",
+    btn_import: "📂 Importuoti JSON",
+    btn_reset_gap: "↺ Atstatyti",
+    btn_add_bunn: "+ Pridėti Bunnsvill sluoksnį",
+    btn_add_topp: "+ Pridėti Topsvill sluoksnį",
+    btn_cancel: "Atšaukti",
+    btn_print: "Spausdinti",
+    th_l: "Kairysis",
+    th_c: "Centras",
+    th_r: "Dešinysis",
+    th_gap: "Tarpas po",
+    th_type: "Tipas",
+    th_name: "Pavadinimas",
+    th_size: "PxA (mm)",
+    th_wall: "Anga",
+    th_bh: "Bh",
+    th_bot: "▼ Apatinė žyma",
+    th_top: "▲ Viršutinė žyma",
+    type_corner_out: "Išorinis kampas",
+    type_corner_in: "Vidinis kampas",
+    type_stud_start: "Pradžios stenderis",
+    type_stud_end: "Pabaigos stenderis",
+    type_stud: "Standartinis stenderis",
+    type_stud_adj: "Koregavimo stenderis",
+    type_king_l: "King stenderis (Kairė)",
+    type_trim_l: "Trim stenderis (Kairė)",
+    type_trim_r: "Trim stenderis (Dešinė)",
+    type_king_r: "King stenderis (Dešinė)",
+    lbl_studs_cnt: "Stenderių skaičius",
+    lbl_total_parts: "Iš viso detalių",
+    msg_warn_gap: "Įspėjimas: Tarpas {0} mm po stenderio #{1} yra mažesnis nei min. {2} mm",
+    pcs: "vnt",
+    lbl_ro_w: "Angos plotis W",
+    lbl_ro_h: "Angos aukštis H",
+    msg_king: "King stenderis (H_stud)",
+    msg_trim: "Trim stenderis (H_trim)",
+    msg_sarama_kant: "Sąrama gulsčia/kant",
+    msg_sarama_sill: "Sąrama gulsčia",
+    msg_top_cripple_above: "Trumpas stenderis virš sąramos",
+    msg_win_top_sill: "Lango viršaus svill",
+    msg_top_cripple_under: "Trumpas stenderis po sąrama",
+    msg_win_sill: "Palangės svill",
+    msg_bot_cripple: "Trumpas stenderis po palange",
+    msg_mark_above: "virš grindų žymos",
+    msg_mark_below: "žemiau grindų žymos",
+    msg_abs_mark: "Atskaitinė žyma (Kote)",
+    ph_proj_name: "Pvz.: YV01 - Fasadas C-1",
+    ph_proj_notes: "Pastabos apie brėžinius 80-0C-005...",
+    ph_sar_name: "Pvz.: V02",
+    struct_intro: "Atsakingos Hus-C (Steinsvikåsen Bygg C) mazgų, perdangų, sijų bei takstolų konstrukcinės detalės pagal Mitek Pamir ir Derome Takstolteknikk AS brėžinius:",
+    struct_t1: "🦴 1. Bjelkelag 1 & 2 - Masonite I-Bjelker & Perdangos Mazgas",
+    struct_t1_calc: "Apskaičiavimas pagal Masonite lenteles:",
+    struct_t1_li1: "Egenvekt: 0.5 kN/m² („Lett bjelkelag“) su sponplater plokšte.",
+    struct_t1_li2: "Įgilinta vonios zona su 50mm betono išlyginamuoju sluoksniu (påstøp).",
+    struct_t1_li3: "Masonite I-bjelker sujungiamos virš plieninių sijų pagal detalę B09-300/305.",
+    struct_t1_li4: "Stiprinimas (Kubbing/Klossing): Kolonų atramos taškai užpildomi mediniais klossais per visą I-bjelke aukštį.",
+    struct_t2: "🛠 2. Plieninės sijos (KB), Limtre (Bt) & Kolonos - Mazgų Detalizacija",
+    struct_t2_desc: "Plieninės sijos ir atraminės kolonos:",
+    struct_t2_li1: "Plieno profiliniai dragere: KB203, KB218, KB221 (Mitek skaičiavimai).",
+    struct_t2_li2: "Limtre sijos ir kolonos: Bt1 - Bt8 per visas ašis C-2 iki C-13.",
+    struct_t2_li3: "Inkaravimas (Oppløft & Vindsug): Visos kolonos ir dragere įtvirtintos su plieninėmis juostomis / ankeriais.",
+    struct_t3: "🏠 3. Mitek Pamir Takstoler (Sp1 - Sp9, T1 - T2)",
+    struct_t3_desc: "Stogo santvarų konstrukcija (Takplan):",
+    struct_t3_li1: "Gamintojas: Derome Takstolteknikk AS (Pamir 2026.1b).",
+    struct_t3_li2: "Gaminio mediena: 45mm / 48mm C24/C30 virke.",
+    struct_t3_li3: "Atskiri santvarų tipai: Sp1-1..Sp9-3, T1-4..T2-6, g236.",
+    struct_t3_li4: "Įstrižas standinimas (Avstivning) pagal NS-EN 1995 su 25x100mm lentomis ir spikplater plokštelėmis.",
+    struct_t4: "🔩 4. Bjelkesko & Apkaustų Specifikacijos (Hardware Schedule)",
+    struct_t4_desc: "Kabinimo apkaustai iš brėžinių žiniaraščio:",
+    struct_t4_li1: "48x166: Naudojama I-bjelker tvirtinimui prie medinių sijų.",
+    struct_t4_li2: "48x226: Naudojama aukštesnio skerspjūvio I-bjelker.",
+    struct_t4_li3: "100x170: Naudojama dviguboms/storoms sijoms.",
+    struct_t4_li4: "45x137: Naudojama takstol santvarų kabinimui.",
+    struct_t4_li5: "Tvirtinama su 4.0x40 mm kamštiniais ankeriniais vinimis / sraigtais.",
+    struct_t5: "🧱 5. Sienos Sluoksnių Skerspjūvio Vizualizacija (YV01 - YV22 / IV01 - IV40)",
+    struct_t5_desc: "Pasirinkus bet kurį sienos tipą iš Stenderių išdėstymo kortelės, atitinkamai matysite pilną sluoksnių specifikaciją. Standartinė Hus-C fasado sienos (YV01) skerspjūvio schema:"
+  },
+  no: {
+    header_title: "Steinsvikåsen Bygg C - Calc by Vytautas Giedraitis",
+    tab_layout: "📐 Stenderoppsett",
+    tab_height: "📏 Stenderhøyde",
+    tab_sarama: "🥳 Overskjønn / Bjelke",
+    tab_openmarks: "🪟 Vindu/Dør Koter",
+    tab_struct: "🏗 Konstruksjoner & Visualiseringer",
+    sec_proj: "📋 Prosjektinformasjon (Hus-C)",
+    sec_params: "📐 Veggparametre (Justerbare)",
+    sec_op: "🚪 Vinduer og Dører (Justerbar)",
+    sec_res: "📊 Resultater",
+    sec_adj: "🎯 Nøyaktig avstandsjustering",
+    sec_h: "📏 Stenderhøyde (Hus-C)",
+    sec_sarama: "🥳 Overskjønn Beregning (Hus-C Detalj)",
+    sec_om_ref: "🏗 Referansekote (Hus-C Kote)",
+    sec_struct: "🏗 Konstruksjoner, Tegninger & Visualiseringer (Derome / Mitek Pamir)",
+    lbl_proj_name: "Veggnavn / Identifikator",
+    lbl_date: "Dato",
+    lbl_wall_preset: "Hus-C Veggtype (Mal)",
+    lbl_notes: "Notater / Detaljer",
+    lbl_wlen: "Vegg lengde (mm)",
+    lbl_pitch: "Stenderavstand OC (mm)",
+    lbl_thick: "Stendertykkelse (mm)",
+    lbl_mingap: "Min. klaring (mm)",
+    lbl_left: "Venstre ende",
+    lbl_right: "Høyre ende",
+    lbl_adj: "Tilstøtende veggtykkelse (mm)",
+    lbl_add_op: "Legg til vinduer / dører",
+    lbl_quick_add_catalog: "Hurtigvalg Hus-C produkt:",
+    lbl_mark: "Oppmerking:",
+    lbl_floor_preset: "Etasjenivå (Hus-C Snitt)",
+    lbl_htot: "Total høyde H (mm)",
+    lbl_bunn: "Bunnsvill (Standard 2x 48mm)",
+    lbl_topp: "Toppsvill (Standard 1x 48mm)",
+    lbl_cut: "Kapping stender (Stender h)",
+    lbl_select_prod_cat: "Velg fra Hus-C produktliste:",
+    lbl_sar_name: "Navn / Kode",
+    lbl_sar_type: "Type",
+    lbl_sar_place: "Overskjønn posisjon",
+    lbl_sar_h: "Stenderhøyde (mm)",
+    lbl_prod_w: "Produktbredde (mm)",
+    lbl_prod_h: "Produkthøyde (mm)",
+    lbl_prod_bh: "Produkt Bh (mm)",
+    lbl_gap_side: "Sideklaring (mm)",
+    lbl_gap_top: "Toppklaring (mm)",
+    lbl_gap_bot: "Bunnklaring (mm)",
+    lbl_cut_list: "Kappeliste",
+    lbl_add_om_catalog: "Legg til fra Hus-C produktliste:",
+    lbl_om_fm: "Referansekote (mm)",
+    lbl_om_ff: "Ferdig gulv / OK Gulv (mm)",
+    lbl_om_gb: "Kompensasjon bunn (mm)",
+    lbl_om_gt: "Kompensasjon topp (mm)",
+    lbl_om_gs: "Kompensasjon side (mm)",
+    lbl_print_title: "Velg hva som skal skrives ut:",
+    h_info: "2x 48mm bunnsvill, 1x 48mm toppsvill (tykkelsen kan justeres nedenfor).",
+    opt_out: "🔳 Utvendig",
+    opt_in: "🔲 Innvendig",
+    opt_free: "↔ Fri ende",
+    opt_mark_l: "← Venstre",
+    opt_mark_r: "Høyre →",
+    opt_mark_c: "⊕ Senter",
+    opt_win: "Vindu",
+    opt_door: "Dør",
+    opt_win_top: "Over vindu/dør",
+    opt_top_sill: "Ved toppsvill",
+    btn_win: "🪟 + Vindu",
+    btn_door: "🚪 + Dør",
+    btn_calc: "⚡ Beregn",
+    btn_reset: "↺ Tilbakestill",
+    btn_export: "💾 Eksporter JSON",
+    btn_import: "📂 Importer JSON",
+    btn_reset_gap: "↺ Tilbakestill avstand",
+    btn_add_bunn: "+ Legg til Bunnsvill lag",
+    btn_add_topp: "+ Legg til Toppsvill lag",
+    btn_cancel: "Avbryt",
+    btn_print: "Skriv ut",
+    th_l: "Venstre",
+    th_c: "Senter",
+    th_r: "Høyre",
+    th_gap: "Klaring etter",
+    th_type: "Type",
+    th_name: "Navn",
+    th_size: "BxH (mm)",
+    th_wall: "Utsparing",
+    th_bh: "Bh",
+    th_bot: "▼ Bunnmerke",
+    th_top: "▲ Toppmerke",
+    type_corner_out: "Ytterhjørne stender",
+    type_corner_in: "Innerhjørne stender",
+    type_stud_start: "Startstender",
+    type_stud_end: "Sluttstender",
+    type_stud: "Standard stender",
+    type_stud_adj: "Justeringsstender",
+    type_king_l: "King stender (Venstre)",
+    type_trim_l: "Trim stender (Venstre)",
+    type_trim_r: "Trim stender (Høyre)",
+    type_king_r: "King stender (Høyre)",
+    lbl_studs_cnt: "Antall stendere",
+    lbl_total_parts: "Totalt antall deler",
+    msg_warn_gap: "Advarsel: Klaring {0} mm etter stender #{1} er mindre enn min. {2} mm",
+    pcs: "stk",
+    lbl_ro_w: "Utsparingsbredde W",
+    lbl_ro_h: "Utsparingshøyde H",
+    msg_king: "King stender (H_stender)",
+    msg_trim: "Trim stender (H_trim)",
+    msg_sarama_kant: "Overskjønn kant",
+    msg_sarama_sill: "Overskjønn flat",
+    msg_top_cripple_above: "Krypstender over overskjønn",
+    msg_win_top_sill: "Vindu toppsvill",
+    msg_top_cripple_under: "Krypstender under overskjønn",
+    msg_win_sill: "Vinduskarm svill",
+    msg_bot_cripple: "Krypstender under vindu",
+    msg_mark_above: "over OK gulv",
+    msg_mark_below: "under OK gulv",
+    msg_abs_mark: "Referansekote",
+    ph_proj_name: "F.eks.: YV01 - Fasad C-1",
+    ph_proj_notes: "Notater om tegninger 80-0C-005...",
+    ph_sar_name: "F.eks.: V02",
+    struct_intro: "Ansvarlige Hus-C (Steinsvikåsen Bygg C) knutepunkt-, etasjeskille-, bjelke- og takstoldetaljer i henhold til Mitek Pamir og Derome Takstolteknikk AS tegninger:",
+    struct_t1: "🦴 1. Bjelkelag 1 & 2 - Masonite I-Bjelker & Etasjeskille",
+    struct_t1_calc: "Beregning i henhold til Masonite-tabeller:",
+    struct_t1_li1: "Egenvekt: 0.5 kN/m² («Lett bjelkelag») med sponplater.",
+    struct_t1_li2: "Nedsenket område bad/vask med 50mm betong påstøp.",
+    struct_t1_li3: "Masonite I-bjelker skjøtes over ståldragere i henhold til detalj B09-300/305.",
+    struct_t1_li4: "Forsterkning (Kubbing/Klossing): Søylestøttepunkter fylles med treklosser i hele I-bjelkehøyden.",
+    struct_t2: "🛠 2. Stålbjelker (KB), Limtre (Bt) & Søyler - Knutepunkt",
+    struct_t2_desc: "Ståldragere og bæresøyler:",
+    struct_t2_li1: "Stål profilbjelker: KB203, KB218, KB221 (Mitek beregninger).",
+    struct_t2_li2: "Limtrebjelker og søyler: Bt1 - Bt8 langs alle akser C-2 til C-13.",
+    struct_t2_li3: "Forankring (Oppløft & Vindsug): Alle søyler og dragere forankres med stål Ankerbånd.",
+    struct_t3: "🏠 3. Mitek Pamir Takstoler (Sp1 - Sp9, T1 - T2)",
+    struct_t3_desc: "Takstolkonstruksjon (Takplan):",
+    struct_t3_li1: "Produsent: Derome Takstolteknikk AS (Pamir 2026.1b).",
+    struct_t3_li2: "Virkesdimensjon: 45mm / 48mm C24/C30 virke.",
+    struct_t3_li3: "Enkelttakstoler: Sp1-1..Sp9-3, T1-4..T2-6, g236.",
+    struct_t3_li4: "Skråavstivning i henhold til NS-EN 1995 med 25x100mm bord og spikplater.",
+    struct_t4: "🔩 4. Bjelkesko & Beslag Spesifikasjoner (Hardware Schedule)",
+    struct_t4_desc: "Bjelkesko og beslag fra tegningsoversikten:",
+    struct_t4_li1: "48x166: Brukes for montering av I-bjelker til trebjelker.",
+    struct_t4_li2: "48x226: Brukes for høyere Masonite I-bjelker.",
+    struct_t4_li3: "100x170: Brukes for doble/tykke bjelker.",
+    struct_t4_li4: "45x137: Brukes for oppheng av takstoler.",
+    struct_t4_li5: "Festes med 4.0x40 mm ankernagler / ankerskruer.",
+    struct_t5: "🧱 5. Vegg Snittkatalog Visualisering (YV01 - YV22 / IV01 - IV40)",
+    struct_t5_desc: "Ved å velge en veggtype fra Stenderoppsett-kortet, vil du se den komplette lagspesifikasjonen. Standard Hus-C fasadevegg (YV01) snittskjema:"
+  },
+  en: {
+    header_title: "Steinsvikåsen Bygg C - Calc by Vytautas Giedraitis",
+    tab_layout: "📐 Stud Layout",
+    tab_height: "📏 Stud Height",
+    tab_sarama: "🥳 Header Calculation",
+    tab_openmarks: "🪟 Opening Marks",
+    tab_struct: "🏗 Structures & Visualizations",
+    sec_proj: "📋 Project Info (Hus-C)",
+    sec_params: "📐 Wall Parameters (Editable)",
+    sec_op: "🚪 Windows & Doors (Editable)",
+    sec_res: "📊 Results",
+    sec_adj: "🎯 Fine Gap Adjustment",
+    sec_h: "📏 Stud Height (Hus-C)",
+    sec_sarama: "🥳 Header Beam Calculation (Hus-C)",
+    sec_om_ref: "🏗 Benchmark Elevation (Hus-C)",
+    sec_struct: "🏗 Structural Details & Visualizations (Derome / Mitek)",
+    lbl_proj_name: "Wall Name / Identifier",
+    lbl_date: "Date",
+    lbl_wall_preset: "Hus-C Wall Type (Preset)",
+    lbl_notes: "Notes / Details",
+    lbl_wlen: "Wall Length (mm)",
+    lbl_pitch: "Stud Pitch OC (mm)",
+    lbl_thick: "Stud Thickness (mm)",
+    lbl_mingap: "Min. Gap (mm)",
+    lbl_left: "Left Corner",
+    lbl_right: "Right Corner",
+    lbl_adj: "Adjacent Wall Thickness (mm)",
+    lbl_add_op: "Add Windows / Doors",
+    lbl_quick_add_catalog: "Quick Select Hus-C Product:",
+    lbl_mark: "Marking Side:",
+    lbl_floor_preset: "Floor Level (Hus-C Section)",
+    lbl_htot: "Total Height H (mm)",
+    lbl_bunn: "Bottom Sill (Default 2x 48mm)",
+    lbl_topp: "Top Sill (Default 1x 48mm)",
+    lbl_cut: "Stud Cut Length (h)",
+    lbl_select_prod_cat: "Select from Hus-C Catalog:",
+    lbl_sar_name: "Name / Code",
+    lbl_sar_type: "Type",
+    lbl_sar_place: "Header Placement",
+    lbl_sar_h: "Stud Height (mm)",
+    lbl_prod_w: "Product Width (mm)",
+    lbl_prod_h: "Product Height (mm)",
+    lbl_prod_bh: "Product Sill Height Bh (mm)",
+    lbl_gap_side: "Side Gap (mm)",
+    lbl_gap_top: "Top Gap (mm)",
+    lbl_gap_bot: "Bottom Gap (mm)",
+    lbl_cut_list: "Cut List",
+    lbl_add_om_catalog: "Add from Hus-C Catalog:",
+    lbl_om_fm: "Benchmark Mark (mm)",
+    lbl_om_ff: "Finished Floor (mm)",
+    lbl_om_gb: "Bottom Allowance (mm)",
+    lbl_om_gt: "Top Allowance (mm)",
+    lbl_om_gs: "Side Allowance (mm)",
+    lbl_print_title: "Select sections to print:",
+    h_info: "2x 48mm bottom sill, 1x 48mm top sill (each thickness is customisable below).",
+    opt_out: "🔳 Outer",
+    opt_in: "🔲 Inner",
+    opt_free: "↔ Free End",
+    opt_mark_l: "← Left",
+    opt_mark_r: "Right →",
+    opt_mark_c: "⊕ Center",
+    opt_win: "Window",
+    opt_door: "Door",
+    opt_win_top: "Above Window/Door",
+    opt_top_sill: "At Top Sill",
+    btn_win: "🪟 + Window",
+    btn_door: "🚪 + Door",
+    btn_calc: "⚡ Calculate",
+    btn_reset: "↺ Reset",
+    btn_export: "💾 Export JSON",
+    btn_import: "📂 Import JSON",
+    btn_reset_gap: "↺ Reset Gaps",
+    btn_add_bunn: "+ Add Bottom Sill Layer",
+    btn_add_topp: "+ Add Top Sill Layer",
+    btn_cancel: "Cancel",
+    btn_print: "Print",
+    th_l: "Left",
+    th_c: "Center",
+    th_r: "Right",
+    th_gap: "Gap After",
+    th_type: "Type",
+    th_name: "Name",
+    th_size: "WxH (mm)",
+    th_wall: "Opening",
+    th_bh: "Bh",
+    th_bot: "▼ Bottom Mark",
+    th_top: "▲ Top Mark",
+    type_corner_out: "Outer Corner Stud",
+    type_corner_in: "Inner Corner Stud",
+    type_stud_start: "Start Stud",
+    type_stud_end: "End Stud",
+    type_stud: "Standard Stud",
+    type_stud_adj: "Adjustment Stud",
+    type_king_l: "King Stud (Left)",
+    type_trim_l: "Trim Stud (Left)",
+    type_trim_r: "Trim Stud (Right)",
+    type_king_r: "King Stud (Right)",
+    lbl_studs_cnt: "Stud Count",
+    lbl_total_parts: "Total Parts",
+    msg_warn_gap: "Warning: Gap {0} mm after stud #{1} is smaller than min {2} mm",
+    pcs: "pcs",
+    lbl_ro_w: "Rough Opening W",
+    lbl_ro_h: "Rough Opening H",
+    msg_king: "King Stud (H_stud)",
+    msg_trim: "Trim Stud (H_trim)",
+    msg_sarama_kant: "Header Beam (On Edge)",
+    msg_sarama_sill: "Header Beam (Flat)",
+    msg_top_cripple_above: "Cripple Stud Above Header",
+    msg_win_top_sill: "Window Top Plate",
+    msg_top_cripple_under: "Cripple Stud Under Header",
+    msg_win_sill: "Window Bottom Sill",
+    msg_bot_cripple: "Cripple Stud Under Sill",
+    msg_mark_above: "above floor level",
+    msg_mark_below: "below floor level",
+    msg_abs_mark: "Benchmark Mark",
+    ph_proj_name: "e.g.: YV01 - Façade C-1",
+    ph_proj_notes: "Notes regarding drawings 80-0C-005...",
+    ph_sar_name: "e.g.: V02",
+    struct_intro: "Hus-C (Steinsvikåsen Bygg C) structural joist, beam, column and roof truss specifications according to Mitek Pamir and Derome Takstolteknikk AS drawings:",
+    struct_t1: "🦴 1. Floor Deck 1 & 2 - Masonite I-Joist Floor Assembly",
+    struct_t1_calc: "Calculation according to Masonite load tables:",
+    struct_t1_li1: "Self-weight: 0.5 kN/m² ('Light floor joist system') with chipboard decking.",
+    struct_t1_li2: "Lowered wet room floor area with 50mm concrete screed.",
+    struct_t1_li3: "Masonite I-joists lapped over steel beams according to detail B09-300/305.",
+    struct_t1_li4: "Web stiffening (Blocking): Column bearing points filled with solid wood blocks full I-joist height.",
+    struct_t2: "🛠 2. Steel Beams (KB), Glulam (Bt) & Columns - Structural Joints",
+    struct_t2_desc: "Steel beams and supporting columns:",
+    struct_t2_li1: "Steel profile beams: KB203, KB218, KB221 (Mitek engineering).",
+    struct_t2_li2: "Glulam beams & columns: Bt1 - Bt8 along all gridlines C-2 to C-13.",
+    struct_t2_li3: "Anchorage (Uplift & Wind suction): All columns and beams anchored with steel straps.",
+    struct_t3: "🏠 3. Mitek Pamir Roof Trusses (Sp1 - Sp9, T1 - T2)",
+    struct_t3_desc: "Roof truss layout & construction:",
+    struct_t3_li1: "Manufacturer: Derome Takstolteknikk AS (Pamir 2026.1b).",
+    struct_t3_li2: "Timber dimensions: 45mm / 48mm C24/C30 structural timber.",
+    struct_t3_li3: "Individual truss types: Sp1-1..Sp9-3, T1-4..T2-6, g236.",
+    struct_t3_li4: "Diagonal wind bracing according to NS-EN 1995 with 25x100mm boards and nail plates.",
+    struct_t4: "🔩 4. Joist Hangers & Connector Schedule (Hardware Specs)",
+    struct_t4_desc: "Joist hangers & connectors from structural schedule:",
+    struct_t4_li1: "48x166: Used for attaching I-joists to timber beams.",
+    struct_t4_li2: "48x226: Used for deeper Masonite I-joists.",
+    struct_t4_li3: "100x170: Used for double/thick joists.",
+    struct_t4_li4: "45x137: Used for hanging roof trusses.",
+    struct_t4_li5: "Fastened with 4.0x40 mm anchor nails / screws.",
+    struct_t5: "🧱 5. Wall Build-up Layer Section Visualizer (YV01 - YV22 / IV01 - IV40)",
+    struct_t5_desc: "Selecting any wall type in the Stud Layout tab displays its complete layer build-up specs. Standard Hus-C façade wall (YV01) cross-section:"
+  },
+  pl: {
+    header_title: "Steinsvikåsen Bygg C - Calc by Vytautas Giedraitis",
+    tab_layout: "📐 Układ Słupków",
+    tab_height: "📏 Wysokość Słupka",
+    tab_sarama: "🥳 Obliczenie Nadproża",
+    tab_openmarks: "🪟 Rzędne Otworów",
+    tab_struct: "🏗 Konstrukcje & Wizualizacje",
+    sec_proj: "📋 Informacje o Projekcie (Hus-C)",
+    sec_params: "📐 Parametry Ściany (Edytowalne)",
+    sec_op: "🚪 Okna i Drzwi (Edytowalne)",
+    sec_res: "📊 Wyniki",
+    sec_adj: "🎯 Dokładna Regulacja Odstępów",
+    sec_h: "📏 Wysokość Słupka (Hus-C)",
+    sec_sarama: "🥳 Obliczenie Nadproża (Hus-C)",
+    sec_om_ref: "🏗 Rzędna Odniesienia (Hus-C)",
+    sec_struct: "🏗 Detale Konstrukcyjne & Wizualizacje (Derome / Mitek)",
+    lbl_proj_name: "Nazwa Ściany / Identyfikator",
+    lbl_date: "Data",
+    lbl_wall_preset: "Hus-C Typ Ściany (Szablon)",
+    lbl_notes: "Uwagi / Detale",
+    lbl_wlen: "Długość Ściany (mm)",
+    lbl_pitch: "Rozstaw Słupków OC (mm)",
+    lbl_thick: "Grubość Słupka (mm)",
+    lbl_mingap: "Min. Odstęp (mm)",
+    lbl_left: "Lewy Koniec",
+    lbl_right: "Prawy Koniec",
+    lbl_adj: "Grubość Ściany Sąsiedniej (mm)",
+    lbl_add_op: "Dodaj Okna / Drzwi",
+    lbl_quick_add_catalog: "Szybki Wybór Produktu Hus-C:",
+    lbl_mark: "Oznaczenie:",
+    lbl_floor_preset: "Poziom Kondygnacji (Hus-C)",
+    lbl_htot: "Wysokość Całkowita H (mm)",
+    lbl_bunn: "Podwalina (Domyślnie 2x 48mm)",
+    lbl_topp: "Oczep (Domyślnie 1x 48mm)",
+    lbl_cut: "Długość Cięcia Słupka (h)",
+    lbl_select_prod_cat: "Wybierz z Katalogu Hus-C:",
+    lbl_sar_name: "Nazwa / Kod",
+    lbl_sar_type: "Typ",
+    lbl_sar_place: "Pozycja Nadproża",
+    lbl_sar_h: "Wysokość Słupka (mm)",
+    lbl_prod_w: "Szerokość Produktu (mm)",
+    lbl_prod_h: "Wysokość Produktu (mm)",
+    lbl_prod_bh: "Wysokość Parapetu Bh (mm)",
+    lbl_gap_side: "Luz Boczny (mm)",
+    lbl_gap_top: "Luz Górny (mm)",
+    lbl_gap_bot: "Luz Dolny (mm)",
+    lbl_cut_list: "Lista Cięć",
+    lbl_add_om_catalog: "Dodaj z Katalogu Hus-C:",
+    lbl_om_fm: "Rzędna Odniesienia (mm)",
+    lbl_om_ff: "Wykończona Podłoga (mm)",
+    lbl_om_gb: "Luz Dolny (mm)",
+    lbl_om_gt: "Luz Górny (mm)",
+    lbl_om_gs: "Luz Boczny (mm)",
+    lbl_print_title: "Wybierz sekcje do druku:",
+    h_info: "2x 48mm podwalina, 1x 48mm oczep (każdą grubość można edytować poniżej).",
+    opt_out: "🔳 Zewnętrzny",
+    opt_in: "🔲 Wewnętrzny",
+    opt_free: "↔ Swobodny",
+    opt_mark_l: "← Lewy",
+    opt_mark_r: "Prawy →",
+    opt_mark_c: "⊕ Środek",
+    opt_win: "Okno",
+    opt_door: "Drzwi",
+    opt_win_top: "Nad oknem/drzwiami",
+    opt_top_sill: "Przy oczepie",
+    btn_win: "🪟 + Okno",
+    btn_door: "🚪 + Drzwi",
+    btn_calc: "⚡ Oblicz",
+    btn_reset: "↺ Resetuj",
+    btn_export: "💾 Eksportuj JSON",
+    btn_import: "📂 Importuj JSON",
+    btn_reset_gap: "↺ Resetuj Odstępy",
+    btn_add_bunn: "+ Dodaj Warstwę Podwaliny",
+    btn_add_topp: "+ Dodaj Warstwę Oczepu",
+    btn_cancel: "Anuluj",
+    btn_print: "Drukuj",
+    th_l: "Lewy",
+    th_c: "Środek",
+    th_r: "Prawy",
+    th_gap: "Odstęp po",
+    th_type: "Typ",
+    th_name: "Nazwa",
+    th_size: "SxW (mm)",
+    th_wall: "Otwór",
+    th_bh: "Bh",
+    th_bot: "▼ Rzędna Dolna",
+    th_top: "▲ Rzędna Górna",
+    type_corner_out: "Słupek Narożnika Zewnętrznego",
+    type_corner_in: "Słupek Narożnika Wewnętrznego",
+    type_stud_start: "Słupek Początkowy",
+    type_stud_end: "Słupek Końcowy",
+    type_stud: "Słupek Standardowy",
+    type_stud_adj: "Słupek Regulacyjny",
+    type_king_l: "Słupek King (Lewy)",
+    type_trim_l: "Słupek Trim (Lewy)",
+    type_trim_r: "Słupek Trim (Prawy)",
+    type_king_r: "Słupek King (Prawy)",
+    lbl_studs_cnt: "Liczba Słupków",
+    lbl_total_parts: "Łącznie Elementów",
+    msg_warn_gap: "Ostrzeżenie: Odstęp {0} mm po słupku #{1} jest mniejszy niż min. {2} mm",
+    pcs: "szt",
+    lbl_ro_w: "Szerokość Otworu W",
+    lbl_ro_h: "Wysokość Otworu H",
+    msg_king: "Słupek King (H_stud)",
+    msg_trim: "Słupek Trim (H_trim)",
+    msg_sarama_kant: "Belka Nadproża (Krawędź)",
+    msg_sarama_sill: "Belka Nadproża (Płasko)",
+    msg_top_cripple_above: "Słupek Krótki Nad Nadprożem",
+    msg_win_top_sill: "Deska Górna Okna",
+    msg_top_cripple_under: "Słupek Krótki Pod Nadprożem",
+    msg_win_sill: "Podwalina Parapetu",
+    msg_bot_cripple: "Słupek Krótki Pod Parapetem",
+    msg_mark_above: "powyżej poziomu podłogi",
+    msg_mark_below: "poniżej poziomu podłogi",
+    msg_abs_mark: "Rzędna Odniesienia",
+    ph_proj_name: "Np.: YV01 - Elewacja C-1",
+    ph_proj_notes: "Uwagi do rysunków 80-0C-005...",
+    ph_sar_name: "Np.: V02",
+    struct_intro: "Detale konstrukcyjne stropów, belek, słupów i wiązarów Hus-C (Steinsvikåsen Bygg C) według rysunków Mitek Pamir i Derome Takstolteknikk AS:",
+    struct_t1: "🦴 1. Strop 1 & 2 - Belki I-Bjelker Masonite i Detal Stropu",
+    struct_t1_calc: "Obliczenia według tabel Masonite:",
+    struct_t1_li1: "Ciężar własny: 0.5 kN/m² ('Lekki strop') z płytami wiórowymi.",
+    struct_t1_li2: "Obniżona strefa łazienki z 50mm wylewką betonową.",
+    struct_t1_li3: "Belki I-bjelker Masonite ączone nad belkami stalowymi wg detalu B09-300/305.",
+    struct_t1_li4: "Wzmocnienie (Klockowanie): Punkty podparcia słupów wypełnione klockami drewnianymi na całą wysokość belki.",
+    struct_t2: "🛠 2. Belki Stalowe (KB), Drewno Klejone (Bt) i Słupy - Detale Węzłów",
+    struct_t2_desc: "Belki stalowe i słupy nośne:",
+    struct_t2_li1: "Stalowe belki profilowe: KB203, KB218, KB221 (Obliczenia Mitek).",
+    struct_t2_li2: "Belki i słupy z drewna klejonego: Bt1 - Bt8 wzdłuż osi C-2 do C-13.",
+    struct_t2_li3: "Zakotwienie (Siła ssania wiatru): Wszystkie słupy i belki zakotwione taśmami stalowymi.",
+    struct_t3: "🏠 3. Wiązary Dachowe Mitek Pamir (Sp1 - Sp9, T1 - T2)",
+    struct_t3_desc: "Konstrukcja wiązarów dachowych (Takplan):",
+    struct_t3_li1: "Producent: Derome Takstolteknikk AS (Pamir 2026.1b).",
+    struct_t3_li2: "Wymiary drewna: 45mm / 48mm drewno konstrukcyjne C24/C30.",
+    struct_t3_li3: "Poszczególne typy wiązarów: Sp1-1..Sp9-3, T1-4..T2-6, g236.",
+    struct_t3_li4: "Stężenia ukośne wiatrowe wg NS-EN 1995 z deskami 25x100mm i płytkami kolczastymi.",
+    struct_t4: "🔩 4. Wieszaki Belkowe & Specyfikacja Złączy Metalowych",
+    struct_t4_desc: "Wieszaki i złącza ciesielskie ze specyfikacji rysunkowej:",
+    struct_t4_li1: "48x166: Używane do mocowania belek I-bjelker do belek drewnianych.",
+    struct_t4_li2: "48x226: Używane do wyższych belek I-bjelker.",
+    struct_t4_li3: "100x170: Używane do podwójnych/grubych belek.",
+    struct_t4_li4: "45x137: Używane do zawieszania wiązarów dachowych.",
+    struct_t4_li5: "Mocowane za pomocą gwoździ/wkrętów kotwowych 4.0x40 mm.",
+    struct_t5: "🧱 5. Wizualizacja Przekroju Warstw Ściany (YV01 - YV22 / IV01 - IV40)",
+    struct_t5_desc: "Wybierając dowolny typ ściany w zakładce Układ Słupków, zobaczysz jej pełną specyfikację warstw. Standardowy przekrój ściany elewacyjnej Hus-C (YV01):"
+  }
+};
+
+let currentLang = localStorage.getItem('probuilder_lang') || 'no';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('probuilder_lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    if(btn.dataset.lang === lang) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+  applyLang();
+  calculate();
+  calcHeight();
+  calcSarama();
+  calcOpenMarks();
+}
+
+function applyLang() {
+  const d = T[currentLang] || T.no;
+  document.querySelectorAll('[data-i18n]').forEach(elem => {
+    const key = elem.getAttribute('data-i18n');
+    if(d[key]) elem.innerText = d[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(elem => {
+    const key = elem.getAttribute('data-i18n-ph');
+    if(d[key]) elem.setAttribute('placeholder', d[key]);
+  });
+}
+
+// ==================== HUS-C DATA CATALOGS ====================
+const HUS_C_WALL_TYPES = {
+  YV01: { name: "YV01 - Yttervegg (Tjærebrun 0175)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon (48x198 stender) / dampsperre / 48mm isolasjon / 12.5mm gips" },
+  YV02: { name: "YV02 - Yttervegg (Vika 546)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon (48x198 stender) / dampsperre / 48mm isolasjon / 12.5mm gips" },
+  YV03: { name: "YV03 - Yttervegg EI60 (Tjærebrun 0175)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips (EI60)" },
+  YV04: { name: "YV04 - Yttervegg (Vika 546)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm GU plate / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips" },
+  YV05: { name: "YV05 - Parapet EI60 (Vika 546)", stud_thick: 48, stud_depth: 73, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm GU plate / 73mm stender / 9mm GU plate (EI60)" },
+  YV06: { name: "YV06 - Parapet (Vika 546)", stud_thick: 48, stud_depth: 73, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm GU plate / 73mm stender / 9mm GU plate" },
+  YV07: { name: "YV07 - Yttervegg EI30 (Tjærebrun 0175)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips (EI30)" },
+  YV08: { name: "YV08 - Yttervegg (Tjærebrun 0175)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips" },
+  YV09: { name: "YV09 - Yttervegg EI60 (Tjærebrun 0175)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips (EI60)" },
+  YV10: { name: "YV10 - Yttervegg EI60 (Vika 546)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips (EI60)" },
+  YV11: { name: "YV11 - Yttervegg EI60 (Vika 546)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm vindsperre / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips (EI60)" },
+  YV12: { name: "YV12 - Parapet EI30 (Tjærebrun 0175)", stud_thick: 48, stud_depth: 73, layers: "19mm kledning / 36mm sløyfe / 23mm utlekting / 9mm GU plate / 73mm stender / 9mm GU plate (EI30)" },
+  YV13: { name: "YV13 - Utvendig skillevegg", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm utlekting / 23mm utlekting / 9mm GU plate / 198mm stender / 9mm GU plate / 23mm utlekting / 36mm utlekting / 19mm kledning" },
+  YV14: { name: "YV14 - Yttervegg Kledning", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 36mm utlekting / 9mm GU gips / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips" },
+  YV15: { name: "YV15 - Påfôring betongvegg", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm utlekting / 23mm utlekting / 9mm GU gips / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips" },
+  YV16: { name: "YV16 - Utvendig påfôring betong", stud_thick: 48, stud_depth: 148, layers: "19mm kledning / 36mm utlekting / 23mm utlekting / 9mm vindsperre / 148mm isolasjon (Vika 546)" },
+  YV17: { name: "YV17 - Utvendig skillevegg", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm utlekting / 23mm utlekting / 9mm GU plate / 198mm stender / 9mm GU plate / 23mm utlekting / 36mm utlekting / 19mm kledning" },
+  YV18: { name: "YV18 - Yttervegg bod", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 36mm utlekting / 9mm GU gips / 198mm stender / 12.5mm gips (Vika 546)" },
+  YV19: { name: "YV19 - Parapet", stud_thick: 48, stud_depth: 73, layers: "9mm GU plate / 73mm stender / 9mm GU plate (Vika 546)" },
+  YV20: { name: "YV20 - Steni plate vegg", stud_thick: 48, stud_depth: 198, layers: "9mm Steni plate / 48mm sløyfe / 36mm utlekting / 9mm GU gipsplate / 198mm isolasjon / dampsperre / 48mm isolasjon / 12.5mm gips (Vika 546)" },
+  YV21: { name: "YV21 - Yttervegg m/120mm isolasjon", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 36mm utlekting / 9mm GU gips / 198mm isolasjon / dampsperre / 120mm isolasjon / 12.5mm gips (Tjærebrun 0175)" },
+  YV22: { name: "YV22 - Dobbeltstender (Vika 546)", stud_thick: 48, stud_depth: 198, layers: "19mm kledning / 36mm sløyfe / 36mm utlekting / 9mm GU gips / 198mm isolasjon / dampsperre / 48mm isolasjon / 100mm stender / 12.5mm gips" },
+  IV01: { name: "IV01 - Innervegg (98mm)", stud_thick: 48, stud_depth: 98, layers: "12.5mm gips / 98mm stender m/ 48mm isolasjon / 12.5mm gips" },
+  IV02: { name: "IV02 - Påfôringsvegg", stud_thick: 48, stud_depth: 48, layers: "48mm isolasjon / 12.5mm gips" },
+  IV03: { name: "IV03 - Innervegg 2x gips", stud_thick: 48, stud_depth: 70, layers: "12.5mm gips / 12.5mm gips / 70mm stender m/ 50mm isolasjon" },
+  IV04: { name: "IV04 - Lydskillevegg EI30 (2x 98mm)", stud_thick: 48, stud_depth: 98, layers: "2x 12.5mm gips / 98mm isolasjon / 20mm luft / 98mm isolasjon / 2x 12.5mm gips (EI30)" },
+  IV05: { name: "IV05 - Skillevegg trapperom EI60 (148mm)", stud_thick: 48, stud_depth: 148, layers: "12.5mm gips / 148mm isolasjon / 48mm isolasjon / 12.5mm gips (EI60)" },
+  IV06: { name: "IV06 - Skillevegg trapperom EI60 (148mm)", stud_thick: 48, stud_depth: 148, layers: "12.5mm gips / 148mm isolasjon / 48mm isolasjon / 12.5mm gips (EI60)" },
+  IV07: { name: "IV07 - Innervegg (148mm)", stud_thick: 48, stud_depth: 148, layers: "12.5mm gips / 148mm isolasjon" },
+  IV08: { name: "IV08 - Skillevegg bolig/bod", stud_thick: 48, stud_depth: 148, layers: "12.5mm gips / 148mm isolasjon / 48mm isolasjon / 12.5mm gips" },
+  IV20: { name: "IV20 - Badvegg flis (98mm)", stud_thick: 48, stud_depth: 98, layers: "10mm flis / 12.5mm gips / 98mm isolasjon / 12.5mm gips" },
+  IV21: { name: "IV21 - Påfôring bad flis", stud_thick: 48, stud_depth: 48, layers: "48mm isolasjon / 12.5mm gips / 10mm flis" },
+  IV23: { name: "IV23 - Vegg for føringer flis", stud_thick: 48, stud_depth: 198, layers: "10mm flis / 12.5mm gips / 198mm isolasjon / 12.5mm gips" },
+  IV30: { name: "IV30 - Sjaktvegg 2x gips", stud_thick: 48, stud_depth: 98, layers: "12.5mm gips / 12.5mm gips / 98mm isolasjon" },
+  IV31: { name: "IV31 - Påfôring føringer", stud_thick: 48, stud_depth: 98, layers: "12.5mm gips / 98mm stender" },
+  IV40: { name: "IV40 - Påfôring føringer (48mm)", stud_thick: 48, stud_depth: 48, layers: "12.5mm gips / 48mm stender" }
+};
+
+const HUS_C_PRODUCTS = {
+  V01: { name: "V01", type: "window", w: 790, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning oppe (EI60)" },
+  V02: { name: "V02", type: "window", w: 1090, h: 2190, bh: 0, desc: "Fastvindu (Bh 0/150 Plan 04)" },
+  V03: { name: "V03", type: "window", w: 1590, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning og tett felt" },
+  V04: { name: "V04", type: "window", w: 1590, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning og tett felt" },
+  V05: { name: "V05", type: "window", w: 1590, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning oppe" },
+  V06: { name: "V06", type: "window", w: 1190, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning oppe (EI60)" },
+  V07: { name: "V07", type: "window", w: 1890, h: 2190, bh: 150, desc: "Fastvindu 2 felt (Bh 150)" },
+  V08: { name: "V08", type: "window", w: 790, h: 2190, bh: 0, desc: "Fastvindu (Bh 0/150 Plan 04)" },
+  V09: { name: "V09", type: "window", w: 1190, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning oppe (Bh 0/150)" },
+  V10: { name: "V10", type: "window", w: 690, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning oppe (Bh 0/150)" },
+  V11: { name: "V11", type: "window", w: 2090, h: 2190, bh: 150, desc: "Fastvindu 2 felt (Bh 150)" },
+  V12: { name: "V12", type: "window", w: 790, h: 1490, bh: 690, desc: "Fastvindu (Bh 690)" },
+  V13: { name: "V13", type: "window", w: 1990, h: 2190, bh: 0, desc: "Vindu 2 felt m/åpning og tett felt" },
+  V14: { name: "V14", type: "window", w: 790, h: 2190, bh: 150, desc: "Vindu 2 felt m/åpning oppe (Bh 150)" },
+  BD01: { name: "BD01", type: "door", w: 990, h: 2090, bh: 0, desc: "Enfløyet Balkongdør Glassfelt" },
+  BD02: { name: "BD02", type: "door", w: 990, h: 2090, bh: 0, desc: "Enfløyet Balkongdør Glassfelt" },
+  BD03: { name: "BD03", type: "door", w: 2090, h: 2090, bh: 0, desc: "NTech Skyvedør Alu" },
+  BD04: { name: "BD04", type: "door", w: 990, h: 2090, bh: 0, desc: "Enfløyet Balkongdør (EI30)" },
+  YD01: { name: "YD01", type: "door", w: 1090, h: 2190, bh: 0, desc: "Ytterdør enfløyet høyre" },
+  YD02: { name: "YD02", type: "door", w: 1090, h: 2190, bh: 0, desc: "Ytterdør enfløyet venstre" },
+  YD03: { name: "YD03", type: "door", w: 990, h: 2190, bh: 0, desc: "Ytterdør enfløyet høyre" },
+  YD04: { name: "YD04", type: "door", w: 990, h: 2190, bh: 0, desc: "Ytterdør enfløyet venstre" },
+  YD05: { name: "YD05", type: "door", w: 990, h: 2090, bh: 0, desc: "Ytterdør enfløyet glassfelt" },
+  YD06: { name: "YD06", type: "door", w: 990, h: 2190, bh: 0, desc: "Ytterdør stål (EI60)" },
+  D01: { name: "D01", type: "door", w: 890, h: 2090, bh: 0, desc: "Innvendig tredør høyre" },
+  D02: { name: "D02", type: "door", w: 890, h: 2090, bh: 0, desc: "Innvendig tredør høyre m/terskel" },
+  D03: { name: "D03", type: "door", w: 890, h: 2090, bh: 0, desc: "Innvendig tredør venstre" },
+  D04: { name: "D04", type: "door", w: 890, h: 2090, bh: 0, desc: "Innvendig tredør venstre m/terskel" },
+  D05: { name: "D05", type: "door", w: 890, h: 2090, bh: 0, desc: "Skyvedør Vossakarmen" }
+};
+
+const HUS_C_FLOORS = {
+  plan01: { name: "Plan 01 (+35400)", h_total: 2748, level: "+35400" },
+  plan02: { name: "Plan 02 (+38400)", h_total: 2748, level: "+38400" },
+  plan03: { name: "Plan 03 (+41400)", h_total: 2748, level: "+41400" },
+  plan04: { name: "Plan 04 (+44700)", h_total: 3048, level: "+44700" },
+  plan05: { name: "Tak / Plan 05 (+47950)", h_total: 2998, level: "+47950" }
+};
+
+// ==================== STATE MANAGEMENT ====================
+let currentState = {
+  proj_name:"",proj_date:"",proj_notes:"",wall_preset:"custom",
+  wall_length:6000,stud_pitch:600,stud_thick:48,min_gap:100,
+  left_type:"outer",left_adj_thick:198,right_type:"free",right_adj_thick:198,
+  openings_enabled:false,openings:[],mark_side:"left",
+  floor_preset:"plan02",h_total:2748,
+  bunn_layers:[48,48], // DEFAULT: 2x 48mm bunnsvill
+  topp_layers:[48],    // DEFAULT: 1x 48mm topsvill
+  sar_name:"",sar_type:"window",sar_placement:"top_sill",sar_opening_w:1200,sar_stud_h:2604,sar_bh:800,sar_win_h:1200,sar_gap_side:10,sar_gap_top:15,sar_gap_bot:15,
+  sar_kant_h:198,sar_flat_h:48,sar_stud_thick:48,
+  om_floor_mark:3900,om_finished_floor:4000,om_gap_bot:15,om_gap_top:15,om_gap_side:10,om_items:[]
+};
+const STORAGE_KEY = 'probuilder_husc_state';
+
+function exportJSON(){
+  saveState();
+  let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentState, null, 2));
+  let dlAnchorElem = document.createElement('a');
+  dlAnchorElem.setAttribute("href", dataStr);
+  let fileName = currentState.proj_name ? currentState.proj_name : "Hus-C_siena";
+  dlAnchorElem.setAttribute("download", fileName + "_eksportas.json");
+  document.body.appendChild(dlAnchorElem);
+  dlAnchorElem.click();
+  dlAnchorElem.remove();
+}
+
+function importJSON(e){
+  let file = e.target.files[0];
+  if(!file) return;
+  let reader = new FileReader();
+  reader.onload = function(evt){
+    try {
+      let parsed = JSON.parse(evt.target.result);
+      currentState = {...currentState, ...parsed};
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+      alert('Duomenys sėkmingai importuoti / Data imported successfully');
+      location.reload();
+    } catch(err) {
+      alert('Klaida skaitant failą / Error reading file');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function saveState(){
+  currentState.proj_name = document.getElementById('proj_name')?.value || '';
+  currentState.proj_date = document.getElementById('proj_date')?.value || '';
+  currentState.proj_notes = document.getElementById('proj_notes')?.value || '';
+  currentState.wall_preset = document.getElementById('wall_preset_select')?.value || 'custom';
+  currentState.wall_length = parseInt(document.getElementById('wall_length')?.value)||0;
+  currentState.stud_pitch = parseInt(document.getElementById('stud_pitch')?.value)||600;
+  currentState.stud_thick = parseInt(document.getElementById('stud_thick')?.value)||48;
+  currentState.min_gap = parseInt(document.getElementById('min_gap')?.value)||100;
+  currentState.left_type = document.querySelector('input[name="left_type"]:checked')?.value || 'outer';
+  currentState.left_adj_thick = parseInt(document.getElementById('left_adj_thick')?.value)||0;
+  currentState.right_type = document.querySelector('input[name="right_type"]:checked')?.value || 'free';
+  currentState.right_adj_thick = parseInt(document.getElementById('right_adj_thick')?.value)||0;
+  currentState.openings_enabled = document.getElementById('openings_enabled')?.checked || false;
+  currentState.mark_side = document.querySelector('input[name="mark_side"]:checked')?.value || 'left';
+  currentState.floor_preset = document.getElementById('floor_preset_select')?.value || 'plan02';
+  currentState.h_total = parseInt(document.getElementById('h_total')?.value)||0;
+  currentState.sar_name = document.getElementById('sar_name')?.value || '';
+  currentState.sar_type = document.getElementById('sar_type')?.value || 'window';
+  currentState.sar_placement = document.getElementById('sar_placement')?.value || 'top_sill';
+  currentState.sar_opening_w = parseInt(document.getElementById('sar_opening_w')?.value)||0;
+  currentState.sar_stud_h = parseInt(document.getElementById('sar_stud_h')?.value)||0;
+  currentState.sar_bh = parseInt(document.getElementById('sar_bh')?.value)||0;
+  currentState.sar_win_h = parseInt(document.getElementById('sar_win_h')?.value)||0;
+  currentState.sar_gap_side = parseInt(document.getElementById('sar_gap_side')?.value)||0;
+  currentState.sar_gap_top = parseInt(document.getElementById('sar_gap_top')?.value)||0;
+  currentState.sar_gap_bot = parseInt(document.getElementById('sar_gap_bot')?.value)||0;
+  currentState.sar_kant_h = parseInt(document.getElementById('sar_kant_h')?.value)||198;
+  currentState.sar_flat_h = parseInt(document.getElementById('sar_flat_h')?.value)||48;
+  currentState.sar_stud_thick = parseInt(document.getElementById('sar_stud_thick')?.value)||48;
+  currentState.om_floor_mark = parseInt(document.getElementById('om_floor_mark')?.value)||3900;
+  currentState.om_finished_floor = parseInt(document.getElementById('om_finished_floor')?.value)||4000;
+  currentState.om_gap_bot = parseInt(document.getElementById('om_gap_bot')?.value)||0;
+  currentState.om_gap_top = parseInt(document.getElementById('om_gap_top')?.value)||0;
+  currentState.om_gap_side = parseInt(document.getElementById('om_gap_side')?.value)||0;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+}
+
+function loadState(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      currentState = {...currentState, ...parsed};
+    }
+  }catch(e){}
+  
+  if(document.getElementById('proj_name')) document.getElementById('proj_name').value = currentState.proj_name||"";
+  if(document.getElementById('proj_date')) document.getElementById('proj_date').value = currentState.proj_date||"";
+  if(document.getElementById('proj_notes')) document.getElementById('proj_notes').value = currentState.proj_notes||"";
+  if(document.getElementById('wall_preset_select')) document.getElementById('wall_preset_select').value = currentState.wall_preset||"custom";
+  if(document.getElementById('wall_length')) document.getElementById('wall_length').value = currentState.wall_length||6000;
+  if(document.getElementById('stud_pitch')) document.getElementById('stud_pitch').value = currentState.stud_pitch||600;
+  if(document.getElementById('stud_thick')) document.getElementById('stud_thick').value = currentState.stud_thick||48;
+  if(document.getElementById('min_gap')) document.getElementById('min_gap').value = currentState.min_gap||100;
+  
+  const ltRadio = document.querySelector(`input[name="left_type"][value="${currentState.left_type}"]`);
+  if(ltRadio) ltRadio.checked = true;
+  if(document.getElementById('left_adj_thick')) document.getElementById('left_adj_thick').value = currentState.left_adj_thick||198;
+  
+  const rtRadio = document.querySelector(`input[name="right_type"][value="${currentState.right_type}"]`);
+  if(rtRadio) rtRadio.checked = true;
+  if(document.getElementById('right_adj_thick')) document.getElementById('right_adj_thick').value = currentState.right_adj_thick||198;
+  
+  if(document.getElementById('openings_enabled')) document.getElementById('openings_enabled').checked = currentState.openings_enabled;
+  
+  const msRadio = document.querySelector(`input[name="mark_side"][value="${currentState.mark_side||'left'}"]`);
+  if(msRadio) msRadio.checked = true;
+  
+  if(document.getElementById('floor_preset_select')) document.getElementById('floor_preset_select').value = currentState.floor_preset||"plan02";
+  if(document.getElementById('h_total')) document.getElementById('h_total').value = currentState.h_total||2748;
+  if(document.getElementById('sar_name')) document.getElementById('sar_name').value = currentState.sar_name||"";
+  if(document.getElementById('sar_placement')) document.getElementById('sar_placement').value = currentState.sar_placement||"top_sill";
+  if(document.getElementById('sar_opening_w')) document.getElementById('sar_opening_w').value = currentState.sar_opening_w||1200;
+  if(document.getElementById('sar_stud_h')) document.getElementById('sar_stud_h').value = currentState.sar_stud_h||2604;
+  if(document.getElementById('sar_bh')) document.getElementById('sar_bh').value = currentState.sar_bh||800;
+  if(document.getElementById('sar_win_h')) document.getElementById('sar_win_h').value = currentState.sar_win_h||1200;
+  if(document.getElementById('sar_kant_h')) document.getElementById('sar_kant_h').value = currentState.sar_kant_h||198;
+  if(document.getElementById('sar_flat_h')) document.getElementById('sar_flat_h').value = currentState.sar_flat_h||48;
+  if(document.getElementById('sar_stud_thick')) document.getElementById('sar_stud_thick').value = currentState.sar_stud_thick||48;
+  if(document.getElementById('om_floor_mark')) document.getElementById('om_floor_mark').value = currentState.om_floor_mark||3900;
+  if(document.getElementById('om_finished_floor')) document.getElementById('om_finished_floor').value = currentState.om_finished_floor||4000;
+  if(document.getElementById('om_gap_bot')) document.getElementById('om_gap_bot').value = currentState.om_gap_bot||15;
+  if(document.getElementById('om_gap_top')) document.getElementById('om_gap_top').value = currentState.om_gap_top||15;
+  if(document.getElementById('om_gap_side')) document.getElementById('om_gap_side').value = currentState.om_gap_side||10;
+  
+  onEndChange();
+  onOpeningsToggle();
+  onWallPresetChange(false);
+  renderOpenings();
+  renderSvill();
+  renderOmItems();
+  
+  if(currentState.proj_name || currentState.wall_length){
+    calculate(); calcHeight(); calcSarama(); calcOpenMarks();
+  }
+}
+
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='tab-layout') redrawRuler();
+  if(id==='tab-sarama') calcSarama();
+  if(id==='tab-openmarks') calcOpenMarks();
+}
+
+function onWallPresetChange(triggerCalc=true){
+  const val = document.getElementById('wall_preset_select').value;
+  const infoBox = document.getElementById('wall_layer_info');
+  
+  if(val && HUS_C_WALL_TYPES[val]){
+    const preset = HUS_C_WALL_TYPES[val];
+    document.getElementById('stud_thick').value = preset.stud_thick;
+    infoBox.style.display = 'block';
+    infoBox.innerHTML = `<strong>${preset.name}</strong><br><span style="color:var(--muted);">${preset.layers}</span>`;
+  } else {
+    infoBox.style.display = 'none';
+  }
+  if(triggerCalc) calculate();
+}
+
+function onFloorPresetChange(){
+  const val = document.getElementById('floor_preset_select').value;
+  if(val && HUS_C_FLOORS[val]){
+    document.getElementById('h_total').value = HUS_C_FLOORS[val].h_total;
+    calcHeight();
+  }
+}
+
+function onEndChange(){
+  const lElem = document.querySelector('input[name="left_type"]:checked');
+  const rElem = document.querySelector('input[name="right_type"]:checked');
+  const l = lElem ? lElem.value : 'outer';
+  const r = rElem ? rElem.value : 'free';
+  document.getElementById('left_adj_wrap').style.display = l!=='free'?'block':'none';
+  document.getElementById('right_adj_wrap').style.display = r!=='free'?'block':'none';
+}
+
+function onOpeningsToggle(){
+  document.getElementById('openings_wrap').style.display = document.getElementById('openings_enabled').checked?'block':'none';
+}
+
+let lastResult = [];
+let manualFirstGap = null;
+let manualLastGap = null;
+
+function applyGapAdjust(){
+  const fv = parseInt(document.getElementById('first_gap_input').value);
+  const lv = parseInt(document.getElementById('last_gap_input').value);
+  manualFirstGap = !isNaN(fv) && fv>=0 ? fv : null;
+  manualLastGap = !isNaN(lv) && lv>=0 ? lv : null;
+  calculate();
+}
+function resetGapAdjust(){
+  manualFirstGap = null; manualLastGap = null;
+  document.getElementById('first_gap_input').value = "";
+  document.getElementById('last_gap_input').value = "";
+  calculate();
+}
+
+function calculate(){
+  saveState();
+  const d = T[currentLang] || T.no;
+  const W = currentState.wall_length, P = currentState.stud_pitch, TH = currentState.stud_thick, MIN_GAP = currentState.min_gap;
+  if(W<100) return;
+  
+  let leftStart = 0;
+  if(currentState.left_type==='inner') leftStart = currentState.left_adj_thick;
+  
+  let rightEnd = W;
+  if(currentState.right_type==='inner') rightEnd = W - currentState.right_adj_thick;
+  
+  let firstGap = leftStart;
+  if(manualFirstGap !== null) firstGap = leftStart + manualFirstGap;
+  
+  let studs = [];
+  if(currentState.left_type==='outer'){
+    studs.push({id:"L_OUT", lx:0, cx:TH/2, rx:TH, type:d.type_corner_out});
+  } else if(currentState.left_type==='inner'){
+    studs.push({id:"L_IN", lx:0, cx:currentState.left_adj_thick/2, rx:currentState.left_adj_thick, type:d.type_corner_in});
+    studs.push({id:"L_STUD", lx:currentState.left_adj_thick, cx:currentState.left_adj_thick+TH/2, rx:currentState.left_adj_thick+TH, type:d.type_stud});
+  } else {
+    studs.push({id:"L_START", lx:0, cx:TH/2, rx:TH, type:d.type_stud_start});
+  }
+  
+  let currCx = (manualFirstGap!==null) ? (studs[studs.length-1].rx + manualFirstGap + TH/2) : P;
+  
+  let maxPos = W;
+  if(currentState.right_type==='inner') maxPos = W - currentState.right_adj_thick - TH;
+  else maxPos = W - TH;
+  if(manualLastGap !== null) maxPos = W - (currentState.right_type==='inner'?currentState.right_adj_thick:0) - TH - manualLastGap;
+
+  let safeLimit = 1000;
+  while(currCx <= maxPos + TH/2 && safeLimit-->0){
+    let lx = currCx - TH/2;
+    let overlap = false;
+    for(let s of studs) if(Math.abs(s.cx - currCx) < TH) overlap = true;
+    if(!overlap && lx > studs[studs.length-1].rx){
+      studs.push({id:`S_${Math.round(currCx)}`, lx:lx, cx:currCx, rx:lx+TH, type:d.type_stud});
+    }
+    currCx += P;
+  }
+  
+  let rightEndStuds = [];
+  let rBase = (currentState.right_type==='inner') ? (W - currentState.right_adj_thick) : W;
+  let lastStud = studs[studs.length-1];
+  
+  if(manualLastGap !== null){
+    let finalLx = rBase - TH - manualLastGap;
+    if(finalLx > lastStud.rx){
+      rightEndStuds.push({id:"R_ADJ", lx:finalLx, cx:finalLx+TH/2, rx:finalLx+TH, type:d.type_stud_adj});
+    }
+  }
+
+  if(currentState.right_type==='outer'){
+    rightEndStuds.push({id:"R_OUT", lx:W-TH, cx:W-TH/2, rx:W, type:d.type_corner_out});
+  } else if(currentState.right_type==='inner'){
+    rightEndStuds.push({id:"R_STUD", lx:rBase-TH, cx:rBase-TH/2, rx:rBase, type:d.type_stud});
+    rightEndStuds.push({id:"R_IN", lx:rBase, cx:rBase+currentState.right_adj_thick/2, rx:W, type:d.type_corner_in});
+  } else {
+    rightEndStuds.push({id:"R_END", lx:W-TH, cx:W-TH/2, rx:W, type:d.type_stud_end});
+  }
+  
+  if(rightEndStuds.length > 0){
+    let rfirst = rightEndStuds[0];
+    if(rfirst.lx - lastStud.rx < MIN_GAP && rfirst.lx >= lastStud.rx) studs.pop();
+    else if(lastStud.rx > rfirst.lx) studs.pop();
+    studs = studs.concat(rightEndStuds);
+  }
+
+  if(currentState.openings_enabled && currentState.openings.length>0) {
+    studs = applyOpenings(studs, TH, MIN_GAP, W);
+  }
+  
+  studs.sort((a,b)=>a.lx - b.lx);
+  
+  if(studs.length>1){
+    document.getElementById('first_gap_hint').innerText = (studs[1].lx - studs[0].rx).toFixed(1)+" mm";
+    let l_idx = studs.length-1;
+    while(l_idx>0 && (studs[l_idx].type.includes('Vidinis')||studs[l_idx].type.includes('Inner')||studs[l_idx].type.includes('Indre')||studs[l_idx].type.includes('Pabaiga')||studs[l_idx].type.includes('End')||studs[l_idx].type.includes('Isorinis')||studs[l_idx].type.includes('Outer')||studs[l_idx].type.includes('Ytre'))) l_idx--;
+    if(l_idx>=0 && studs.length-1 > l_idx) {
+      document.getElementById('last_gap_hint').innerText = (studs[studs.length-1].lx - studs[l_idx].rx).toFixed(1)+" mm";
+    }
+  }
+  
+  lastResult = studs;
+  renderLayoutResults();
+}
+
+function applyOpenings(arr, T_th, MIN_GAP, W){
+  const d = T[currentLang] || T.no;
+  let out = [...arr];
+  let toRemove = [];
+  let toAdd = [];
+  
+  currentState.openings.forEach((op, idx) => {
+    const start = op.pos;
+    const end = op.pos + op.width;
+    if(start<0 || end>W) return;
+    
+    let trimL_rx = start; let trimL_lx = start - T_th;
+    let kingL_rx = start - T_th; let kingL_lx = start - 2 * T_th;
+    let trimR_lx = end; let trimR_rx = end + T_th;
+    let kingR_lx = end + T_th; let kingR_rx = end + 2 * T_th;
+    
+    out.forEach(s => {
+      if(s.type.includes("Kampas") || s.type.includes("Pradzia") || s.type.includes("Pabaiga") || s.type.includes("Corner") || s.type.includes("Hjørne") || s.type.includes("Start") || s.type.includes("End")) return;
+      if(s.type.includes("King") || s.type.includes("Trim")) return;
+      if(s.rx > kingL_lx - MIN_GAP && s.lx < kingR_rx + MIN_GAP) toRemove.push(s.id);
+    });
+    
+    let opName = op.name ? ` (${op.name})` : ` (${idx+1})`;
+    toAdd.push({id:`K_L_${idx}`, lx:kingL_lx, cx:kingL_lx+T_th/2, rx:kingL_rx, type:`${d.type_king_l}${opName}`});
+    toAdd.push({id:`T_L_${idx}`, lx:trimL_lx, cx:trimL_lx+T_th/2, rx:trimL_rx, type:`${d.type_trim_l}${opName}`});
+    toAdd.push({id:`T_R_${idx}`, lx:trimR_lx, cx:trimR_lx+T_th/2, rx:trimR_rx, type:`${d.type_trim_r}${opName}`});
+    toAdd.push({id:`K_R_${idx}`, lx:kingR_lx, cx:kingR_lx+T_th/2, rx:kingR_rx, type:`${d.type_king_r}${opName}`});
+  });
+  
+  out = out.filter(s => !toRemove.includes(s.id));
+  out = out.concat(toAdd);
+  return out;
+}
+
+function renderLayoutResults(){
+  const d = T[currentLang] || T.no;
+  document.getElementById('results_card').style.display = 'block';
+  const grid = document.getElementById('result_grid');
+  const tbody = document.getElementById('stud_tbody');
+  grid.innerHTML = ""; tbody.innerHTML = "";
+  
+  let totalStuds = 0; let warns = [];
+  lastResult.forEach((s, i) => {
+    let gapAfter = (i < lastResult.length-1) ? (lastResult[i+1].lx - s.rx) : 0;
+    if(i < lastResult.length-1 && gapAfter < currentState.min_gap && gapAfter > 0.1){
+      warns.push(d.msg_warn_gap.replace("{0}", gapAfter.toFixed(1)).replace("{1}", i+1).replace("{2}", currentState.min_gap));
+    }
+    
+    let isKing = s.type.includes('King') || s.type.includes('Trim');
+    let isCorner = s.type.includes('Kampas') || s.type.includes('Corner') || s.type.includes('Hjørne') || s.type.includes('Išorinis') || s.type.includes('Vidinis') || s.type.includes('Utvendig') || s.type.includes('Innvendig');
+    
+    if(!isCorner) totalStuds++; 
+    
+    let tr = document.createElement('tr');
+    if(isKing) tr.className = 'row-king';
+    if(isCorner) tr.className = 'row-corner';
+    
+    let c1 = `<td>${i+1}</td>`;
+    let c2 = `<td>${s.lx.toFixed(1)}</td>`;
+    let c3 = `<td>${s.cx.toFixed(1)}</td>`;
+    let c4 = `<td>${s.rx.toFixed(1)}</td>`;
+    let c5 = `<td>${(i<lastResult.length-1)?gapAfter.toFixed(1):'-'}</td>`;
+    let c6 = `<td>${s.type}</td>`;
+    tr.innerHTML = c1+c2+c3+c4+c5+c6;
+    tbody.appendChild(tr);
+  });
+  
+  grid.innerHTML += `<div class="res-box"><div class="val">${totalStuds}</div><div class="lbl">${d.lbl_studs_cnt}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${lastResult.length}</div><div class="lbl">${d.lbl_total_parts}</div></div>`;
+  
+  const wb = document.getElementById('warn_box');
+  if(warns.length>0){ wb.classList.add('visible'); document.getElementById('warn_text').innerHTML = warns.join('<br>'); }
+  else { wb.classList.remove('visible'); }
+  redrawRuler();
+}
+
+function redrawRuler(){
+  const cvs = document.getElementById('ruler_canvas');
+  if(!cvs || lastResult.length===0) return;
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width = (cvs.parentElement?.clientWidth || 600) - 10;
+  const H = cvs.height = 140;
+  ctx.clearRect(0,0,W,H);
+  const wallW = currentState.wall_length;
+  if(wallW<=0) return;
+  
+  const scale = (W - 40) / wallW;
+  const pad = 20;
+  
+  ctx.beginPath(); ctx.moveTo(pad, 70); ctx.lineTo(pad + wallW*scale, 70);
+  ctx.lineWidth = 4; ctx.strokeStyle = '#3d8ef0'; ctx.stroke();
+  
+  ctx.font = '10px "Segoe UI"'; ctx.fillStyle = '#8892aa'; ctx.textAlign = 'center';
+  
+  lastResult.forEach((s,i) => {
+    let px = pad + s.lx * scale;
+    let pw = (s.rx - s.lx) * scale;
+    if(pw<1) pw=1;
+    
+    if(s.type.includes('King') || s.type.includes('Trim')){
+      ctx.fillStyle = 'rgba(123,61,240,0.5)';
+      ctx.fillRect(px, 30, pw, 80);
+    } else if(s.type.includes('Kampas') || s.type.includes('Corner') || s.type.includes('Hjørne') || s.type.includes('Išorinis') || s.type.includes('Vidinis')){
+      ctx.fillStyle = 'rgba(240,135,61,0.5)';
+      ctx.fillRect(px, 30, pw, 80);
+    } else {
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillRect(px, 30, pw, 80);
+    }
+    
+    let mx = 0, mval = 0;
+    if(currentState.mark_side==='left'){ mx = px; mval = s.lx; }
+    else if(currentState.mark_side==='right'){ mx = px + pw; mval = s.rx; }
+    else { mx = px + pw/2; mval = s.cx; }
+    
+    ctx.beginPath(); ctx.moveTo(mx, 20); ctx.lineTo(mx, 120);
+    ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    if(s.type.includes('King')) ctx.strokeStyle = 'rgba(123,61,240,0.8)';
+    ctx.stroke();
+    
+    ctx.fillStyle = '#e8edf5';
+    if(i%2===0) ctx.fillText(Math.round(mval), mx, 15);
+    else ctx.fillText(Math.round(mval), mx, 132);
+  });
+}
+
+function renderOpenings(){
+  const list = document.getElementById('openings_list');
+  if(!list) return;
+  list.innerHTML = "";
+  currentState.openings.forEach((op, i) => {
+    let div = document.createElement('div');
+    div.className = 'open-item';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:var(--text);text-transform:uppercase;display:flex;align-items:center;">${op.type==='window'?'🪟':'🚪'} 
+          <input type="text" value="${op.name||''}" placeholder="..." onchange="updOpening(${i},'name',this.value)" style="background:transparent;border:none;border-bottom:1px solid #555;color:inherit;font:inherit;outline:none;padding:2px 4px;width:120px;margin-left:8px;">
+        </div>
+        <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;min-height:0;" onclick="delOpening(${i})">✖</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="field"><label data-i18n="lbl_op_pos">Pozicija (X)</label><input type="number" value="${op.pos}" oninput="updOpening(${i},'pos',this.value)"></div>
+        <div class="field"><label data-i18n="lbl_op_w">Plotis W (mm)</label><input type="number" value="${op.width}" oninput="updOpening(${i},'width',this.value)"></div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  applyLang();
+}
+
+function addOpening(type){ currentState.openings.push({type:type, pos:1000, width:1200}); renderOpenings(); calculate(); }
+function delOpening(idx){ currentState.openings.splice(idx, 1); renderOpenings(); calculate(); }
+function updOpening(idx, key, val){ currentState.openings[idx][key] = key==='name'?val:(parseInt(val)||0); calculate(); }
+
+function quickAddOpeningFromCatalog(code){
+  if(!code || !HUS_C_PRODUCTS[code]) return;
+  const prod = HUS_C_PRODUCTS[code];
+  currentState.openings.push({
+    name: prod.name,
+    type: prod.type,
+    pos: 1000,
+    width: prod.w + 20
+  });
+  document.getElementById('quick_op_catalog').value = "";
+  renderOpenings();
+  calculate();
+}
+
+function renderSvill(){
+  ['bunn','topp'].forEach(t => {
+    const list = document.getElementById(t+'_list');
+    if(!list) return;
+    list.innerHTML = "";
+    currentState[t+'_layers'].forEach((val, i) => {
+      let div = document.createElement('div');
+      div.className = 'svill-row';
+      div.innerHTML = `
+        <div class="svill-color ${t}"></div>
+        <span style="font-size:0.8rem;font-weight:700;color:var(--primary);">SV${i+1}:</span>
+        <input type="number" value="${val}" min="10" max="300" style="width:80px;min-height:32px;padding:4px 8px;font-size:0.82rem;" onchange="updSvill('${t}', ${i}, this.value)">
+        <span style="font-size:0.8rem;color:var(--muted);">mm</span>
+        <button class="btn btn-outline" style="padding:2px 6px;min-height:0;font-size:0.7rem;color:var(--red);border-color:transparent;margin-left:auto;" onclick="delSvill('${t}',${i})">✖</button>
+      `;
+      list.appendChild(div);
+    });
+  });
+}
+
+function updSvill(type, idx, val){
+  const num = parseInt(val)||48;
+  currentState[type+'_layers'][idx] = num;
+  saveState();
+  calcHeight();
+}
+
+function addSvill(type, th){ currentState[type+'_layers'].push(th); saveState(); renderSvill(); calcHeight(); }
+function delSvill(type, idx){ currentState[type+'_layers'].splice(idx,1); saveState(); renderSvill(); calcHeight(); }
+
+function calcHeight(){
+  saveState();
+  const H = currentState.h_total;
+  if(H<100) return;
+  let b_sum = currentState.bunn_layers.reduce((a,b)=>a+b, 0);
+  let t_sum = currentState.topp_layers.reduce((a,b)=>a+b, 0);
+  let stud_h = H - b_sum - t_sum;
+  
+  document.getElementById('height_result').style.display = 'block';
+  document.getElementById('height_val').innerText = stud_h;
+  if(stud_h<0) document.getElementById('height_val').classList.add('bad');
+  else document.getElementById('height_val').classList.remove('bad');
+  
+  document.getElementById('height_formula').innerText = `H = ${H} - (${b_sum} bunn) - (${t_sum} topp) = ${stud_h} mm`;
+  if(document.getElementById('sar_stud_h')) document.getElementById('sar_stud_h').value = stud_h;
+  calcSarama();
+}
+
+function applySaramaFromCatalog(code){
+  if(!code || !HUS_C_PRODUCTS[code]) return;
+  const prod = HUS_C_PRODUCTS[code];
+  document.getElementById('sar_name').value = prod.name;
+  document.getElementById('sar_type').value = prod.type;
+  document.getElementById('sar_opening_w').value = prod.w;
+  document.getElementById('sar_win_h').value = prod.h;
+  document.getElementById('sar_bh').value = prod.bh;
+  document.getElementById('sar_catalog_select').value = "";
+  calcSarama();
+}
+
+function calcSarama(){
+  saveState();
+  const d = T[currentLang] || T.no;
+  const type = currentState.sar_type;
+  const placement = currentState.sar_placement;
+  const H_stud = currentState.sar_stud_h;
+  
+  const prod_w = currentState.sar_opening_w;
+  const prod_h = currentState.sar_win_h;
+  const prod_bh = currentState.sar_bh;
+  
+  const gap_side = currentState.sar_gap_side;
+  const gap_top = currentState.sar_gap_top;
+  const gap_bot = currentState.sar_gap_bot;
+
+  const kant_h = parseInt(document.getElementById('sar_kant_h')?.value)||198;
+  const flat_h = parseInt(document.getElementById('sar_flat_h')?.value)||48;
+  const stud_th = parseInt(document.getElementById('sar_stud_thick')?.value)||48;
+  
+  const fldBh = document.getElementById('fld_sar_bh');
+  const fldGapBot = document.getElementById('fld_sar_gap_bot');
+  if(fldBh && fldGapBot) {
+    if(type === 'door') {
+      fldBh.style.display = 'none';
+      fldGapBot.style.display = 'none';
+    } else {
+      fldBh.style.display = 'block';
+      fldGapBot.style.display = 'block';
+    }
+  }
+
+  if(prod_w<10 || H_stud<10) return;
+  
+  const w = prod_w + (gap_side * 2);
+  let wh, Bh;
+  
+  if (type === 'door') {
+    wh = prod_h + gap_top;
+    Bh = 0;
+  } else {
+    wh = prod_h + gap_top + gap_bot;
+    Bh = prod_bh - gap_bot;
+    if(Bh<0) Bh=0;
+  }
+
+  const grid = document.getElementById('sarama_grid');
+  grid.innerHTML = "";
+  document.getElementById('sarama_result').style.display = 'block';
+  
+  const sarama_len = w + 2 * stud_th; 
+  const sarama_h_total = kant_h + flat_h; 
+  
+  let trim_h = 0;
+  let cripple_top_h = 0;
+  let cripple_under_h = 0;
+  
+  if (placement === 'win_top') {
+    trim_h = Bh + wh; 
+    cripple_top_h = H_stud - (trim_h + sarama_h_total);
+    cripple_under_h = 0;
+  } else {
+    trim_h = H_stud - sarama_h_total;
+    cripple_top_h = 0;
+    cripple_under_h = trim_h - (Bh + wh) - stud_th; 
+  }
+  
+  grid.innerHTML += `<div class="res-box"><div class="val">${w}</div><div class="lbl">${d.lbl_ro_w}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${wh}</div><div class="lbl">${d.lbl_ro_h}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${H_stud}</div><div class="lbl">${d.msg_king}</div></div>`;
+  grid.innerHTML += `<div class="res-box"><div class="val">${trim_h}</div><div class="lbl">${d.msg_trim}</div></div>`;
+  
+  let cutList = `2${d.pcs} x ${stud_th}x${kant_h}, L=<strong>${sarama_len}</strong> mm (${d.msg_sarama_kant})<br>` +
+                `1${d.pcs} x ${stud_th}x${kant_h}, L=<strong>${sarama_len}</strong> mm (${d.msg_sarama_sill})<br>` +
+                `2${d.pcs} x ${stud_th}x${kant_h}, L=<strong>${H_stud}</strong> mm (${d.msg_king})<br>` +
+                `2${d.pcs} x ${stud_th}x${kant_h}, L=<strong>${trim_h}</strong> mm (${d.msg_trim})`;
+                
+  if(cripple_top_h > 0) cutList += `<br>L=<strong>${cripple_top_h}</strong> mm (${d.msg_top_cripple_above})`;
+  
+  if(placement === 'top_sill' && cripple_under_h > 0) {
+    cutList += `<br><br>1${d.pcs} x ${stud_th}x${kant_h}, L=<strong>${w}</strong> mm (${d.msg_win_top_sill})`;
+    cutList += `<br>L=<strong>${cripple_under_h}</strong> mm (${d.msg_top_cripple_under})`;
+  }
+  
+  if(type === 'window' && Bh > stud_th) {
+    cutList += `<br><br>1${d.pcs} x ${stud_th}x${kant_h}, L=<strong>${w}</strong> mm (${d.msg_win_sill})`;
+    cutList += `<br>L=<strong>${Bh - stud_th}</strong> mm (${d.msg_bot_cripple})`;
+  }
+  
+  const cl = document.getElementById('sarama_cut_list');
+  cl.innerHTML = cutList;
+  
+  const clTitle = document.getElementById('sarama_cut_list_title');
+  if(currentState.sar_name) {
+    clTitle.innerText = d.lbl_cut_list + " - " + currentState.sar_name;
+  } else {
+    clTitle.innerText = d.lbl_cut_list;
+  }
+  
+  drawSarama(w, H_stud, trim_h, kant_h, flat_h, cripple_top_h, Bh, type, placement, wh, cripple_under_h);
+}
+
+function drawSarama(w, H_stud, trim_h, hk, hf, cripple, bh, type, placement, wh, cripple_under_h){
+  const cvs = document.getElementById('sarama_canvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width = (cvs.parentElement?.clientWidth || 600) - 32;
+  const H = cvs.height = 300;
+  ctx.clearRect(0,0,W,H);
+  
+  const T_th = 15; 
+  const scale = (H - 40) / H_stud;
+  const drawW = w * scale;
+  const sx = W/2 - drawW/2;
+  
+  // Kings
+  ctx.fillStyle = 'rgba(123,61,240,0.5)';
+  ctx.fillRect(sx - 2*T_th, 20, T_th, H_stud*scale); 
+  ctx.fillRect(sx + drawW + T_th, 20, T_th, H_stud*scale); 
+  
+  // Trims
+  ctx.fillStyle = 'rgba(61,142,240,0.5)';
+  ctx.fillRect(sx - T_th, 20 + H_stud*scale - trim_h*scale, T_th, trim_h*scale); 
+  ctx.fillRect(sx + drawW, 20 + H_stud*scale - trim_h*scale, T_th, trim_h*scale); 
+  
+  // Header
+  let sy_flat, sy_kant;
+  if(placement === 'win_top') {
+    sy_flat = 20 + H_stud*scale - trim_h*scale - hf*scale;
+  } else {
+    sy_flat = 20 + hk*scale;
+  }
+  
+  ctx.fillStyle = 'rgba(240,192,61,0.6)';
+  sy_kant = sy_flat - hk*scale;
+  ctx.fillRect(sx - T_th, sy_kant, drawW + 2*T_th, hk*scale);
+  
+  ctx.fillStyle = 'rgba(240,140,61,0.8)';
+  ctx.fillRect(sx - T_th, sy_flat, drawW + 2*T_th, hf*scale);
+  
+  // Cripple above header
+  if(placement === 'win_top' && cripple > 0){
+    ctx.fillStyle = 'rgba(100,200,100,0.5)';
+    ctx.fillRect(sx + drawW/2 - 7.5, 20 + H_stud*scale - trim_h*scale - hk*scale - hf*scale - cripple*scale, 15, cripple*scale);
+  }
+  
+  // Top sill and cripple under header
+  if(placement === 'top_sill' && cripple_under_h > 0) {
+    const topSillY = 20 + H_stud*scale - bh*scale - wh*scale - 48*scale;
+    ctx.fillStyle = 'rgba(240,140,61,0.8)';
+    ctx.fillRect(sx, topSillY, drawW, 48*scale);
+    
+    ctx.fillStyle = 'rgba(100,200,100,0.5)';
+    ctx.fillRect(sx + drawW/2 - 7.5, topSillY - cripple_under_h*scale, 15, cripple_under_h*scale);
+  }
+  
+  // Bottom sill and cripples
+  if(type === 'window' && bh > 48) {
+    const bottomY = 20 + H_stud*scale;
+    const sillY = bottomY - bh*scale;
+    
+    ctx.fillStyle = 'rgba(240,140,61,0.8)';
+    ctx.fillRect(sx, sillY, drawW, 48*scale);
+    
+    const cripple_h = (bh - 48)*scale;
+    ctx.fillStyle = 'rgba(100,200,100,0.5)';
+    ctx.fillRect(sx + drawW/2 - 7.5, sillY + 48*scale, 15, cripple_h);
+  }
+  
+  ctx.fillStyle = '#fff'; ctx.font = '10px "Segoe UI"'; ctx.textAlign = 'center';
+  ctx.fillText('King', sx - 1.5*T_th, 15);
+  ctx.fillText('Trim', sx - 0.5*T_th, 20 + H_stud*scale - 5);
+}
+
+function renderOmItems(){
+  const c = document.getElementById('om_items_container');
+  if(!c) return;
+  c.innerHTML = "";
+  currentState.om_items.forEach((it, i) => {
+    let div = document.createElement('div');
+    div.className = 'open-item';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:var(--text);text-transform:uppercase;display:flex;align-items:center;">${it.type==='window'?'🪟':'🚪'}
+          <input type="text" value="${it.name||''}" placeholder="..." onchange="updOmItem(${i},'name',this.value)" style="background:transparent;border:none;border-bottom:1px solid #555;color:inherit;font:inherit;outline:none;padding:2px 4px;width:120px;margin-left:8px;">
+        </div>
+        <button class="btn btn-danger" style="padding:4px 8px;font-size:0.7rem;min-height:0;" onclick="delOmItem(${i})">✖</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="field"><label data-i18n="lbl_op_w">Plotis W (mm)</label><input type="number" value="${it.w}" oninput="updOmItem(${i},'w',this.value)"></div>
+        <div class="field"><label data-i18n="lbl_op_h">Aukštis H (mm)</label><input type="number" value="${it.h}" oninput="updOmItem(${i},'h',this.value)"></div>
+        <div class="field"><label data-i18n="lbl_prod_bh">Bh (mm)</label><input type="number" value="${it.bh}" oninput="updOmItem(${i},'bh',this.value)"></div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function omAddFromCatalog(code){
+  if(!code || !HUS_C_PRODUCTS[code]) return;
+  const prod = HUS_C_PRODUCTS[code];
+  currentState.om_items.push({
+    name: prod.name,
+    type: prod.type,
+    w: prod.w,
+    h: prod.h,
+    bh: prod.bh
+  });
+  document.getElementById('om_catalog_select').value = "";
+  renderOmItems();
+  calcOpenMarks();
+}
+
+function omAddItem(type){ currentState.om_items.push({ name: type==='window'?'L-1':'D-1', type: type, w: 1200, h: 1200, bh: type==='window'?800:0 }); renderOmItems(); calcOpenMarks(); }
+function delOmItem(idx){ currentState.om_items.splice(idx,1); renderOmItems(); calcOpenMarks(); }
+function updOmItem(idx, k, val){ currentState.om_items[idx][k] = k==='name'?val:(parseInt(val)||0); calcOpenMarks(); }
+
+function calcOpenMarks(){
+  saveState();
+  const d_dict = T[currentLang] || T.no;
+  const fm = currentState.om_floor_mark;
+  const ff = currentState.om_finished_floor;
+  const gBot = currentState.om_gap_bot;
+  const gTop = currentState.om_gap_top;
+  const gSide = currentState.om_gap_side;
+  
+  const d = fm - ff;
+  if(!isNaN(d) && fm>0 && ff>0){
+    document.getElementById('om_floor_diff_box').style.display = 'block';
+    if(d > 0) document.getElementById('om_floor_diff_val').innerText = `${d} mm (${d_dict.msg_mark_above})`;
+    else document.getElementById('om_floor_diff_val').innerText = `${Math.abs(d)} mm (${d_dict.msg_mark_below})`;
+  } else { document.getElementById('om_floor_diff_box').style.display = 'none'; }
+
+  const tbody = document.getElementById('om_tbody');
+  if(!tbody) return;
+  tbody.innerHTML = "";
+  
+  if(currentState.om_items.length===0){ document.getElementById('om_results_card').style.display = 'none'; return; }
+  document.getElementById('om_results_card').style.display = 'block';
+  
+  const cvs = document.getElementById('om_canvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width = (cvs.parentElement?.clientWidth || 600) - 10;
+  const H = cvs.height = 300;
+  ctx.clearRect(0,0,W,H);
+  
+  ctx.beginPath(); ctx.moveTo(30, 200); ctx.lineTo(W-30, 200);
+  ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#fff'; ctx.font = '12px "Segoe UI"'; ctx.textAlign = 'left'; ctx.fillText(d_dict.msg_abs_mark + ': ' + fm, 35, 195);
+  
+  const scaleY = 0.05; 
+  let cx = 60;
+  
+  currentState.om_items.forEach(it => {
+    let wallW = it.w + gSide*2;
+    let wallH = it.h + gBot + gTop;
+    let bot_from_ff = it.bh; 
+    let abs_bot = ff + bot_from_ff - gBot;
+    let abs_top = abs_bot + wallH;
+    
+    let mark_down = fm - abs_bot;
+    let mark_up = abs_top - fm;
+    
+    let tr = document.createElement('tr');
+    tr.innerHTML = `<td style="font-family:inherit;font-weight:600;color:var(--text);">${it.name}</td><td>${it.w}x${it.h}</td><td>${wallW}x${wallH}</td><td>${it.bh}</td><td style="color:var(--green);font-weight:700;">${mark_down.toFixed(1)}</td><td style="color:var(--accent);font-weight:700;">${mark_up.toFixed(1)}</td>`;
+    tbody.appendChild(tr);
+    
+    let drawW = 40;
+    let py_bot = 200 + mark_down * scaleY; 
+    let py_top = 200 - mark_up * scaleY; 
+    
+    ctx.fillStyle = 'rgba(61,142,240,0.3)'; ctx.fillRect(cx, py_top, drawW, py_bot - py_top);
+    ctx.strokeStyle = '#3d8ef0'; ctx.strokeRect(cx, py_top, drawW, py_bot - py_top);
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = '10px "Consolas"'; ctx.fillText(it.name, cx+drawW/2, py_top - 5);
+    cx += drawW + 40;
+  });
+}
+
+function resetAll(){
+  if(!confirm('Ar tikrai norite išvalyti visus duomenis?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  setLang(currentLang);
+  window.addEventListener('resize', () => { redrawRuler(); calcSarama(); calcOpenMarks(); });
+});
+</script>
+
+<!-- PRINT MODAL -->
+<div id="print_modal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:9999;">
+  <div class="card" style="width:320px;padding:20px;display:flex;flex-direction:column;gap:16px;">
+    <div style="font-size:1.1rem;font-weight:700;color:var(--text);" data-i18n="lbl_print_title">Pasirinkite ką spausdinti:</div>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_layout" checked> <span data-i18n="tab_layout">Stenderių išdėstymas</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_height" checked> <span data-i18n="tab_height">Stenderio aukštis</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_sarama" checked> <span data-i18n="tab_sarama">Sąramos skaičiavimas</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_om" checked> <span data-i18n="tab_openmarks">Langų/durų žymos</span></label>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;"><input type="checkbox" id="cb_pr_struct" checked> <span data-i18n="tab_struct">Konstrukcijos / Bjelkelag</span></label>
+    <div style="display:flex;gap:10px;margin-top:10px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closePrintModal()" data-i18n="btn_cancel">Atšaukti</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="doPrint()" data-i18n="btn_print">Spausdinti</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPrintModal() {
+  document.getElementById('print_modal').style.display = 'flex';
+}
+function closePrintModal() {
+  document.getElementById('print_modal').style.display = 'none';
+}
+function doPrint() {
+  const pLayout = document.getElementById('cb_pr_layout').checked;
+  const pHeight = document.getElementById('cb_pr_height').checked;
+  const pSarama = document.getElementById('cb_pr_sarama').checked;
+  const pOm = document.getElementById('cb_pr_om').checked;
+  const pStruct = document.getElementById('cb_pr_struct').checked;
+  
+  document.body.dataset.prLayout = pLayout ? "1" : "0";
+  document.body.dataset.prHeight = pHeight ? "1" : "0";
+  document.body.dataset.prSarama = pSarama ? "1" : "0";
+  document.body.dataset.prOm = pOm ? "1" : "0";
+  document.body.dataset.prStruct = pStruct ? "1" : "0";
+  
+  const ph = document.getElementById('print_header');
+  const d = T[currentLang] || T.no;
+  ph.innerHTML = `
+    <h1>${currentState.proj_name || d.lbl_proj_name} - Steinsvikåsen Bygg C</h1>
+    <p><strong>${d.lbl_date}:</strong> ${currentState.proj_date || '-'} | <strong>${d.lbl_notes}:</strong> ${currentState.proj_notes || '-'}</p>
+  `;
+  
+  closePrintModal();
+  setTimeout(() => window.print(), 100);
+}
+</script>
+</body>
+</html>
