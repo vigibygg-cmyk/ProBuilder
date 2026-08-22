@@ -1,0 +1,2560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="author" content="Vytautas Giedraitis">
+<meta name="copyright" content="© Vytautas Giedraitis. All rights reserved.">
+<meta name="description" content="VG_Bim_Pro by Vytautas Giedraitis - Professional Drawing Measurement & Layout Tool">
+<title>VG_Bim_Pro by Vytautas Giedraitis</title>
+<style>
+:root{
+  --bg:#f7f9fa; --card:#ffffff; --text:#2d3748; --muted:#718096;
+  --primary:#3182ce; --primary-dark:#2c5282; --accent:#dd6b20;
+  --success:#38a169; --danger:#e53e3e; --border:#e2e8f0;
+  --header-h:56px;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg); color:var(--text); font-size:14px;
+  display:flex; flex-direction:column; overflow:hidden;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+  -webkit-touch-callout:none;
+}
+input, select, textarea{
+  -webkit-user-select:auto; -moz-user-select:auto; -ms-user-select:auto; user-select:auto;
+}
+header{
+  height:var(--header-h); flex:0 0 auto; background:var(--card); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:8px; padding:0 10px; overflow-x:auto; white-space:nowrap;
+}
+.brand-wrap{display:flex; flex-direction:column; flex:0 0 auto; margin-right:4px;}
+.brand-title{font-size:14.5px; margin:0; font-weight:700; color:var(--primary-dark); line-height:1.15; display:flex; align-items:center; gap:4px;}
+.brand-author{font-size:10px; color:var(--muted); font-weight:600;}
+.btn{
+  border:1px solid var(--border); background:var(--card); color:var(--text);
+  border-radius:8px; padding:8px 12px; font-size:13px; cursor:pointer; min-height:38px;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap; flex:0 0 auto;
+}
+.btn:hover{background:#edf2f7;}
+.btn.active{background:var(--primary); color:#fff; border-color:var(--primary);}
+.btn.accent{background:var(--accent); color:#fff; border-color:var(--accent);}
+.btn.danger{background:#fff5f5; color:var(--danger); border-color:#feb2b2;}
+.btn.primary{background:var(--primary); color:#fff; border-color:var(--primary);}
+.btn:disabled{opacity:.4; cursor:not-allowed;}
+.sep{width:1px; align-self:stretch; background:var(--border); margin:8px 2px; flex:0 0 auto;}
+#fileInput{display:none;}
+
+.lang-select-wrap{display:inline-flex; align-items:center; gap:4px; flex:0 0 auto;}
+.lang-select{
+  padding:6px 8px; border:1px solid var(--border); border-radius:8px;
+  font-size:12.5px; background:var(--card); font-weight:600; color:var(--text); cursor:pointer; min-height:38px;
+}
+
+/* Secondary toolbar */
+.toolbar-secondary{
+  display:none; flex-direction:column; align-items:stretch; gap:6px;
+  position:absolute; top:calc(var(--header-h) + 6px); right:10px; width:340px; z-index:70;
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.22); padding:10px; max-height:75vh; overflow-y:auto;
+}
+.toolbar-secondary.open{ display:flex; }
+.toolbar-secondary .sep{ display:none; }
+.tsec-label{
+  display:block; font-size:10.5px; text-transform:uppercase; font-weight:700;
+  color:var(--muted); margin:6px 0 -2px;
+}
+.toolbar-secondary .tsec-label:first-child{ margin-top:0; }
+.tsec-group{ display:flex; flex-wrap:wrap; gap:6px; }
+.toolbar-secondary .btn, .toolbar-secondary label{ flex:1 1 auto; justify-content:center; }
+
+#zoomMenuWrap{ display:none; }
+body.zoom-in-menu #zoomMenuWrap{ display:block; }
+body.zoom-in-menu #zoomSepHeader{ display:none; }
+
+main{flex:1 1 auto; display:flex; min-height:0;}
+#viewportScroll{
+  flex:1 1 auto; overflow:auto; background:#525659; position:relative; touch-action:none;
+}
+#viewport{position:relative; margin:20px; box-shadow:0 2px 10px rgba(0,0,0,.4);}
+#pdfCanvas, #overlayCanvas{position:absolute; top:0; left:0; display:block;}
+#overlayCanvas{touch-action:none;}
+#emptyState{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:12px; color:#cbd5e0; text-align:center; padding:20px;
+}
+#emptyState .btn{font-size:15px; padding:12px 20px;}
+
+aside{
+  width:320px; flex:0 0 auto; background:var(--card); border-left:1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.tabs{display:flex; border-bottom:1px solid var(--border); flex:0 0 auto;}
+.tab{flex:1; text-align:center; padding:10px; cursor:pointer; font-size:12.5px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent;}
+.tab.active{color:var(--primary); border-bottom-color:var(--primary);}
+.panel{flex:1; overflow-y:auto; padding:12px; display:none;}
+.panel.active{display:block;}
+.field{margin-bottom:10px;}
+.field label{display:block; font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:600; margin-bottom:4px;}
+.field input, .field select{
+  width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-size:14px; background:#fff;
+}
+.info-box{background:#ebf8ff; border:1px solid #bee3f8; border-radius:8px; padding:10px; font-size:12.5px; margin-bottom:10px; line-height:1.5;}
+.info-box.warn{background:#fffaf0; border-color:#feebc8;}
+.row{display:flex; gap:6px;}
+.row .btn{flex:1;}
+.list-item{
+  border:1px solid var(--border); border-radius:8px; padding:8px 10px; margin-bottom:6px;
+  display:flex; justify-content:space-between; align-items:center; font-size:13px;
+}
+.list-item .val{font-weight:600;}
+.list-item button{background:none; border:none; color:var(--danger); cursor:pointer; font-size:16px; padding:2px 6px;}
+table.segtable{width:100%; border-collapse:collapse; font-size:12.5px;}
+table.segtable th{text-align:left; color:var(--muted); font-weight:600; padding:4px 4px; border-bottom:1px solid var(--border); font-size:11px;}
+table.segtable td{padding:3px 4px; border-bottom:1px solid #f1f1f1;}
+table.segtable input{width:72px; padding:5px; border:1px solid var(--border); border-radius:5px; font-size:13px;}
+table.segtable .rm{background:none; border:none; color:var(--danger); cursor:pointer; font-size:15px;}
+.small-btn{background:none; border:1px solid var(--border); border-radius:6px; padding:3px 8px; font-size:12px; cursor:pointer;}
+#status{
+  flex:0 0 auto; padding:8px 12px; background:#fffaf0; border-top:1px solid #feebc8;
+  font-size:12.5px; color:#7b341e; display:none;
+}
+#status.show{display:block;}
+#loupe{
+  position:fixed; width:150px; height:150px; border-radius:50%; display:none;
+  pointer-events:none; z-index:50; box-shadow:0 4px 18px rgba(0,0,0,.45);
+}
+#loupe canvas{width:100%; height:100%; border-radius:50%;}
+
+.aside-footer{
+  border-top:1px solid var(--border); padding:8px 12px; font-size:11px; color:var(--muted);
+  text-align:center; background:#fafafa;
+}
+
+#asideToggle{
+  position:fixed; z-index:60; right:14px; bottom:14px; width:46px; height:46px; border-radius:50%;
+  background:var(--primary); color:#fff; border:none; font-size:19px; box-shadow:0 3px 12px rgba(0,0,0,.35);
+  display:none; align-items:center; justify-content:center; cursor:pointer;
+}
+#asideToggle.show-badge::after{
+  content:''; position:absolute; top:2px; right:2px; width:9px; height:9px; border-radius:50%; background:var(--accent); border:1.5px solid #fff;
+}
+@media (max-width:820px){
+  main{flex-direction:column; position:relative;}
+  aside{
+    width:100%; height:46vh; border-left:none; border-top:1px solid var(--border);
+    position:absolute; left:0; right:0; bottom:0; z-index:40;
+    transform:translateY(100%); transition:transform .18s ease; box-shadow:0 -4px 16px rgba(0,0,0,.18);
+  }
+  aside.open{transform:translateY(0);}
+  #viewportScroll{height:100%;}
+  .brand-wrap{display:none;}
+  #asideToggle{display:flex;}
+  .toolbar-secondary{ left:8px; right:8px; width:auto; }
+  header{ transition:height .18s ease, opacity .18s ease, padding .18s ease; }
+  body.mobile-ui-hidden header{ height:0; min-height:0; padding-top:0; padding-bottom:0; border-bottom-color:transparent; opacity:0; overflow:hidden; pointer-events:none; }
+  #asideToggle{ transition:opacity .18s ease, transform .18s ease; }
+  body.mobile-ui-hidden #asideToggle{ opacity:0; transform:scale(.8); pointer-events:none; }
+}
+@media (max-width:768px){
+  input,select{font-size:16px !important;}
+  .btn{min-height:44px;}
+}
+#printArea{display:none;}
+@media print{
+  body > *:not(#printArea){ display:none !important; }
+  html, body{ height:auto !important; overflow:visible !important; }
+  #printArea{display:block !important; position:static; width:100%; margin:0; padding:0;}
+  #printArea .printPage{page-break-after:always;}
+  #printArea .printPage:last-child{page-break-after:auto;}
+  #printArea img{width:100%; height:auto; display:block;}
+  #printArea .printLists{padding:10mm; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#2d3748;}
+  #printArea .printLists h2{font-size:14pt; margin:0 0 6mm;}
+  #printArea .printLists h3{font-size:12pt; margin:6mm 0 3mm;}
+  #printArea .printLists h4{font-size:11pt; margin:5mm 0 2mm;}
+  #printArea table.printTable{width:100%; border-collapse:collapse; font-size:10pt; margin-bottom:4mm;}
+  #printArea table.printTable th, #printArea table.printTable td{border:1px solid #999; padding:2mm 3mm; text-align:left;}
+  @page{margin:8mm;}
+}
+</style>
+</head>
+<body>
+<div id="printArea"></div>
+
+<header>
+  <div class="brand-wrap">
+    <div class="brand-title">📐 VG_Bim_Pro</div>
+    <div class="brand-author">by Vytautas Giedraitis</div>
+  </div>
+  <button class="btn primary" id="btnUpload" data-i18n="upload">📁 Upload</button>
+  <input type="file" id="fileInput" accept="application/pdf,image/jpeg,image/png,image/bmp,image/webp,image/*">
+  <div class="sep"></div>
+  <button class="btn" id="modeCalibrate" data-i18n="modeCalibrate" data-i18n-title="titleCalibrate" title="Calibrate scale">📏 Calibrate</button>
+  <button class="btn" id="modeMeasure" data-i18n="modeMeasure" data-i18n-title="titleMeasure" title="Measure distance">📐 Measure</button>
+  <button class="btn" id="modeLayout" data-i18n="modeLayout" data-i18n-title="titleLayout" title="Layout segment">📊 Layout</button>
+  <div class="sep" id="zoomSepHeader"></div>
+  <span id="zoomSlotHeader" style="display:contents;">
+    <span id="zoomGroup" style="display:contents;">
+      <button class="btn" id="btnZoomOut">🔍−</button>
+      <span id="zoomIndicator" style="font-size:12.5px; color:var(--muted); min-width:40px; text-align:center;">100%</span>
+      <button class="btn" id="btnZoomIn">🔍+</button>
+      <button class="btn" id="btnFit" data-i18n="fit">Fit</button>
+    </span>
+  </span>
+
+  <div class="lang-select-wrap">
+    <select id="langSelect" class="lang-select" title="Language / Kalba / Språk / Język / Язык">
+      <option value="en">🌐 English</option>
+      <option value="no">🌐 Norsk</option>
+      <option value="lt">🌐 Lietuvių</option>
+      <option value="pl">🌐 Polski</option>
+      <option value="ru">🌐 Русский</option>
+    </select>
+  </div>
+
+  <button class="btn" id="btnMoreToggle" data-i18n="more" data-i18n-title="moreTitle" title="More actions">⋯ More</button>
+
+  <div class="toolbar-secondary" id="toolbarSecondary">
+    <div id="zoomMenuWrap">
+      <div class="sep"></div>
+      <span class="tsec-label" data-i18n="scale">Scale</span>
+      <div class="tsec-group" id="zoomSlotMenu"></div>
+    </div>
+    <div class="sep"></div>
+    <span class="tsec-label" data-i18n="page">Page</span>
+    <div class="tsec-group">
+      <button class="btn" id="btnPrevPage">◀</button>
+      <span id="pageIndicator" style="font-size:12.5px; color:var(--muted); min-width:60px; text-align:center;">–/–</span>
+      <button class="btn" id="btnNextPage">▶</button>
+    </div>
+
+    <div class="sep"></div>
+    <span class="tsec-label" data-i18n="units">Units</span>
+    <label class="tsec-group" style="display:inline-flex; align-items:center; gap:5px; font-size:12.5px; color:var(--muted); white-space:nowrap;">
+      <span data-i18n="showAs">Show as:</span>
+      <select id="unitSelect" style="padding:6px 8px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:#fff;">
+        <option value="mm" selected>mm</option>
+        <option value="cm">cm</option>
+        <option value="m">m</option>
+      </select>
+    </label>
+
+    <div class="sep"></div>
+    <span class="tsec-label" data-i18n="pageActions">Page actions</span>
+    <div class="tsec-group">
+      <button class="btn danger" id="btnClearPage" data-i18n="clearPage" data-i18n-title="clearPageTitle">🗑 Clear page</button>
+    </div>
+
+    <div class="sep"></div>
+    <span class="tsec-label" data-i18n="printing">Printing</span>
+    <div class="tsec-group">
+      <button class="btn" id="btnPrintFull" data-i18n="printFull" data-i18n-title="printFullTitle" title="Print full drawing in high resolution">🖨 Full drawing</button>
+      <button class="btn" id="btnPrintVisible" data-i18n="printVisible" data-i18n-title="printVisibleTitle" title="Print only currently visible screen area in high resolution">🖨 Visible area</button>
+      <label style="display:inline-flex; align-items:center; gap:4px; font-size:12px; color:var(--muted); white-space:nowrap;">
+        <input type="checkbox" id="printIncludeLists" style="width:auto;"> <span data-i18n="printIncludeLists">+ lists (separate page)</span>
+      </label>
+    </div>
+
+    <div class="sep"></div>
+    <span class="tsec-label" data-i18n="project">Project</span>
+    <div class="tsec-group">
+      <button class="btn" id="btnExportProject" data-i18n="exportProject" data-i18n-title="exportProjectTitle" title="Export entire project to file">💾 Export</button>
+      <button class="btn" id="btnImportProject" data-i18n="importProject" data-i18n-title="importProjectTitle" title="Load previously exported project file">📂 Import</button>
+      <input type="file" id="projectFileInput" accept=".json,application/json" style="display:none;">
+      <button class="btn danger" id="btnNewProject" data-i18n="newProject" data-i18n-title="newProjectTitle" title="Delete everything and start new project">🆕 New project</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="viewportScroll">
+    <div id="viewport">
+      <canvas id="pdfCanvas"></canvas>
+      <canvas id="overlayCanvas"></canvas>
+    </div>
+    <div id="emptyState">
+      <div style="font-size:40px;">📄</div>
+      <div id="emptyPromptText" data-i18n="emptyPrompt">Upload a PDF drawing or image (JPG/PNG/BMP) to begin</div>
+      <button class="btn primary" id="btnUpload2" data-i18n="uploadFull">📁 Upload PDF / image</button>
+    </div>
+  </div>
+
+  <aside>
+    <div class="tabs">
+      <div class="tab active" data-tab="calib" data-i18n="tabScale">Scale</div>
+      <div class="tab" data-tab="meas" data-i18n="tabMeasure">Measurements</div>
+      <div class="tab" data-tab="layout" data-i18n="tabLayout">Layout</div>
+    </div>
+
+    <div class="panel active" id="panel-calib">
+      <div class="field" id="stdScaleBox">
+        <label data-i18n="stdScaleLabel">Standard drawing scale</label>
+        <div class="row">
+          <select id="scaleSelect">
+            <option value="20">1:20</option>
+            <option value="25">1:25</option>
+            <option value="50" selected>1:50</option>
+            <option value="75">1:75</option>
+            <option value="100">1:100</option>
+            <option value="125">1:125</option>
+            <option value="140">1:140</option>
+            <option value="150">1:150</option>
+            <option value="200">1:200</option>
+            <option value="250">1:250</option>
+            <option value="500">1:500</option>
+            <option value="custom" data-i18n="scaleCustomOpt">Custom...</option>
+          </select>
+          <button class="btn primary" id="btnApplyScale" data-i18n="applyScale">Apply</button>
+        </div>
+        <input type="number" id="scaleCustom" data-i18n-placeholder="scaleCustomPlaceholder" placeholder="Enter N value (1:N)" style="display:none; margin-top:6px;" min="1">
+        <div data-i18n="stdScaleHint" style="font-size:11.5px; color:var(--muted); margin-top:4px;">Use if PDF was exported at true size (without additional scale adjustments when printing).</div>
+      </div>
+      <div id="stdScaleSep" data-i18n="orSep" style="text-align:center; font-size:11px; color:var(--muted); margin:10px 0; text-transform:uppercase; font-weight:600;">— OR —</div>
+      <div class="info-box" id="imgCalibNote" data-i18n="imgCalibNote" style="display:none;">For photos/images, scale is always set manually: mark two points whose real distance you know (e.g. door width) and enter it in millimeters.</div>
+      <div class="info-box" id="calibInfo" data-i18n="calibInfo">Click <b>📏 Calibrate</b> and mark two points whose real distance you know on the drawing (e.g. overall dimension). Zoom in before marking for higher precision – the accuracy of all measurements depends on this.</div>
+      <div class="field" id="calibDoneBox" style="display:none;">
+        <label data-i18n="calibDoneLabel">Set scale</label>
+        <div class="list-item"><span id="calibRatio">–</span><button class="small-btn" id="btnRecalibrate" data-i18n="recalibrate">Recalibrate</button></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-meas">
+      <div class="info-box" id="measInfo" data-i18n="measInfo">Click <b>📐 Measure</b>, then click two points on the drawing – the distance will be shown (live distance is displayed while dragging the second point, also in magnifier).<br><br>To adjust an existing point – hold and drag it to a new location. To move the measurement label sideways (to avoid covering the drawing) – hold and drag the label itself.</div>
+      <div id="measUnitNote" style="font-size:11px; color:var(--muted); margin-bottom:6px;"></div>
+      <div id="measList"></div>
+    </div>
+
+    <div class="panel" id="panel-layout">
+      <div class="info-box" id="layoutInfo" data-i18n="layoutInfo">Click <b>📊 Layout</b>, then mark segment start <b>A</b> and end <b>B</b> (e.g. wall corners). Specify the interval step (e.g. 600 mm) – the system will distribute points along the segment.<br><br><b>Dragging an interior point</b> in table or drawing (or typing a value) adjusts only that spacing – <b>A and B remain locked</b>, and remaining points downstream re-distribute automatically using the interval, inserting an extra point if needed so total A–B distance stays exact.<br><br><b>You can drag A or B</b> if marked inaccurately – the entire segment layout will recalculate for the new total distance.<br><br><b>Drag measurement labels</b> sideways to keep drawings clearly visible – point positions remain fixed.</div>
+      <div id="layoutEmptyMsg" data-i18n="noLayout" style="color:var(--muted); font-size:12.5px;">No active layout.</div>
+      <div id="layoutBox" style="display:none;">
+        <div class="field">
+          <label data-i18n="intervalLabel">Step (mm)</label>
+          <div class="row">
+            <input type="number" id="intervalInput" value="600" min="1" inputmode="decimal">
+            <button class="btn" id="btnRegenerate" data-i18n="recalc">↻ Recalculate</button>
+          </div>
+        </div>
+        <div class="info-box" id="layoutSummary" style="margin-bottom:8px;"></div>
+        <table class="segtable">
+          <thead><tr><th data-i18n="thNum">#</th><th class="js-unit-th" data-i18n="thDist">Distance (mm)</th><th data-i18n="thFromStart">From start</th><th></th></tr></thead>
+          <tbody id="segRows"></tbody>
+        </table>
+        <div class="row" style="margin-top:8px;">
+          <button class="btn" id="btnAddSeg" data-i18n="addSeg">+ Add</button>
+          <button class="btn" id="btnRemoveSeg" data-i18n="removeLastSeg">− Remove last</button>
+        </div>
+        <button class="btn accent" id="btnCopyList" data-i18n="copyList" style="width:100%; margin-top:8px;">📋 Copy list</button>
+        <button class="btn danger" id="btnDeleteLayout" data-i18n="deleteLayout" style="width:100%; margin-top:6px;">🗑 Delete this layout</button>
+      </div>
+      <div id="otherLayouts"></div>
+    </div>
+
+    <div class="aside-footer" id="copyrightFooter">
+      © Vytautas Giedraitis. All rights reserved.
+    </div>
+  </aside>
+</main>
+
+<div id="status"></div>
+<div id="loupe"><canvas id="loupeCanvas" width="320" height="320"></canvas></div>
+<button id="asideToggle" title="Show / hide panel">⚙️</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+/**
+ * ========================================================================
+ * VG_Bim_Pro by Vytautas Giedraitis
+ * Copyright (c) Vytautas Giedraitis. All rights reserved.
+ * Protected proprietary software.
+ * ========================================================================
+ */
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ---------- Internationalization (i18n) ----------
+const I18N = {
+  en: {
+    appTitle: "VG_Bim_Pro by Vytautas Giedraitis",
+    brand: "VG_Bim_Pro",
+    author: "by Vytautas Giedraitis",
+    copyright: "© Vytautas Giedraitis. All rights reserved.",
+    upload: "📁 Upload",
+    uploadFull: "📁 Upload PDF / image",
+    emptyPrompt: "Upload a PDF drawing or image (JPG/PNG/BMP) to begin",
+    modeCalibrate: "📏 Calibrate",
+    modeMeasure: "📐 Measure",
+    modeLayout: "📊 Layout",
+    titleCalibrate: "Calibrate scale",
+    titleMeasure: "Measure distance",
+    titleLayout: "Layout segment",
+    fit: "Fit",
+    more: "⋯ More",
+    moreTitle: "More actions",
+    language: "Language",
+    scale: "Scale",
+    page: "Page",
+    units: "Units",
+    showAs: "Show as:",
+    pageActions: "Page actions",
+    clearPage: "🗑 Clear page",
+    clearPageTitle: "Clear all measurements and layouts on this page",
+    printing: "Printing",
+    printFull: "🖨 Full drawing",
+    printFullTitle: "Print full drawing in high resolution",
+    printVisible: "🖨 Visible area",
+    printVisibleTitle: "Print only currently visible screen area in high resolution",
+    printIncludeLists: "+ lists (separate page)",
+    project: "Project",
+    exportProject: "💾 Export",
+    exportProjectTitle: "Export entire project (drawing + all measurements/layouts) to file",
+    importProject: "📂 Import",
+    importProjectTitle: "Load previously exported project file",
+    newProject: "🆕 New project",
+    newProjectTitle: "Delete everything (including autosaved session) and start new project",
+    tabScale: "Scale",
+    tabMeasure: "Measurements",
+    tabLayout: "Layout",
+    stdScaleLabel: "Standard drawing scale",
+    scaleCustomOpt: "Custom...",
+    applyScale: "Apply",
+    scaleCustomPlaceholder: "Enter N value (1:N)",
+    stdScaleHint: "Use if PDF was exported at true size (without additional scale adjustments when printing).",
+    orSep: "— OR —",
+    imgCalibNote: "For photos/images, scale is always set manually: mark two points whose real distance you know (e.g. door width) and enter it in millimeters.",
+    calibInfo: "Click <b>📏 Calibrate</b> and mark two points whose real distance you know on the drawing (e.g. overall dimension). Zoom in before marking for higher precision – the accuracy of all measurements depends on this.",
+    calibDoneLabel: "Set scale",
+    recalibrate: "Recalibrate",
+    manualCalib: "Manual calibration",
+    measInfo: "Click <b>📐 Measure</b>, then click two points on the drawing – the distance will be shown (live distance is displayed while dragging the second point, also in magnifier).<br><br>To adjust an existing point – hold and drag it to a new location. To move the measurement label sideways (to avoid covering the drawing) – hold and drag the label itself.",
+    measUnitsNote: 'Units: <b id="measUnitVal">{unit}</b> (change in top menu under "Show as")',
+    noMeas: "No measurements yet.",
+    uncalibrated: "uncalibrated",
+    layoutInfo: "Click <b>📊 Layout</b>, then mark segment start <b>A</b> and end <b>B</b> (e.g. wall corners). Specify the interval step (e.g. 600 mm) – the system will distribute points along the segment.<br><br><b>Dragging an interior point</b> in table or drawing (or typing a value) adjusts only that spacing – <b>A and B remain locked</b>, and remaining points downstream re-distribute automatically using the interval, inserting an extra point if needed so total A–B distance stays exact.<br><br><b>You can drag A or B</b> if marked inaccurately – the entire segment layout will recalculate for the new total distance.<br><br><b>Drag measurement labels</b> sideways to keep drawings clearly visible – point positions remain fixed.",
+    noLayout: "No active layout.",
+    intervalLabel: "Step (mm)",
+    recalc: "↻ Recalculate",
+    thNum: "#",
+    thDist: "Distance ({unit})",
+    thFromStart: "From start ({unit})",
+    addSeg: "+ Add",
+    removeLastSeg: "− Remove last",
+    copyList: "📋 Copy list",
+    deleteLayout: "🗑 Delete this layout",
+    otherLayouts: "Other layouts on this page",
+    layoutItem: "Layout #{id} · {count} pts · {len}",
+    togglePanelTitle: "Show / hide panel",
+    statusCalib: "Calibration: click two points with mouse (on touchscreen — long-press on position, then release). One finger pans freely. Magnet snaps near existing points.",
+    statusMeas: "Measurement: click two points with mouse (on touchscreen — long-press). To adjust — long-press existing point and drag; to offset label — drag sideways. One finger pans freely.",
+    statusLayout: "Layout: mark segment start, then end (on touchscreen — long-press). One finger pans freely.",
+    statusCalibCancelled: "Calibration cancelled.",
+    statusScaleSet: "Scale set: 1:{n}",
+    statusListCopied: "List copied to clipboard.",
+    statusSessionRestored: "Previous session restored.",
+    statusExporting: "Preparing export…",
+    statusExportDone: "Project exported.",
+    statusImportDone: "Project imported.",
+    statusPrinting: "Preparing high-resolution view for printing…",
+    promptDistance: "What is the real distance between these two points? (mm)",
+    promptCopyManual: "Copy manually:",
+    alertImageFail: "Failed to load image. Please try another JPG/PNG/BMP file.",
+    alertInvalidScale: "Enter a valid scale denominator (e.g. 50 means 1:50).",
+    alertCalibFirst: "Please calibrate the scale on this page first.",
+    alertExportFail: "Failed to export project. The file might be too large for this browser.",
+    alertExportEmpty: "No drawing loaded – nothing to export.",
+    alertImportFail: "Failed to import project file. Check if this is a valid .bmproj.json file.",
+    alertPrintFail: "Failed to prepare high-resolution image for printing.",
+    confirmClearPage: "Clear all measurements and layouts on this page?",
+    confirmRecalc: "Recalculate all points with new step? Manual adjustments will be reset.",
+    confirmDeleteLayout: "Delete this layout?",
+    confirmRestoreSession: "Unclosed session found{name}{when}. Do you want to restore it?",
+    confirmImportOverwrite: "Loading this project file will replace the current drawing and its measurements. Continue?",
+    confirmNewProject: "Create a new project? Current drawing, all measurements and layouts (as well as autosaved session) will be deleted.",
+    summaryUnits: "Units: <b>{unit}</b><br>Segment length: <b>{len}</b><br>Sum of points: <b>{sum}</b>",
+    summaryExceeds: "Exceeds segment by {diff}",
+    summaryShort: "Short of segment end by {diff}",
+    copiedListHeader: "Layout (step {step} mm) — distances in: {unit}\n",
+    copiedListItem: "{i}. {seg} (from start: {cum})\n",
+    printHeaderTitle: "Measurements and layouts",
+    printPageSuffix: "p.",
+    printUnitNote: "All distances in tables are in: <b>{unit}</b>",
+    printMeasTitle: "Measurements",
+    printNoMeas: "No measurements.",
+    printLayoutsTitle: "Layouts",
+    printNoLayouts: "No layouts.",
+    printLayoutHeader: "Layout #{id} — step {interval} mm, total {total} {unit}",
+    unitPdf: "unit",
+    unitPx: "px"
+  },
+  no: {
+    appTitle: "VG_Bim_Pro by Vytautas Giedraitis",
+    brand: "VG_Bim_Pro",
+    author: "by Vytautas Giedraitis",
+    copyright: "© Vytautas Giedraitis. Alle rettigheter forbeholdt.",
+    upload: "📁 Last opp",
+    uploadFull: "📁 Last opp PDF / bilde",
+    emptyPrompt: "Last opp en PDF-tegning eller et bilde (JPG/PNG/BMP) for å starte",
+    modeCalibrate: "📏 Kalibrer",
+    modeMeasure: "📐 Mål",
+    modeLayout: "📊 Fordeling",
+    titleCalibrate: "Kalibrer målestokk",
+    titleMeasure: "Mål avstand",
+    titleLayout: "Fordel segment",
+    fit: "Tilpass",
+    more: "⋯ Mer",
+    moreTitle: "Flere handlinger",
+    language: "Språk",
+    scale: "Målestokk",
+    page: "Side",
+    units: "Enheter",
+    showAs: "Vis som:",
+    pageActions: "Sidehandlinger",
+    clearPage: "🗑 Tøm side",
+    clearPageTitle: "Slett alle målinger og fordelinger på denne siden",
+    printing: "Utskrift",
+    printFull: "🖨 Hele tegningen",
+    printFullTitle: "Skriv ut hele tegningen i høy oppløsning",
+    printVisible: "🖨 Synlig område",
+    printVisibleTitle: "Skriv ut kun synlig skjermområde i høy oppløsning",
+    printIncludeLists: "+ lister (eget ark)",
+    project: "Prosjekt",
+    exportProject: "💾 Eksporter",
+    exportProjectTitle: "Eksporter hele prosjektet (tegning + alle målinger/fordelinger) til fil",
+    importProject: "📂 Importer",
+    importProjectTitle: "Åpne tidligere eksportert prosjektfil",
+    newProject: "🆕 Nytt prosjekt",
+    newProjectTitle: "Slett alt (også automatisk lagret økt) og start nytt prosjekt",
+    tabScale: "Målestokk",
+    tabMeasure: "Målinger",
+    tabLayout: "Fordeling",
+    stdScaleLabel: "Standard tegningsmålestokk",
+    scaleCustomOpt: "Egendefinert...",
+    applyScale: "Bruk",
+    scaleCustomPlaceholder: "Skriv inn N-verdi (1:N)",
+    stdScaleHint: "Bruk hvis PDF-en ble eksportert i reell størrelse (uten ekstra skalering ved utskrift).",
+    orSep: "— ELLER —",
+    imgCalibNote: "For bilder settes målestokk alltid manuelt: merk to punkter med kjent avstand (f.eks. dørbredde) og oppgi den i millimeter.",
+    calibInfo: "Klikk på <b>📏 Kalibrer</b> og merk to punkter med kjent avstand på tegningen (f.eks. et hovedmål). Zoom inn på forhånd for maksimal nøyaktighet – hele målestokkens presisjon avhenger av dette.",
+    calibDoneLabel: "Innstilt målestokk",
+    recalibrate: "Rekalibrer",
+    manualCalib: "Manuell kalibrering",
+    measInfo: "Klikk på <b>📐 Mål</b>, og klikk deretter to punkter på tegningen – avstanden vises (sanntidsavstand vises også når du drar det andre punktet og i forstørrelsesglasset).<br><br>For å justere et punkt – hold og dra til ny posisjon. For å flytte måleteksten til siden (slik at den ikke dekker tegningen) – hold og dra selve teksten.",
+    measUnitsNote: 'Enheter: <b id="measUnitVal">{unit}</b> (endres øverst under "Vis som")',
+    noMeas: "Ingen målinger ennå.",
+    uncalibrated: "ukalibrert",
+    layoutInfo: "Klikk på <b>📊 Fordeling</b>, og merk start <b>A</b> og slutt <b>B</b> for segmentet (f.eks. vegghjørner). Angi steg/avstand (f.eks. 600 mm) – systemet fordeler punktene langs strekket.<br><br><b>Dra et mellompunkt</b> i tabellen eller tegningen (eller skriv inn verdi) for å justere kun det mellomrommet – <b>A og B forblir låst</b>, og resterende punkter etter dette omfordeles automatisk iht. steget, med ekstra punkt lagt til ved behov slik at totalavstanden forblir nøyaktig.<br><br><b>Du kan dra A eller B</b> hvis de ble plassert unøyaktig – hele fordelingen beregnes da på nytt for den nye totalavstanden.<br><br><b>Dra måletekstene</b> sidelengs for god lesbarhet – selve punktene blir stående.",
+    noLayout: "Ingen aktiv fordeling.",
+    intervalLabel: "Steg (mm)",
+    recalc: "↻ Beregn på nytt",
+    thNum: "#",
+    thDist: "Avstand ({unit})",
+    thFromStart: "Fra start ({unit})",
+    addSeg: "+ Legg til",
+    removeLastSeg: "− Fjern siste",
+    copyList: "📋 Kopier liste",
+    deleteLayout: "🗑 Slett denne fordelingen",
+    otherLayouts: "Andre fordelinger på denne siden",
+    layoutItem: "Fordeling #{id} · {count} pkt · {len}",
+    togglePanelTitle: "Vis / skjul panel",
+    statusCalib: "Kalibrering: klikk to punkter med mus (på berøringsskjerm — hold fingeren nede og slipp). Ettfinger-panorering fungerer fritt. Magnet fester til eksisterende punkter.",
+    statusMeas: "Måling: klikk to punkter med mus (på berøringsskjerm — hold nede). For justering — hold på punkt og dra; for tekstforskyvning — dra teksten. Ettfinger-panorering fungerer fritt.",
+    statusLayout: "Fordeling: merk start, deretter slutt på segmentet (på berøringsskjerm — hold nede). Ettfinger-panorering fungerer fritt.",
+    statusCalibCancelled: "Kalibrering avbrutt.",
+    statusScaleSet: "Målestokk satt: 1:{n}",
+    statusListCopied: "Liste kopiert til utklippstavlen.",
+    statusSessionRestored: "Forrige økt gjenopprettet.",
+    statusExporting: "Forbereder eksport…",
+    statusExportDone: "Prosjekt eksportert.",
+    statusImportDone: "Prosjekt importert.",
+    statusPrinting: "Forbereder høyoppløselig bilde for utskrift…",
+    promptDistance: "Hva er den virkelige avstanden mellom disse to punktene? (mm)",
+    promptCopyManual: "Kopier manuelt:",
+    alertImageFail: "Kunne ikke laste inn bildet. Prøv en annen JPG/PNG/BMP-fil.",
+    alertInvalidScale: "Skriv inn en gyldig målestokknevner (f.eks. 50 betyr 1:50).",
+    alertCalibFirst: "Vennligst kalibrer målestokken på denne siden først.",
+    alertExportFail: "Kunne ikke eksportere prosjektet. Filen kan være for stor for nettleseren.",
+    alertExportEmpty: "Ingen tegning er lastet inn – ingenting å eksportere.",
+    alertImportFail: "Kunne ikke importere prosjektfilen. Sjekk om det er en gyldig .bmproj.json-fil.",
+    alertPrintFail: "Kunne ikke forberede høyoppløselig bilde for utskrift.",
+    confirmClearPage: "Slette alle målinger og fordelinger på denne siden?",
+    confirmRecalc: "Beregne alle punkter på nytt med nytt steg? Manuelle endringer vil gå tapt.",
+    confirmDeleteLayout: "Slette denne fordelingen?",
+    confirmRestoreSession: "Fant en ulagret/avbrutt økt{name}{when}. Vil du gjenopprette den?",
+    confirmImportOverwrite: "Innlasting av denne prosjektfilen vil erstatte gjeldende tegning og målinger. Fortsette?",
+    confirmNewProject: "Opprette et nytt prosjekt? Gjeldende tegning, alle målinger og fordelinger (samt autolagring) blir slettet.",
+    summaryUnits: "Enheter: <b>{unit}</b><br>Segmentlengde: <b>{len}</b><br>Punktsum: <b>{sum}</b>",
+    summaryExceeds: "Overskrider segmentet med {diff}",
+    summaryShort: "Mangler til enden {diff}",
+    copiedListHeader: "Fordeling (steg {step} mm) — avstander i: {unit}\n",
+    copiedListItem: "{i}. {seg} (fra start: {cum})\n",
+    printHeaderTitle: "Målinger og fordelinger",
+    printPageSuffix: "s.",
+    printUnitNote: "Alle avstander i tabellene er i: <b>{unit}</b>",
+    printMeasTitle: "Målinger",
+    printNoMeas: "Ingen målinger.",
+    printLayoutsTitle: "Fordelinger",
+    printNoLayouts: "Ingen fordelinger.",
+    printLayoutHeader: "Fordeling #{id} — steg {interval} mm, totalt {total} {unit}",
+    unitPdf: "enh",
+    unitPx: "px"
+  },
+  lt: {
+    appTitle: "VG_Bim_Pro by Vytautas Giedraitis",
+    brand: "VG_Bim_Pro",
+    author: "by Vytautas Giedraitis",
+    copyright: "© Vytautas Giedraitis. Visos teisės saugomos.",
+    upload: "📁 Įkelti",
+    uploadFull: "📁 Įkelti PDF / nuotrauką",
+    emptyPrompt: "Įkelkite PDF brėžinį arba nuotrauką (JPG/PNG/BMP), kad pradėtumėte",
+    modeCalibrate: "📏 Kalibruoti",
+    modeMeasure: "📐 Matuoti",
+    modeLayout: "📊 Išdėstyti",
+    titleCalibrate: "Kalibruoti mastelį",
+    titleMeasure: "Matuoti atstumą",
+    titleLayout: "Išdėstyti atkarpą",
+    fit: "Talpinti",
+    more: "⋯ Daugiau",
+    moreTitle: "Daugiau veiksmų",
+    language: "Kalba",
+    scale: "Mastelis",
+    page: "Puslapis",
+    units: "Vienetai",
+    showAs: "Rodyti kaip:",
+    pageActions: "Puslapio veiksmai",
+    clearPage: "🗑 Valyti puslapį",
+    clearPageTitle: "Išvalyti visus matavimus ir išdėstymus šiame puslapyje",
+    printing: "Spausdinimas",
+    printFull: "🖨 Visą brėžinį",
+    printFullTitle: "Spausdinti visą brėžinį didele raiška",
+    printVisible: "🖨 Matomą sritį",
+    printVisibleTitle: "Spausdinti tik dabar matomą ekrano sritį didele raiška",
+    printIncludeLists: "+ sąrašai (atsk. lapas)",
+    project: "Projektas",
+    exportProject: "💾 Eksportuoti",
+    exportProjectTitle: "Eksportuoti visą projektą (brėžinys + visi matavimai/išdėstymai) į failą",
+    importProject: "📂 Importuoti",
+    importProjectTitle: "Įkelti anksčiau eksportuotą projekto failą",
+    newProject: "🆕 Naujas projektas",
+    newProjectTitle: "Ištrinti viską (taip pat ir automatiškai išsaugotą sesiją) ir pradėti naują projektą",
+    tabScale: "Mastelis",
+    tabMeasure: "Matavimai",
+    tabLayout: "Išdėstymas",
+    stdScaleLabel: "Standartinis brėžinio mastelis",
+    scaleCustomOpt: "Kita...",
+    applyScale: "Taikyti",
+    scaleCustomPlaceholder: "Įrašykite N reikšmę (1:N)",
+    stdScaleHint: "Naudokite, jei PDF eksportuotas tikru dydžiu (be papildomo mastelio keitimo spausdinant).",
+    orSep: "— ARBA —",
+    imgCalibNote: "Nuotraukoms mastelis visada nustatomas rankiniu būdu: pažymėkite du taškus, kurių tikrą atstumą žinote (pvz. durų plotį), ir įrašykite jį milimetrais.",
+    calibInfo: "Paspauskite <b>📏 Kalibruoti</b> ir pažymėkite du taškus, kurių atstumą žinote brėžinyje (pvz. gabaritinį matmenį). Priartinkite (zoom) prieš žymėdami, kad taškus padėtumėte tiksliau – nuo to priklauso viso mastelio tikslumas.",
+    calibDoneLabel: "Nustatytas mastelis",
+    recalibrate: "Perkalibruoti",
+    manualCalib: "Rankinė kalibracija",
+    measInfo: "Paspauskite <b>📐 Matuoti</b>, tada spustelėkite du taškus brėžinyje – bus parodytas atstumas (atstumas rodomas jau ir tempiant antrą tašką, taip pat ir padidinimo stikle).<br><br>Norėdami pataisyti jau padėtą tašką – palaikykite ant jo ir nutempkite į naują vietą. Norėdami perkelti matmens užrašą į šoną (kad neuždengtų brėžinio) – palaikykite ant paties užrašo ir nutempkite.",
+    measUnitsNote: 'Vienetai: <b id="measUnitVal">{unit}</b> (keičiama viršuje, "Rodyti kaip")',
+    noMeas: "Matavimų dar nėra.",
+    uncalibrated: "nekalibruota",
+    layoutInfo: "Paspauskite <b>📊 Išdėstyti</b>, tada pažymėkite atkarpos pradžią <b>A</b> ir pabaigą <b>B</b> (pvz. sienos kampus). Nurodykite žingsnį (pvz. 600 mm) – sistema sudės taškus per atkarpą.<br><br><b>Tarpinio taško</b> tempimas lentelėje ar brėžinyje (arba reikšmės įvedimas) koreguoja tik tą tarpą – <b>A ir B lieka vietoje</b>, o likę taškai po juo persidėlioja automatiškai pagal žingsnį, prireikus įterpiant papildomą tašką, kad bendras A–B atstumas nesikeistų.<br><br><b>Patį A arba B</b> galite nutempti, jei jie buvo pažymėti netiksliai – tada visas išdėstymas šioje atkarpoje bus perskaičiuotas iš naujo pagal naują atstumą.<br><br><b>Matmens užrašą</b> (skaičių prie taško) galite nutempti į šoną, kad neuždengtų brėžinio – patys taškai lieka savo vietose.",
+    noLayout: "Aktyvaus išdėstymo nėra.",
+    intervalLabel: "Žingsnis (mm)",
+    recalc: "↻ Perskaičiuoti",
+    thNum: "#",
+    thDist: "Atstumas ({unit})",
+    thFromStart: "Nuo pradžios ({unit})",
+    addSeg: "+ Pridėti",
+    removeLastSeg: "− Šalinti paskutinį",
+    copyList: "📋 Kopijuoti sąrašą",
+    deleteLayout: "🗑 Šalinti šį išdėstymą",
+    otherLayouts: "Kiti šio puslapio išdėstymai",
+    layoutItem: "Išdėstymas #{id} · {count} tšk · {len}",
+    togglePanelTitle: "Rodyti / slėpti skydelį",
+    statusCalib: "Kalibravimas: pele spustelėkite du taškus (jutikliniame ekrane — palaikykite pirštą ant vietos, tada atleiskite). Vienu pirštu galima laisvai slinkti. Arti jau esančio taško – prisitraukia (magnetas).",
+    statusMeas: "Matavimas: pele spustelėkite du taškus (jutikliniame ekrane — palaikykite pirštą). Norėdami pataisyti – palaikykite ant jau padėto taško ir tempkite; ant matmens užrašo – tempkite į šoną. Vienu pirštu galima laisvai slinkti.",
+    statusLayout: "Išdėstymas: pažymėkite atkarpos pradžią, tada pabaigą (jutikliniame ekrane — palaikykite pirštą). Vienu pirštu galima laisvai slinkti.",
+    statusCalibCancelled: "Kalibravimas atšauktas.",
+    statusScaleSet: "Mastelis nustatytas: 1:{n}",
+    statusListCopied: "Sąrašas nukopijuotas į iškarpinę.",
+    statusSessionRestored: "Ankstesnė sesija atkurta.",
+    statusExporting: "Ruošiamas eksportas…",
+    statusExportDone: "Projektas eksportuotas.",
+    statusImportDone: "Projektas importuotas.",
+    statusPrinting: "Ruošiamas didelės raiškos vaizdas spausdinimui…",
+    promptDistance: "Koks yra tikrasis atstumas tarp šių dviejų taškų? (mm)",
+    promptCopyManual: "Kopijuokite rankiniu būdu:",
+    alertImageFail: "Nepavyko įkelti nuotraukos. Bandykite kitą JPG/PNG/BMP failą.",
+    alertInvalidScale: "Įveskite teisingą mastelio vardiklį (pvz. 50 reiškia 1:50).",
+    alertCalibFirst: "Pirmiausia sukalibruokite mastelį šiame puslapyje.",
+    alertExportFail: "Nepavyko eksportuoti projekto. Galbūt failas per didelis šiai naršyklei.",
+    alertExportEmpty: "Nėra įkelto brėžinio – nėra ko eksportuoti.",
+    alertImportFail: "Nepavyko importuoti projekto failo. Patikrinkite, ar tai teisingas .bmproj.json failas.",
+    alertPrintFail: "Nepavyko paruošti spausdinimui didelės raiškos vaizdo.",
+    confirmClearPage: "Išvalyti visus matavimus ir išdėstymus šiame puslapyje?",
+    confirmRecalc: "Perskaičiuoti visus taškus per naują žingsnį? Rankiniai pakeitimai bus prarasti.",
+    confirmDeleteLayout: "Šalinti šį išdėstymą?",
+    confirmRestoreSession: "Rasta neuždaryta sesija{name}{when}. Ar norite ją atkurti?",
+    confirmImportOverwrite: "Įkėlus šį projekto failą, dabartinis brėžinys ir jo matavimai bus pakeisti. Tęsti?",
+    confirmNewProject: "Sukurti naują projektą? Dabartinis brėžinys, visi matavimai ir išdėstymai (taip pat ir automatiškai išsaugota sesija) bus ištrinti.",
+    summaryUnits: "Vienetai: <b>{unit}</b><br>Atkarpos ilgis: <b>{len}</b><br>Taškų suma: <b>{sum}</b>",
+    summaryExceeds: "Viršija atkarpą {diff}",
+    summaryShort: "Trūksta iki atkarpos galo {diff}",
+    copiedListHeader: "Išdėstymas (žingsnis {step} mm) — atstumai pateikti vienetais: {unit}\n",
+    copiedListItem: "{i}. {seg} (nuo pradžios: {cum})\n",
+    printHeaderTitle: "Matavimai ir išdėstymai",
+    printPageSuffix: "psl.",
+    printUnitNote: "Visi atstumai lentelėse pateikti vienetais: <b>{unit}</b>",
+    printMeasTitle: "Matavimai",
+    printNoMeas: "Matavimų nėra.",
+    printLayoutsTitle: "Išdėstymai",
+    printNoLayouts: "Išdėstymų nėra.",
+    printLayoutHeader: "Išdėstymas #{id} — žingsnis {interval} mm, iš viso {total} {unit}",
+    unitPdf: "vnt",
+    unitPx: "px"
+  },
+  pl: {
+    appTitle: "VG_Bim_Pro by Vytautas Giedraitis",
+    brand: "VG_Bim_Pro",
+    author: "by Vytautas Giedraitis",
+    copyright: "© Vytautas Giedraitis. Wszelkie prawa zastrzeżone.",
+    upload: "📁 Prześlij",
+    uploadFull: "📁 Prześlij PDF / obraz",
+    emptyPrompt: "Prześlij rysunek PDF lub obraz (JPG/PNG/BMP), aby rozpocząć",
+    modeCalibrate: "📏 Kalibruj",
+    modeMeasure: "📐 Zmierz",
+    modeLayout: "📊 Rozmieść",
+    titleCalibrate: "Kalibruj skalę",
+    titleMeasure: "Zmierz odległość",
+    titleLayout: "Rozmieść odcinek",
+    fit: "Dopasuj",
+    more: "⋯ Więcej",
+    moreTitle: "Więcej opcji",
+    language: "Język",
+    scale: "Skala",
+    page: "Strona",
+    units: "Jednostki",
+    showAs: "Pokaż jako:",
+    pageActions: "Działania na stronie",
+    clearPage: "🗑 Wyczyść stronę",
+    clearPageTitle: "Wyczyść wszystkie pomiary i rozmieszczenia na tej stronie",
+    printing: "Drukowanie",
+    printFull: "🖨 Cały rysunek",
+    printFullTitle: "Drukuj cały rysunek w wysokiej rozdzielczości",
+    printVisible: "🖨 Widoczny obszar",
+    printVisibleTitle: "Drukuj tylko widoczny obszar ekranu w wysokiej rozdzielczości",
+    printIncludeLists: "+ listy (osobna strona)",
+    project: "Projekt",
+    exportProject: "💾 Eksportuj",
+    exportProjectTitle: "Eksportuj cały projekt (rysunek + wszystkie pomiary/rozmieszczenia) do pliku",
+    importProject: "📂 Importuj",
+    importProjectTitle: "Wczytaj wcześniej wyeksportowany plik projektu",
+    newProject: "🆕 Nowy projekt",
+    newProjectTitle: "Usuń wszystko (w tym automatycznie zapisaną sesję) i rozpocznij nowy projekt",
+    tabScale: "Skala",
+    tabMeasure: "Pomiary",
+    tabLayout: "Rozmieszczenie",
+    stdScaleLabel: "Standardowa skala rysunku",
+    scaleCustomOpt: "Inna...",
+    applyScale: "Zastosuj",
+    scaleCustomPlaceholder: "Wpisz wartość N (1:N)",
+    stdScaleHint: "Użyj, jeśli plik PDF został wyeksportowany w rzeczywistym rozmiarze (bez dodatkowego skalowania podczas druku).",
+    orSep: "— LUB —",
+    imgCalibNote: "W przypadku zdjęć skala jest zawsze ustawiana ręcznie: zaznacz dwa punkty o znanej odległości (np. szerokość drzwi) i wpisz ją w milimetrach.",
+    calibInfo: "Kliknij <b>📏 Kalibruj</b> i zaznacz dwa punkty o znanej odległości na rysunku (np. wymiar gabarytowy). Przybliż (zoom) przed zaznaczeniem, aby uzyskać najwyższą dokładność.",
+    calibDoneLabel: "Ustawiona skala",
+    recalibrate: "Przekalibruj",
+    manualCalib: "Ręczna kalibracja",
+    measInfo: "Kliknij <b>📐 Zmierz</b>, a następnie kliknij dwa punkty na rysunku – zostanie wyświetlona odległość (odległość na żywo jest widoczna podczas przeciągania drugiego punktu i w lupie).<br><br>Aby poprawić punkt – przytrzymaj i przeciągnij. Aby przesunąć etykietę wymiaru w bok – przytrzymaj i przeciągnij samą etykietę.",
+    measUnitsNote: 'Jednostki: <b id="measUnitVal">{unit}</b> (zmień u góry w "Pokaż jako")',
+    noMeas: "Brak pomiarów.",
+    uncalibrated: "nieskalibrowane",
+    layoutInfo: "Kliknij <b>📊 Rozmieść</b>, a następnie zaznacz początek <b>A</b> i koniec <b>B</b> odcinka (np. narożniki ściany). Podaj krok (np. 600 mm) – system rozmieści punkty wzdłuż odcinka.<br><br><b>Przeciąganie punktu pośredniego</b> w tabeli lub na rysunku (lub wpisanie wartości) zmienia tylko ten odstęp – <b>A i B pozostają zablokowane</b>, a kolejne punkty dopasowują się automatycznie wg kroku, w razie potrzeby wstawiając dodatkowy punkt.<br><br><b>Możesz przeciągnąć A lub B</b>, jeśli zostały oznaczone niedokładnie – całe rozmieszczenie zostanie przeliczone na nowo.<br><br><b>Przeciągaj etykiety wymiarów</b> w bok, aby nie zasłaniały rysunku.",
+    noLayout: "Brak aktywnego rozmieszczenia.",
+    intervalLabel: "Krok (mm)",
+    recalc: "↻ Przelicz",
+    thNum: "#",
+    thDist: "Odległość ({unit})",
+    thFromStart: "Od początku ({unit})",
+    addSeg: "+ Dodaj",
+    removeLastSeg: "− Usuń ostatni",
+    copyList: "📋 Kopiuj listę",
+    deleteLayout: "🗑 Usuń to rozmieszczenie",
+    otherLayouts: "Inne rozmieszczenia na tej stronie",
+    layoutItem: "Rozmieszczenie #{id} · {count} pkt · {len}",
+    togglePanelTitle: "Pokaż / ukryj panel",
+    statusCalib: "Kalibracja: kliknij dwa punkty myszą (na ekranie dotykowym — przytrzymaj palec i puść). Przesuwanie jednym palcem działa swobodnie. Magnes przyciąga do istniejących punktów.",
+    statusMeas: "Pomiar: kliknij dwa punkty myszą (na ekranie dotykowym — przytrzymaj). Aby poprawić — przytrzymaj punkt i przeciągnij; etykietę — przeciągnij w bok. Przesuwanie jednym palcem działa swobodnie.",
+    statusLayout: "Rozmieszczenie: zaznacz początek, a następnie koniec odcinka (na dotyku — przytrzymaj). Przesuwanie jednym palcem działa swobodnie.",
+    statusCalibCancelled: "Kalibracja anulowana.",
+    statusScaleSet: "Ustawiono skalę: 1:{n}",
+    statusListCopied: "Lista skopiowana do schowka.",
+    statusSessionRestored: "Poprzednia sesja przywrócona.",
+    statusExporting: "Przygotowywanie eksportu…",
+    statusExportDone: "Projekt wyeksportowany.",
+    statusImportDone: "Projekt zaimportowany.",
+    statusPrinting: "Przygotowywanie obrazu o wysokiej rozdzielczości do druku…",
+    promptDistance: "Jaka jest rzeczywista odległość między tymi dwoma punktami? (mm)",
+    promptCopyManual: "Skopiuj ręcznie:",
+    alertImageFail: "Nie udało się wczytać obrazu. Wybierz inny plik JPG/PNG/BMP.",
+    alertInvalidScale: "Wpisz poprawny mianownik skali (np. 50 oznacza 1:50).",
+    alertCalibFirst: "Najpierw skalibruj skalę na tej stronie.",
+    alertExportFail: "Nie udało się wyeksportować projektu. Plik może być zbyt duży dla tej przeglądarki.",
+    alertExportEmpty: "Brak wczytanego rysunku – nie ma czego eksportować.",
+    alertImportFail: "Nie udało się zaimportować pliku projektu. Sprawdź, czy to poprawny plik .bmproj.json.",
+    alertPrintFail: "Nie udało się przygotować obrazu o wysokiej rozdzielczości do druku.",
+    confirmClearPage: "Wyczyścić wszystkie pomiary i rozmieszczenia na tej stronie?",
+    confirmRecalc: "Przeliczyć wszystkie punkty wg nowego kroku? Zmiany ręczne zostaną utracone.",
+    confirmDeleteLayout: "Usunąć to rozmieszczenie?",
+    confirmRestoreSession: "Znaleziono niezamkniętą sesję{name}{when}. Czy chcesz ją przywrócić?",
+    confirmImportOverwrite: "Wczytanie tego pliku projektu zastąpi bieżący rysunek i pomiary. Kontynuować?",
+    confirmNewProject: "Utworzyć nowy projekt? Bieżący rysunek, wszystkie pomiary i rozmieszczenia zostaną usunięte.",
+    summaryUnits: "Jednostki: <b>{unit}</b><br>Długość odcinka: <b>{len}</b><br>Suma punktów: <b>{sum}</b>",
+    summaryExceeds: "Przekracza odcinek o {diff}",
+    summaryShort: "Brakuje do końca odcinka {diff}",
+    copiedListHeader: "Rozmieszczenie (krok {step} mm) — odległości w: {unit}\n",
+    copiedListItem: "{i}. {seg} (od początku: {cum})\n",
+    printHeaderTitle: "Pomiary i rozmieszczenia",
+    printPageSuffix: "str.",
+    printUnitNote: "Wszystkie odległości w tabelach podano w: <b>{unit}</b>",
+    printMeasTitle: "Pomiary",
+    printNoMeas: "Brak pomiarów.",
+    printLayoutsTitle: "Rozmieszczenia",
+    printNoLayouts: "Brak rozmieszczeń.",
+    printLayoutHeader: "Rozmieszczenie #{id} — krok {interval} mm, łącznie {total} {unit}",
+    unitPdf: "jedn",
+    unitPx: "px"
+  },
+  ru: {
+    appTitle: "VG_Bim_Pro by Vytautas Giedraitis",
+    brand: "VG_Bim_Pro",
+    author: "by Vytautas Giedraitis",
+    copyright: "© Vytautas Giedraitis. Все права защищены.",
+    upload: "📁 Загрузить",
+    uploadFull: "📁 Загрузить PDF / фото",
+    emptyPrompt: "Загрузите чертёж PDF или изображение (JPG/PNG/BMP), чтобы начать",
+    modeCalibrate: "📏 Калибровать",
+    modeMeasure: "📐 Измерить",
+    modeLayout: "📊 Разметка",
+    titleCalibrate: "Калибровать масштаб",
+    titleMeasure: "Измерить расстояние",
+    titleLayout: "Разметить отрезок",
+    fit: "По размеру",
+    more: "⋯ Ещё",
+    moreTitle: "Дополнительные действия",
+    language: "Язык",
+    scale: "Масштаб",
+    page: "Страница",
+    units: "Единицы",
+    showAs: "Отображать как:",
+    pageActions: "Действия со страницей",
+    clearPage: "🗑 Очистить страницу",
+    clearPageTitle: "Очистить все измерения и разметку на этой странице",
+    printing: "Печать",
+    printFull: "🖨 Весь чертёж",
+    printFullTitle: "Печать всего чертежа в высоком разрешении",
+    printVisible: "🖨 Видимую область",
+    printVisibleTitle: "Печать только видимой области экрана в высоком разрешении",
+    printIncludeLists: "+ списки (отд. лист)",
+    project: "Проект",
+    exportProject: "💾 Экспорт",
+    exportProjectTitle: "Экспорт всего проекта (чертёж + все измерения/разметки) в файл",
+    importProject: "📂 Импорт",
+    importProjectTitle: "Загрузить ранее экспортированный файл проекта",
+    newProject: "🆕 Новый проект",
+    newProjectTitle: "Удалить всё (включая автосохранённую сессию) и начать новый проект",
+    tabScale: "Масштаб",
+    tabMeasure: "Измерения",
+    tabLayout: "Разметка",
+    stdScaleLabel: "Стандартный масштаб чертежа",
+    scaleCustomOpt: "Другой...",
+    applyScale: "Применить",
+    scaleCustomPlaceholder: "Введите значение N (1:N)",
+    stdScaleHint: "Используйте, если PDF экспортирован в реальном масштабе (без дополнительного масштабирования при печати).",
+    orSep: "— ИЛИ —",
+    imgCalibNote: "Для фото/изображений масштаб всегда задаётся вручную: отметьте две точки с известным расстоянием (напр. ширину двери) и введите его в миллиметрах.",
+    calibInfo: "Нажмите <b>📏 Калибровать</b> и отметьте две точки с известным расстоянием на чертеже (напр., габаритный размер). Увеличьте масштаб перед отметкой для максимальной точности.",
+    calibDoneLabel: "Установленный масштаб",
+    recalibrate: "Перекалибровать",
+    manualCalib: "Ручная калибровка",
+    measInfo: "Нажмите <b>📐 Измерить</b>, затем кликните две точки на чертеже – расстояние отобразится (расстояние в реальном времени видно при перетаскивании второй точки и в лупе).<br><br>Чтобы скорректировать точку – зажмите и перетащите. Чтобы сместить надпись размера вбок – зажмите и перетащите саму надпись.",
+    measUnitsNote: 'Единицы: <b id="measUnitVal">{unit}</b> (изменяется в меню сверху "Отображать как")',
+    noMeas: "Измерений пока нет.",
+    uncalibrated: "не калибровано",
+    layoutInfo: "Нажмите <b>📊 Разметка</b>, затем отметьте начало <b>A</b> и конец <b>B</b> отрезка (напр., углы стены). Укажите шаг (напр., 600 мм) – система расставит точки вдоль отрезка.<br><br><b>Перетаскивание промежуточной точки</b> в таблице или на чертеже (или ввод значения) меняет только этот интервал – <b>A и B остаются зафиксированными</b>, а последующие точки пересчитываются автоматически с сохранением общей длины.<br><br><b>Точки A и B можно перетащить</b>, если они были поставлены неточно – вся разметка отрезка пересчитается заново.<br><br><b>Подписи размеров</b> можно смещать в сторону, чтобы они не перекрывали чертёж.",
+    noLayout: "Нет активной разметки.",
+    intervalLabel: "Шаг (mm)",
+    recalc: "↻ Пересчитать",
+    thNum: "#",
+    thDist: "Расстояние ({unit})",
+    thFromStart: "От начала ({unit})",
+    addSeg: "+ Добавить",
+    removeLastSeg: "− Удалить последний",
+    copyList: "📋 Скопировать список",
+    deleteLayout: "🗑 Удалить эту разметку",
+    otherLayouts: "Другие разметки на этой странице",
+    layoutItem: "Разметка #{id} · {count} точ · {len}",
+    togglePanelTitle: "Показать / скрыть панель",
+    statusCalib: "Калибровка: кликните две точки мышью (на сенсорном экране — удерживайте палец и отпустите). Панорамирование одним пальцем работает свободно. Магнит привязывается к существующим точкам.",
+    statusMeas: "Измерение: кликните две точки мышью (на сенсорном экране — удерживайте). Для корректировки — удерживайте точку и тяните; для смещения подписи — тяните надпись в сторону. Панорамирование одним пальцем работает свободно.",
+    statusLayout: "Разметка: отметьте начало, затем конец отрезка (на сенсоре — удерживайте). Панорамирование одним пальцем работает свободно.",
+    statusCalibCancelled: "Калибровка отменена.",
+    statusScaleSet: "Масштаб установлен: 1:{n}",
+    statusListCopied: "Список скопирован в буфер обмена.",
+    statusSessionRestored: "Предыдущая сессия восстановлена.",
+    statusExporting: "Подготовка экспорта…",
+    statusExportDone: "Проект экспортирован.",
+    statusImportDone: "Проект импортирован.",
+    statusPrinting: "Подготовка изображения высокого разрешения для печати…",
+    promptDistance: "Каково реальное расстояние между этими двумя точками? (мм)",
+    promptCopyManual: "Скопируйте вручную:",
+    alertImageFail: "Не удалось загрузить изображение. Попробуйте другой файл JPG/PNG/BMP.",
+    alertInvalidScale: "Введите корректный знаменатель масштаба (напр., 50 означает 1:50).",
+    alertCalibFirst: "Сначала откалибруйте масштаб на этой странице.",
+    alertExportFail: "Не удалось экспортировать проект. Возможно, файл слишком велик для этого браузера.",
+    alertExportEmpty: "Нет загруженного чертежа – нечего экспортировать.",
+    alertImportFail: "Не удалось импортировать файл проекта. Проверьте, является ли это корректным файлом .bmproj.json.",
+    alertPrintFail: "Не удалось подготовить изображение высокого разрешения для печати.",
+    confirmClearPage: "Очистить все измерения и разметку на этой странице?",
+    confirmRecalc: "Пересчитать все точки с новым шагом? Ручные изменения будут сброшены.",
+    confirmDeleteLayout: "Удалить эту разметку?",
+    confirmRestoreSession: "Найдена незавершённая сессия{name}{when}. Хотите восстановить её?",
+    confirmImportOverwrite: "Загрузка этого файла проекта заменит текущий чертёж и измерения. Продолжить?",
+    confirmNewProject: "Создать новый проект? Текущий чертёж, все измерения и разметки (а также автосохранение) будут удалены.",
+    summaryUnits: "Единицы: <b>{unit}</b><br>Длина отрезка: <b>{len}</b><br>Сумма точек: <b>{sum}</b>",
+    summaryExceeds: "Превышает отрезок на {diff}",
+    summaryShort: "Не хватает до конца {diff}",
+    copiedListHeader: "Разметка (шаг {step} мм) — расстояния в: {unit}\n",
+    copiedListItem: "{i}. {seg} (от начала: {cum})\n",
+    printHeaderTitle: "Измерения и разметка",
+    printPageSuffix: "стр.",
+    printUnitNote: "Все расстояния в таблицах указаны в: <b>{unit}</b>",
+    printMeasTitle: "Измерения",
+    printNoMeas: "Измерений нет.",
+    printLayoutsTitle: "Разметка",
+    printNoLayouts: "Разметки нет.",
+    printLayoutHeader: "Разметка #{id} — шаг {interval} мм, всего {total} {unit}",
+    unitPdf: "ед",
+    unitPx: "px"
+  }
+};
+
+let currentLang = 'en';
+try {
+  const savedLang = localStorage.getItem('vg_bim_pro_lang');
+  if(savedLang && I18N[savedLang]) currentLang = savedLang;
+} catch(e){}
+
+function t(key, params){
+  const dict = I18N[currentLang] || I18N.en;
+  let str = dict[key] || I18N.en[key] || key;
+  if(params){
+    Object.keys(params).forEach(k=>{
+      str = str.replace(new RegExp('\\{'+k+'\\}','g'), params[k]);
+    });
+  }
+  return str;
+}
+
+function applyLanguage(lang){
+  if(!I18N[lang]) lang = 'en';
+  currentLang = lang;
+  try{ localStorage.setItem('vg_bim_pro_lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.title = t('appTitle');
+  const langSel = document.getElementById('langSelect');
+  if(langSel && langSel.value !== lang) langSel.value = lang;
+
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.dataset.i18n;
+    if(k) el.innerHTML = t(k, {unit: displayUnit});
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{
+    const k = el.dataset.i18nTitle;
+    if(k) el.title = t(k);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const k = el.dataset.i18nPlaceholder;
+    if(k) el.placeholder = t(k);
+  });
+
+  const cr = document.getElementById('copyrightFooter');
+  if(cr) cr.textContent = t('copyright');
+
+  const asideToggle = document.getElementById('asideToggle');
+  if(asideToggle) asideToggle.title = t('togglePanelTitle');
+
+  updateCalibPanel();
+  refreshUnitDependentUI();
+  if(mode !== 'none') setMode(mode);
+}
+
+document.getElementById('langSelect').onchange = (e)=>{
+  applyLanguage(e.target.value);
+};
+
+// ---------- State ----------
+let pdfDoc = null;
+let docType = null;     // 'pdf' | 'image'
+let sourceImage = null; // HTMLImageElement, when docType==='image'
+let currentPageNum = 1;
+let pageCount = 0;
+let pageProxy = null;
+let baseScale = 1;      // render scale used to fit width at zoom=1
+let zoomMul = 1;        // user zoom multiplier
+const MIN_ZOOM = 0.15;
+const MAX_ZOOM = 20;    // up to 2000%
+let renderScale = 1;    // baseScale * zoomMul, actual render scale
+let renderTask = null;
+let currentFileBlob = null; // original PDF/image bytes, kept for export & autosave
+let currentFileName = '';
+function hasDoc(){ return docType==='pdf' ? !!pdfDoc : !!sourceImage; }
+function nativeUnitSize(){
+  if(docType==='pdf'){ const vp = pageProxy.getViewport({scale:1}); return {width:vp.width, height:vp.height}; }
+  return {width: sourceImage.naturalWidth, height: sourceImage.naturalHeight};
+}
+
+// per-page data, keyed by page number
+let pageData = {};
+
+function ensurePage(n){
+  if(!pageData[n]) pageData[n] = { mmPerUnit:null, measurements:[], layouts:[] };
+  return pageData[n];
+}
+
+// interaction mode: 'none' | 'calibrate' | 'measure' | 'layout'
+let mode = 'none';
+let pendingPoints = [];
+let activeLayoutId = null;
+
+const pdfCanvas = document.getElementById('pdfCanvas');
+const overlayCanvas = document.getElementById('overlayCanvas');
+const ctx = overlayCanvas.getContext('2d');
+const pctx = pdfCanvas.getContext('2d');
+const viewportScroll = document.getElementById('viewportScroll');
+const viewportEl = document.getElementById('viewport');
+const emptyState = document.getElementById('emptyState');
+const statusEl = document.getElementById('status');
+
+function setStatus(msg){
+  if(!msg){ statusEl.classList.remove('show'); statusEl.textContent=''; return; }
+  statusEl.textContent = msg;
+  statusEl.classList.add('show');
+}
+
+// ---------- File loading ----------
+document.getElementById('btnUpload').onclick = () => document.getElementById('fileInput').click();
+document.getElementById('btnUpload2').onclick = () => document.getElementById('fileInput').click();
+document.getElementById('fileInput').onchange = async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  currentFileBlob = file;
+  currentFileName = file.name || '';
+  if(file.type==='application/pdf' || /\.pdf$/i.test(file.name)){
+    const buf = await file.arrayBuffer();
+    await loadPdf(buf);
+  } else {
+    await loadImageFile(file);
+  }
+  e.target.value = '';
+  scheduleAutosave();
+};
+
+async function loadPdf(buf){
+  pdfDoc = await pdfjsLib.getDocument({data: buf}).promise;
+  docType = 'pdf'; sourceImage = null;
+  pageCount = pdfDoc.numPages;
+  pageData = {};
+  currentPageNum = 1;
+  emptyState.style.display = 'none';
+  document.getElementById('stdScaleBox').style.display = '';
+  document.getElementById('stdScaleSep').style.display = '';
+  document.getElementById('imgCalibNote').style.display = 'none';
+  updatePageNavVisibility();
+  await renderPage(1, true);
+}
+
+function loadImageFile(file){
+  return new Promise((resolve)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = async ()=>{
+      sourceImage = img;
+      docType = 'image'; pdfDoc = null; pageProxy = null;
+      pageCount = 1; currentPageNum = 1;
+      pageData = {};
+      emptyState.style.display = 'none';
+      document.getElementById('stdScaleBox').style.display = 'none';
+      document.getElementById('stdScaleSep').style.display = 'none';
+      document.getElementById('imgCalibNote').style.display = 'block';
+      updatePageNavVisibility();
+      await renderPage(1, true);
+      URL.revokeObjectURL(url);
+      resolve();
+    };
+    img.onerror = ()=>{ alert(t('alertImageFail')); resolve(); };
+    img.src = url;
+  });
+}
+
+function updatePageNavVisibility(){
+  const show = docType==='pdf' && pageCount>1;
+  document.getElementById('btnPrevPage').style.display = show ? '' : 'none';
+  document.getElementById('btnNextPage').style.display = show ? '' : 'none';
+}
+
+async function renderPage(n, fitWidth){
+  currentPageNum = n;
+  let unitViewport;
+  if(docType==='pdf'){
+    pageProxy = await pdfDoc.getPage(n);
+    unitViewport = pageProxy.getViewport({scale:1});
+  } else {
+    unitViewport = {width: sourceImage.naturalWidth, height: sourceImage.naturalHeight};
+  }
+  if(fitWidth){
+    const availW = Math.max(300, viewportScroll.clientWidth - 40);
+    baseScale = Math.min(2.5, availW / unitViewport.width);
+    zoomMul = 1;
+  }
+  renderScale = baseScale * zoomMul;
+  const w = Math.round(unitViewport.width * renderScale);
+  const h = Math.round(unitViewport.height * renderScale);
+  pdfCanvas.width = overlayCanvas.width = w;
+  pdfCanvas.height = overlayCanvas.height = h;
+  viewportEl.style.width = w + 'px';
+  viewportEl.style.height = h + 'px';
+
+  if(docType==='pdf'){
+    if(renderTask){ try{ renderTask.cancel(); }catch(e){} }
+    const viewport = pageProxy.getViewport({scale: renderScale});
+    renderTask = pageProxy.render({canvasContext: pctx, viewport: viewport});
+    await renderTask.promise;
+  } else {
+    pctx.imageSmoothingEnabled = true;
+    pctx.imageSmoothingQuality = 'high';
+    pctx.clearRect(0,0,w,h);
+    pctx.drawImage(sourceImage, 0, 0, w, h);
+  }
+
+  document.getElementById('pageIndicator').textContent = `${n}/${pageCount}`;
+  document.getElementById('zoomIndicator').textContent = Math.round(zoomMul*100)+'%';
+  ensurePage(n);
+  updateCalibPanel();
+  refreshLayoutPanel();
+  redrawOverlay();
+}
+
+document.getElementById('btnPrevPage').onclick = () => { if(docType==='pdf' && currentPageNum>1){ resetPending(); renderPage(currentPageNum-1, true); } };
+document.getElementById('btnNextPage').onclick = () => { if(docType==='pdf' && currentPageNum<pageCount){ resetPending(); renderPage(currentPageNum+1, true); } };
+document.getElementById('btnZoomIn').onclick = () => { if(hasDoc()){ zoomAtViewportCenter(zoomMul*1.3); } };
+document.getElementById('btnZoomOut').onclick = () => { if(hasDoc()){ zoomAtViewportCenter(zoomMul/1.3); } };
+document.getElementById('btnFit').onclick = () => { if(hasDoc()){ renderPage(currentPageNum, true); } };
+
+// ---------- Zoom helpers ----------
+function captureAnchor(clientX, clientY){
+  const scrollRect = viewportScroll.getBoundingClientRect();
+  return {
+    unit: clientToUnit(clientX, clientY),
+    offsetX: clientX - scrollRect.left,
+    offsetY: clientY - scrollRect.top
+  };
+}
+function restoreAnchor(anchor){
+  const contentX = 20 + anchor.unit.x * renderScale;
+  const contentY = 20 + anchor.unit.y * renderScale;
+  viewportScroll.scrollLeft = contentX - anchor.offsetX;
+  viewportScroll.scrollTop = contentY - anchor.offsetY;
+}
+async function zoomAtClient(newZoomMul, clientX, clientY){
+  if(!hasDoc()) return;
+  newZoomMul = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, newZoomMul));
+  if(Math.abs(newZoomMul-zoomMul) < 1e-4) return;
+  const anchor = captureAnchor(clientX, clientY);
+  zoomMul = newZoomMul;
+  await renderPage(currentPageNum, false);
+  restoreAnchor(anchor);
+}
+function zoomAtViewportCenter(newZoomMul){
+  const r = viewportScroll.getBoundingClientRect();
+  zoomAtClient(newZoomMul, r.left + r.width/2, r.top + r.height/2);
+}
+
+// ---------- Coordinate helpers ----------
+function evtToUnit(evt){
+  const rect = overlayCanvas.getBoundingClientRect();
+  const sx = overlayCanvas.width / rect.width;
+  const sy = overlayCanvas.height / rect.height;
+  const px = (evt.clientX - rect.left) * sx;
+  const py = (evt.clientY - rect.top) * sy;
+  return { x: px/renderScale, y: py/renderScale };
+}
+function unitToCanvas(pt){
+  return { x: pt.x*renderScale, y: pt.y*renderScale };
+}
+function unitDist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+
+// ---------- Snap-to-point magnet ----------
+function snapRadiusUnit(){ return 16/renderScale; }
+function collectSnapPoints(){
+  const pd = ensurePage(currentPageNum);
+  const pts = [];
+  pd.measurements.forEach(m=>{ pts.push(m.p1); pts.push(m.p2); });
+  pd.layouts.forEach(l=>{ markerPositions(l).forEach(mp=>pts.push(mp.point)); });
+  return pts;
+}
+function snapPoint(upt){
+  const r = snapRadiusUnit();
+  let best=null, bestD=r;
+  collectSnapPoints().forEach(p=>{ const d=unitDist(p,upt); if(d<bestD){ bestD=d; best=p; } });
+  return best ? {x:best.x, y:best.y, snapped:true} : upt;
+}
+
+// ---------- Mode buttons ----------
+const modeButtons = {
+  calibrate: document.getElementById('modeCalibrate'),
+  measure: document.getElementById('modeMeasure'),
+  layout: document.getElementById('modeLayout'),
+};
+function setMode(m){
+  mode = m;
+  pendingPoints = [];
+  Object.values(modeButtons).forEach(b=>b.classList.remove('active'));
+  if(m==='calibrate'){
+    modeButtons.calibrate.classList.add('active');
+    setStatus(t('statusCalib'));
+    switchTab('calib');
+  } else if(m==='measure'){
+    modeButtons.measure.classList.add('active');
+    setStatus(t('statusMeas'));
+    switchTab('meas');
+  } else if(m==='layout'){
+    modeButtons.layout.classList.add('active');
+    setStatus(t('statusLayout'));
+    switchTab('layout');
+  } else {
+    setStatus('');
+  }
+  if(m!=='none') setAsideOpen(true);
+  redrawOverlay();
+}
+modeButtons.calibrate.onclick = () => setMode(mode==='calibrate' ? 'none' : 'calibrate');
+modeButtons.measure.onclick = () => setMode(mode==='measure' ? 'none' : 'measure');
+modeButtons.layout.onclick = () => setMode(mode==='layout' ? 'none' : 'layout');
+function resetPending(){ pendingPoints=[]; }
+
+document.getElementById('btnClearPage').onclick = () => {
+  if(!hasDoc()) return;
+  if(!confirm(t('confirmClearPage'))) return;
+  const pd = ensurePage(currentPageNum);
+  pd.measurements = []; pd.layouts = []; pd.mmPerUnit = null;
+  activeLayoutId = null;
+  updateCalibPanel(); refreshMeasList(); refreshLayoutPanel(); redrawOverlay();
+};
+
+// ---------- Tabs ----------
+document.querySelectorAll('.tab').forEach(tEl=>{
+  tEl.onclick = () => switchTab(tEl.dataset.tab);
+});
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(tEl=>tEl.classList.toggle('active', tEl.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+name));
+}
+
+// ---------- Mobile side panel show/hide ----------
+const asideEl = document.querySelector('aside');
+const asideToggleBtn = document.getElementById('asideToggle');
+function setAsideOpen(open){
+  asideEl.classList.toggle('open', open);
+  asideToggleBtn.textContent = open ? '✕' : '⚙️';
+}
+asideToggleBtn.onclick = () => setAsideOpen(!asideEl.classList.contains('open'));
+
+// ---------- Secondary toolbar dropdown ----------
+const moreToggleBtn = document.getElementById('btnMoreToggle');
+const toolbarSecondary = document.getElementById('toolbarSecondary');
+function setMoreOpen(open){ toolbarSecondary.classList.toggle('open', open); }
+moreToggleBtn.onclick = (e) => { e.stopPropagation(); setMoreOpen(!toolbarSecondary.classList.contains('open')); };
+document.addEventListener('click', (e)=>{
+  if(!toolbarSecondary.classList.contains('open')) return;
+  if(toolbarSecondary.contains(e.target) && e.target.tagName!=='BUTTON') return;
+  if(e.target.closest && e.target.closest('.toolbar-secondary button')){ setMoreOpen(false); return; }
+  if(!toolbarSecondary.contains(e.target) && e.target!==moreToggleBtn){ setMoreOpen(false); }
+});
+
+const zoomGroupEl = document.getElementById('zoomGroup');
+const zoomSlotHeaderEl = document.getElementById('zoomSlotHeader');
+const zoomSlotMenuEl = document.getElementById('zoomSlotMenu');
+const zoomInMenuMQ = window.matchMedia('(min-width:821px)');
+function applyZoomSlot(){
+  const inMenu = zoomInMenuMQ.matches;
+  document.body.classList.toggle('zoom-in-menu', inMenu);
+  const target = inMenu ? zoomSlotMenuEl : zoomSlotHeaderEl;
+  if(zoomGroupEl.parentElement !== target) target.appendChild(zoomGroupEl);
+  if(inMenu) setMoreOpen(false);
+}
+applyZoomSlot();
+zoomInMenuMQ.addEventListener('change', applyZoomSlot);
+
+// ---------- Mobile auto-hide header ----------
+const mobileUIMQ = window.matchMedia('(max-width:820px)');
+function hideMobileUI(){
+  if(!mobileUIMQ.matches) return;
+  if(asideEl.classList.contains('open')) return;
+  setMoreOpen(false);
+  document.body.classList.add('mobile-ui-hidden');
+}
+function showMobileUI(){ document.body.classList.remove('mobile-ui-hidden'); }
+viewportScroll.addEventListener('scroll', hideMobileUI, {passive:true});
+
+// ---------- Pointer interaction ----------
+const TOUCH_OFFSET = 70;
+const LONG_PRESS_MS = 420;
+const MOVE_THRESHOLD_PX = 18;
+let longPressTimer = null;
+const activePointers = new Map();
+let pinchState = null;
+let singleAction = null;
+
+function clientToUnit(clientX, clientY){
+  const rect = overlayCanvas.getBoundingClientRect();
+  const sx = overlayCanvas.width / rect.width;
+  const sy = overlayCanvas.height / rect.height;
+  const px = (clientX - rect.left) * sx;
+  const py = (clientY - rect.top) * sy;
+  return { x: px/renderScale, y: py/renderScale };
+}
+
+overlayCanvas.addEventListener('pointerdown', (e)=>{
+  activePointers.set(e.pointerId, {x:e.clientX, y:e.clientY, type:e.pointerType});
+  try{ overlayCanvas.setPointerCapture(e.pointerId); }catch(err){}
+
+  if(activePointers.size===2){
+    singleAction = null; hideLoupe();
+    hideMobileUI();
+    if(longPressTimer){ clearTimeout(longPressTimer); longPressTimer=null; }
+    const pts = [...activePointers.values()];
+    const rect = viewportEl.getBoundingClientRect();
+    const midX = (pts[0].x+pts[1].x)/2, midY=(pts[0].y+pts[1].y)/2;
+    pinchState = {
+      initialDist: Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y),
+      initialZoom: zoomMul, finalZoom: zoomMul,
+      originX: midX-rect.left, originY: midY-rect.top,
+      midClientX: midX, midClientY: midY
+    };
+    viewportEl.style.transformOrigin = `${pinchState.originX}px ${pinchState.originY}px`;
+    return;
+  }
+  if(activePointers.size>2 || !hasDoc()) return;
+
+  const touchOff = e.pointerType==='touch' ? TOUCH_OFFSET : 0;
+  const targetY = e.clientY - touchOff;
+  const upt = clientToUnit(e.clientX, targetY);
+
+  if(e.pointerType!=='touch'){
+    if(mode==='layout' || mode==='measure'){
+      const hit = findDragHit(upt);
+      if(hit){ singleAction = {type:'drag', hit, pointerId:e.pointerId, offsetY:0}; showLoupe(e.clientX, targetY, upt); return; }
+    }
+    if(mode==='none'){
+      singleAction = {type:'pan', pointerId:e.pointerId, startX:e.clientX, startY:e.clientY, sl:viewportScroll.scrollLeft, st:viewportScroll.scrollTop};
+      return;
+    }
+    const sp = snapPoint(upt);
+    singleAction = {type:'target', pointerId:e.pointerId, offsetY:0, lastUnit:sp};
+    redrawOverlay(sp);
+    showLoupe(e.clientX, targetY, sp);
+    return;
+  }
+
+  let intended = null;
+  if(mode==='layout' || mode==='measure'){
+    const hit = findDragHit(upt);
+    if(hit) intended = {type:'drag', hit};
+  }
+  if(!intended && mode!=='none') intended = {type:'target'};
+
+  singleAction = {
+    type:'pending', pointerId:e.pointerId, offsetY:touchOff,
+    startX:e.clientX, startY:e.clientY, sl:viewportScroll.scrollLeft, st:viewportScroll.scrollTop,
+    intended
+  };
+  if(intended){
+    longPressTimer = setTimeout(()=>{
+      longPressTimer = null;
+      if(!singleAction || singleAction.pointerId!==e.pointerId || singleAction.type!=='pending') return;
+      const p = clientToUnit(singleAction.startX, singleAction.startY - touchOff);
+      if(intended.type==='drag'){ singleAction.type='drag'; singleAction.hit=intended.hit; }
+      else { const sp=snapPoint(p); singleAction.type='target'; singleAction.lastUnit=sp; redrawOverlay(sp); }
+      if(navigator.vibrate) navigator.vibrate(12);
+      showLoupe(singleAction.startX, singleAction.startY - touchOff, singleAction.lastUnit || p);
+    }, LONG_PRESS_MS);
+  }
+});
+
+overlayCanvas.addEventListener('pointermove', (e)=>{
+  if(activePointers.has(e.pointerId)) activePointers.set(e.pointerId, {x:e.clientX, y:e.clientY, type:e.pointerType});
+
+  if(pinchState){
+    if(activePointers.size<2) return;
+    const pts = [...activePointers.values()];
+    const dist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
+    const scale = dist / pinchState.initialDist;
+    pinchState.finalZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, pinchState.initialZoom*scale));
+    pinchState.midClientX = (pts[0].x+pts[1].x)/2;
+    pinchState.midClientY = (pts[0].y+pts[1].y)/2;
+    viewportEl.style.transform = `scale(${pinchState.finalZoom/pinchState.initialZoom})`;
+    document.getElementById('zoomIndicator').textContent = Math.round(pinchState.finalZoom*100)+'%';
+    return;
+  }
+
+  if(!singleAction || singleAction.pointerId!==e.pointerId){
+    if(mode!=='none' && pendingPoints.length===1 && e.pointerType==='mouse'){
+      redrawOverlay(snapPoint(clientToUnit(e.clientX, e.clientY)));
+    }
+    return;
+  }
+
+  if(singleAction.type==='pending'){
+    const dx = e.clientX-singleAction.startX, dy = e.clientY-singleAction.startY;
+    if(Math.hypot(dx,dy) > MOVE_THRESHOLD_PX){
+      if(longPressTimer){ clearTimeout(longPressTimer); longPressTimer=null; }
+      singleAction.type = 'pan';
+    } else {
+      return;
+    }
+  }
+
+  const targetY = e.clientY - (singleAction.offsetY||0);
+  const upt = clientToUnit(e.clientX, targetY);
+
+  if(singleAction.type==='pan'){
+    viewportScroll.scrollLeft = singleAction.sl - (e.clientX-singleAction.startX);
+    viewportScroll.scrollTop = singleAction.st - (e.clientY-singleAction.startY);
+    return;
+  }
+  if(singleAction.type==='drag'){
+    applyDrag(singleAction.hit, upt);
+    redrawOverlay();
+    updateLoupe(e.clientX, targetY, upt);
+    return;
+  }
+  if(singleAction.type==='target'){
+    const sp = snapPoint(upt);
+    singleAction.lastUnit = sp;
+    redrawOverlay(sp);
+    updateLoupe(e.clientX, targetY, sp);
+    return;
+  }
+});
+
+function endPointer(e){
+  activePointers.delete(e.pointerId);
+  if(longPressTimer && singleAction && singleAction.pointerId===e.pointerId){ clearTimeout(longPressTimer); longPressTimer=null; }
+  if(pinchState){
+    if(activePointers.size<2){
+      const anchor = captureAnchor(pinchState.midClientX, pinchState.midClientY);
+      zoomMul = pinchState.finalZoom;
+      pinchState = null;
+      renderPage(currentPageNum, false).then(()=>{
+        viewportEl.style.transform = '';
+        restoreAnchor(anchor);
+      });
+    }
+    return;
+  }
+  if(singleAction && singleAction.pointerId===e.pointerId){
+    if(singleAction.type==='target'){ handleClick(singleAction.lastUnit); }
+    else if(singleAction.type==='pending' && e.pointerType!=='mouse'){
+      showMobileUI();
+    }
+    singleAction = null;
+    hideLoupe();
+  }
+}
+overlayCanvas.addEventListener('pointerup', endPointer);
+overlayCanvas.addEventListener('pointercancel', endPointer);
+
+// ---------- Magnifying loupe ----------
+const loupeEl = document.getElementById('loupe');
+const loupeCanvas = document.getElementById('loupeCanvas');
+const loupeCtx = loupeCanvas.getContext('2d');
+const LOUPE_DISPLAY = 150;
+const LOUPE_RASTER = loupeCanvas.width;
+const LOUPE_ZOOM_FACTOR = 4.5;
+
+let loupeBusy = false;
+let loupePendingTarget = null;
+let loupeRenderTask = null;
+
+function positionLoupe(clientX, targetClientY){
+  const above = (targetClientY - LOUPE_DISPLAY - 30) > 10;
+  const top = above ? targetClientY-LOUPE_DISPLAY-30 : targetClientY+30;
+  let left = clientX - LOUPE_DISPLAY/2;
+  left = Math.max(6, Math.min(window.innerWidth-LOUPE_DISPLAY-6, left));
+  loupeEl.style.left = left+'px';
+  loupeEl.style.top = top+'px';
+}
+function drawLoupeCrosshair(){
+  const c = LOUPE_RASTER/2;
+  loupeCtx.strokeStyle='#e53e3e'; loupeCtx.lineWidth=3;
+  loupeCtx.beginPath();
+  loupeCtx.moveTo(c-24,c); loupeCtx.lineTo(c-8,c);
+  loupeCtx.moveTo(c+8,c); loupeCtx.lineTo(c+24,c);
+  loupeCtx.moveTo(c,c-24); loupeCtx.lineTo(c,c-8);
+  loupeCtx.moveTo(c,c+8); loupeCtx.lineTo(c,c+24);
+  loupeCtx.stroke();
+}
+async function doLoupeRender(){
+  if(!loupePendingTarget || !hasDoc()){ loupeBusy=false; return; }
+  const upt = loupePendingTarget; loupePendingTarget = null;
+  loupeBusy = true;
+  const highScale = renderScale * LOUPE_ZOOM_FACTOR;
+  const topLeftX = upt.x*highScale - LOUPE_RASTER/2;
+  const topLeftY = upt.y*highScale - LOUPE_RASTER/2;
+
+  loupeCtx.setTransform(1,0,0,1,0,0);
+  loupeCtx.clearRect(0,0,LOUPE_RASTER,LOUPE_RASTER);
+  loupeCtx.save();
+  loupeCtx.beginPath(); loupeCtx.arc(LOUPE_RASTER/2,LOUPE_RASTER/2,LOUPE_RASTER/2-6,0,Math.PI*2); loupeCtx.clip();
+  loupeCtx.fillStyle = '#ffffff';
+  loupeCtx.fillRect(0,0,LOUPE_RASTER,LOUPE_RASTER);
+
+  if(docType==='pdf'){
+    const viewport = pageProxy.getViewport({scale: highScale});
+    if(loupeRenderTask){ try{ loupeRenderTask.cancel(); }catch(err){} }
+    try{
+      loupeRenderTask = pageProxy.render({
+        canvasContext: loupeCtx, viewport: viewport,
+        transform: [1,0,0,1,-topLeftX,-topLeftY]
+      });
+      await loupeRenderTask.promise;
+    }catch(err){}
+    loupeRenderTask = null;
+  } else {
+    loupeCtx.imageSmoothingEnabled = true;
+    loupeCtx.imageSmoothingQuality = 'high';
+    loupeCtx.translate(-topLeftX, -topLeftY);
+    loupeCtx.drawImage(sourceImage, 0, 0,
+      sourceImage.naturalWidth * highScale, sourceImage.naturalHeight * highScale);
+    loupeCtx.setTransform(1,0,0,1,0,0);
+  }
+
+  drawLoupeCrosshair();
+  loupeCtx.restore();
+  loupeCtx.beginPath(); loupeCtx.arc(LOUPE_RASTER/2,LOUPE_RASTER/2,LOUPE_RASTER/2-6,0,Math.PI*2);
+  loupeCtx.lineWidth=8; loupeCtx.strokeStyle='#2d3748'; loupeCtx.stroke();
+
+  if(pendingPoints.length===1){
+    const pd2 = ensurePage(currentPageNum);
+    const d = unitDist(pendingPoints[0], upt);
+    const liveLabel = pd2.mmPerUnit ? formatMM(d*pd2.mmPerUnit) : d.toFixed(0)+' '+(docType==='pdf'?t('unitPdf'):t('unitPx'));
+    const ty = LOUPE_RASTER/2 + 46;
+    loupeCtx.font = 'bold 20px Segoe UI, sans-serif';
+    loupeCtx.textAlign = 'center';
+    loupeCtx.lineWidth = 4; loupeCtx.strokeStyle = 'rgba(0,0,0,.75)';
+    loupeCtx.strokeText(liveLabel, LOUPE_RASTER/2, ty);
+    loupeCtx.fillStyle = '#ffffff';
+    loupeCtx.fillText(liveLabel, LOUPE_RASTER/2, ty);
+    loupeCtx.textAlign = 'left';
+  }
+
+  if(loupePendingTarget){ doLoupeRender(); } else { loupeBusy=false; }
+}
+function requestLoupeRender(upt){
+  loupePendingTarget = upt;
+  if(!loupeBusy) doLoupeRender();
+}
+function showLoupe(clientX, targetClientY, upt){
+  loupeEl.style.display = 'block';
+  positionLoupe(clientX, targetClientY);
+  requestLoupeRender(upt);
+}
+function updateLoupe(clientX, targetClientY, upt){
+  positionLoupe(clientX, targetClientY);
+  requestLoupeRender(upt);
+}
+function hideLoupe(){ loupeEl.style.display = 'none'; loupePendingTarget=null; }
+
+function handleClick(upt){
+  pendingPoints.push(upt);
+  if(mode==='calibrate' && pendingPoints.length===2){
+    finishCalibration(pendingPoints[0], pendingPoints[1]);
+    pendingPoints=[];
+  } else if(mode==='measure' && pendingPoints.length===2){
+    const pd = ensurePage(currentPageNum);
+    pd.measurements.push({p1:pendingPoints[0], p2:pendingPoints[1]});
+    pendingPoints=[];
+    refreshMeasList();
+  } else if(mode==='layout' && pendingPoints.length===2){
+    startLayout(pendingPoints[0], pendingPoints[1]);
+    pendingPoints=[];
+  }
+  redrawOverlay();
+}
+
+const PT_TO_MM = 25.4/72;
+const STANDARD_SCALES = [20,25,50,75,100,125,140,150,200,250,500,1000];
+
+function finishCalibration(p1,p2){
+  const unitD = unitDist(p1,p2);
+  if(unitD < 1e-6) return;
+  const realStr = prompt(t('promptDistance'));
+  const real = parseFloat((realStr||'').replace(',','.'));
+  if(!real || real<=0){ setStatus(t('statusCalibCancelled')); return; }
+  const pd = ensurePage(currentPageNum);
+  pd.mmPerUnit = real / unitD;
+  pd.scaleLabel = null;
+  updateCalibPanel();
+  setStatus('');
+  setMode('none');
+}
+
+function nearestStandardLabel(mmPerUnit){
+  const N = mmPerUnit / PT_TO_MM;
+  let best = STANDARD_SCALES[0], bestDiff = Infinity;
+  STANDARD_SCALES.forEach(s=>{ const diff=Math.abs(s-N); if(diff<bestDiff){ bestDiff=diff; best=s; } });
+  return `≈ 1:${Math.round(N)}`;
+}
+
+function updateCalibPanel(){
+  const pd = ensurePage(currentPageNum);
+  const info = document.getElementById('calibInfo');
+  const done = document.getElementById('calibDoneBox');
+  if(pd.mmPerUnit){
+    info.style.display='none';
+    done.style.display='block';
+    const label = pd.scaleLabel ? pd.scaleLabel : (docType==='pdf' ? nearestStandardLabel(pd.mmPerUnit) : t('manualCalib'));
+    const unitWord = docType==='pdf' ? t('unitPdf') : t('unitPx');
+    document.getElementById('calibRatio').textContent = `${label} (1 ${unitWord} = ${pd.mmPerUnit.toFixed(4)} mm)`;
+  } else {
+    info.style.display='block';
+    done.style.display='none';
+  }
+}
+document.getElementById('btnRecalibrate').onclick = () => setMode('calibrate');
+
+document.getElementById('scaleSelect').onchange = (e)=>{
+  document.getElementById('scaleCustom').style.display = e.target.value==='custom' ? 'block' : 'none';
+};
+document.getElementById('btnApplyScale').onclick = ()=>{
+  if(docType!=='pdf') return;
+  const sel = document.getElementById('scaleSelect').value;
+  const N = sel==='custom' ? parseFloat(document.getElementById('scaleCustom').value) : parseFloat(sel);
+  if(!N || N<=0){ alert(t('alertInvalidScale')); return; }
+  const pd = ensurePage(currentPageNum);
+  pd.mmPerUnit = PT_TO_MM * N;
+  pd.scaleLabel = '1:'+N;
+  updateCalibPanel();
+  redrawOverlay();
+  setStatus(t('statusScaleSet', {n: N}));
+};
+
+// ---------- Measurements ----------
+function refreshMeasList(){
+  const pd = ensurePage(currentPageNum);
+  const list = document.getElementById('measList');
+  list.innerHTML='';
+  if(pd.measurements.length===0){
+    list.innerHTML = `<div style="color:var(--muted); font-size:12.5px;">${t('noMeas')}</div>`;
+    return;
+  }
+  pd.measurements.forEach((m,i)=>{
+    const d = unitDist(m.p1,m.p2);
+    const mm = pd.mmPerUnit ? d*pd.mmPerUnit : null;
+    const unitWord = docType==='pdf' ? t('unitPdf') : t('unitPx');
+    const div = document.createElement('div');
+    div.className='list-item';
+    div.innerHTML = `<span>#${i+1} <span class="val">${mm? formatMM(mm) : d.toFixed(1)+' '+unitWord+' ('+t('uncalibrated')+')'}</span></span>`;
+    const btn = document.createElement('button');
+    btn.textContent='✕';
+    btn.onclick = ()=>{ pd.measurements.splice(i,1); refreshMeasList(); redrawOverlay(); };
+    div.appendChild(btn);
+    list.appendChild(div);
+  });
+}
+
+let displayUnit = 'mm';
+const UNIT_INFO = { mm:{factor:1, decimals:0}, cm:{factor:10, decimals:1}, m:{factor:1000, decimals:3} };
+function formatMM(mm){
+  const info = UNIT_INFO[displayUnit] || UNIT_INFO.mm;
+  const val = mm / info.factor;
+  if(info.decimals===0) return String(Math.round(val));
+  return val.toFixed(info.decimals).replace(/\.?0+$/,'');
+}
+function unitHeaderLabel(){ return displayUnit; }
+function refreshUnitDependentUI(){
+  document.querySelectorAll('.js-unit-th').forEach(el=> el.textContent = t('thDist', {unit: displayUnit}));
+  const measNote = document.getElementById('measUnitNote');
+  if(measNote) measNote.innerHTML = t('measUnitsNote', {unit: displayUnit});
+  redrawOverlay();
+  refreshMeasList();
+  refreshLayoutPanel();
+}
+document.getElementById('unitSelect').onchange = (e)=>{
+  displayUnit = e.target.value;
+  refreshUnitDependentUI();
+};
+
+// ---------- Layout (studs/segments) ----------
+let layoutIdSeq = 1;
+function startLayout(start,end){
+  const pd = ensurePage(currentPageNum);
+  if(!pd.mmPerUnit){
+    alert(t('alertCalibFirst'));
+    setMode('calibrate');
+    return;
+  }
+  const interval = parseFloat(document.getElementById('intervalInput').value)||600;
+  const lengthMM = unitDist(start,end) * pd.mmPerUnit;
+  const segments = generateSegments(lengthMM, interval);
+  const layout = { id: layoutIdSeq++, start, end, interval, segments };
+  pd.layouts.push(layout);
+  activeLayoutId = layout.id;
+  refreshLayoutPanel();
+  redrawOverlay();
+  setMode('none');
+}
+function generateSegments(lengthMM, interval){
+  const segs = [];
+  let rem = lengthMM;
+  while(rem > interval + 1e-6){ segs.push(interval); rem -= interval; }
+  if(rem > 0.5) segs.push(Math.round(rem));
+  if(segs.length===0) segs.push(Math.round(lengthMM));
+  return segs;
+}
+function getActiveLayout(){
+  const pd = ensurePage(currentPageNum);
+  return pd.layouts.find(l=>l.id===activeLayoutId) || null;
+}
+function markerPositions(layout){
+  const pd = ensurePage(currentPageNum);
+  const mmPerUnit = pd.mmPerUnit;
+  const dirUnit = { x: layout.end.x-layout.start.x, y: layout.end.y-layout.start.y };
+  const lineUnitLen = Math.hypot(dirUnit.x, dirUnit.y);
+  const ux = dirUnit.x/lineUnitLen, uy = dirUnit.y/lineUnitLen;
+  const pts = [{point:{...layout.start}, cumMM:0}];
+  let cum=0;
+  layout.segments.forEach(segMM=>{
+    cum += segMM;
+    const unitsAlong = cum / mmPerUnit;
+    pts.push({point:{x: layout.start.x + ux*unitsAlong, y: layout.start.y + uy*unitsAlong}, cumMM: cum});
+  });
+  return pts;
+}
+function totalLengthMM(layout){
+  const pd = ensurePage(currentPageNum);
+  return unitDist(layout.start, layout.end) * pd.mmPerUnit;
+}
+function regenerateAllFromScratch(layout){
+  layout.segments = generateSegments(totalLengthMM(layout), layout.interval);
+}
+function setInteriorSegment(layout, idx, newValue){
+  const totalMM = totalLengthMM(layout);
+  const before = cumBefore(layout, idx);
+  const minSeg = 1;
+  let val = Math.max(minSeg, newValue);
+  const budget = Math.max(minSeg, totalMM - before);
+  if(val > budget) val = budget;
+  val = Math.round(val);
+  const remainingMM = Math.max(0, totalMM - before - val);
+  const tail = remainingMM >= 1 ? generateSegments(remainingMM, layout.interval) : [];
+  layout.segments = layout.segments.slice(0, idx).concat([val], tail);
+}
+function ensureLabelOffsets(layout){
+  if(!layout.labelOffsets) layout.labelOffsets = [];
+  while(layout.labelOffsets.length < layout.segments.length) layout.labelOffsets.push(undefined);
+  layout.labelOffsets.length = layout.segments.length;
+}
+function defaultLabelGapUnit(){
+  const pd = ensurePage(currentPageNum);
+  const screenMinUnit = 15/renderScale;
+  if(pd.mmPerUnit) return Math.max(3/pd.mmPerUnit, screenMinUnit);
+  return screenMinUnit;
+}
+function measurementLabelUnit(m, gapOverride){
+  const dir = {x:m.p2.x-m.p1.x, y:m.p2.y-m.p1.y};
+  const len = Math.hypot(dir.x,dir.y)||1;
+  const nx=-dir.y/len, ny=dir.x/len;
+  const mid = {x:(m.p1.x+m.p2.x)/2, y:(m.p1.y+m.p2.y)/2};
+  const off = (typeof m.labelOffset==='number') ? m.labelOffset : (gapOverride!==undefined ? gapOverride : defaultLabelGapUnit());
+  return {x: mid.x+nx*off, y: mid.y+ny*off};
+}
+function segmentLabelUnit(layout, segIndex, pts, nx, ny, gapOverride){
+  ensureLabelOffsets(layout);
+  const prevPt = pts[segIndex].point, p = pts[segIndex+1].point;
+  const mid = {x:(prevPt.x+p.x)/2, y:(prevPt.y+p.y)/2};
+  const off = (typeof layout.labelOffsets[segIndex]==='number') ? layout.labelOffsets[segIndex] : (gapOverride!==undefined ? gapOverride : defaultLabelGapUnit());
+  return {x: mid.x+nx*off, y: mid.y+ny*off};
+}
+
+function findLayoutPointNear(upt){
+  const pd = ensurePage(currentPageNum);
+  const threshold = 14/renderScale;
+  for(const layout of pd.layouts){
+    const pts = markerPositions(layout);
+    const N = layout.segments.length;
+    for(let i=0;i<pts.length;i++){
+      if(unitDist(pts[i].point, upt) < threshold){
+        activeLayoutId = layout.id;
+        refreshLayoutPanel();
+        if(i===0) return { kind:'layout-point', layoutId: layout.id, role:'start' };
+        if(i===N) return { kind:'layout-point', layoutId: layout.id, role:'end' };
+        return { kind:'layout-point', layoutId: layout.id, role:'interior', segIndex: i-1 };
+      }
+    }
+  }
+  return null;
+}
+function findLayoutLabelNear(upt){
+  const pd = ensurePage(currentPageNum);
+  const threshold = 20/renderScale;
+  for(const layout of pd.layouts){
+    ensureLabelOffsets(layout);
+    const pts = markerPositions(layout);
+    const dirUnit = {x: layout.end.x-layout.start.x, y: layout.end.y-layout.start.y};
+    const lineLen = Math.hypot(dirUnit.x,dirUnit.y)||1;
+    const nx=-dirUnit.y/lineLen, ny=dirUnit.x/lineLen;
+    for(let i=0;i<layout.segments.length;i++){
+      const labelU = segmentLabelUnit(layout, i, pts, nx, ny);
+      if(unitDist(labelU, upt) < threshold){
+        activeLayoutId = layout.id; refreshLayoutPanel();
+        return { kind:'layout-label', layoutId: layout.id, segIndex:i };
+      }
+    }
+  }
+  return null;
+}
+function findMeasPointNear(upt){
+  const pd = ensurePage(currentPageNum);
+  const threshold = 14/renderScale;
+  for(let i=0;i<pd.measurements.length;i++){
+    const m = pd.measurements[i];
+    if(unitDist(m.p1, upt) < threshold) return { kind:'meas-point', measIndex:i, role:'p1' };
+    if(unitDist(m.p2, upt) < threshold) return { kind:'meas-point', measIndex:i, role:'p2' };
+  }
+  return null;
+}
+function findMeasLabelNear(upt){
+  const pd = ensurePage(currentPageNum);
+  const threshold = 20/renderScale;
+  for(let i=0;i<pd.measurements.length;i++){
+    const labelU = measurementLabelUnit(pd.measurements[i]);
+    if(unitDist(labelU, upt) < threshold) return { kind:'meas-label', measIndex:i };
+  }
+  return null;
+}
+function findDragHit(upt){
+  if(mode==='layout') return findLayoutPointNear(upt) || findLayoutLabelNear(upt);
+  if(mode==='measure') return findMeasPointNear(upt) || findMeasLabelNear(upt);
+  return null;
+}
+function applyDrag(hit, upt){
+  const pd = ensurePage(currentPageNum);
+  if(hit.kind==='meas-point'){
+    const m = pd.measurements[hit.measIndex];
+    if(!m) return;
+    m[hit.role] = {x:upt.x, y:upt.y};
+    refreshMeasList();
+    return;
+  }
+  if(hit.kind==='meas-label'){
+    const m = pd.measurements[hit.measIndex];
+    if(!m) return;
+    const dir = {x:m.p2.x-m.p1.x, y:m.p2.y-m.p1.y};
+    const len = Math.hypot(dir.x,dir.y)||1;
+    const nx=-dir.y/len, ny=dir.x/len;
+    const mid = {x:(m.p1.x+m.p2.x)/2, y:(m.p1.y+m.p2.y)/2};
+    const rel = {x:upt.x-mid.x, y:upt.y-mid.y};
+    m.labelOffset = rel.x*nx + rel.y*ny;
+    return;
+  }
+  if(hit.kind==='layout-label'){
+    const layout = pd.layouts.find(l=>l.id===hit.layoutId);
+    if(!layout) return;
+    ensureLabelOffsets(layout);
+    const pts = markerPositions(layout);
+    const dirUnit = { x: layout.end.x-layout.start.x, y: layout.end.y-layout.start.y };
+    const lineLen = Math.hypot(dirUnit.x, dirUnit.y)||1;
+    const nx=-dirUnit.y/lineLen, ny=dirUnit.x/lineLen;
+    const prevPt = pts[hit.segIndex].point, p = pts[hit.segIndex+1].point;
+    const mid = {x:(prevPt.x+p.x)/2, y:(prevPt.y+p.y)/2};
+    const rel = {x:upt.x-mid.x, y:upt.y-mid.y};
+    layout.labelOffsets[hit.segIndex] = rel.x*nx + rel.y*ny;
+    return;
+  }
+  const layout = pd.layouts.find(l=>l.id===hit.layoutId);
+  if(!layout) return;
+  if(hit.role==='start'){
+    layout.start = {x:upt.x, y:upt.y};
+    regenerateAllFromScratch(layout);
+    refreshLayoutPanel();
+    return;
+  }
+  if(hit.role==='end'){
+    layout.end = {x:upt.x, y:upt.y};
+    regenerateAllFromScratch(layout);
+    refreshLayoutPanel();
+    return;
+  }
+  const dirUnit = { x: layout.end.x-layout.start.x, y: layout.end.y-layout.start.y };
+  const lineUnitLen = Math.hypot(dirUnit.x, dirUnit.y);
+  const ux = dirUnit.x/lineUnitLen, uy = dirUnit.y/lineUnitLen;
+  const rel = { x: upt.x-layout.start.x, y: upt.y-layout.start.y };
+  let tDist = rel.x*ux + rel.y*uy;
+  if(tDist<0) tDist=0;
+  const newCumMM = tDist * pd.mmPerUnit;
+  const prevCum = cumBefore(layout, hit.segIndex);
+  const newSegVal = newCumMM - prevCum;
+  setInteriorSegment(layout, hit.segIndex, newSegVal);
+  refreshLayoutPanel();
+}
+function cumBefore(layout, segIndex){
+  let cum=0;
+  for(let i=0;i<segIndex;i++) cum+=layout.segments[i];
+  return cum;
+}
+
+function refreshLayoutPanel(){
+  const pd = ensurePage(currentPageNum);
+  const layout = getActiveLayout();
+  const emptyMsg = document.getElementById('layoutEmptyMsg');
+  const box = document.getElementById('layoutBox');
+  const others = document.getElementById('otherLayouts');
+  others.innerHTML='';
+  if(pd.layouts.length>1){
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<label style="display:block;font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin:10px 0 4px;">${t('otherLayouts')}</label>`;
+    pd.layouts.forEach(l=>{
+      if(l.id===activeLayoutId) return;
+      const d = document.createElement('div');
+      d.className='list-item';
+      d.style.cursor='pointer';
+      const total = l.segments.reduce((a,b)=>a+b,0);
+      d.innerHTML = `<span>${t('layoutItem', {id:l.id, count:l.segments.length, len:formatMM(total)})}</span>`;
+      d.onclick = ()=>{ activeLayoutId = l.id; refreshLayoutPanel(); redrawOverlay(); };
+      others.appendChild(d);
+    });
+  }
+  if(!layout){
+    emptyMsg.style.display='block';
+    box.style.display='none';
+    return;
+  }
+  emptyMsg.style.display='none';
+  box.style.display='block';
+  document.getElementById('intervalInput').value = layout.interval;
+  const pts = markerPositions(layout);
+  const total = layout.segments.reduce((a,b)=>a+b,0);
+  const lineLenMM = unitDist(layout.start,layout.end) * (pd.mmPerUnit||1);
+  const diff = total - lineLenMM;
+  document.getElementById('layoutSummary').innerHTML =
+    t('summaryUnits', {unit: displayUnit, len: formatMM(lineLenMM), sum: formatMM(total)}) +
+    (Math.abs(diff)>2 ? `<br><span style="color:${diff>0?'#dd6b20':'#3182ce'}">${diff>0 ? t('summaryExceeds',{diff:formatMM(Math.abs(diff))}) : t('summaryShort',{diff:formatMM(Math.abs(diff))})}</span>` : '');
+
+  const tbody = document.getElementById('segRows');
+  tbody.innerHTML='';
+  layout.segments.forEach((seg,i)=>{
+    const tr = document.createElement('tr');
+    const cum = pts[i+1].cumMM;
+    tr.innerHTML = `<td>${i+1}</td>
+      <td><input type="number" inputmode="decimal" value="${seg}" data-idx="${i}" class="segInput"></td>
+      <td>${formatMM(cum)}</td>
+      <td><button class="rm" data-idx="${i}">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('.segInput').forEach(inp=>{
+    inp.onchange = (e)=>{
+      const idx = parseInt(e.target.dataset.idx);
+      const val = parseFloat(e.target.value.replace(',','.'));
+      if(val>0){ setInteriorSegment(layout, idx, val); refreshLayoutPanel(); redrawOverlay(); }
+      else { refreshLayoutPanel(); }
+    };
+  });
+  tbody.querySelectorAll('.rm').forEach(b=>{
+    b.onclick = (e)=>{
+      const idx = parseInt(e.target.dataset.idx);
+      layout.segments.splice(idx,1);
+      if(layout.labelOffsets) layout.labelOffsets.splice(idx,1);
+      if(layout.segments.length===0) layout.segments.push(layout.interval);
+      refreshLayoutPanel(); redrawOverlay();
+    };
+  });
+}
+
+document.getElementById('btnRegenerate').onclick = ()=>{
+  const layout = getActiveLayout();
+  if(!layout) return;
+  const pd = ensurePage(currentPageNum);
+  const interval = parseFloat(document.getElementById('intervalInput').value)||600;
+  const lengthMM = unitDist(layout.start,layout.end) * pd.mmPerUnit;
+  if(!confirm(t('confirmRecalc'))) return;
+  layout.interval = interval;
+  layout.segments = generateSegments(lengthMM, interval);
+  refreshLayoutPanel(); redrawOverlay();
+};
+document.getElementById('btnAddSeg').onclick = ()=>{
+  const layout = getActiveLayout(); if(!layout) return;
+  layout.segments.push(layout.interval);
+  refreshLayoutPanel(); redrawOverlay();
+};
+document.getElementById('btnRemoveSeg').onclick = ()=>{
+  const layout = getActiveLayout(); if(!layout) return;
+  if(layout.segments.length>1) layout.segments.pop();
+  refreshLayoutPanel(); redrawOverlay();
+};
+document.getElementById('btnDeleteLayout').onclick = ()=>{
+  const pd = ensurePage(currentPageNum);
+  const layout = getActiveLayout(); if(!layout) return;
+  if(!confirm(t('confirmDeleteLayout'))) return;
+  pd.layouts = pd.layouts.filter(l=>l.id!==layout.id);
+  activeLayoutId = pd.layouts.length ? pd.layouts[0].id : null;
+  refreshLayoutPanel(); redrawOverlay();
+};
+document.getElementById('btnCopyList').onclick = ()=>{
+  const layout = getActiveLayout(); if(!layout) return;
+  const pts = markerPositions(layout);
+  let txt = t('copiedListHeader', {step: layout.interval, unit: displayUnit});
+  layout.segments.forEach((seg,i)=>{
+    txt += t('copiedListItem', {i: i+1, seg: formatMM(seg), cum: formatMM(pts[i+1].cumMM)});
+  });
+  navigator.clipboard.writeText(txt).then(()=>setStatus(t('statusListCopied')))
+    .catch(()=>{ prompt(t('promptCopyManual'), txt); });
+};
+
+// ---------- Drawing ----------
+function redrawOverlay(hoverPt){
+  scheduleAutosave();
+  ctx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
+  const pd = ensurePage(currentPageNum);
+  const unitWord = docType==='pdf' ? t('unitPdf') : t('unitPx');
+
+  // measurements
+  pd.measurements.forEach(m=>{
+    drawLine(m.p1,m.p2,'#3182ce', 2);
+    const d = unitDist(m.p1,m.p2);
+    const label = pd.mmPerUnit ? formatMM(d*pd.mmPerUnit) : d.toFixed(0)+' '+unitWord;
+    drawLabel(measurementLabelUnit(m), label, '#2c5282');
+    drawDot(m.p1,'#3182ce'); drawDot(m.p2,'#3182ce');
+  });
+
+  // layouts
+  pd.layouts.forEach(layout=>{
+    const isActive = layout.id===activeLayoutId;
+    const col = isActive ? '#dd6b20' : '#a0aec0';
+    drawLine(layout.start, layout.end, col, isActive?2:1.5);
+    const pts = markerPositions(layout);
+    const dirUnit = {x: layout.end.x-layout.start.x, y: layout.end.y-layout.start.y};
+    const len = Math.hypot(dirUnit.x,dirUnit.y)||1;
+    const nx = -dirUnit.y/len, ny = dirUnit.x/len;
+    pts.forEach((p,i)=>{
+      const isEndpoint = (i===0 || i===pts.length-1);
+      const c = unitToCanvas(p.point);
+      const tickLen = 9;
+      ctx.strokeStyle = isEndpoint ? '#2f855a' : col;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(c.x - nx*tickLen, c.y - ny*tickLen);
+      ctx.lineTo(c.x + nx*tickLen, c.y + ny*tickLen);
+      ctx.stroke();
+      drawDot(p.point, isEndpoint ? '#2f855a' : col, isEndpoint?5:5);
+      if(isEndpoint){
+        drawLabel(p.point, i===0?'A':'B', '#2f855a', -nx, -ny);
+      }
+      if(i>0){
+        const segMM = layout.segments[i-1];
+        const labelU = segmentLabelUnit(layout, i-1, pts, nx, ny);
+        drawLabel(labelU, formatMM(segMM), isActive? '#9c4221':'#718096');
+      }
+    });
+  });
+
+  // pending in-progress
+  if(pendingPoints.length===1){
+    drawDot(pendingPoints[0], '#e53e3e');
+    if(hoverPt){
+      drawLine(pendingPoints[0], hoverPt, '#e53e3e', 1.5, true);
+      const d = unitDist(pendingPoints[0], hoverPt);
+      const liveLabel = pd.mmPerUnit ? formatMM(d*pd.mmPerUnit) : d.toFixed(0)+' '+unitWord;
+      const mid = {x:(pendingPoints[0].x+hoverPt.x)/2, y:(pendingPoints[0].y+hoverPt.y)/2};
+      const ddir = {x:hoverPt.x-pendingPoints[0].x, y:hoverPt.y-pendingPoints[0].y};
+      const dlen = Math.hypot(ddir.x,ddir.y)||1;
+      drawLabel(mid, liveLabel, '#c53030', -ddir.y/dlen, ddir.x/dlen);
+    }
+  }
+  if(hoverPt){
+    drawCrosshair(hoverPt);
+  }
+}
+function drawCrosshair(p){
+  const c = unitToCanvas(p);
+  const col = p.snapped ? '#38a169' : '#e53e3e';
+  ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(c.x-11,c.y); ctx.lineTo(c.x-4,c.y);
+  ctx.moveTo(c.x+4,c.y); ctx.lineTo(c.x+11,c.y);
+  ctx.moveTo(c.x,c.y-11); ctx.lineTo(c.x,c.y-4);
+  ctx.moveTo(c.x,c.y+4); ctx.lineTo(c.x,c.y+11);
+  ctx.stroke();
+  ctx.beginPath(); ctx.arc(c.x,c.y,p.snapped?5:3,0,Math.PI*2); ctx.strokeStyle=col; ctx.stroke();
+}
+function drawLine(a,b,color,width,dashed){
+  const ca=unitToCanvas(a), cb=unitToCanvas(b);
+  ctx.strokeStyle=color; ctx.lineWidth=width||2;
+  ctx.setLineDash(dashed?[6,4]:[]);
+  ctx.beginPath(); ctx.moveTo(ca.x,ca.y); ctx.lineTo(cb.x,cb.y); ctx.stroke();
+  ctx.setLineDash([]);
+}
+function drawDot(p,color,r){
+  const c = unitToCanvas(p);
+  const rad = r||5;
+  const arm = rad*2.2, gap = rad*0.55, ring = rad*0.85;
+  function xcross(){
+    ctx.beginPath();
+    ctx.moveTo(c.x-arm,c.y-arm); ctx.lineTo(c.x-gap,c.y-gap);
+    ctx.moveTo(c.x+gap,c.y+gap); ctx.lineTo(c.x+arm,c.y+arm);
+    ctx.moveTo(c.x-arm,c.y+arm); ctx.lineTo(c.x-gap,c.y+gap);
+    ctx.moveTo(c.x+gap,c.y-gap); ctx.lineTo(c.x+arm,c.y-arm);
+    ctx.stroke();
+  }
+  ctx.strokeStyle='#ffffff'; ctx.lineWidth=Math.max(2.2, rad*0.65); xcross();
+  ctx.strokeStyle=color; ctx.lineWidth=Math.max(1.2, rad*0.35); xcross();
+  ctx.beginPath(); ctx.arc(c.x,c.y,ring,0,Math.PI*2);
+  ctx.strokeStyle='#ffffff'; ctx.lineWidth=Math.max(1.8, rad*0.5); ctx.stroke();
+  ctx.beginPath(); ctx.arc(c.x,c.y,ring,0,Math.PI*2);
+  ctx.strokeStyle=color; ctx.lineWidth=Math.max(1, rad*0.3); ctx.stroke();
+}
+function drawLabel(pUnit,text,color,nx,ny){
+  const c = unitToCanvas(pUnit);
+  let ox=0, oy=0;
+  if(nx!==undefined){ ox = nx*16; oy = ny*16 - 4; }
+  ctx.font='bold 12px Segoe UI, sans-serif';
+  const w = ctx.measureText(text).width;
+  ctx.fillStyle='rgba(255,255,255,.9)';
+  ctx.fillRect(c.x+ox-w/2-3, c.y+oy-12, w+6, 16);
+  ctx.fillStyle = color||'#2d3748';
+  ctx.textAlign='center';
+  ctx.fillText(text, c.x+ox, c.y+oy);
+  ctx.textAlign='left';
+}
+
+// ---------- Project persistence ----------
+function arrayBufferToBase64(buf){
+  let binary = '';
+  const bytes = new Uint8Array(buf);
+  const chunkSize = 0x8000;
+  for(let i=0; i<bytes.length; i+=chunkSize){
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i+chunkSize));
+  }
+  return btoa(binary);
+}
+function base64ToArrayBuffer(base64){
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0; i<binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+const IDB_NAME = 'vgBimProDB';
+const IDB_STORE = 'projects';
+const IDB_KEY = 'current';
+let idbPromise = null;
+function openIDB(){
+  if(idbPromise) return idbPromise;
+  idbPromise = new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)){ reject(new Error('IndexedDB unavailable')); return; }
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = ()=>{ req.result.createObjectStore(IDB_STORE); };
+    req.onsuccess = ()=> resolve(req.result);
+    req.onerror = ()=> reject(req.error);
+  });
+  return idbPromise;
+}
+async function idbSet(key, value){
+  const db = await openIDB();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).put(value, key);
+    tx.oncomplete = ()=>resolve();
+    tx.onerror = ()=>reject(tx.error);
+  });
+}
+async function idbGet(key){
+  const db = await openIDB();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readonly');
+    const req = tx.objectStore(IDB_STORE).get(key);
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbDelete(key){
+  const db = await openIDB();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).delete(key);
+    tx.oncomplete = ()=>resolve();
+    tx.onerror = ()=>reject(tx.error);
+  });
+}
+
+let autosaveTimer = null;
+function scheduleAutosave(){
+  if(!hasDoc() || !currentFileBlob) return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(()=>{ autosaveTimer=null; doAutosave(); }, 900);
+}
+async function doAutosave(){
+  try{
+    if(!currentFileBlob) return;
+    await idbSet(IDB_KEY, {
+      fileBlob: currentFileBlob,
+      fileName: currentFileName,
+      fileMime: currentFileBlob.type,
+      docType, pageData, layoutIdSeq, currentPageNum,
+      savedAt: Date.now()
+    });
+  }catch(err){ console.warn('Autosave error:', err); }
+}
+
+async function restoreProjectFromBlob(saved){
+  currentFileBlob = saved.fileBlob;
+  currentFileName = saved.fileName || '';
+  if(saved.docType === 'pdf'){
+    const buf = await saved.fileBlob.arrayBuffer();
+    await loadPdf(buf);
+  } else {
+    const f = new File([saved.fileBlob], saved.fileName || 'image', {type: saved.fileBlob.type});
+    await loadImageFile(f);
+  }
+  pageData = saved.pageData || {};
+  layoutIdSeq = saved.layoutIdSeq || 1;
+  if(saved.currentPageNum && saved.currentPageNum!==1 && docType==='pdf'){
+    await renderPage(saved.currentPageNum, true);
+  } else {
+    updateCalibPanel(); refreshMeasList(); refreshLayoutPanel(); redrawOverlay();
+  }
+  setStatus(t('statusSessionRestored'));
+}
+
+(async function tryRestoreAutosave(){
+  try{
+    const saved = await idbGet(IDB_KEY);
+    if(saved && saved.fileBlob){
+      const when = saved.savedAt ? ' (' + new Date(saved.savedAt).toLocaleString() + ')' : '';
+      const name = saved.fileName ? ' "' + saved.fileName + '"' : '';
+      const ok = confirm(t('confirmRestoreSession', {name, when}));
+      if(ok){ await restoreProjectFromBlob(saved); }
+      else { await idbDelete(IDB_KEY); }
+    }
+  }catch(err){ console.warn('Session check error:', err); }
+})();
+
+async function exportProject(){
+  if(!currentFileBlob){ alert(t('alertExportEmpty')); return; }
+  setStatus(t('statusExporting'));
+  try{
+    const buf = await currentFileBlob.arrayBuffer();
+    const data = {
+      appId: 'vg-bim-pro-project', version: 2,
+      author: 'Vytautas Giedraitis',
+      fileName: currentFileName, fileMime: currentFileBlob.type, docType,
+      pageData, layoutIdSeq, currentPageNum,
+      exportedAt: new Date().toISOString(),
+      fileBase64: arrayBufferToBase64(buf)
+    };
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const baseName = (currentFileName||'drawing').replace(/\.[^./\\]+$/,'');
+    a.href = url; a.download = baseName + '.vgbim.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    setStatus(t('statusExportDone'));
+  }catch(err){
+    console.error(err);
+    alert(t('alertExportFail'));
+    setStatus('');
+  }
+}
+document.getElementById('btnExportProject').onclick = exportProject;
+
+document.getElementById('btnImportProject').onclick = () => document.getElementById('projectFileInput').click();
+document.getElementById('projectFileInput').onchange = async (e)=>{
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  if(hasDoc() && !confirm(t('confirmImportOverwrite'))) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if(!data || !data.fileBase64 || !data.docType) throw new Error('Invalid format');
+    const buf = base64ToArrayBuffer(data.fileBase64);
+    const blob = new Blob([buf], {type: data.fileMime || (data.docType==='pdf'?'application/pdf':'image/png')});
+    currentFileBlob = blob;
+    currentFileName = data.fileName || '';
+    if(data.docType==='pdf'){
+      await loadPdf(buf);
+    } else {
+      const f = new File([blob], data.fileName||'image', {type: blob.type});
+      await loadImageFile(f);
+    }
+    pageData = data.pageData || {};
+    layoutIdSeq = data.layoutIdSeq || 1;
+    if(data.currentPageNum && data.currentPageNum!==1 && docType==='pdf'){
+      await renderPage(data.currentPageNum, true);
+    } else {
+      updateCalibPanel(); refreshMeasList(); refreshLayoutPanel(); redrawOverlay();
+    }
+    scheduleAutosave();
+    setStatus(t('statusImportDone'));
+  }catch(err){
+    console.error(err);
+    alert(t('alertImportFail'));
+  }
+};
+
+function resetProject(){
+  if(hasDoc() && !confirm(t('confirmNewProject'))) return;
+  pdfDoc = null; docType = null; sourceImage = null; pageProxy = null;
+  currentPageNum = 1; pageCount = 0;
+  baseScale = 1; zoomMul = 1; renderScale = 1;
+  pageData = {}; activeLayoutId = null; layoutIdSeq = 1;
+  currentFileBlob = null; currentFileName = '';
+  mode = 'none'; pendingPoints = [];
+  pdfCanvas.width = pdfCanvas.height = overlayCanvas.width = overlayCanvas.height = 0;
+  viewportEl.style.width = ''; viewportEl.style.height = '';
+  emptyState.style.display = 'flex';
+  document.getElementById('pageIndicator').textContent = '–/–';
+  document.getElementById('zoomIndicator').textContent = '100%';
+  Object.values(modeButtons).forEach(b=>b.classList.remove('active'));
+  setStatus('');
+  updatePageNavVisibility();
+  document.getElementById('stdScaleBox').style.display = '';
+  document.getElementById('stdScaleSep').style.display = '';
+  document.getElementById('imgCalibNote').style.display = 'none';
+  updateCalibPanel(); refreshMeasList(); refreshLayoutPanel();
+  idbDelete(IDB_KEY).catch(()=>{});
+}
+document.getElementById('btnNewProject').onclick = resetProject;
+
+// wheel zoom
+viewportScroll.addEventListener('wheel', (e)=>{
+  if(!hasDoc() || !e.ctrlKey) return;
+  e.preventDefault();
+  const factor = e.deltaY<0 ? 1.12 : 0.89;
+  zoomAtClient(zoomMul*factor, e.clientX, e.clientY);
+}, {passive:false});
+
+// ---------- High-resolution print ----------
+function labelGapUnitAt(scale){
+  const pd = ensurePage(currentPageNum);
+  const minPx = 13;
+  if(pd.mmPerUnit) return Math.max(3/pd.mmPerUnit, minPx/scale);
+  return Math.max(16/scale, minPx/scale);
+}
+function drawOverlayForPrint(pctx2, scale, ox, oy){
+  const pd = ensurePage(currentPageNum);
+  const toCanvas = (p)=>({x:(p.x-ox)*scale, y:(p.y-oy)*scale});
+  const fontPx = pd.mmPerUnit ? Math.max(9, (3/pd.mmPerUnit)*scale) : Math.max(11, scale*9);
+  const lineW = pd.mmPerUnit ? Math.max(0.8, (0.25/pd.mmPerUnit)*scale) : Math.max(0.8, scale*0.5);
+  const dotR = pd.mmPerUnit ? Math.max(1.5, (1/pd.mmPerUnit)*scale) : Math.max(1.5, scale*1.5);
+  const unitWord = docType==='pdf' ? t('unitPdf') : t('unitPx');
+
+  function line(a,b,color,w){ const ca=toCanvas(a), cb=toCanvas(b); pctx2.strokeStyle=color; pctx2.lineWidth=w; pctx2.beginPath(); pctx2.moveTo(ca.x,ca.y); pctx2.lineTo(cb.x,cb.y); pctx2.stroke(); }
+  function marker(p,color){
+    const c = toCanvas(p);
+    const arm = dotR*2.4, gap = dotR*0.55, ring = dotR*0.9;
+    function cross(){
+      pctx2.beginPath();
+      pctx2.moveTo(c.x-arm,c.y); pctx2.lineTo(c.x-gap,c.y);
+      pctx2.moveTo(c.x+gap,c.y); pctx2.lineTo(c.x+arm,c.y);
+      pctx2.moveTo(c.x,c.y-arm); pctx2.lineTo(c.x,c.y-gap);
+      pctx2.moveTo(c.x,c.y+gap); pctx2.lineTo(c.x,c.y+arm);
+      pctx2.stroke();
+    }
+    pctx2.strokeStyle='#ffffff'; pctx2.lineWidth=Math.max(1.4, lineW*2.4); cross();
+    pctx2.strokeStyle=color; pctx2.lineWidth=Math.max(0.8, lineW*1.1); cross();
+    pctx2.beginPath(); pctx2.arc(c.x,c.y,ring,0,Math.PI*2);
+    pctx2.strokeStyle='#ffffff'; pctx2.lineWidth=Math.max(1.2, lineW*1.8); pctx2.stroke();
+    pctx2.beginPath(); pctx2.arc(c.x,c.y,ring,0,Math.PI*2);
+    pctx2.strokeStyle=color; pctx2.lineWidth=Math.max(0.7, lineW*0.9); pctx2.stroke();
+  }
+  function label(pUnit,text,color){
+    const c = toCanvas(pUnit);
+    pctx2.font = `bold ${fontPx}px Segoe UI, sans-serif`;
+    const w = pctx2.measureText(text).width;
+    pctx2.fillStyle='rgba(255,255,255,.92)';
+    pctx2.fillRect(c.x-w/2-fontPx*0.3, c.y-fontPx*0.85, w+fontPx*0.6, fontPx*1.35);
+    pctx2.fillStyle=color; pctx2.textAlign='center';
+    pctx2.fillText(text, c.x, c.y+fontPx*0.32);
+    pctx2.textAlign='left';
+  }
+
+  const printGap = labelGapUnitAt(scale);
+  pd.measurements.forEach(m=>{
+    line(m.p1,m.p2,'#3182ce', lineW);
+    const d = unitDist(m.p1,m.p2);
+    const valText = pd.mmPerUnit ? formatMM(d*pd.mmPerUnit) : d.toFixed(0)+' '+unitWord;
+    label(measurementLabelUnit(m, printGap), valText, '#2c5282');
+    marker(m.p1,'#3182ce'); marker(m.p2,'#3182ce');
+  });
+
+  pd.layouts.forEach(layout=>{
+    line(layout.start, layout.end, '#dd6b20', lineW);
+    const pts = markerPositions(layout);
+    const dirUnit = {x: layout.end.x-layout.start.x, y: layout.end.y-layout.start.y};
+    const len = Math.hypot(dirUnit.x,dirUnit.y)||1;
+    const nx=-dirUnit.y/len, ny=dirUnit.x/len;
+    pts.forEach((p,i)=>{
+      const isEndpoint = (i===0 || i===pts.length-1);
+      marker(p.point, isEndpoint?'#2f855a':'#dd6b20');
+      if(isEndpoint) label(p.point, i===0?'A':'B', '#2f855a');
+      if(i>0){
+        const segMM = layout.segments[i-1];
+        label(segmentLabelUnit(layout, i-1, pts, nx, ny, printGap), formatMM(segMM), '#9c4221');
+      }
+    });
+  });
+}
+async function buildPrintCanvas(scopeVisible){
+  const nat = nativeUnitSize();
+  let scale, ox=0, oy=0, cw, ch;
+  if(docType==='pdf'){
+    scale = 300/72;
+    const maxDim = 6000;
+    if(nat.width*scale>maxDim || nat.height*scale>maxDim) scale = Math.min(maxDim/nat.width, maxDim/nat.height);
+  } else {
+    scale = 1;
+  }
+  if(scopeVisible){
+    const left = Math.max(0, (viewportScroll.scrollLeft-20)/renderScale);
+    const top = Math.max(0, (viewportScroll.scrollTop-20)/renderScale);
+    const w = Math.min(nat.width-left, viewportScroll.clientWidth/renderScale);
+    const h = Math.min(nat.height-top, viewportScroll.clientHeight/renderScale);
+    ox=left; oy=top;
+    cw = Math.max(1, Math.round(w*scale));
+    ch = Math.max(1, Math.round(h*scale));
+  } else {
+    cw = Math.round(nat.width*scale);
+    ch = Math.round(nat.height*scale);
+  }
+  const pc = document.createElement('canvas');
+  pc.width=cw; pc.height=ch;
+  const pctx2 = pc.getContext('2d');
+  pctx2.fillStyle='#fff'; pctx2.fillRect(0,0,cw,ch);
+  if(docType==='pdf'){
+    const viewport = pageProxy.getViewport({scale});
+    await pageProxy.render({canvasContext:pctx2, viewport, transform:[1,0,0,1,-ox*scale,-oy*scale]}).promise;
+  } else {
+    pctx2.imageSmoothingEnabled=true; pctx2.imageSmoothingQuality='high';
+    const w = cw/scale, h = ch/scale;
+    pctx2.drawImage(sourceImage, ox, oy, w, h, 0, 0, cw, ch);
+  }
+  drawOverlayForPrint(pctx2, scale, ox, oy);
+  return pc;
+}
+async function printDrawing(scopeVisible){
+  if(!hasDoc()) return;
+  setStatus(t('statusPrinting'));
+  try{
+    const pc = await buildPrintCanvas(scopeVisible);
+    const dataUrl = pc.toDataURL('image/png');
+    const area = document.getElementById('printArea');
+    area.innerHTML = '';
+    const page1 = document.createElement('div');
+    page1.className = 'printPage';
+    const img = document.createElement('img');
+    img.onload = ()=>{ setStatus(''); window.print(); };
+    img.src = dataUrl;
+    page1.appendChild(img);
+    area.appendChild(page1);
+    if(document.getElementById('printIncludeLists').checked){
+      area.appendChild(buildListsPage());
+    }
+  }catch(err){
+    console.error(err);
+    setStatus('');
+    alert(t('alertPrintFail'));
+  }
+}
+function escHtml(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function buildListsPage(){
+  const pd = ensurePage(currentPageNum);
+  const div = document.createElement('div');
+  div.className = 'printPage printLists';
+  const pageSuff = t('printPageSuffix');
+  const unitWord = docType==='pdf' ? t('unitPdf') : t('unitPx');
+  let html = `<h2>${t('printHeaderTitle')}${currentFileName ? ' — '+escHtml(currentFileName) : ''}${docType==='pdf' && pageCount>1 ? ' ('+currentPageNum+'/'+pageCount+' '+pageSuff+')' : ''}</h2>`;
+  html += `<p style="color:#718096;font-size:9.5pt;margin:0 0 4mm;">${t('printUnitNote', {unit: displayUnit})}</p>`;
+  html += `<h3>${t('printMeasTitle')}</h3>`;
+  if(pd.measurements.length===0){
+    html += `<p>${t('printNoMeas')}</p>`;
+  } else {
+    html += `<table class="printTable"><thead><tr><th>#</th><th>${t('thDist', {unit: displayUnit})}</th></tr></thead><tbody>`;
+    pd.measurements.forEach((m,i)=>{
+      const d = unitDist(m.p1,m.p2);
+      const valText = pd.mmPerUnit ? formatMM(d*pd.mmPerUnit) : d.toFixed(0)+' '+unitWord+' ('+t('uncalibrated')+')';
+      html += `<tr><td>${i+1}</td><td>${valText}</td></tr>`;
+    });
+    html += '</tbody></table>';
+  }
+  html += `<h3>${t('printLayoutsTitle')}</h3>`;
+  if(pd.layouts.length===0){
+    html += `<p>${t('printNoLayouts')}</p>`;
+  } else {
+    pd.layouts.forEach(layout=>{
+      const pts = markerPositions(layout);
+      const total = layout.segments.reduce((a,b)=>a+b,0);
+      html += `<h4>${t('printLayoutHeader', {id: layout.id, interval: layout.interval, total: formatMM(total), unit: displayUnit})}</h4>`;
+      html += `<table class="printTable"><thead><tr><th>#</th><th>${t('thDist', {unit: displayUnit})}</th><th>${t('thFromStart', {unit: displayUnit})}</th></tr></thead><tbody>`;
+      layout.segments.forEach((seg,i)=>{
+        html += `<tr><td>${i+1}</td><td>${formatMM(seg)}</td><td>${formatMM(pts[i+1].cumMM)}</td></tr>`;
+      });
+      html += '</tbody></table>';
+    });
+  }
+  div.innerHTML = html;
+  return div;
+}
+document.getElementById('btnPrintFull').onclick = () => printDrawing(false);
+document.getElementById('btnPrintVisible').onclick = () => printDrawing(true);
+
+// ---------- Keyboard escape ----------
+window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ pendingPoints=[]; redrawOverlay(); } });
+
+// ---------- Code Protection, Copyright & Anti-Inspection ----------
+(function initProtection(){
+  console.log('%c VG_Bim_Pro %c by Vytautas Giedraitis ',
+    'background:#2c5282; color:#fff; font-size:16px; font-weight:bold; padding:4px 8px; border-radius:4px 0 0 4px;',
+    'background:#dd6b20; color:#fff; font-size:16px; font-weight:bold; padding:4px 8px; border-radius:0 4px 4px 0;');
+  console.log('%c © Vytautas Giedraitis. All rights reserved. Protected proprietary software.', 'color:#718096; font-size:12px;');
+
+  // Disable context menu except on input fields
+  document.addEventListener('contextmenu', (e)=>{
+    if(e.target && (e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA')) return;
+    e.preventDefault();
+  });
+
+  // Block viewing source & devtools hotkeys
+  window.addEventListener('keydown', (e)=>{
+    if(
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && (e.key==='I' || e.key==='i' || e.key==='J' || e.key==='j' || e.key==='C' || e.key==='c')) ||
+      (e.ctrlKey && (e.key==='U' || e.key==='u' || e.key==='S' || e.key==='s'))
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  }, {capture:true});
+
+  // Prevent dragging non-canvas elements
+  document.addEventListener('dragstart', (e)=>{
+    if(e.target.tagName!=='CANVAS') e.preventDefault();
+  });
+})();
+
+// Initialize language on startup
+applyLanguage(currentLang);
+</script>
+</body>
+</html>
