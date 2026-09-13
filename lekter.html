@@ -467,6 +467,106 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
   .form-grid { grid-template-columns: 1fr; }
   .result-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── ENHANCED ROOF WIDTH & GABLE STYLES ─── */
+.sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #e6fffa;
+  border: 1px solid #81e6d9;
+  color: #234e52;
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.btn-subtle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--primary);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.btn-subtle:hover {
+  background: #ebf8ff;
+  border-color: var(--primary);
+}
+.stepper-wrap {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  overflow: hidden;
+}
+.stepper-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.stepper-btn:hover {
+  background: #e2e8f0;
+}
+.stepper-val {
+  padding: 0 8px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text);
+  min-width: 32px;
+  text-align: center;
+}
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.param-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+.param-box label {
+  font-size: 0.65rem;
+  margin-bottom: 3px;
+  display: block;
+}
+.param-box input {
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  min-height: 32px;
+}
+.kappeplan-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.kappeplan-step {
+  padding: 8px 12px;
+  background: var(--surface2);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
 </style>
 </head>
 <body>
@@ -498,6 +598,7 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
 <!-- ─── TABS ─── -->
 <div class="tab-nav no-print">
   <button class="tab-btn active" data-tab="tab-rafter" onclick="switchTab('tab-rafter',this)">📐 <span data-i18n="tab_rafter"></span></button>
+  <button class="tab-btn" data-tab="tab-width-gavl" onclick="switchTab('tab-width-gavl',this)">📏 <span data-i18n="tab_width_gavl"></span></button>
   <button class="tab-btn" data-tab="tab-batten" onclick="switchTab('tab-batten',this)">🪵 <span data-i18n="tab_batten"></span></button>
   <button class="tab-btn" data-tab="tab-qty" onclick="switchTab('tab-qty',this)">📦 <span data-i18n="tab_qty"></span></button>
   <button class="tab-btn" data-tab="tab-3d-slope" onclick="switchTab('tab-3d-slope',this);init3DSlope()">🏠 <span data-i18n="tab_3d_slope"></span></button>
@@ -547,6 +648,16 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
         <input type="number" id="overhang" min="0" max="2000" step="1" inputmode="decimal" placeholder="500" oninput="calcRafter()">
         <span class="field-hint" data-i18n="hint_overhang"></span>
       </div>
+      <div class="field">
+        <label data-i18n="lbl_building_len"></label>
+        <input type="number" id="building_len" min="1000" max="100000" step="1" inputmode="decimal" placeholder="10000" oninput="syncBuildingDims('building_len')">
+        <span class="field-hint" data-i18n="hint_building_len"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_gavl_overhang"></label>
+        <input type="number" id="gavl_overhang" min="0" max="2000" step="1" inputmode="decimal" placeholder="300" oninput="syncBuildingDims('gavl_overhang')">
+        <span class="field-hint" data-i18n="hint_gavl_overhang"></span>
+      </div>
 
     </div>
 
@@ -559,15 +670,178 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
 
   <!-- Rafter results -->
   <div class="card" id="rafter-result-card" style="display:none;">
-    <div class="card-title"><span data-i18n="sec_rafter_result"></span></div>
+    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span data-i18n="sec_rafter_result"></span>
+      <span class="sync-badge">🔗 <span data-i18n="lbl_rafter_sync_banner"></span></span>
+    </div>
     <div class="result-grid" id="rafter-result-grid"></div>
+    <!-- Direct rafter length override/sync for renovation/extensions -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      <div style="flex:1;min-width:200px;">
+        <label style="font-size:0.72rem;font-weight:700;color:var(--text);margin-bottom:3px;display:block;" data-i18n="lbl_direct_rafter_len"></label>
+        <input type="number" id="rafter_len_manual" min="500" max="20000" step="1" inputmode="decimal" style="background:#fff;max-width:220px;" oninput="onDirectRafterInput(this.value)">
+        <span class="field-hint" style="margin-top:3px;display:block;" data-i18n="hint_direct_rafter_len"></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-outline" type="button" onclick="calcWidthFromRafter()" style="min-height:38px;padding:6px 12px;font-size:0.78rem;">⇄ <span data-i18n="btn_calc_width_from_rafter"></span></button>
+      </div>
+    </div>
     <!-- Visual triangle -->
     <div class="canvas-wrap">
       <canvas id="rafter-canvas" height="160" style="width:100%;"></canvas>
     </div>
+    <!-- Quick navigation to Width & Batten tabs -->
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+      <button class="btn btn-outline" type="button" onclick="switchTab('tab-width-gavl', document.querySelector('[data-tab=tab-width-gavl]'))">📏 <span data-i18n="jump_to_width"></span></button>
+      <button class="btn btn-outline" type="button" onclick="switchTab('tab-batten', document.querySelector('[data-tab=tab-batten]'))">🪵 <span data-i18n="jump_to_battens"></span></button>
+    </div>
   </div>
 
 </div><!-- /tab-rafter -->
+
+
+<!-- ══════════ TAB 1.5: ROOF WIDTH & GABLE (KONSTRUKSJONSBREDDE & GAVL) ══════════ -->
+<div id="tab-width-gavl" class="tab-panel hidden">
+
+  <!-- Scenario Card -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_gavl_scenario"></span></div>
+    <div class="preset-row" style="margin-bottom:8px;">
+      <button class="preset-btn active" id="gavl-scen-btn-new" onclick="setGavlScenario('new_roof')"><span data-i18n="gavl_scen_new"></span></button>
+      <button class="preset-btn" id="gavl-scen-btn-reno" onclick="setGavlScenario('renovation')"><span data-i18n="gavl_scen_reno"></span></button>
+    </div>
+    <div id="gavl-scen-new-hint" class="info-box blue" style="font-size:0.8rem;line-height:1.6;margin-bottom:0;"><span data-i18n="gavl_scen_new_hint"></span></div>
+    <div id="gavl-scen-reno-hint" class="info-box green" style="font-size:0.8rem;line-height:1.6;margin-bottom:0;display:none;"><span data-i18n="gavl_scen_reno_hint"></span></div>
+  </div>
+
+  <!-- Tile Model & Manufacturer Specs -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_tile_preset"></span></div>
+    <div class="form-grid">
+      <div class="field" style="grid-column:span 2;">
+        <label data-i18n="lbl_select_tile_model"></label>
+        <select id="tile_preset_select" onchange="setTilePreset(this.value)">
+          <option value="benders_dobbel" selected>Benders Dobbelkrum (Palema / Exklusiv)</option>
+          <option value="benders_enkel">Benders Enkelkrum</option>
+          <option value="skarpnes_dobbel">Skarpnes Dobbelkrum</option>
+          <option value="nortekk_dobbel">Nortekk Dobbelkrum</option>
+          <option value="custom">Egendefinert / Custom</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_tile_w_normal"></label>
+        <input type="number" id="tile_w_normal" min="150" max="400" step="1" inputmode="decimal" value="300" oninput="onCustomTileSpecChange()">
+        <span class="field-hint" data-i18n="hint_tile_w_normal"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_tile_w_siste_v"></label>
+        <input type="number" id="tile_w_siste_v" min="150" max="450" step="1" inputmode="decimal" value="330" oninput="onCustomTileSpecChange()">
+        <span class="field-hint" data-i18n="hint_tile_w_siste_v"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_tile_w_halv"></label>
+        <input type="number" id="tile_w_halv" min="100" max="250" step="1" inputmode="decimal" value="150" oninput="onCustomTileSpecChange()">
+        <span class="field-hint" data-i18n="hint_tile_w_halv"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_tile_w_gavl_v"></label>
+        <input type="number" id="tile_w_gavl_v" min="100" max="400" step="1" inputmode="decimal" value="265" oninput="onCustomTileSpecChange()">
+        <span class="field-hint" data-i18n="hint_tile_w_gavl_v"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_tile_w_gavl_h"></label>
+        <input type="number" id="tile_w_gavl_h" min="100" max="400" step="1" inputmode="decimal" value="295" oninput="onCustomTileSpecChange()">
+        <span class="field-hint" data-i18n="hint_tile_w_gavl_h"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_tile_side_play"></label>
+        <input type="number" id="tile_side_play" min="0" max="5" step="0.5" inputmode="decimal" value="1" oninput="onCustomTileSpecChange()">
+        <span class="field-hint" data-i18n="hint_tile_side_play"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gable Solution & Windski Configuration -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_gavl_solution"></span></div>
+    <label style="margin-bottom:6px;display:block;" data-i18n="lbl_gavl_mode"></label>
+    <div class="preset-row" style="margin-bottom:12px;">
+      <button class="preset-btn active" id="gavl-mode-both" onclick="setGavlMode('both')"><span data-i18n="gavl_mode_both"></span></button>
+      <button class="preset-btn" id="gavl-mode-none" onclick="setGavlMode('none')"><span data-i18n="gavl_mode_none"></span></button>
+      <button class="preset-btn" id="gavl-mode-left" onclick="setGavlMode('left')"><span data-i18n="gavl_mode_left"></span></button>
+      <button class="preset-btn" id="gavl-mode-right" onclick="setGavlMode('right')"><span data-i18n="gavl_mode_right"></span></button>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label data-i18n="lbl_vindski_count"></label>
+        <input type="number" id="vindski_count" min="1" max="4" step="1" inputmode="decimal" value="2" oninput="calcWidthAndGavl()">
+        <span class="field-hint" data-i18n="hint_vindski_count"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_vindski_thick"></label>
+        <input type="number" id="vindski_thick" min="15" max="40" step="1" inputmode="decimal" value="22" oninput="calcWidthAndGavl()">
+        <span class="field-hint" data-i18n="hint_vindski_thick"></span>
+      </div>
+      <div class="field">
+        <label data-i18n="lbl_vindski_clearance"></label>
+        <input type="number" id="vindski_clearance" min="0" max="30" step="1" inputmode="decimal" value="10" oninput="calcWidthAndGavl()">
+        <span class="field-hint" data-i18n="hint_vindski_clearance"></span>
+      </div>
+      <div class="field" style="display:flex;align-items:center;padding-top:20px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-weight:600;font-size:0.82rem;color:var(--text);">
+          <input type="checkbox" id="allow_half_tile" checked onchange="calcWidthAndGavl()" style="width:auto;min-height:auto;">
+          <span data-i18n="lbl_allow_half"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Building & Dimension Inputs -->
+  <div class="card">
+    <div class="card-title"><span data-i18n="sec_dimensions"></span></div>
+    <div class="form-grid">
+      <div class="field">
+        <label data-i18n="lbl_building_len_gavl"></label>
+        <input type="number" id="building_len_gavl" min="1000" max="100000" step="1" inputmode="decimal" placeholder="10000" oninput="syncBuildingDims('building_len_gavl')">
+        <span class="field-hint" data-i18n="hint_building_len_gavl"></span>
+      </div>
+      <div class="field" id="field-target-gavl-overhang">
+        <label data-i18n="lbl_target_gavl_overhang"></label>
+        <input type="number" id="gavl_overhang_target" min="0" max="2000" step="1" inputmode="decimal" placeholder="300" oninput="syncBuildingDims('gavl_overhang_target')">
+        <span class="field-hint" data-i18n="hint_target_gavl_overhang"></span>
+      </div>
+      <div class="field" id="field-existing-fixed-width" style="display:none;">
+        <label data-i18n="lbl_existing_fixed_width"></label>
+        <input type="number" id="existing_fixed_width" min="1000" max="100000" step="1" inputmode="decimal" placeholder="10600" oninput="calcWidthAndGavl()">
+        <span class="field-hint" data-i18n="hint_existing_fixed_width"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Width Calculation Results & Kappeplan -->
+  <div class="card" id="width-results-card">
+    <div class="card-title"><span data-i18n="sec_width_results"></span></div>
+    <div class="result-grid" id="width-result-grid"></div>
+
+    <!-- Status feedback banner (Lock adjust or cut) -->
+    <div id="width-status-banner" class="info-box green" style="margin-bottom:14px;font-size:0.83rem;line-height:1.6;"></div>
+
+    <!-- Visual Cross-Section Diagram -->
+    <div class="canvas-wrap">
+      <canvas id="width-gavl-canvas" height="170" style="width:100%;"></canvas>
+    </div>
+
+    <!-- Step-by-step practical guide -->
+    <div class="kappeplan-steps" id="kappeplan-steps-list"></div>
+
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;" class="no-print">
+      <button class="btn btn-primary" onclick="switchTab('tab-batten', document.querySelector('[data-tab=tab-batten]'))">🪵 <span data-i18n="jump_to_battens"></span></button>
+      <button class="btn btn-outline" onclick="switchTab('tab-qty', document.querySelector('[data-tab=tab-qty]'))">📦 <span data-i18n="tab_qty"></span></button>
+    </div>
+  </div>
+
+</div><!-- /tab-width-gavl -->
 
 <!-- ══════════ TAB 2: BATTENS (LEKTER) ══════════ -->
 <div id="tab-batten" class="tab-panel hidden">
@@ -619,18 +893,27 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
         <span class="field-hint" data-i18n="hint_rafter_len_side"></span>
       </div>
       <div class="field">
-        <label data-i18n="lbl_max_step"></label>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <label data-i18n="lbl_max_step"></label>
+          <button type="button" class="btn-subtle" onclick="applyRecommendedMaxStep()" title="Taikyti gamintojo leistiną žingsnį">⚡ <span data-i18n="btn_rec"></span></button>
+        </div>
         <input type="number" id="max_step" min="200" max="500" step="1" inputmode="decimal" placeholder="345" oninput="calcBattens()">
         <span class="field-hint" data-i18n="hint_max_step"></span>
       </div>
       <div class="field">
-        <label data-i18n="lbl_lat"></label>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <label data-i18n="lbl_lat"></label>
+          <button type="button" class="btn-subtle" onclick="applyRecommendedLAT()" title="Standartinis LAT 370 mm">⚡ 370</button>
+        </div>
         <input type="number" id="lat" min="100" max="600" step="1" inputmode="decimal" placeholder="350" oninput="calcBattens()">
         <span class="field-hint" data-i18n="hint_lat"></span>
       </div>
       <div class="field">
-        <label data-i18n="lbl_laf"></label>
-        <input type="number" id="laf" min="50" max="400" step="1" inputmode="decimal" placeholder="50" oninput="calcBattens()">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <label data-i18n="lbl_laf"></label>
+          <button type="button" class="btn-subtle" onclick="applyRecommendedLAF()" title="Rekomenduojamas LAF pagal kampą">⚡ <span data-i18n="btn_rec"></span></button>
+        </div>
+        <input type="number" id="laf" min="10" max="400" step="1" inputmode="decimal" placeholder="50" oninput="calcBattens()">
         <span class="field-hint" data-i18n="hint_laf"></span>
       </div>
       <div class="field">
@@ -668,6 +951,21 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
 
     <!-- Warning -->
     <div id="batten-warn" class="info-box" style="display:none;"></div>
+
+    <!-- Gavlstein Overlap Fit Banner -->
+    <div id="gavl-overlap-banner" class="info-box green" style="display:none;margin-bottom:12px;font-size:0.83rem;line-height:1.6;"></div>
+
+    <!-- Row Count Adjuster (Manual override / test +-1 row) -->
+    <div class="card" style="padding:12px 18px;margin-bottom:14px;background:var(--surface2);">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <span style="font-size:0.8rem;font-weight:700;color:var(--text);" data-i18n="lbl_row_adjust_title"></span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button type="button" class="btn btn-outline" style="min-height:34px;padding:4px 10px;font-size:0.78rem;" onclick="adjustBattenRows(-1)">➖ <span data-i18n="btn_row_minus"></span></button>
+          <button type="button" class="btn btn-outline" id="btn-row-auto" style="min-height:34px;padding:4px 10px;font-size:0.78rem;" onclick="adjustBattenRows(0)">🎯 <span data-i18n="btn_row_auto"></span></button>
+          <button type="button" class="btn btn-outline" style="min-height:34px;padding:4px 10px;font-size:0.78rem;" onclick="adjustBattenRows(1)">➕ <span data-i18n="btn_row_plus"></span></button>
+        </div>
+      </div>
+    </div>
 
     <!-- Dual result side-switcher -->
     <div id="dual-result-switcher" style="display:none;margin-bottom:0;">
@@ -1004,7 +1302,7 @@ canvas { display: block; border-radius: 8px; background: var(--surface2); }
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(\`User response to the install prompt: \${outcome}\`);
+            console.log(`User response to the install prompt: ${outcome}`);
             deferredPrompt = null;
         }
     });
@@ -1189,6 +1487,93 @@ const T = {
     qty_battens_line:(r,bl,lm)=>`${r} rows × building ${bl} mm × 2 slopes × 1.05 = ${lm} lm`,
     qty_ridge_line:(bl,rl,rt)=>`building ${bl} mm ÷ ${rl} mm/stk = ${rt} stk`,
     reset_confirm:'Reset all fields and clear saved data?',
+
+    /* Width & Gable additions */
+    tab_width_gavl:'Width & Gable',
+    sec_width_gavl:'Roof Width & Gable Construction',
+    sec_gavl_scenario:'Project Scenario',
+    gavl_scen_new:'⭐ New Roof / Extension (Full Tiles - No Cutting)',
+    gavl_scen_reno:'🔧 Renovation (Fixed Roof Width)',
+    gavl_scen_new_hint:'Calculates optimal batten cutting length and gable overhang so whole tiles (and gavlstein if selected) fit seamlessly without longitudinal cutting.',
+    gavl_scen_reno_hint:'Enter existing fixed width. Calculates tile modules, lock adjustability (±1 mm/tile), and cut width for the last tile if needed.',
+    sec_tile_preset:'Tile Manufacturer & Model',
+    lbl_select_tile_model:'Select model / preset',
+    lbl_tile_w_normal:'Normal tile width (mm)',
+    hint_tile_w_normal:'Standard cover width (byggebredde)',
+    lbl_tile_w_siste_v:'Left edge end tile (mm)',
+    hint_tile_w_siste_v:'Benders/Skarpnes left edge: 330 mm',
+    lbl_tile_w_halv:'Half-tile width (mm)',
+    hint_tile_w_halv:'Standard 150 mm (125 mm enkelkrum)',
+    lbl_tile_w_gavl_v:'Gavlstein left width (mm)',
+    hint_tile_w_gavl_v:'Benders: 265 mm, Skarpnes: 150 mm',
+    lbl_tile_w_gavl_h:'Gavlstein right width (mm)',
+    hint_tile_w_gavl_h:'Benders: 295 mm, Skarpnes: 150 mm',
+    lbl_tile_side_play:'Side lock play (±mm/tile)',
+    hint_tile_side_play:'Benders: ±1 mm per tile',
+    sec_gavl_solution:'Gable Solution & Windski',
+    lbl_gavl_mode:'Gable end type',
+    gavl_mode_both:'Gavlstein Both Sides',
+    gavl_mode_none:'Traditional Windski (No Gavlstein)',
+    gavl_mode_left:'Gavlstein Left only',
+    gavl_mode_right:'Gavlstein Right only',
+    lbl_vindski_count:'Windski boards per gable',
+    hint_vindski_count:'Usually 2 overlapping boards or more',
+    lbl_vindski_thick:'Board thickness (mm)',
+    hint_vindski_thick:'Standard 22 mm or 19 mm',
+    lbl_vindski_clearance:'Clearance tile-to-windski (mm)',
+    hint_vindski_clearance:'Expansion gap (10-15 mm)',
+    lbl_allow_half:'Allow half-tile (150 mm) for optimal fit',
+    sec_dimensions:'Dimensions',
+    lbl_building_len_gavl:'Building length / wall width at gable (mm)',
+    hint_building_len_gavl:'Framing width wall-to-wall',
+    lbl_target_gavl_overhang:'Target gable overhang per side (mm)',
+    hint_target_gavl_overhang:'Desired projection past wall (e.g. 300 mm)',
+    lbl_existing_fixed_width:'Existing fixed roof / batten width (mm)',
+    hint_existing_fixed_width:'Exact measured width of existing structure',
+    sec_width_results:'Width & Cutting Plan (Kappeplan)',
+    res_normal_tiles_row:'Normal tiles / row',
+    res_halvstein:'Half-tile (150 mm)',
+    res_batten_cut_len:'Batten Cut Length (mm)',
+    res_total_roof_width:'Total Roof Width (mm)',
+    res_actual_overhang:'Actual Gable Overhang (mm)',
+    res_side_play:'Lock Adjustment Play (±mm)',
+    lbl_direct_rafter_len:'Rafter length (measured / direct entry mm)',
+    hint_direct_rafter_len:'For renovation/extension: type measured rafter length to sync across all tabs',
+    lbl_rafter_sync_banner:'Linked & Synced across tabs',
+    btn_calc_width_from_rafter:'⇄ Compute building width from rafter',
+    btn_rec:'Rec',
+    btn_apply_rec_step:'Apply pitch max step ({step} mm)',
+    btn_apply_rec_laf:'Apply recommended LAF ({laf} mm)',
+    btn_apply_rec_lat:'Apply standard LAT ({lat} mm)',
+    lbl_row_adjust_title:'Adjust Batten Rows (test spacing)',
+    btn_row_minus:'− 1 row',
+    btn_row_auto:'Auto optimal',
+    btn_row_plus:'+ 1 row',
+    jump_to_width:'Go to Width & Gable Plan →',
+    jump_to_battens:'Go to Batten Spacing →',
+    mat_vindski_boards:'Windski boards (Vindskibord)',
+    note_vindski_boards:'Linear meters for 4 gable slopes, incl. 5% waste',
+
+    lbl_wall_framing:'Rafters / Wall',
+    lbl_overhang_short:'Overhang',
+    btn_row_auto_offset:(off)=>`Auto (${off>0?'+':''}${off})`,
+    gavl_overlap_perfect:(step,omlegg)=>`✅ <strong>Gavlstein fit: PERFECT.</strong> Batten step is <strong>${step} mm</strong>, overlap is <strong>${omlegg} mm</strong> (required 45–110 mm). Gavlstein flange overlaps and seals optimally!`,
+    gavl_overlap_too_big:(step,omlegg)=>`⚠️ <strong>WARNING: Batten step ${step} mm exceeds max 375 mm!</strong> Overlap is only ${omlegg} mm (< 45 mm). Gavlstein will not overlap safely. Click <strong>➕ 1 row</strong> to reduce batten step.`,
+    gavl_overlap_too_small:(step,omlegg)=>`⚠️ <strong>Notice: Batten step ${step} mm is below 310 mm.</strong> Overlap is ${omlegg} mm. Verify that gavlstein notch depth accommodates this overlap.`,
+    banner_width_new:(totalW,cutLen,nNorm,hasHalv,halvW,hasL,hasR,play)=>`⭐ <strong>Full Tiles Plan:</strong> Total roof width: <strong>${totalW} mm</strong>. Batten cut length: <strong>${cutLen} mm</strong>. Roof fits whole tiles (${nNorm} normal ${hasHalv?'+ 1 half-tile '+halvW+' mm':''} ${hasL?'+ left gavlstein':''} ${hasR?'+ right gavlstein':''}) with zero longitudinal cutting! Side lock adjustment: <strong>±${play} mm</strong>.`,
+    banner_width_reno_ok:(diff,play,adj,sidePlay)=>`✅ <strong>Lock play absorbs the difference!</strong> Remaining gap is ${diff} mm (can be adjusted by ${adj} mm/tile, allowed ±${sidePlay} mm). ZERO longitudinal tile cutting required!`,
+    banner_width_reno_cut:(diff,play,cutW)=>`⚠️ <strong>Longitudinal cut required:</strong> Remaining gap of ${diff} mm exceeds lock play (±${play} mm). Cut the leftmost end tile to <strong>${cutW} mm</strong> width.`,
+    step_batten_cut:(len)=>`<strong>1. Batten cutting (Bærelekter kapping):</strong> Cut all horizontal battens to exactly <strong>${len} mm</strong> length.`,
+    step_overhang:(oh,len)=>`<strong>2. Gable overhang:</strong> Battens extend <strong>${oh} mm</strong> past the wall framing line on each side.`,
+    step_windski:(count,thick,totalThick,isGavl)=>`<strong>3. Windski installation:</strong> Mount ${count} windski boards (${count}×${thick} mm = ${totalThick} mm per side). ` +
+      (isGavl
+        ? `<strong>With Gavlstein:</strong> Windski board is mounted up to the <strong>center of the batten in height</strong> so the gavlstein flange hooks over cleanly.`
+        : `<strong>Without Gavlstein:</strong> Side windski board is mounted about <strong>8–13 cm (80–130 mm) above the batten</strong>, with a 10–15 mm expansion gap to tiles and covered with metal bargeboard flashing (vindskibeslag).`),
+    step_tile_layout:(hasR,wGavlH,wNormal,nNormal,useHalv,wHalv,hasL,wGavlV,wSisteV)=>`<strong>4. Tile row layout:</strong> Start from the bottom-right corner. Layout: ` +
+      (hasR ? `1× Gavlstein R (${wGavlH} mm)` : `1× Normal tile (${wNormal} mm)`) +
+      ` + <strong>${nNormal - 1}× Normal tiles (${wNormal} mm each)</strong>` +
+      (useHalv ? ` + 1× Half-tile (${wHalv} mm)` : '') +
+      ` + ` + (hasL ? `1× Gavlstein L (${wGavlV} mm)` : `1× Left end tile (${wSisteV} mm)`),
     print_meta:(n,d)=>`Project: ${n}  |  Date: ${d}`,
   },
   no: {
@@ -1332,6 +1717,93 @@ const T = {
     qty_battens_line:(r,bl,lm)=>`${r} rekker × bygning ${bl} mm × 2 sider × 1,05 = ${lm} lm`,
     qty_ridge_line:(bl,rl,rt)=>`bygning ${bl} mm ÷ ${rl} mm/stk = ${rt} stk`,
     reset_confirm:'Nullstill alle felt og slett lagrede data?',
+
+    /* Width & Gable additions */
+    tab_width_gavl:'Bredde & Gavl',
+    sec_width_gavl:'Beregning av takbredde og gavl',
+    sec_gavl_scenario:'Prosjekttype / Scenarie',
+    gavl_scen_new:'⭐ Nybygg / Tilbygg (Kun hele stein - unngå kapping)',
+    gavl_scen_reno:'🔧 Rehabilitering (Eksisterende fast bredde)',
+    gavl_scen_new_hint:'Beregner nøyaktig kappemål for bærelekter og takutstikk slik at taket går opp i hele takstein (og gavlstein), uten langsgående kapping.',
+    gavl_scen_reno_hint:'Legg inn eksisterende fast bredde. Kalkulatoren beregner steinfordeling, utnyttelse av justeringsrom (±1 mm/stein) og eventuelt kappemål for siste stein.',
+    sec_tile_preset:'Takstein produsent og modell',
+    lbl_select_tile_model:'Velg taksteinmodell / preset',
+    lbl_tile_w_normal:'Normalstein byggebredde (mm)',
+    hint_tile_w_normal:'Standard dekningsbredde (300 mm)',
+    lbl_tile_w_siste_v:'Siste stein venstre gavl (mm)',
+    hint_tile_w_siste_v:'Benders/Skarpnes dobbelkrum bygger 330 mm',
+    lbl_tile_w_halv:'Halvstein byggebredde (mm)',
+    hint_tile_w_halv:'Standard 150 mm (125 mm enkelkrum)',
+    lbl_tile_w_gavl_v:'Gavlstein venstre byggebredde (mm)',
+    hint_tile_w_gavl_v:'Benders: 265 mm, Skarpnes: 150 mm',
+    lbl_tile_w_gavl_h:'Gavlstein høyre byggebredde (mm)',
+    hint_tile_w_gavl_h:'Benders: 295 mm, Skarpnes: 150 mm',
+    lbl_tile_side_play:'Sideveis justeringsmonn (±mm/stein)',
+    hint_tile_side_play:'Benders dobbelkrum: ±1 mm pr. stein',
+    sec_gavl_solution:'Gavlløsning og vindskier',
+    lbl_gavl_mode:'Type gavlløsning',
+    gavl_mode_both:'Gavlstein begge sider (V + H)',
+    gavl_mode_none:'Tradisjonell vindski (uten gavlstein)',
+    gavl_mode_left:'Gavlstein kun venstre',
+    gavl_mode_right:'Gavlstein kun høyre',
+    lbl_vindski_count:'Antall vindskibord pr. gavl',
+    hint_vindski_count:'Vanligvis 2 bord (inner- og ytterbord) eller flere',
+    lbl_vindski_thick:'Bordtykkelse (mm)',
+    hint_vindski_thick:'Standard 22 mm eller 19 mm',
+    lbl_vindski_clearance:'Klaring stein til vindski (mm)',
+    hint_vindski_clearance:'Luftespalte / klaring (normalt 10-15 mm)',
+    lbl_allow_half:'Tillat halvstein (150 mm) for optimal tilpasning',
+    sec_dimensions:'Bygningsmål',
+    lbl_building_len_gavl:'Bygningslengde / gavelveggbredde (mm)',
+    hint_building_len_gavl:'Utvendig karkasmål vegg-til-vegg ved gavl',
+    lbl_target_gavl_overhang:'Ønsket gavlutstikk pr. side (mm)',
+    hint_target_gavl_overhang:'Ønsket utstikk forbi vegg (f.eks. 300 mm)',
+    lbl_existing_fixed_width:'Eksisterende fast tak- / lektebredde (mm)',
+    hint_existing_fixed_width:'Nøyaktig målt bredde på eksisterende konstruksjon',
+    sec_width_results:'Resultater og Kappeplan',
+    res_normal_tiles_row:'Normalstein pr. rad',
+    res_halvstein:'Halvstein (150 mm)',
+    res_batten_cut_len:'Kappemål bærelekter (mm)',
+    res_total_roof_width:'Total takbredde (mm)',
+    res_actual_overhang:'Faktisk gavlutstikk (mm)',
+    res_side_play:'Justeringsrom fals (±mm)',
+    lbl_direct_rafter_len:'Sperrelengde (målt / direkte inntasting mm)',
+    hint_direct_rafter_len:'For rehab/tilbygg: skriv målt sperrelengde for å oppdatere alle faner',
+    lbl_rafter_sync_banner:'Koblet og synkronisert på tvers av faner',
+    btn_calc_width_from_rafter:'⇄ Beregn bygningsbredde fra sperrelengde',
+    btn_rec:'Anbefalt',
+    btn_apply_rec_step:'Bruk maks lekteavstand for vinkel ({step} mm)',
+    btn_apply_rec_laf:'Bruk anbefalt LAF ({laf} mm)',
+    btn_apply_rec_lat:'Bruk standard LAT ({lat} mm)',
+    lbl_row_adjust_title:'Juster antall lekterader (test lekteavstand)',
+    btn_row_minus:'− 1 rad',
+    btn_row_auto:'Auto optimal',
+    btn_row_plus:'+ 1 rad',
+    jump_to_width:'Gå til Takbredde & Gavl →',
+    jump_to_battens:'Gå til Lekting →',
+    mat_vindski_boards:'Vindskibord (trevirke)',
+    note_vindski_boards:'Totale løpemeter for 4 gavlsider, inkl. 5% kapp',
+
+    lbl_wall_framing:'Sperrer / Vegg',
+    lbl_overhang_short:'Utstikk',
+    btn_row_auto_offset:(off)=>`Auto (${off>0?'+':''}${off})`,
+    gavl_overlap_perfect:(step,omlegg)=>`✅ <strong>Gavlstein passform: PERFEKT.</strong> Lekteavstand er <strong>${step} mm</strong>, omlegg er <strong>${omlegg} mm</strong> (krav 45–110 mm). Gavlsteinens utstøpte kant overlapper og tetter optimalt!`,
+    gavl_overlap_too_big:(step,omlegg)=>`⚠️ <strong>ADVARSEL: Lekteavstand ${step} mm overstiger maks 375 mm!</strong> Omlegg er bare ${omlegg} mm (< 45 mm). Gavlstein vil glippe. Klikk <strong>➕ 1 rad</strong> for å redusere lekteavstanden.`,
+    gavl_overlap_too_small:(step,omlegg)=>`⚠️ <strong>Obs: Lekteavstand ${step} mm er under 310 mm.</strong> Omlegg er ${omlegg} mm. Kontroller at gavlsteinens falsdybde tillater dette omlegget.`,
+    banner_width_new:(totalW,cutLen,nNorm,hasHalv,halvW,hasL,hasR,play)=>`⭐ <strong>Hele takstein plan:</strong> Total takbredde: <strong>${totalW} mm</strong>. Kappemål bærelekter: <strong>${cutLen} mm</strong>. Taket går opp i hele stein (${nNorm} normalstein ${hasHalv?'+ 1 halvstein '+halvW+' mm':''} ${hasL?'+ gavlstein V':''} ${hasR?'+ gavlstein H':''}) uten langsgående kapping! Justeringsrom i fals: <strong>±${play} mm</strong>.`,
+    banner_width_reno_ok:(diff,play,adj,sidePlay)=>`✅ <strong>Falsen absorberer differansen!</strong> Avvik på ${diff} mm tas opp av justeringsrommet (${adj} mm/stein, tillatt ±${sidePlay} mm). Kapping av stein er IKKE nødvendig!`,
+    banner_width_reno_cut:(diff,play,cutW)=>`⚠️ <strong>Langsgående kapping nødvendig:</strong> Avvik på ${diff} mm overskrider justeringsrommet (±${play} mm). Kapp ytterste venstre stein til <strong>${cutW} mm</strong> bredde.`,
+    step_batten_cut:(len)=>`<strong>1. Kappemål bærelekter:</strong> Kapp alle horisontale bærelekter nøyaktig til <strong>${len} mm</strong> lengde.`,
+    step_overhang:(oh,len)=>`<strong>2. Gavlutstikk:</strong> Bærelektene stikker <strong>${oh} mm</strong> forbi veggens karkaslinje på hver side.`,
+    step_windski:(count,thick,totalThick,isGavl)=>`<strong>3. Montering av vindskier:</strong> Monter ${count} vindskibord (${count}×${thick} mm = ${totalThick} mm pr. side). ` +
+      (isGavl
+        ? `<strong>Med Gavlstein:</strong> Vindskibordet monteres <strong>opp til midten av bærelekten i høyde</strong> slik at gavlsteinens kant griper over og tetter.`
+        : `<strong>Uten Gavlstein:</strong> Side-vindskibordet monteres ca. <strong>8–13 cm (80–130 mm) over bærelekten</strong>, med 10–15 mm klaring til takstein og dekkes med vindskibeslag / vannbord.`),
+    step_tile_layout:(hasR,wGavlH,wNormal,nNormal,useHalv,wHalv,hasL,wGavlV,wSisteV)=>`<strong>4. Taksteinfordeling i raden:</strong> Begynn nederst i høyre hjørne. Rekkefølge: ` +
+      (hasR ? `1× Gavlstein H (${wGavlH} mm)` : `1× Normalstein (${wNormal} mm)`) +
+      ` + <strong>${nNormal - 1}× Normalstein (à ${wNormal} mm)</strong>` +
+      (useHalv ? ` + 1× Halvstein (${wHalv} mm)` : '') +
+      ` + ` + (hasL ? `1× Gavlstein V (${wGavlV} mm)` : `1× Siste venstre stein (${wSisteV} mm)`),
     print_meta:(n,d)=>`Prosjekt: ${n}  |  Dato: ${d}`,
   },
   pl: {
@@ -1475,6 +1947,93 @@ const T = {
     qty_battens_line:(r,bl,lm)=>`${r} rzędów × budynek ${bl} mm × 2 połacie × 1,05 = ${lm} mb`,
     qty_ridge_line:(bl,rl,rt)=>`budynek ${bl} mm ÷ ${rl} mm/szt = ${rt} szt`,
     reset_confirm:'Zresetować wszystkie pola i wyczyścić zapisane dane?',
+
+    /* Width & Gable additions */
+    tab_width_gavl:'Szerokość i Szczyt',
+    sec_width_gavl:'Szerokość dachu i wykończenie szczytu',
+    sec_gavl_scenario:'Scenariusz projektu',
+    gavl_scen_new:'⭐ Nowy dach / Rozbudowa (Tylko całe dachówki)',
+    gavl_scen_reno:'🔧 Remont (Istniejąca stała szerokość)',
+    gavl_scen_new_hint:'Oblicza optymalną długość cięcia łat i okap szczytowy, aby dach składał się wyłącznie z całych dachówek bez cięcia wzdłużnego.',
+    gavl_scen_reno_hint:'Wprowadź stałą szerokość. Kalkulator oblicza układ dachówek, luz na zamkach (±1 mm/dachówkę) i ewentualne docięcie ostatniej dachówki.',
+    sec_tile_preset:'Producent i model dachówki',
+    lbl_select_tile_model:'Wybierz model dachówki',
+    lbl_tile_w_normal:'Szerokość krycia dachówki podstawowej (mm)',
+    hint_tile_w_normal:'Standardowo 300 mm (250 mm enkelkrum)',
+    lbl_tile_w_siste_v:'Szerokość lewej dachówki końcowej (mm)',
+    hint_tile_w_siste_v:'Benders/Skarpnes dobbelkrum: 330 mm',
+    lbl_tile_w_halv:'Szerokość dachówki połówkowej (mm)',
+    hint_tile_w_halv:'Standardowo 150 mm (125 mm)',
+    lbl_tile_w_gavl_v:'Dachówka szczytowa lewa (mm)',
+    hint_tile_w_gavl_v:'Benders: 265 mm, Skarpnes: 150 mm',
+    lbl_tile_w_gavl_h:'Dachówka szczytowa prawa (mm)',
+    hint_tile_w_gavl_h:'Benders: 295 mm, Skarpnes: 150 mm',
+    lbl_tile_side_play:'Luz na zamkach (±mm/dachówkę)',
+    hint_tile_side_play:'Benders dobbelkrum: ±1 mm na dachówkę',
+    sec_gavl_solution:'Wykończenie szczytu i wiatrownice',
+    lbl_gavl_mode:'Rozwiązanie szczytu',
+    gavl_mode_both:'Dachówki szczytowe po obu stronach',
+    gavl_mode_none:'Tradycyjna wiatrownica (bez dachówek szczytowych)',
+    gavl_mode_left:'Dachówka szczytowa tylko z lewej',
+    gavl_mode_right:'Dachówka szczytowa tylko z prawej',
+    lbl_vindski_count:'Liczba desek wiatrowych na szczyt',
+    hint_vindski_count:'Zwykle 2 deski (wewnętrzna i zewnętrzna) lub więcej',
+    lbl_vindski_thick:'Grubość deski (mm)',
+    hint_vindski_thick:'Standardowo 22 mm lub 19 mm',
+    lbl_vindski_clearance:'Szczelina dylatacyjna (mm)',
+    hint_vindski_clearance:'Odstęp dachówki od deski (10-15 mm)',
+    lbl_allow_half:'Zezwalaj na połówkę (150 mm) dla lepszego dopasowania',
+    sec_dimensions:'Wymiary konstrukcyjne',
+    lbl_building_len_gavl:'Długość budynku / rozstaw ścian (mm)',
+    hint_building_len_gavl:'Wymiar zewnętrzny konstrukcji ścian',
+    lbl_target_gavl_overhang:'Żądany okap szczytowy na stronę (mm)',
+    hint_target_gavl_overhang:'Wysunięcie dachu poza ścianę (np. 300 mm)',
+    lbl_existing_fixed_width:'Istniejąca stała szerokość łat/dachu (mm)',
+    hint_existing_fixed_width:'Dokładna zmierzona szerokość konstrukcji',
+    sec_width_results:'Wyniki i Plan cięcia (Kappeplan)',
+    res_normal_tiles_row:'Dachówek całych w rzędzie',
+    res_halvstein:'Dachówka połówkowa (150 mm)',
+    res_batten_cut_len:'Długość cięcia łat (mm)',
+    res_total_roof_width:'Całkowita szerokość dachu (mm)',
+    res_actual_overhang:'Rzeczywisty okap szczytowy (mm)',
+    res_side_play:'Luz na zamkach (±mm)',
+    lbl_direct_rafter_len:'Długość krokwi (zmierzona / bezpośrednia mm)',
+    hint_direct_rafter_len:'Dla remontów/rozbudów: wpisz długość krokwi, aby zsynchronizować wszystkie zakładki',
+    lbl_rafter_sync_banner:'Połączone i zsynchronizowane między zakładkami',
+    btn_calc_width_from_rafter:'⇄ Oblicz szerokość budynku z krokwi',
+    btn_rec:'Zalecane',
+    btn_apply_rec_step:'Zastosuj maks. rozstaw dla kąta ({step} mm)',
+    btn_apply_rec_laf:'Zastosuj zalecany LAF ({laf} mm)',
+    btn_apply_rec_lat:'Zastosuj standardowy LAT ({lat} mm)',
+    lbl_row_adjust_title:'Korekta liczby rzędów łat (test rozstawu)',
+    btn_row_minus:'− 1 rząd',
+    btn_row_auto:'Auto optymalny',
+    btn_row_plus:'+ 1 rząd',
+    jump_to_width:'Przejdź do Szerokości i Szczytu →',
+    jump_to_battens:'Przejdź do Łatowania →',
+    mat_vindski_boards:'Deski wiatrowe (Vindskibord)',
+    note_vindski_boards:'Łączne metry bieżące dla 4 połaci szczytowych, z 5% naddatkiem',
+
+    lbl_wall_framing:'Krokwie / Ściana',
+    lbl_overhang_short:'Okap',
+    btn_row_auto_offset:(off)=>`Auto (${off>0?'+':''}${off})`,
+    gavl_overlap_perfect:(step,omlegg)=>`✅ <strong>Pasowanie dachówek szczytowych: IDEALNE.</strong> Rozstaw łat wynosi <strong>${step} mm</strong>, zakład to <strong>${omlegg} mm</strong> (wymagane 45–110 mm). Zamek dachówki szczytowej zachodzi i uszczelnia optymalnie!`,
+    gavl_overlap_too_big:(step,omlegg)=>`⚠️ <strong>UWAGA: Rozstaw łat ${step} mm przekracza maks. 375 mm!</strong> Zakład wynosi tylko ${omlegg} mm (< 45 mm). Dachówki szczytowe stracą szczelność. Kliknij <strong>➕ 1 rząd</strong> aby zmniejszyć rozstaw łat.`,
+    gavl_overlap_too_small:(step,omlegg)=>`⚠️ <strong>Uwaga: Rozstaw łat ${step} mm jest poniżej 310 mm.</strong> Zakład to ${omlegg} mm. Upewnij się, że zamek dachówki pozwala na taki zakład.`,
+    banner_width_new:(totalW,cutLen,nNorm,hasHalv,halvW,hasL,hasR,play)=>`⭐ <strong>Plan całych dachówek:</strong> Szerokość dachu: <strong>${totalW} mm</strong>. Wymiar cięcia łat: <strong>${cutLen} mm</strong>. Dach składa się wyłącznie z całych dachówek (${nNorm} podstawowych ${hasHalv?'+ 1 połówkowa '+halvW+' mm':''} ${hasL?'+ szczytowa lewa':''} ${hasR?'+ szczytowa prawa':''}) bez cięcia wzdłużnego! Luz na zamkach: <strong>±${play} mm</strong>.`,
+    banner_width_reno_ok:(diff,play,adj,sidePlay)=>`✅ <strong>Zamki dachówek pochłaniają różnicę!</strong> Odchyłka ${diff} mm mieści się w luzie (${adj} mm/dachówkę, dopuszczalne ±${sidePlay} mm). Cięcie dachówek NIE jest potrzebne!`,
+    banner_width_reno_cut:(diff,play,cutW)=>`⚠️ <strong>Wymagane cięcie wzdłużne:</strong> Odchyłka ${diff} mm przekracza luz na zamkach (±${play} mm). Ostatnią lewą dachówkę należy przyciąć do szerokości <strong>${cutW} mm</strong>.`,
+    step_batten_cut:(len)=>`<strong>1. Cięcie łat nośnych:</strong> Przytnij wszystkie poziome łaty nośne dokładnie do długości <strong>${len} mm</strong>.`,
+    step_overhang:(oh,len)=>`<strong>2. Okap szczytowy:</strong> Łaty nośne wystają poza linię ścian o <strong>${oh} mm</strong> z każdej strony.`,
+    step_windski:(count,thick,totalThick,isGavl)=>`<strong>3. Montaż desek wiatrowych:</strong> Zamontuj ${count} deski wiatrowe (${count}×${thick} mm = ${totalThick} mm na stronę). ` +
+      (isGavl
+        ? `<strong>Z dachówką szczytową (Gavlstein):</strong> Deska wiatrowa montowana jest <strong>do środka wysokości łaty nośnej</strong>, aby kołnierz dachówki szczytowej swobodnie na nią nachodził.`
+        : `<strong>Bez dachówki szczytowej:</strong> Boczna deska wiatrowa montowana jest ok. <strong>8–13 cm (80–130 mm) ponad łatę nośną</strong>, z 10–15 mm szczeliną do dachówki i osłonięta obróbką blacharską.`),
+    step_tile_layout:(hasR,wGavlH,wNormal,nNormal,useHalv,wHalv,hasL,wGavlV,wSisteV)=>`<strong>4. Układ dachówek w rzędzie:</strong> Zacznij od prawego dolnego rogu. Kolejność: ` +
+      (hasR ? `1× Szczytowa P (${wGavlH} mm)` : `1× Podstawowa (${wNormal} mm)`) +
+      ` + <strong>${nNormal - 1}× Podstawowe (po ${wNormal} mm)</strong>` +
+      (useHalv ? ` + 1× Połówkowa (${wHalv} mm)` : '') +
+      ` + ` + (hasL ? `1× Szczytowa L (${wGavlV} mm)` : `1× Końcowa lewa (${wSisteV} mm)`),
     print_meta:(n,d)=>`Projekt: ${n}  |  Data: ${d}`,
   },
   lt: {
@@ -1618,6 +2177,93 @@ const T = {
     qty_battens_line:(r,bl,lm)=>`${r} eilės × pastatas ${bl} mm × 2 šlaitai × 1,05 = ${lm} lm`,
     qty_ridge_line:(bl,rl,rt)=>`pastatas ${bl} mm ÷ ${rl} mm/vnt = ${rt} vnt`,
     reset_confirm:'Išvalyti visus laukus ir ištrinti išsaugotus duomenis?',
+
+    /* Width & Gable additions */
+    tab_width_gavl:'Plotis ir Vėjalentės',
+    sec_width_gavl:'Stogo pločio ir frontono/vėjalenčių skaičiavimas',
+    sec_gavl_scenario:'Stogo projekto scenarijus',
+    gavl_scen_new:'⭐ Naujas stogas / Priestatas (Tik sveikos čerpės - be išilginio pjovimo)',
+    gavl_scen_reno:'🔧 Renovacija (Esamas fiksuotas stogo plotis)',
+    gavl_scen_new_hint:'Apskaičiuoja tikslų grebėstų nupjovimo plotį ir išsikišimą, kad stogas sueitų lygiomis sveikomis čerpėmis (ir gavlstein), išvengiant pjaustymo išilgai.',
+    gavl_scen_reno_hint:'Įveskite esamą fiksuotą plotį. Skaičiuoklė apskaičiuoja čerpių modulius, spynos reguliavimo galimybes (±1 mm/čerpę) ir paskutinės čerpės pjovimo matmenį.',
+    sec_tile_preset:'Čerpių gamintojas ir modelis',
+    lbl_select_tile_model:'Pasirinkite modelį / nustatymą',
+    lbl_tile_w_normal:'Normalios čerpės dengiamas plotis (mm)',
+    hint_tile_w_normal:'Standartinis montavimo plotis (300 mm)',
+    lbl_tile_w_siste_v:'Kairiojo krašto čerpės plotis (mm)',
+    hint_tile_w_siste_v:'Benders/Skarpnes dobbelkrum kairėje bygger 330 mm',
+    lbl_tile_w_halv:'Pusinės čerpės plotis (mm)',
+    hint_tile_w_halv:'Standartiškai 150 mm (125 mm enkelkrum)',
+    lbl_tile_w_gavl_v:'Gavlstein kairės plotis (mm)',
+    hint_tile_w_gavl_v:'Benders: 265 mm, Skarpnes: 150 mm',
+    lbl_tile_w_gavl_h:'Gavlstein dešinės plotis (mm)',
+    hint_tile_w_gavl_h:'Benders: 295 mm, Skarpnes: 150 mm',
+    lbl_tile_side_play:'Šoninio reguliavimo laisvumas (±mm/čerpę)',
+    hint_tile_side_play:'Benders dobbelkrum: ±1 mm kiekvienai čerpei',
+    sec_gavl_solution:'Frontono sprendimas ir vėjalentės',
+    lbl_gavl_mode:'Frontono krašto tipas',
+    gavl_mode_both:'Gavlstein abiejose pusėse (Kairė + Dešinė)',
+    gavl_mode_none:'Tradicinės vėjalentės (be gavlstein, su skarda/apvadu)',
+    gavl_mode_left:'Gavlstein tik kairėje',
+    gavl_mode_right:'Gavlstein tik dešinėje',
+    lbl_vindski_count:'Vėjalenčių lentų skaičius šone',
+    hint_vindski_count:'Dažniausiai 2 lentos (vidinė + išorinė) arba daugiau',
+    lbl_vindski_thick:'Vienos lentos storis (mm)',
+    hint_vindski_thick:'Standartiškai 22 mm arba 19 mm',
+    lbl_vindski_clearance:'Tarpas tarp čerpės ir vėjalentės (mm)',
+    hint_vindski_clearance:'Ventiliacinis/montavimo tarpas (10-15 mm)',
+    lbl_allow_half:'Leisti pusinę čerpę (150 mm) optimaliam sutapimui',
+    sec_dimensions:'Konstrukciniai matmenys',
+    lbl_building_len_gavl:'Pastato ilgis / sienų plotis ties frontonu (mm)',
+    hint_building_len_gavl:'Atstumas tarp išorinių sienų karkasų',
+    lbl_target_gavl_overhang:'Norimas išsikišimas už sienos šone (mm)',
+    hint_target_gavl_overhang:'Planuojamas stogo išsikišimas (pvz. 300 mm)',
+    lbl_existing_fixed_width:'Esamas fiksuotas stogo / grebėstų plotis (mm)',
+    hint_existing_fixed_width:'Tiksliai išmatuotas esamos konstrukcijos plotis',
+    sec_width_results:'Rezultatai ir Pjovimo planas (Kappeplan)',
+    res_normal_tiles_row:'Sveikos čerpės eilėje',
+    res_halvstein:'Pusinė čerpė (150 mm)',
+    res_batten_cut_len:'Grebėstų nupjovimo ilgis (mm)',
+    res_total_roof_width:'Bendras stogo plotis (mm)',
+    res_actual_overhang:'Faktinis išsikišimas už sienos (mm)',
+    res_side_play:'Spynos reguliavimo eiga (±mm)',
+    lbl_direct_rafter_len:'Gegnės ilgis (išmatuotas / tiesioginis mm)',
+    hint_direct_rafter_len:'Renovacijai/priestatui: įrašykite išmatuotą gegnės ilgį, kad sinchronizuotų visas skiltis',
+    lbl_rafter_sync_banner:'Susietas ir sinchronizuotas tarp skilčių',
+    btn_calc_width_from_rafter:'⇄ Apskaičiuoti pastato plotį pagal gegnę',
+    btn_rec:'Rekom.',
+    btn_apply_rec_step:'Taikyti šio nuolydžio maks. žingsnį ({step} mm)',
+    btn_apply_rec_laf:'Taikyti rekomenduojamą LAF ({laf} mm)',
+    btn_apply_rec_lat:'Taikyti standartinį LAT ({lat} mm)',
+    lbl_row_adjust_title:'Koreguoti grebėstų eilių skaičių (tikrinti žingsnį)',
+    btn_row_minus:'− 1 eilė',
+    btn_row_auto:'Optimalus auto',
+    btn_row_plus:'+ 1 eilė',
+    jump_to_width:'Eiti į Stogo pločio planą →',
+    jump_to_battens:'Eiti į Grebėstų žingsnius →',
+    mat_vindski_boards:'Vėjalenčių lentos (Vindskibord)',
+    note_vindski_boards:'Bendras bėginių metrų kiekis 4 šlaitų kraštams, su 5% atsarga',
+
+    lbl_wall_framing:'Gegnės / Sienos',
+    lbl_overhang_short:'Išsikišimas',
+    btn_row_auto_offset:(off)=>`Auto (${off>0?'+':''}${off})`,
+    gavl_overlap_perfect:(step,omlegg)=>`✅ <strong>Gavlstein montavimas: PERFEKT.</strong> Grebėstų žingsnis yra <strong>${step} mm</strong>, persidengimas yra <strong>${omlegg} mm</strong> (reikalavimas 45–110 mm). Gavlstein išlietas kantas persidengia ir sandarina optimaliai!`,
+    gavl_overlap_too_big:(step,omlegg)=>`⚠️ <strong>DĖMESIO: Grebėstų žingsnis ${step} mm viršija maks. 375 mm!</strong> Persidengimas tik ${omlegg} mm (< 45 mm). Gavlstein kantas glipp'ins ir bus nesandaru. Spauskite <strong>➕ 1 eilė</strong> žingsniui sumažinti.`,
+    gavl_overlap_too_small:(step,omlegg)=>`⚠️ <strong>Dėmesio: Grebėstų žingsnis ${step} mm yra mažesnis nei 310 mm.</strong> Persidengimas yra ${omlegg} mm. Patikrinkite gavlstein išpjovos gylį.`,
+    banner_width_new:(totalW,cutLen,nNorm,hasHalv,halvW,hasL,hasR,play)=>`⭐ <strong>Sveikų čerpių planas:</strong> Bendras stogo plotis: <strong>${totalW} mm</strong>. Grebėstų nupjovimo ilgis: <strong>${cutLen} mm</strong>. Visas stogas sueina sveikomis čerpėmis (${nNorm} normalstein ${hasHalv?'+ 1 halvstein '+halvW+' mm':''} ${hasL?'+ gavlstein K':''} ${hasR?'+ gavlstein D':''}) be jokio čerpių pjaustymo išilgai! Spynos reguliavimo laisvumas: <strong>±${play} mm</strong>.`,
+    banner_width_reno_ok:(diff,play,adj,sidePlay)=>`✅ <strong>Spyna pilnai sugeria skirtumą!</strong> Likutis ${diff} mm telpa į spynų reguliavimo laisvumą (${adj} mm/čerpei, leistina ±${sidePlay} mm). Čerpių pjauti išilgai NEREIKIA!`,
+    banner_width_reno_cut:(diff,play,cutW)=>`⚠️ <strong>Reikalingas išilginis pjovimas:</strong> Likutis ${diff} mm viršija spynos eigą (±${play} mm). Paskutinę kairiojo krašto čerpę pjaukite iki <strong>${cutW} mm</strong> pločio.`,
+    step_batten_cut:(len)=>`<strong>1. Grebėstų nupjovimas (Bærelekter kapping):</strong> Nupjaukite horizontalius grebėstus tiksliai iki <strong>${len} mm</strong> ilgio.`,
+    step_overhang:(oh,len)=>`<strong>2. Išsikišimas už sienos:</strong> Grebėstai nuo karkaso sienos linijos į kiekvieną šoną išsikiša po <strong>${oh} mm</strong>.`,
+    step_windski:(count,thick,totalThick,isGavl)=>`<strong>3. Vėjalenčių montavimas:</strong> Tvirtinamos ${count} vėjalentės (${count}×${thick} mm = ${totalThick} mm vienam šonui). ` +
+      (isGavl
+        ? `<strong>Su Gavlstein:</strong> Vėjalentė montuojama <strong>iki lektos centro</strong>, o gavlstein bortelis apgaubia vėjalentę iš viršaus.`
+        : `<strong>Be Gavlstein:</strong> Šoninė vėjalentė montuojama apie <strong>8–13 cm (80–130 mm) virš lektos</strong>, paliekant 10–15 mm tarpą iki čerpės ir uždengiama skardiniu vėjalentės apvadu (vindskibeslag).`),
+    step_tile_layout:(hasR,wGavlH,wNormal,nNormal,useHalv,wHalv,hasL,wGavlV,wSisteV)=>`<strong>4. Čerpių klojimas eilėje:</strong> Pradėkite nuo apatinio dešiniojo kampo. Klojama: ` +
+      (hasR ? `1× Gavlstein D (${wGavlH} mm)` : `1× Normalstein (${wNormal} mm)`) +
+      ` + <strong>${nNormal - 1}× Normalstein (po ${wNormal} mm)</strong>` +
+      (useHalv ? ` + 1× Halvstein (${wHalv} mm)` : '') +
+      ` + ` + (hasL ? `1× Gavlstein K (${wGavlV} mm)` : `1× Paskutinė kairė čerpė (${wSisteV} mm)`),
     print_meta:(n,d)=>`Projektas: ${n}  |  Data: ${d}`,
   },
 };
@@ -1625,6 +2271,74 @@ const T = {
 /* ══════════════════════════════════════════
    TILE REFERENCE & TERMINOLOGY
 ══════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────
+   MANUFACTURER PRESETS & GAVLSTEIN SPECS
+────────────────────────────────────────── */
+const TILE_PRESETS = {
+  benders_dobbel: {
+    name: 'Benders Dobbelkrum (Palema / Exklusiv)',
+    normalWidth: 300,
+    sisteLeftWidth: 330,
+    halvWidth: 150,
+    gavlLeftWidth: 265,
+    gavlRightWidth: 295,
+    sidePlay: 1.0,
+    standardLAT: 370,
+    defaultTilePerM2: 8.9,
+  },
+  benders_enkel: {
+    name: 'Benders Enkelkrum',
+    normalWidth: 250,
+    sisteLeftWidth: 280,
+    halvWidth: 125,
+    gavlLeftWidth: 250,
+    gavlRightWidth: 250,
+    sidePlay: 0.5,
+    standardLAT: 370,
+    defaultTilePerM2: 10.7,
+  },
+  skarpnes_dobbel: {
+    name: 'Skarpnes Dobbelkrum',
+    normalWidth: 300,
+    sisteLeftWidth: 330,
+    halvWidth: 150,
+    gavlLeftWidth: 265,
+    gavlRightWidth: 295,
+    sidePlay: 1.0,
+    standardLAT: 375,
+    defaultTilePerM2: 9.0,
+  },
+  nortekk_dobbel: {
+    name: 'Nortekk Dobbelkrum',
+    normalWidth: 300,
+    sisteLeftWidth: 330,
+    halvWidth: 150,
+    gavlLeftWidth: 265,
+    gavlRightWidth: 295,
+    sidePlay: 1.0,
+    standardLAT: 370,
+    defaultTilePerM2: 9.0,
+  },
+  custom: {
+    name: 'Egendefinert / Custom',
+    normalWidth: 300,
+    sisteLeftWidth: 330,
+    halvWidth: 150,
+    gavlLeftWidth: 265,
+    gavlRightWidth: 295,
+    sidePlay: 1.0,
+    standardLAT: 370,
+    defaultTilePerM2: 9.5,
+  }
+};
+
+let gavlScenario = 'new_roof';
+let gavlMode = 'both';
+let tilePreset = 'benders_dobbel';
+let rowOffset = 0;
+let lastWidthCalc = null;
+
 const TILE_TYPES =[
   { key:'concrete_wave',  color:'var(--primary)',  minStep:310, maxStep:345, lat:'330–370', tilePerM2:9.5,  warn:null },
   { key:'concrete_flat',  color:'var(--accent)',   minStep:310, maxStep:330, lat:'320–350', tilePerM2:10.5, warn:'flat' },
@@ -1685,6 +2399,416 @@ function renderTerminology() {
 /* ══════════════════════════
    CALC MODE
 ══════════════════════════ */
+
+/* ──────────────────────────────────────────
+   BIDIRECTIONAL SYNC & ROOF WIDTH / GABLE
+────────────────────────────────────────── */
+function syncBuildingDims(sourceId) {
+  const src = document.getElementById(sourceId);
+  if (!src) return;
+  const val = src.value;
+  if (sourceId === 'building_len' || sourceId === 'building_len_gavl') {
+    const el1 = document.getElementById('building_len');
+    const el2 = document.getElementById('building_len_gavl');
+    if (el1 && el1.value !== val) el1.value = val;
+    if (el2 && el2.value !== val) el2.value = val;
+    calcWidthAndGavl();
+    calcQty();
+  } else if (sourceId === 'gavl_overhang' || sourceId === 'gavl_overhang_target') {
+    const el1 = document.getElementById('gavl_overhang');
+    const el2 = document.getElementById('gavl_overhang_target');
+    if (el1 && el1.value !== val) el1.value = val;
+    if (el2 && el2.value !== val) el2.value = val;
+    calcWidthAndGavl();
+    calcQty();
+  }
+  saveState();
+}
+
+function onDirectRafterInput(val) {
+  const num = parseFloat(val);
+  if (isNaN(num) || num <= 0) return;
+  const rl = document.getElementById('rafter_len');
+  if (rl) rl.value = Math.round(num);
+  const rlq = document.getElementById('rafter_len_qty');
+  if (rlq) rlq.value = Math.round(num);
+  calcBattens();
+  calcQty();
+  saveState();
+}
+
+function calcWidthFromRafter() {
+  const rlEl = document.getElementById('rafter_len_manual');
+  const rlVal = parseFloat(rlEl ? rlEl.value : '') || parseFloat(document.getElementById('rafter_len').value);
+  const A = parseFloat(document.getElementById('roof_angle').value) || 25;
+  const Oh = parseFloat(document.getElementById('overhang').value) || 0;
+  if (isNaN(rlVal) || rlVal <= 0) return;
+  const Arad = A * Math.PI / 180;
+  // rafterTotal = (halfW + Oh) / cos(Arad)
+  const halfW = rlVal * Math.cos(Arad) - Oh;
+  if (halfW > 0) {
+    const W = Math.round(halfW * 2);
+    document.getElementById('building_width').value = W;
+    calcRafter();
+  }
+}
+
+function setGavlScenario(scen) {
+  gavlScenario = scen;
+  const btnNew = document.getElementById('gavl-scen-btn-new');
+  const btnReno = document.getElementById('gavl-scen-btn-reno');
+  if (btnNew) btnNew.classList.toggle('active', scen === 'new_roof');
+  if (btnReno) btnReno.classList.toggle('active', scen === 'renovation');
+  const hNew = document.getElementById('gavl-scen-new-hint');
+  const hReno = document.getElementById('gavl-scen-reno-hint');
+  if (hNew) hNew.style.display = scen === 'new_roof' ? 'block' : 'none';
+  if (hReno) hReno.style.display = scen === 'renovation' ? 'block' : 'none';
+  const fTarg = document.getElementById('field-target-gavl-overhang');
+  const fExist = document.getElementById('field-existing-fixed-width');
+  if (fTarg) fTarg.style.display = scen === 'new_roof' ? '' : 'none';
+  if (fExist) fExist.style.display = scen === 'renovation' ? '' : 'none';
+  calcWidthAndGavl();
+  saveState();
+}
+
+function setGavlMode(mode) {
+  gavlMode = mode;
+  ['both', 'none', 'left', 'right'].forEach(m => {
+    const btn = document.getElementById('gavl-mode-' + m);
+    if (btn) btn.classList.toggle('active', m === mode);
+  });
+  calcWidthAndGavl();
+  saveState();
+}
+
+function setTilePreset(key) {
+  tilePreset = key;
+  const p = TILE_PRESETS[key] || TILE_PRESETS.custom;
+  document.getElementById('tile_w_normal').value = p.normalWidth;
+  document.getElementById('tile_w_siste_v').value = p.sisteLeftWidth;
+  document.getElementById('tile_w_halv').value = p.halvWidth;
+  document.getElementById('tile_w_gavl_v').value = p.gavlLeftWidth;
+  document.getElementById('tile_w_gavl_h').value = p.gavlRightWidth;
+  document.getElementById('tile_side_play').value = p.sidePlay;
+  const tilePerM2El = document.getElementById('tile_per_m2');
+  if (tilePerM2El && p.defaultTilePerM2) tilePerM2El.value = p.defaultTilePerM2;
+  calcWidthAndGavl();
+  saveState();
+}
+
+function onCustomTileSpecChange() {
+  const sel = document.getElementById('tile_preset_select');
+  if (sel) sel.value = 'custom';
+  tilePreset = 'custom';
+  calcWidthAndGavl();
+  saveState();
+}
+
+function applyRecommendedMaxStep() {
+  const A = parseFloat(document.getElementById('roof_angle').value) || 25;
+  let rec = 375;
+  if (A >= 22) rec = 375;
+  else if (A >= 18) rec = 340;
+  else rec = 320;
+  document.getElementById('max_step').value = rec;
+  calcBattens();
+}
+
+function applyRecommendedLAF() {
+  const A = parseFloat(document.getElementById('roof_angle').value) || 25;
+  let rec = 40;
+  if (A <= 27) rec = 40;
+  else if (A <= 38) rec = 25;
+  else rec = 15;
+  document.getElementById('laf').value = rec;
+  calcBattens();
+}
+
+function applyRecommendedLAT() {
+  const p = TILE_PRESETS[tilePreset] || TILE_PRESETS.benders_dobbel;
+  document.getElementById('lat').value = p.standardLAT || 370;
+  calcBattens();
+}
+
+function adjustBattenRows(delta) {
+  if (delta === 0) rowOffset = 0;
+  else rowOffset += delta;
+  calcBattens();
+}
+
+function calcWidthAndGavl() {
+  const d = T[lang] || T.lt;
+  const bLenEl = document.getElementById('building_len_gavl');
+  const bLen = parseFloat(bLenEl && bLenEl.value ? bLenEl.value : '') ||
+               parseFloat(document.getElementById('building_len').value) || 10000;
+  const targetOverhang = parseFloat(document.getElementById('gavl_overhang_target').value) || 300;
+  const existEl = document.getElementById('existing_fixed_width');
+  const existingW = parseFloat(existEl && existEl.value ? existEl.value : '') || (bLen + 2 * targetOverhang);
+
+  const wNormal = parseFloat(document.getElementById('tile_w_normal').value) || 300;
+  const wSisteV = parseFloat(document.getElementById('tile_w_siste_v').value) || 330;
+  const wHalv = parseFloat(document.getElementById('tile_w_halv').value) || 150;
+  const wGavlV = parseFloat(document.getElementById('tile_w_gavl_v').value) || 265;
+  const wGavlH = parseFloat(document.getElementById('tile_w_gavl_h').value) || 295;
+  const sidePlay = parseFloat(document.getElementById('tile_side_play').value) || 1.0;
+
+  const vCount = parseInt(document.getElementById('vindski_count').value, 10) || 2;
+  const vThick = parseFloat(document.getElementById('vindski_thick').value) || 22;
+  const vClear = parseFloat(document.getElementById('vindski_clearance').value) || 10;
+  const allowHalvBox = document.getElementById('allow_half_tile');
+  const allowHalv = allowHalvBox ? allowHalvBox.checked : true;
+
+  const vindskiTotalOneSide = vCount * vThick; // e.g. 44 mm
+
+  // Left & Right end modules
+  let leftW = 0, rightW = 0, hasGavlLeft = false, hasGavlRight = false;
+  if (gavlMode === 'both') {
+    leftW = wGavlV; rightW = wGavlH; hasGavlLeft = true; hasGavlRight = true;
+  } else if (gavlMode === 'left') {
+    leftW = wGavlV; rightW = wNormal; hasGavlLeft = true; hasGavlRight = false;
+  } else if (gavlMode === 'right') {
+    leftW = wSisteV; rightW = wGavlH; hasGavlLeft = false; hasGavlRight = true;
+  } else {
+    // none (traditional vindski)
+    leftW = wSisteV; rightW = wNormal; hasGavlLeft = false; hasGavlRight = false;
+  }
+
+  // Margin for traditional vindski outside tiles
+  const leftTradMargin = hasGavlLeft ? 0 : (vindskiTotalOneSide + vClear);
+  const rightTradMargin = hasGavlRight ? 0 : (vindskiTotalOneSide + vClear);
+
+  let nNormal = 0;
+  let useHalv = false;
+  let totalTileW = 0;
+  let battenCutLen = 0;
+  let totalRoofW = 0;
+  let actualOverhang = 0;
+  let totalPlay = 0;
+  let diff = 0;
+  let cutTileWidth = null;
+
+  if (gavlScenario === 'new_roof') {
+    const targetTotalW = bLen + 2 * targetOverhang;
+    const targetTileSpan = targetTotalW - (leftTradMargin + rightTradMargin);
+    const spanForMiddle = targetTileSpan - (leftW + rightW);
+
+    // Option A: no half tile
+    const nA = Math.max(1, Math.round(spanForMiddle / wNormal));
+    const spanA = leftW + nA * wNormal + rightW;
+    const errA = Math.abs(spanA - targetTileSpan);
+
+    // Option B: with half tile
+    let nB = nA, spanB = spanA, errB = 999999;
+    if (allowHalv) {
+      nB = Math.max(0, Math.round((spanForMiddle - wHalv) / wNormal));
+      spanB = leftW + nB * wNormal + wHalv + rightW;
+      errB = Math.abs(spanB - targetTileSpan);
+    }
+
+    if (allowHalv && errB < errA) {
+      nNormal = nB;
+      useHalv = true;
+      totalTileW = spanB;
+    } else {
+      nNormal = nA;
+      useHalv = false;
+      totalTileW = spanA;
+    }
+
+    if (gavlMode === 'both') {
+      battenCutLen = totalTileW - 2 * vThick;
+      totalRoofW = totalTileW;
+    } else if (gavlMode === 'none') {
+      battenCutLen = totalTileW + 2 * vClear;
+      totalRoofW = battenCutLen + 2 * vindskiTotalOneSide;
+    } else {
+      const leftBattenAdd = hasGavlLeft ? -vThick : vClear;
+      const rightBattenAdd = hasGavlRight ? -vThick : vClear;
+      battenCutLen = totalTileW + leftBattenAdd + rightBattenAdd;
+      totalRoofW = totalTileW + (hasGavlLeft ? 0 : (vClear + vindskiTotalOneSide)) + (hasGavlRight ? 0 : (vClear + vindskiTotalOneSide));
+    }
+
+    actualOverhang = (totalRoofW - bLen) / 2;
+    totalPlay = (nNormal + (useHalv ? 1 : 0) + (hasGavlLeft?1:0) + (hasGavlRight?1:0)) * sidePlay;
+
+  } else {
+    // Renovation
+    const fixedW = existingW;
+    totalRoofW = fixedW;
+    const availableTileSpan = fixedW - (leftTradMargin + rightTradMargin);
+    const spanForMiddle = availableTileSpan - (leftW + rightW);
+
+    const nA = Math.max(0, Math.floor(spanForMiddle / wNormal));
+    const spanA = leftW + nA * wNormal + rightW;
+    const remA = availableTileSpan - spanA;
+
+    if (allowHalv && remA >= wHalv * 0.75) {
+      nNormal = nA;
+      useHalv = true;
+      totalTileW = spanA + wHalv;
+    } else {
+      nNormal = nA;
+      useHalv = false;
+      totalTileW = spanA;
+    }
+
+    diff = availableTileSpan - totalTileW;
+    totalPlay = (nNormal + (useHalv ? 1 : 0) + 2) * sidePlay;
+
+    if (Math.abs(diff) > totalPlay) {
+      cutTileWidth = Math.round(wNormal + diff);
+    }
+
+    battenCutLen = fixedW - (hasGavlLeft ? 2 * vThick : 0);
+    actualOverhang = (fixedW - bLen) / 2;
+  }
+
+  lastWidthCalc = {
+    bLen, targetOverhang, totalRoofW, battenCutLen, actualOverhang,
+    nNormal, useHalv, leftW, rightW, totalTileW, sidePlay, totalPlay,
+    gavlMode, hasGavlLeft, hasGavlRight, vCount, vThick, vClear,
+    vindskiTotalOneSide, diff, cutTileWidth, gavlScenario
+  };
+
+  // Render result grid
+  const grid = document.getElementById('width-result-grid');
+  if (grid) {
+    const halvStr = useHalv ? `1 ${d.mat_unit_stk || 'stk'} (${Math.round(wHalv)} mm)` : '0';
+    grid.innerHTML = `
+      <div class="res-box"><div class="res-val info">${nNormal}</div><div class="res-lbl">${d.res_normal_tiles_row}</div></div>
+      <div class="res-box"><div class="res-val ${useHalv ? 'accent' : ''}">${halvStr}</div><div class="res-lbl">${d.res_halvstein}</div></div>
+      <div class="res-box"><div class="res-val ok" style="font-size:1.6rem;">${Math.round(battenCutLen)}</div><div class="res-lbl">${d.res_batten_cut_len}</div></div>
+      <div class="res-box"><div class="res-val">${Math.round(totalRoofW)}</div><div class="res-lbl">${d.res_total_roof_width}</div></div>
+      <div class="res-box"><div class="res-val info">${Math.round(actualOverhang)}</div><div class="res-lbl">${d.res_actual_overhang}</div></div>
+      <div class="res-box"><div class="res-val accent">±${Math.round(totalPlay)}</div><div class="res-lbl">${d.res_side_play}</div></div>
+    `;
+  }
+
+  // Render Banner (Fully Localized!)
+  const banner = document.getElementById('width-status-banner');
+  if (banner) {
+    if (gavlScenario === 'new_roof') {
+      banner.className = 'info-box green';
+      banner.innerHTML = d.banner_width_new(Math.round(totalRoofW), Math.round(battenCutLen), nNormal, useHalv, Math.round(wHalv), hasGavlLeft, hasGavlRight, Math.round(totalPlay));
+    } else {
+      if (Math.abs(diff) <= totalPlay) {
+        banner.className = 'info-box green';
+        const adj = nNormal > 0 ? (diff / nNormal).toFixed(1) : 0;
+        banner.innerHTML = d.banner_width_reno_ok(Math.round(diff), Math.round(totalPlay), adj, sidePlay);
+      } else {
+        banner.className = 'info-box orange';
+        banner.innerHTML = d.banner_width_reno_cut(Math.round(diff), Math.round(totalPlay), cutTileWidth);
+      }
+    }
+  }
+
+  // Render Step-by-step (Fully Localized & with Gavlstein / Windski rules!)
+  const steps = document.getElementById('kappeplan-steps-list');
+  if (steps) {
+    const vTotal = vCount * vThick;
+    const isGavl = hasGavlLeft || hasGavlRight;
+    const ohMm = Math.round((battenCutLen - bLen) / 2);
+    steps.innerHTML = `
+      <div class="kappeplan-step">${d.step_batten_cut(Math.round(battenCutLen))}</div>
+      <div class="kappeplan-step">${d.step_overhang(ohMm, bLen)}</div>
+      <div class="kappeplan-step">${d.step_windski(vCount, vThick, vTotal, isGavl)}</div>
+      <div class="kappeplan-step">${d.step_tile_layout(hasGavlRight, wGavlH, wNormal, nNormal, useHalv, wHalv, hasGavlLeft, wGavlV, wSisteV)}</div>
+    `;
+  }
+  drawWidthCanvas();
+}
+
+function drawWidthCanvas() {
+  const canvas = document.getElementById('width-gavl-canvas');
+  if (!canvas || !lastWidthCalc) return;
+  const W = canvas.parentElement.offsetWidth || 500;
+  canvas.width = W; canvas.height = 170;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, 170);
+
+  const { bLen, battenCutLen, totalRoofW, actualOverhang, nNormal, useHalv, hasGavlLeft, hasGavlRight, vCount, vThick } = lastWidthCalc;
+
+  const pad = 24;
+  const usableW = W - pad * 2;
+  const scale = usableW / (totalRoofW * 1.05);
+
+  const ox = pad + (usableW - totalRoofW * scale) / 2;
+  const baseY = 115;
+
+  // Wall lines
+  const wallLeftX = ox + actualOverhang * scale;
+  const wallRightX = wallLeftX + bLen * scale;
+
+  // Wall indicators
+  ctx.fillStyle = 'rgba(113, 128, 150, 0.12)';
+  ctx.fillRect(wallLeftX, baseY - 30, (wallRightX - wallLeftX), 75);
+  ctx.strokeStyle = '#a0aec0'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(wallLeftX, baseY - 40); ctx.lineTo(wallLeftX, baseY + 45);
+  ctx.moveTo(wallRightX, baseY - 40); ctx.lineTo(wallRightX, baseY + 45);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Batten cut line
+  const battenLeftX = ox + (totalRoofW - battenCutLen) / 2 * scale;
+  const battenW = battenCutLen * scale;
+  ctx.fillStyle = 'rgba(200, 160, 85, 0.4)';
+  ctx.fillRect(battenLeftX, baseY - 8, battenW, 10);
+  ctx.strokeStyle = '#8B5A2B'; ctx.lineWidth = 1.5;
+  ctx.strokeRect(battenLeftX, baseY - 8, battenW, 10);
+
+  // Tiles line (simplified module blocks)
+  const tileY = baseY - 24;
+  const tileH = 14;
+  ctx.fillStyle = 'rgba(176, 80, 48, 0.7)';
+  ctx.strokeStyle = '#8B2500'; ctx.lineWidth = 1;
+  ctx.fillRect(ox, tileY, totalRoofW * scale, tileH);
+  ctx.strokeRect(ox, tileY, totalRoofW * scale, tileH);
+
+  // Windski boards at edges
+  const vindskiW = Math.max(3, vCount * vThick * scale);
+  ctx.fillStyle = '#2b6cb0';
+  ctx.fillRect(ox, baseY - 32, vindskiW, 36);
+  ctx.fillRect(ox + totalRoofW * scale - vindskiW, baseY - 32, vindskiW, 36);
+
+  const d = T[lang] || T.lt;
+  // Dimension: Total Roof Width
+  ctx.strokeStyle = '#2b6cb0'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(ox, 22); ctx.lineTo(ox + totalRoofW * scale, 22);
+  ctx.moveTo(ox, 16); ctx.lineTo(ox, 28);
+  ctx.moveTo(ox + totalRoofW * scale, 16); ctx.lineTo(ox + totalRoofW * scale, 28);
+  ctx.stroke();
+  ctx.fillStyle = '#2b6cb0'; ctx.font = 'bold 10px Consolas, Courier New, monospace'; ctx.textAlign = 'center';
+  ctx.fillText(`${d.res_total_roof_width || 'Total'}: ${Math.round(totalRoofW)} mm`, ox + (totalRoofW * scale) / 2, 17);
+
+  // Dimension: Bærelekter kappemål
+  ctx.strokeStyle = '#8B5A2B'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(battenLeftX, 44); ctx.lineTo(battenLeftX + battenW, 44);
+  ctx.moveTo(battenLeftX, 39); ctx.lineTo(battenLeftX, 49);
+  ctx.moveTo(battenLeftX + battenW, 39); ctx.lineTo(battenLeftX + battenW, 49);
+  ctx.stroke();
+  ctx.fillStyle = '#8B5A2B';
+  ctx.fillText(`${d.res_batten_cut_len || 'Lekter'}: ${Math.round(battenCutLen)} mm`, battenLeftX + battenW / 2, 40);
+
+  // Dimension: Wall width
+  ctx.strokeStyle = '#718096'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(wallLeftX, baseY + 30); ctx.lineTo(wallRightX, baseY + 30);
+  ctx.moveTo(wallLeftX, baseY + 25); ctx.lineTo(wallLeftX, baseY + 35);
+  ctx.moveTo(wallRightX, baseY + 25); ctx.lineTo(wallRightX, baseY + 35);
+  ctx.stroke();
+  ctx.fillStyle = '#4a5568';
+  ctx.fillText(`${d.lbl_wall_framing || 'Vegg'}: ${Math.round(bLen)} mm`, (wallLeftX + wallRightX) / 2, baseY + 42);
+
+  // Overhang labels
+  ctx.fillStyle = '#dd6b20'; ctx.font = '9px Consolas, Courier New, monospace';
+  const ohLabel = d.lbl_overhang_short || 'Utstikk';
+  ctx.fillText(`${ohLabel} ${Math.round(actualOverhang)} mm`, (ox + wallLeftX) / 2, baseY + 18);
+  ctx.fillText(`${ohLabel} ${Math.round(actualOverhang)} mm`, (wallRightX + ox + totalRoofW * scale) / 2, baseY + 18);
+}
+
 function setCalcMode(mode) {
   calcMode = mode;
   document.getElementById('calcmode-btn-full').classList.toggle('active', mode === 'full');
@@ -1753,6 +2877,7 @@ function switchTab(id, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.remove('hidden');
   btn.classList.add('active');
+  if (id === 'tab-width-gavl') calcWidthAndGavl();
   if (id === 'tab-batten') calcBattens();
   if (id === 'tab-qty')    calcQty();
 }
@@ -1785,6 +2910,7 @@ function applyLang() {
   if (lastBattensRight.length) renderBattenTable(lastBattensRight, 'batten-tbody-right');
   // Re-run calculations to refresh all dynamic text in current language
   calcRafter();
+  if (typeof calcWidthAndGavl === 'function') calcWidthAndGavl();
   calcBattens();
   calcQty();
   updateEaveLegend();
@@ -1846,11 +2972,20 @@ function calcRafter() {
   `;
 
   drawRafterTriangle(halfW, rise, rafterTotal, A, Oh, ohType, d);
-  // Auto-fill rafter length in tab 2 and qty tab
+  // Auto-fill and sync rafter length across all tabs
+  const roundedRafter = Math.round(rafterTotal);
   const rl = document.getElementById('rafter_len');
-  if (!rl.dataset.userSet) rl.value = Math.round(rafterTotal);
+  if (rl) rl.value = roundedRafter;
+  const rlm = document.getElementById('rafter_len_manual');
+  if (rlm) rlm.value = roundedRafter;
   const rlq = document.getElementById('rafter_len_qty');
-  if (rlq && !rlq.dataset.userSet) rlq.value = Math.round(rafterTotal);
+  if (rlq) rlq.value = roundedRafter;
+  const rlL = document.getElementById('rafter_len_left');
+  if (rlL && !rlL.value) rlL.value = roundedRafter;
+  
+  // Also trigger battens and width updates
+  if (typeof calcBattens === 'function') calcBattens();
+  if (typeof calcWidthAndGavl === 'function') calcWidthAndGavl();
   saveState();
 }
 
@@ -1987,7 +3122,8 @@ function calcBattens() {
     } else {
       const Leff = rl - LAT - LAF;
       if (Leff <= 0) return null;
-      const N_gaps = Math.ceil(Leff / maxStep);
+      const N_base = Math.ceil(Leff / maxStep);
+      const N_gaps = Math.max(1, N_base + (rowOffset || 0));
       const N = N_gaps + 1;
       const S = Leff / N_gaps;
       const spacer = Math.round(S - battenW);
@@ -1996,7 +3132,7 @@ function calcBattens() {
         const pos = i === N-1 ? Math.round(rl - LAF) : Math.round(LAT + i * S);
         battens.push({ pos, step: i===0 ? null : Math.round(S), isFirst: i===0, isLast: i===N-1 });
       }
-      return { Leff, N, S, spacer, battens, isStarted: false };
+      return { Leff, N, S, spacer, battens, isStarted: false, N_base };
     }
   }
 
@@ -2064,6 +3200,29 @@ function calcBattens() {
 
   lastBattens = left.battens;
   renderGrid('batten-result-grid', left);
+
+  // Gavlstein Overlap (omlegg) validation (Fully Localized!)
+  const gavlBanner = document.getElementById('gavl-overlap-banner');
+  if (gavlBanner && left.S) {
+    const omlegg = Math.round(420 - left.S);
+    gavlBanner.style.display = 'block';
+    if (left.S <= 375 && left.S >= 310) {
+      gavlBanner.className = 'info-box green';
+      gavlBanner.innerHTML = d.gavl_overlap_perfect(left.S.toFixed(1), omlegg);
+    } else if (left.S > 375) {
+      gavlBanner.className = 'info-box red';
+      gavlBanner.innerHTML = d.gavl_overlap_too_big(left.S.toFixed(1), omlegg);
+    } else {
+      gavlBanner.className = 'info-box yellow';
+      gavlBanner.innerHTML = d.gavl_overlap_too_small(left.S.toFixed(1), omlegg);
+    }
+  }
+
+  // Update auto row button text
+  const btnRowAuto = document.getElementById('btn-row-auto');
+  if (btnRowAuto) {
+    btnRowAuto.textContent = rowOffset === 0 ? `🎯 ${d.btn_row_auto || 'Auto'}` : `🎯 ${d.btn_row_auto_offset(rowOffset)}`;
+  }
   const sb = document.getElementById('spacer-block-main');
   if (sb) {
     sb.style.display = sideMode === 'dual' ? 'none' : '';
@@ -2237,8 +3396,25 @@ function calcQty() {
     areaLine = d.qty_area_roof_line(roofArea.toFixed(1));
   }
 
+  const rows = lastBattens.length || 0;
+  
+  // Use exact width layout from tab-width-gavl if available
+  let normalTilesExact = null;
+  let halfTilesExact = null;
+  let battenEffectiveLen = buildingL;
+
+  if (lastWidthCalc) {
+    battenEffectiveLen = lastWidthCalc.battenCutLen || buildingL;
+    if (lastWidthCalc.nNormal && rows > 0) {
+      normalTilesExact = Math.ceil(lastWidthCalc.nNormal * rows * 2 * wasteFactor);
+      if (lastWidthCalc.useHalv) {
+        halfTilesExact = Math.ceil(rows * 2 * wasteFactor);
+      }
+    }
+  }
+
   // ── Main tiles ──
-  const tiles = Math.ceil(roofArea * tilePerM2 * wasteFactor);
+  const tiles = normalTilesExact !== null ? normalTilesExact : Math.ceil(roofArea * tilePerM2 * wasteFactor);
 
   // ── Ridge tiles ──
   const ridgeTiles = buildingL > 0 ? Math.ceil((buildingL / ridgeTileL) * wasteFactor) : null;
@@ -2247,9 +3423,14 @@ function calcQty() {
   const ridgeStart = 2;
 
   // ── Battens — rows from tab2 (ONE slope), × 2 slopes total ──
-  const rows = lastBattens.length || 0;
-  const battensLM = rows > 0 && buildingL > 0
-    ? Math.ceil(rows * (buildingL / 1000) * 2 * 1.05 * 10) / 10
+  const battensLM = rows > 0 && battenEffectiveLen > 0
+    ? Math.ceil(rows * (battenEffectiveLen / 1000) * 2 * 1.05 * 10) / 10
+    : null;
+
+  // ── Windski timber (Vindskibord) ── 4 slopes (2 each gable end)
+  const vCount = lastWidthCalc ? (lastWidthCalc.vCount || 2) : 2;
+  const vindskiLM = rafterLen > 0
+    ? Math.ceil(4 * (rafterLen / 1000) * vCount * 1.05 * 10) / 10
     : null;
 
   // ── SU (Sløyfe) — counter-batten, same run count as battens, × 2 slopes ──
@@ -2307,8 +3488,10 @@ function calcQty() {
     row(d.mat_ridge_start, ridgeStart, d.mat_unit_stk, `<span style="color:var(--dim);font-size:0.72rem;">${d.note_ridge_start}</span>`) +
     (gavlTotalPerSide !== null ? row(d.mat_gavl_left, gavlTotalPerSide, d.mat_unit_stk, `<span style="color:var(--muted);font-size:0.72rem;">${gavlExplain}</span>`) : '') +
     (gavlTotalPerSide !== null ? row(d.mat_gavl_right, gavlTotalPerSide, d.mat_unit_stk, `<span style="color:var(--dim);font-size:0.72rem;">${d.note_gavl_sep}</span>`) : '') +
+    (typeof halfTilesExact === 'number' && halfTilesExact > 0 ? row(d.res_halvstein || 'Halvstein', halfTilesExact, d.mat_unit_stk, '<span style="color:var(--accent);font-size:0.72rem;">150 mm</span>') : '') +
     (suLM !== null ? row(d.mat_su, suLM, d.mat_unit_lm, `<span style="color:var(--dim);font-size:0.72rem;">${d.note_su}</span>`) : '') +
     (battensLM !== null ? row(d.mat_battens, battensLM, d.mat_unit_lm) : '') +
+    (vindskiLM !== null ? row(d.mat_vindski_boards || 'Vindskibord', vindskiLM, d.mat_unit_lm, `<span style="color:var(--dim);font-size:0.72rem;">${d.note_vindski_boards || ''}</span>`) : '') +
     (snowGuards !== null ? row(d.mat_snow, snowGuards, d.mat_unit_stk, `<span style="color:var(--dim);font-size:0.72rem;">${d.note_snow}</span>`) : '') +
     (ventBandM !== null ? row(d.mat_ventband, ventBandM, d.mat_unit_m) : '') +
     (birdBlockerM !== null ? row(d.mat_birdblocker, birdBlockerM, d.mat_unit_m) : '');
@@ -2341,10 +3524,15 @@ const SK = 'pb_lekter';
 
 function gatherState() {
   const ids =['proj_name','proj_date','proj_notes','building_width','roof_angle','overhang',
-    'rafter_len','rafter_len_left','rafter_len_right','max_step','lat','laf','batten_width','remaining_len',
-    'building_len','rafter_len_qty','slope_area','tile_per_m2','ridge_tile_len',
+    'rafter_len','rafter_len_left','rafter_len_right','rafter_len_manual','max_step','lat','laf','batten_width','remaining_len',
+    'building_len','building_len_gavl','gavl_overhang_target','existing_fixed_width',
+    'tile_preset_select','tile_w_normal','tile_w_siste_v','tile_w_halv','tile_w_gavl_v','tile_w_gavl_h','tile_side_play',
+    'vindski_count','vindski_thick','vindski_clearance',
+    'rafter_len_qty','slope_area','tile_per_m2','ridge_tile_len',
     'gavl_overhang','rafter_spacing','waste_pct','su_height_qty','su_width_qty'];
-  const state = { lang, sideMode, qtyMode, calcMode };
+  const state = { lang, sideMode, qtyMode, calcMode, gavlScenario, gavlMode, tilePreset, rowOffset };
+  const ahEl = document.getElementById('allow_half_tile');
+  if (ahEl) state.allow_half_tile = ahEl.checked;
   ids.forEach(id => { const el = document.getElementById(id); if (el) state[id] = el.value; });
   return state;
 }
@@ -2352,9 +3540,20 @@ function gatherState() {
 function applyState(state) {
   if (!state) return;
   const ids =['proj_name','proj_date','proj_notes','building_width','roof_angle','overhang',
-    'rafter_len','rafter_len_left','rafter_len_right','remaining_len','max_step','lat','laf','batten_width',
-    'building_len','rafter_len_qty','slope_area','tile_per_m2','ridge_tile_len',
+    'rafter_len','rafter_len_left','rafter_len_right','rafter_len_manual','remaining_len','max_step','lat','laf','batten_width',
+    'building_len','building_len_gavl','gavl_overhang_target','existing_fixed_width',
+    'tile_preset_select','tile_w_normal','tile_w_siste_v','tile_w_halv','tile_w_gavl_v','tile_w_gavl_h','tile_side_play',
+    'vindski_count','vindski_thick','vindski_clearance',
+    'rafter_len_qty','slope_area','tile_per_m2','ridge_tile_len',
     'gavl_overhang','rafter_spacing','waste_pct','su_height_qty','su_width_qty'];
+  if (state.gavlScenario) setGavlScenario(state.gavlScenario);
+  if (state.gavlMode) setGavlMode(state.gavlMode);
+  if (state.tilePreset) setTilePreset(state.tilePreset);
+  if (state.rowOffset !== undefined) rowOffset = state.rowOffset;
+  if (state.allow_half_tile !== undefined) {
+    const ah = document.getElementById('allow_half_tile');
+    if (ah) ah.checked = !!state.allow_half_tile;
+  }
   ids.forEach(id => { const el = document.getElementById(id); if (el && state[id] !== undefined) el.value = state[id]; });
   if (state.sideMode) setSideMode(state.sideMode);
   if (state.qtyMode)  setQtyMode(state.qtyMode);
@@ -2441,13 +3640,14 @@ Object.entries(defs).forEach(([id, v]) => {
   const el = document.getElementById(id); if (el && !el.value) el.value = v;
 });
 document.getElementById('rafter_len').addEventListener('input', function() {
-  this.dataset.userSet = '1';
-  const qtyEl = document.getElementById('rafter_len_qty');
-  if (qtyEl && !qtyEl.dataset.userSet) qtyEl.value = this.value;
+  onDirectRafterInput(this.value);
 });
 document.getElementById('rafter_len_qty').addEventListener('input', function() {
-  this.dataset.userSet = '1';
+  onDirectRafterInput(this.value);
 });
+if (typeof calcRafter === 'function') calcRafter();
+if (typeof calcWidthAndGavl === 'function') calcWidthAndGavl();
+if (typeof calcBattens === 'function') calcBattens();
 calcRafter();
 calcBattens();
 calcQty();
